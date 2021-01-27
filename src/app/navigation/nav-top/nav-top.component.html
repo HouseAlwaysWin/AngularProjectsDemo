@@ -1,0 +1,26 @@
+<mat-toolbar color="primary">
+  <div fxHide.gt-xs>
+    <button mat-icon-button
+      (click)="onToggleSideNav()">
+      <mat-icon>menu</mat-icon>
+    </button>
+  </div>
+  <div>
+    <a>Shop</a>
+  </div>
+  <div fxFlex
+    fxLayout
+    fxLayoutAlign="end"
+    fxHide.xs>
+    <ul fxLayout
+      fxLayoutGap="15px"
+      class="navigation-items">
+      <li>
+        <a>Login</a>
+      </li>
+      <li>
+        <a>Register</a>
+      </li>
+    </ul>
+  </div>
+</mat-toolbar>
