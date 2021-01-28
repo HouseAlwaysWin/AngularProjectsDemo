@@ -1,4 +1,4 @@
-import { SideNavComponent } from './navigation/side-nav/side-nav.component';
+import { NavSideComponent } from './navigation/nav-side/nav-side.component';
 import { NavTopComponent } from './navigation/nav-top/nav-top.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -15,7 +15,7 @@ import { HomeComponent } from './home/home.component';
     AppComponent,
     HomeComponent,
     NavTopComponent,
-    SideNavComponent
+    NavSideComponent
   ],
   imports: [
     BrowserModule,

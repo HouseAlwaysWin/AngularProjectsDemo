@@ -1,11 +1,11 @@
 <mat-sidenav-container>
-  <mat-sidenav #sidenav
+  <mat-sidenav #navside
     role="navigation">
-    <app-side-nav (sideNavClose)="sidenav.close()"></app-side-nav>
+    <app-nav-side (navSideClose)="navside.close()"></app-nav-side>
   </mat-sidenav>
 
   <mat-sidenav-content>
-    <app-nav-top (sideNavToggle)="sidenav.toggle()"></app-nav-top>
+    <app-nav-top (navSideToggle)="navside.toggle()"></app-nav-top>
     <main>
       <router-outlet></router-outlet>
     </main>

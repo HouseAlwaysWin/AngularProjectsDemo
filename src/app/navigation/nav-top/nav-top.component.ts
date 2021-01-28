@@ -6,12 +6,11 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./nav-top.component.scss']
 })
 export class NavTopComponent implements OnInit {
-  @Output() public sidenavToggle = new EventEmitter();
+  @Output() navSideToggle = new EventEmitter();
   constructor() { }
 
-  onToggleSideNav() {
-    console.log('toggle');
-    this.sidenavToggle.emit();
+  onNavSideToggle() {
+    this.navSideToggle.emit();
   }
 
   ngOnInit(): void {
