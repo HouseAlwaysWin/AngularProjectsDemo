@@ -1,12 +1,34 @@
-<form fxLayout="row">
-  <mat-form-field>
-    <mat-label>Email</mat-label>
-    <input matInput
-      placeholder="Username">
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Email</mat-label>
-    <input matInput
-      placeholder="Username">
-  </mat-form-field>
-</form>
+<section id="loginForm">
+  <form fxLayout="column"
+    fxLayoutAlign="center center"
+    [formGroup]="loginForm"
+    (ngSubmit)="onSubmit()">
+    <mat-form-field>
+      <input matInput
+        type="email"
+        formControlName="email"
+        placeholder="Your email"
+        name="email" />
+      <mat-error *ngIf="!loginForm.get('email').valid && loginForm.get('email').touched">
+        Email is invalid
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>password</mat-label>
+      <input matInput
+        type="password"
+        formControlName="password"
+        placeholder="Your password"
+        name="password" />
+      <mat-error *ngIf="!loginForm.get('password').valid && loginForm.get('password').touched">
+        Password is invalid
+      </mat-error>
+    </mat-form-field>
+    <button type="submit"
+      mat-raised-button
+      [disabled]="!loginForm.valid"
+      color="primary">
+      Login
+    </button>
+  </form>
+</section>
