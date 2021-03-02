@@ -1,0 +1,18 @@
+{
+  "Lang": {
+    "langs": "Lang",
+    "en": "English",
+    "zh-TW": "Tranditional Chinese"
+  },
+  "AccountForm": {
+    "Email": "Email",
+    "Password": "Password",
+    "Register": "Register",
+    "Login": "Login",
+    "Logout": "Logout",
+    "PasswordConfirm": "Password Confirm",
+    "EmailRequired": "Email is Required",
+    "PasswordRequired": "Password is Required",
+    "PasswordConfirmRequired": "PasswordConfirm is Required"
+  }
+}

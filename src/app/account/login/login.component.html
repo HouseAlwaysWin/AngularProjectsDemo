@@ -7,28 +7,28 @@
       <input matInput
         type="email"
         formControlName="email"
-        placeholder="Your email"
+        placeholder="{{ 'AccountForm.Email' | translate }}"
         name="email" />
       <mat-error *ngIf="!loginForm.get('email').valid && loginForm.get('email').touched">
-        Email is invalid
+        {{ 'AccountForm.EmailRequired' | translate }}
       </mat-error>
     </mat-form-field>
     <mat-form-field>
-      <mat-label>password</mat-label>
+      <mat-label>{{ 'AccountForm.Password' | translate }}</mat-label>
       <input matInput
         type="password"
         formControlName="password"
-        placeholder="Your password"
+        placeholder="{{ 'AccountForm.Password' | translate }}"
         name="password" />
       <mat-error *ngIf="!loginForm.get('password').valid && loginForm.get('password').touched">
-        Password is invalid
+        {{ 'AccountForm.PasswordRequired' | translate}}
       </mat-error>
     </mat-form-field>
     <button type="submit"
       mat-raised-button
       [disabled]="!loginForm.valid"
       color="primary">
-      Login
+      {{ 'AccountForm.Login' | translate }}
     </button>
   </form>
 </section>

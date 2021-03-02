@@ -1,4 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-nav-top',
@@ -7,7 +8,11 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 })
 export class NavTopComponent implements OnInit {
   @Output() navSideToggle = new EventEmitter();
-  constructor() { }
+  constructor(public translate: TranslateService) {
+    translate.addLangs(['en']);
+    const browserLang = navigator.language;
+    translate.use(browserLang.match(/en|zh-TW/) ? browserLang : 'en');
+  }
 
   onNavSideToggle() {
     this.navSideToggle.emit();
@@ -15,5 +20,7 @@ export class NavTopComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
+
 
 }

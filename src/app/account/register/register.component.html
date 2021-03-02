@@ -1,5 +1,46 @@
 <section>
-  <form fxLayout="cloumn">
+  <form fxLayout="column"
+    fxLayoutAlign="center center"
+    [formGroup]="registerForm"
+    (ngSubmit)="onSubmit()">
+    <mat-form-field>
+      <input matInput
+        type="email"
+        formControlName="email"
+        placeholder="{{ 'AccountForm.Email' | translate }}"
+        name="email" />
+      <mat-error *ngIf="!registerForm.get('email').valid && registerForm.get('email').touched">
+        {{ 'AccountForm.EmailRequired' | translate }}
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>{{ 'AccountForm.Password' | translate }}</mat-label>
+      <input matInput
+        type="password"
+        formControlName="password"
+        placeholder="{{ 'AccountForm.Password' | translate }}"
+        name="password" />
+      <mat-error *ngIf="!registerForm.get('password').valid && registerForm.get('password').touched">
+        {{ 'AccountForm.PasswordRequired' | translate}}
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>{{ 'AccountForm.PasswordConfirm' | translate }}</mat-label>
+      <input matInput
+        type="password"
+        formControlName="password"
+        placeholder="Your password"
+        name="password" />
+      <mat-error *ngIf="!registerForm.get('passwordConfirm').valid && registerForm.get('passwordConfirm').touched">
+        {{ 'AccountForm.PasswordConfirmRequired' | translate}}
+      </mat-error>
+    </mat-form-field>
 
+    <button type="submit"
+      mat-raised-button
+      color="primary"
+      [disabled]="!registerForm.valid">
+      {{ 'AccountForm.Register' | translate}}
+    </button>
   </form>
 </section>

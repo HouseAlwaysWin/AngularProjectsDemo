@@ -1,0 +1,18 @@
+{
+  "Lang": {
+    "langs": "語言",
+    "en": "英文",
+    "zh-TW": "繁體中文"
+  },
+  "AccountForm": {
+    "Email": "電子信箱",
+    "Password": "密碼",
+    "Register": "註冊",
+    "Login": "登入",
+    "Logout": "登出",
+    "PasswordConfirm": "密碼再確認",
+    "EmailRequired": "電子信箱為必填",
+    "PasswordRequired": "密碼為必填",
+    "PasswordConfirmRequired": "密碼再確認為必填"
+  }
+}

@@ -16,11 +16,26 @@
       fxLayoutGap="15px"
       class="navigation-items">
       <li>
-        <a routerLink="/account/login">Login</a>
+        <a mat-button
+          routerLink="/account/login">{{'AccountForm.Login' | translate }}</a>
       </li>
       <li>
-        <a routerLink="/account/register">Register</a>
+        <a mat-button
+          routerLink="/account/register">{{ 'AccountForm.Register' | translate }}</a>
       </li>
+      <li>
+        <a mat-button
+          [matMenuTriggerFor]="langList">
+          <mat-icon>public</mat-icon>
+          {{ 'Lang.langs' | translate }}
+        </a>
+        <mat-menu #langList="matMenu">
+          <button mat-menu-item
+            *ngFor="let lang of translate.getLangs()"
+            (click)="translate.use(lang)">{{ 'Lang.'+lang | translate }}</button>
+        </mat-menu>
+      </li>
+
     </ul>
   </div>
 </mat-toolbar>

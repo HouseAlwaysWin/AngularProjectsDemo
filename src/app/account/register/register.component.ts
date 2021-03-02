@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
+import { AccountService } from '../account.service';
 
 @Component({
   selector: 'app-register',
@@ -10,19 +12,34 @@ export class RegisterComponent implements OnInit {
 
   registerForm: FormGroup;
 
-  constructor(private fb: FormBuilder) { }
+  constructor(
+    private accountService: AccountService) {
+  }
 
   ngOnInit(): void {
+    this.initRegisterForm();
   }
 
   initRegisterForm() {
-    this.registerForm = this.fb.group({
-      displayName: [null, Validators.required],
-      email: [null,
-        [Validators.required, Validators.email]
-      ],
-      password: [null, [Validators.required]]
+    this.registerForm = new FormGroup({
+      email: new FormControl('', {
+        validators: [Validators.required, Validators.email]
+      }),
+      password: new FormControl('', {
+        validators: [Validators.required]
+      }),
+      passwordConfirm: new FormControl('', {
+        validators: [Validators.required]
+      })
     })
+  }
+
+  onSubmit() {
+    console.log(this.registerForm);
+    this.accountService.regiaterByFB({
+      email: this.registerForm.value.email,
+      password: this.registerForm.value.password
+    });
   }
 
 }
