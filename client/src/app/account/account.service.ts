@@ -2,11 +2,14 @@ import { Injectable } from '@angular/core';
 import { ILoginForm } from '../models/loginForm';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { IRegisterForm } from '../models/registerForm';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
+
+  authChange = new Subject<boolean>();
 
   constructor(private afAuth: AngularFireAuth) { }
 
@@ -16,7 +19,7 @@ export class AccountService {
     ).then(result => {
       console.log(result);
     }).catch(error => {
-
+      console.log(error);
     });
   }
 
@@ -27,7 +30,23 @@ export class AccountService {
     ).then(result => {
       console.log(result);
     }).catch(error => {
+      console.log(error);
+    });
+  }
 
+  logoutByFB() {
+    this.afAuth.signOut();
+  }
+
+  isAuth() {
+    this.afAuth.authState.subscribe(user => {
+      console.log(user);
+      if (user) {
+        this.authChange.next(true);
+      }
+      else {
+        this.authChange.next(false);
+      }
     });
   }
 }

@@ -15,11 +15,16 @@
     <ul fxLayout
       fxLayoutGap="15px"
       class="navigation-items">
-      <li>
+      <li *ngIf="!isAuth">
         <a mat-button
           routerLink="/account/login">{{'AccountForm.Login' | translate }}</a>
       </li>
-      <li>
+      <li *ngIf="isAuth">
+        <a mat-button
+          routerLink="/home"
+          (click)="onLogout()">{{'AccountForm.Logout' | translate }}</a>
+      </li>
+      <li *ngIf="!isAuth">
         <a mat-button
           routerLink="/account/register">{{ 'AccountForm.Register' | translate }}</a>
       </li>

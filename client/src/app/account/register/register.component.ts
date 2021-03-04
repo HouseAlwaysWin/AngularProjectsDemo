@@ -11,16 +11,24 @@ import { AccountService } from '../account.service';
 export class RegisterComponent implements OnInit {
 
   registerForm: FormGroup;
+  errors: string;
 
   constructor(
+    private formBuilder: FormBuilder,
     private accountService: AccountService) {
   }
 
   ngOnInit(): void {
-    this.initRegisterForm();
+    this.validateRegisterForm();
   }
 
-  initRegisterForm() {
+  validateRegisterForm() {
+    // this.registerForm = this.formBuilder.group({
+    //   email: [null, [Validators.required, Validators.email]
+    //   ],
+    //   password: [null, [Validators.required]],
+    //   passwordConfirm: [null, [Validators.required]]
+    // });
     this.registerForm = new FormGroup({
       email: new FormControl('', {
         validators: [Validators.required, Validators.email]
