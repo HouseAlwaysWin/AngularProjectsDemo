@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AccountService } from '../account.service';
 import { FbAuthService } from '../fb-auth.service';
 
@@ -10,12 +11,16 @@ import { FbAuthService } from '../fb-auth.service';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
+  returnUrl: string;
 
   constructor(
     private formBuilder: FormBuilder,
-    private fbauth: FbAuthService) { }
+    private fbauth: FbAuthService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router) { }
 
   ngOnInit(): void {
+    this.returnUrl = this.activatedRoute.snapshot.queryParams.returnUrl || '/shop';
     this.validateLoginForm();
   }
 
@@ -32,9 +37,21 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
+    this.router.navigateByUrl('/shop');
     this.fbauth.login({
       email: this.loginForm.value.email,
       password: this.loginForm.value.password
+    }).subscribe(isAuth => {
+      if (isAuth) {
+        if (!this.returnUrl) {
+          this.router.navigateByUrl(this.returnUrl);
+        } else {
+          this.router.navigateByUrl('/home');
+        }
+      }
+      else {
+        this.router.navigateByUrl('/account/login');
+      }
     });
   }
 

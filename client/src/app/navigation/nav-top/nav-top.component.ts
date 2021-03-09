@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, AfterViewInit, AfterContentInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { AccountService } from 'src/app/account/account.service';
@@ -9,9 +9,9 @@ import { FbAuthService } from 'src/app/account/fb-auth.service';
   templateUrl: './nav-top.component.html',
   styleUrls: ['./nav-top.component.scss']
 })
-export class NavTopComponent implements OnInit {
+export class NavTopComponent implements OnInit, OnDestroy {
   @Output() navSideToggle = new EventEmitter();
-
+  showBar = false;
   isAuth = false;
   authSubscription: Subscription;
 
@@ -29,14 +29,20 @@ export class NavTopComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.showBar = false;
     this.authSubscription = this.fbAuthService
-      .authChange.subscribe(authStatus => {
+      .isAuth$.subscribe(authStatus => {
         this.isAuth = authStatus;
+        this.showBar = true;
       });
   }
 
   onLogout() {
     this.fbAuthService.logout();
+  }
+
+  ngOnDestroy() {
+    this.authSubscription.unsubscribe();
   }
 
 

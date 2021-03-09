@@ -23,12 +23,6 @@ export class RegisterComponent implements OnInit {
   }
 
   validateRegisterForm() {
-    // this.registerForm = this.formBuilder.group({
-    //   email: [null, [Validators.required, Validators.email]
-    //   ],
-    //   password: [null, [Validators.required]],
-    //   passwordConfirm: [null, [Validators.required]]
-    // });
     this.registerForm = new FormGroup({
       email: new FormControl('', {
         validators: [Validators.required, Validators.email]

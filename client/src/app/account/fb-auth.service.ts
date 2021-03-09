@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
 import { ILoginForm } from '../models/loginForm';
 import { IRegisterForm } from '../models/registerForm';
 
@@ -8,8 +8,7 @@ import { IRegisterForm } from '../models/registerForm';
   providedIn: 'root'
 })
 export class FbAuthService {
-  authChange = new Subject<boolean>();
-  private isAuthenticated = false;
+  isAuth$ = new ReplaySubject<boolean>();
   constructor(private afAuth: AngularFireAuth) { }
 
   regiater(registerData: IRegisterForm) {
@@ -27,30 +26,31 @@ export class FbAuthService {
       loginData.email,
       loginData.password
     ).then(result => {
-      console.log(result);
+      console.log(result.user);
+      this.isAuth$.next(true);
     }).catch(error => {
+      this.isAuth$.next(false);
       console.log(error);
     });
+    return this.isAuth$;
   }
 
   logout() {
+    console.log('logout');
     this.afAuth.signOut();
   }
 
   authListener() {
     this.afAuth.authState.subscribe(user => {
+      console.log(user);
       if (user) {
-        this.isAuthenticated = true;
-        this.authChange.next(true);
+        this.isAuth$.next(true);
       } else {
-        this.isAuthenticated = false;
-        this.authChange.next(false);
+        this.isAuth$.next(false);
       }
     });
   }
 
-  isAuth() {
-    return this.isAuthenticated;
-  }
+
 
 }

@@ -6,7 +6,7 @@
     </button>
   </div>
   <div>
-    <a>Shop</a>
+    <a routerLink="/home">Shop</a>
   </div>
   <div fxFlex
     fxLayout
@@ -14,7 +14,8 @@
     fxHide.xs>
     <ul fxLayout
       fxLayoutGap="15px"
-      class="navigation-items">
+      class="navigation-items"
+      *ngIf="showBar">
       <li *ngIf="!isAuth">
         <a mat-button
           routerLink="/account/login">{{'AccountForm.Login' | translate }}</a>
