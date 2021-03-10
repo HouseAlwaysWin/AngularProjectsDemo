@@ -28,6 +28,8 @@ namespace EcommerceApi.Core.ErrorHandlers
 
         private string GetMessageForStatusCode(int statusCode){
             switch(statusCode){
+                case StatusCodes.Status200OK:
+                    return "Successed";
                 case StatusCodes.Status400BadRequest:
                     return "Bad Request";
                 case StatusCodes.Status401Unauthorized:

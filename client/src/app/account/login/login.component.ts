@@ -16,6 +16,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private fbauth: FbAuthService,
+    private accountService: AccountService,
     private activatedRoute: ActivatedRoute,
     private router: Router) { }
 
@@ -38,21 +39,31 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     this.router.navigateByUrl('/shop');
-    this.fbauth.login({
-      email: this.loginForm.value.email,
-      password: this.loginForm.value.password
-    }).subscribe(isAuth => {
-      if (isAuth) {
-        if (!this.returnUrl) {
-          this.router.navigateByUrl(this.returnUrl);
-        } else {
-          this.router.navigateByUrl('/home');
-        }
+    this.accountService.login(this.loginForm.value).subscribe(() => {
+      if (!this.returnUrl) {
+        this.router.navigateByUrl(this.returnUrl);
+      } else {
+        this.router.navigateByUrl('/home');
       }
-      else {
-        this.router.navigateByUrl('/account/login');
-      }
+    }, error => {
+      console.log(error);
+      this.router.navigateByUrl('/account/login');
     });
+    // this.fbauth.login({
+    //   email: this.loginForm.value.email,
+    //   password: this.loginForm.value.password
+    // }).subscribe(isAuth => {
+    //   if (isAuth) {
+    //     if (!this.returnUrl) {
+    //       this.router.navigateByUrl(this.returnUrl);
+    //     } else {
+    //       this.router.navigateByUrl('/home');
+    //     }
+    //   }
+    //   else {
+    //     this.router.navigateByUrl('/account/login');
+    //   }
+    // });
   }
 
 

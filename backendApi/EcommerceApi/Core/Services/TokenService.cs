@@ -22,7 +22,7 @@ namespace EcommerceApi.Core.Services
            this._key = new SymmetricSecurityKey(
                Encoding.UTF8.GetBytes(_config["Token:Key"]));
         }
-        public string CreateToken(AppUser user)
+        public string CreateToken(ECUser user)
         {
             var claims = new List<Claim>{
                 new Claim(JwtRegisteredClaimNames.Email,user.Email),

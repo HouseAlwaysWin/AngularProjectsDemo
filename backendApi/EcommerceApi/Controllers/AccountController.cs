@@ -20,12 +20,12 @@ namespace EcommerceApi.Controllers
     [Route ("api/[controller]")]
     public class AccountController:ControllerBase
     {
-        private readonly UserManager<AppUser> _userManager;
-        private readonly SignInManager<AppUser> _signInManager;
+        private readonly UserManager<ECUser> _userManager;
+        private readonly SignInManager<ECUser> _signInManager;
         private readonly ITokenService _tokenService;
         public AccountController(
-            SignInManager<AppUser> signInManager,
-            UserManager<AppUser> userManager,
+            SignInManager<ECUser> signInManager,
+            UserManager<ECUser> userManager,
             ITokenService tokenService
         ){
             this._signInManager = signInManager;
@@ -35,7 +35,7 @@ namespace EcommerceApi.Controllers
 
         [Authorize]
         [HttpGet("gettoken")]
-        public async Task<ActionResult<UserDto>> GetToken(){
+        public async Task<ActionResult<ApiResponse<UserDto>>> GetToken(){
             var email = HttpContext.User?.Claims?.FirstOrDefault(
                 x=>x.Type == ClaimTypes.Email)?.Value;
             
@@ -43,10 +43,12 @@ namespace EcommerceApi.Controllers
 
             var token = _tokenService.CreateToken(user);
 
-            return new UserDto{
-                Email = user.Email,
-                DisplayName = user.DisplayName,
-                Token = token
+            return new ApiResponse<UserDto>{
+                Data = new UserDto{
+                    Email = user.Email,
+                    DisplayName = user.DisplayName,
+                    Token = token
+                }
             };
         }
 
@@ -93,17 +95,21 @@ namespace EcommerceApi.Controllers
                         "Email address is used"));
                 }
 
-                var user = new AppUser {
+                var user = new ECUser {
                     DisplayName = register.DisplayName,
                     Email = register.Email,
                     UserName = register.DisplayName
                 };
                 
                 var result = await _userManager.CreateAsync(user,register.Password);
-                if(!result.Succeeded) return BadRequest(
+                if(!result.Succeeded) {
+                    return BadRequest(
                     new ApiResponse(
                         StatusCodes.Status400BadRequest,
                         result.Errors.FirstOrDefault().Description));
+                }
+
+                return Ok(new ApiResponse(message:"Register Successed"));
             }
 
             return new ApiResponse<UserDto> {

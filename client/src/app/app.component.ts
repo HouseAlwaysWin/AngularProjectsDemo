@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AccountService } from './account/account.service';
 import { FbAuthService } from './account/fb-auth.service';
 
 @Component({
@@ -10,10 +11,19 @@ export class AppComponent implements OnInit {
   /**
    *
    */
-  constructor(private authService: FbAuthService) {
+  constructor(
+    private accountService: AccountService,
+    private authService: FbAuthService) {
 
   }
   ngOnInit(): void {
-    this.authService.authListener();
+    const token = localStorage.getItem('token');
+
+    this.accountService.GetUserState(token).subscribe(() => {
+      console.log('get user');
+    }, error => {
+      console.log(error);
+    })
+    // this.authService.authListener();
   }
 }

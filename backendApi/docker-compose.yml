@@ -1,0 +1,88 @@
+version: "3.8"
+services:
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile.mssql
+    # image: "mcr.microsoft.com/mssql/server"
+    container_name: db
+    ports:
+      - "1500:1433"
+    environment:
+      SA_PASSWORD: "Your_password123"
+      ACCEPT_EULA: "Y"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 1500M
+        reservations:
+          memory: 1000M
+  # api:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: api
+  #   ports:
+  #     - "5001:5001"
+  #   depends_on:
+  #     - db
+  #     - redis
+  #     # - client
+  #   volumes:
+  #     - ".:/app/"
+  #     - D:/Users/.aspnet/https/:/https:ro
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=Development
+  #     - ASPNETCORE_URLS="https://+;http://+"
+  #     - ASPNETCORE_HTTPS_PORT=5001
+  #     - ASPNETCORE_Kestrel__Certificates__Default__Password=password
+  #     - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: "0.1"
+  #         memory: 400M
+  #       reservations:
+  #         memory: 200M
+  redis:
+    container_name: cache
+    image: "redis:alpine"
+
+    command: redis-server --requirepass 111111
+
+    ports:
+      - "6379:6379"
+
+    volumes:
+      - D:/Users/redis/redis-data:/var/lib/redis
+      - D:/Users/redis/redis.conf:/usr/local/etc/redis/redis.conf
+
+    environment:
+      - REDIS_REPLICATION_MODE/master
+    deploy:
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 400M
+        reservations:
+          memory: 200M
+  # client:
+  #   container_name: client
+  #   build:
+  #     context: .
+  #     dockerfile: ./client/Dockerfile
+  #   volumes:
+  #     - "./client:/app"
+  #     - "/app/node_modules"
+  #   ports:
+  #     - "4200:4200"
+  #   environment:
+  #     - CHOKIDAR_USEPOLLING=true
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: "0.1"
+  #         memory: 400M
+  #       reservations:
+  #         memory: 200M

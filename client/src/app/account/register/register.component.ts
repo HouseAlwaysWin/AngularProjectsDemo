@@ -38,7 +38,7 @@ export class RegisterComponent implements OnInit {
 
   onSubmit() {
     console.log(this.registerForm);
-    this.accountService.regiaterByFB({
+    this.accountService.regiater({
       email: this.registerForm.value.email,
       password: this.registerForm.value.password
     });

@@ -3,6 +3,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router, CanLoad, Route, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { AccountService } from './account.service';
 import { FbAuthService } from './fb-auth.service';
 
 @Injectable({
@@ -14,18 +15,28 @@ export class AuthGuard implements CanActivate, CanLoad {
    */
   constructor(
     private afAuth: AngularFireAuth,
+    private accountService: AccountService,
     private authService: FbAuthService,
     private router: Router) { }
   canLoad(route: Route, segments: UrlSegment[]): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-    return this.authService.isAuth$.pipe(map(
+    return this.accountService.isAuth.pipe(map(
       isAuth => {
-        console.log(isAuth);
         if (isAuth) {
           this.router.navigate(['/home']);
         }
         return true;
       }
     ));
+
+    // return this.authService.isAuth$.pipe(map(
+    //   isAuth => {
+    //     console.log(isAuth);
+    //     if (isAuth) {
+    //       this.router.navigate(['/home']);
+    //     }
+    //     return true;
+    //   }
+    // ));
   }
 
 

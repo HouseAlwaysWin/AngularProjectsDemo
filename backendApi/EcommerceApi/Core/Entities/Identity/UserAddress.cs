@@ -1,6 +1,8 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace EcommerceApi.Core.Entities.Identity
 {
-    public class Address
+    public class UserAddress
     {
         public int Id  { get; set; }
         public string FirstName { get; set; }
@@ -9,7 +11,7 @@ namespace EcommerceApi.Core.Entities.Identity
         public string City { get; set; }
         public string State { get; set; }
         public string ZipCode { get; set; }
-        public string AppUserId { get; set; }
-        public AppUser AppUser { get; set; }
+        public int ECUserId { get; set; }
+        public ECUser ECUser { get; set; }
     }
 }

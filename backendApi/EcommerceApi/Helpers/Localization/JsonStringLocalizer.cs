@@ -23,5 +23,10 @@ namespace EcommerceApi.Helpers.Localization
         {
             throw new System.NotImplementedException();
         }
+
+        public IStringLocalizer WithCulture(CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

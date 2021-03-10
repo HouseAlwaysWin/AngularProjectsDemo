@@ -4,6 +4,6 @@ namespace EcommerceApi.Core.Services.Interfaces
 {
     public interface ITokenService
     {
-         string CreateToken(AppUser user);
+         string CreateToken(ECUser user);
     }
 }

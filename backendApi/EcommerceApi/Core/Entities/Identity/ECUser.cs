@@ -1,10 +1,11 @@
+using System;
 using Microsoft.AspNetCore.Identity;
 
 namespace EcommerceApi.Core.Entities.Identity
 {
-    public class AppUser:IdentityUser
+    public class ECUser : IdentityUser<int>
     {
         public string DisplayName { get; set; }
-        public Address Address { get; set; }
+        public UserAddress Address { get; set; }
     }
 }
