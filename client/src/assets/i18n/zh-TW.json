@@ -12,7 +12,10 @@
     "Logout": "登出",
     "PasswordConfirm": "密碼再確認",
     "EmailRequired": "電子信箱為必填",
+    "EmailFormatWrong": "電子信箱格式錯誤",
     "PasswordRequired": "密碼為必填",
-    "PasswordConfirmRequired": "密碼再確認為必填"
+    "PasswordConfirmRequired": "密碼再確認為必填",
+    "DisplayName": "顯示名稱",
+    "DisplayNameRequired": "顯示名稱為必填"
   }
 }

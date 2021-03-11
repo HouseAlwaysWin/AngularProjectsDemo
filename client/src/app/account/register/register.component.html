@@ -3,16 +3,42 @@
     fxLayoutAlign="center center"
     [formGroup]="registerForm"
     (ngSubmit)="onSubmit()">
+
+    <mat-error>
+      <div *ngFor="let error of errors">
+        {{ error }}
+      </div>
+    </mat-error>
+
+    <mat-form-field>
+      <input matInput
+        type="text"
+        formControlName="displayName"
+        placeholder="{{ 'AccountForm.DisplayName' | translate }}"
+        name="displayName" />
+      <mat-error *ngIf="displayName.invalid && (displayName.dirty || displayName.touched)">
+        <div *ngIf="displayName.errors.required && displayName.touched">
+          {{ 'AccountForm.DisplayNameRequired' | translate }}
+        </div>
+      </mat-error>
+    </mat-form-field>
+
     <mat-form-field>
       <input matInput
         type="email"
         formControlName="email"
         placeholder="{{ 'AccountForm.Email' | translate }}"
         name="email" />
-      <mat-error *ngIf="!registerForm.get('email').valid && registerForm.get('email').touched">
-        {{ 'AccountForm.EmailRequired' | translate }}
+      <mat-error *ngIf="email.invalid && (email.dirty || email.touched)">
+        <div *ngIf="email.errors.required && email.touched">
+          {{ 'AccountForm.EmailRequired' | translate }}
+        </div>
+        <div *ngIf="email.errors.email && email.touched">
+          {{ 'AccountForm.EmailFormatWrong' | translate }}
+        </div>
       </mat-error>
     </mat-form-field>
+
     <mat-form-field>
       <mat-label>{{ 'AccountForm.Password' | translate }}</mat-label>
       <input matInput
@@ -20,8 +46,10 @@
         formControlName="password"
         placeholder="{{ 'AccountForm.Password' | translate }}"
         name="password" />
-      <mat-error *ngIf="!registerForm.get('password').valid && registerForm.get('password').touched">
-        {{ 'AccountForm.PasswordRequired' | translate}}
+      <mat-error *ngIf="password.invalid && (password.dirty || password.touched)">
+        <div *ngIf="password.errors.required && password.touched">
+          {{ 'AccountForm.PasswordRequired' | translate}}
+        </div>
       </mat-error>
     </mat-form-field>
     <mat-form-field>
@@ -31,8 +59,10 @@
         formControlName="passwordConfirm"
         placeholder="{{ 'AccountForm.PasswordConfirm' | translate }}"
         name="password" />
-      <mat-error *ngIf="!registerForm.get('passwordConfirm').valid && registerForm.get('passwordConfirm').touched">
-        {{ 'AccountForm.PasswordConfirmRequired' | translate}}
+      <mat-error *ngIf="passwordConfirm.invalid && (passwordConfirm.dirty || passwordConfirm.touched)">
+        <div *ngIf="passwordConfirm.errors.required && passwordConfirm.touched">
+          {{ 'AccountForm.PasswordConfirmRequired' | translate}}
+        </div>
       </mat-error>
     </mat-form-field>
 
@@ -40,6 +70,7 @@
 
     </mat-error>
 
+    <br />
     <button type="submit"
       mat-raised-button
       color="primary"

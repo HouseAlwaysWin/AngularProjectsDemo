@@ -19,11 +19,11 @@ export class AuthGuard implements CanActivate, CanLoad {
     private authService: FbAuthService,
     private router: Router) { }
   canLoad(route: Route, segments: UrlSegment[]): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-    return this.accountService.isAuth.pipe(map(
-      isAuth => {
-        if (isAuth) {
-          this.router.navigate(['/home']);
-        }
+    return this.accountService.currrentUser.pipe(map(
+      user => {
+        //   if (user === null) {
+        //     this.router.navigate(['/home']);
+        //   }
         return true;
       }
     ));

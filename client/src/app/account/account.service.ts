@@ -15,9 +15,8 @@ import { map } from 'rxjs/operators';
 })
 export class AccountService {
   baseUrl = environment.apiUrl;
-  private currrentUser = new ReplaySubject<IUser>();
-  isAuth = new ReplaySubject<boolean>();
-  currentUser$ = this.currrentUser.asObservable();
+  currrentUser = new ReplaySubject<IUser>();
+  // currentUser$ = this.currrentUser.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -27,7 +26,6 @@ export class AccountService {
   GetUserState(token: string) {
     if (token === null) {
       this.currrentUser.next(null);
-      this.isAuth.next(false);
       return of(null);
     }
 
@@ -38,9 +36,7 @@ export class AccountService {
         if (res.statusCode === 200) {
           localStorage.setItem('token', res.data.token);
           this.currrentUser.next(res.data);
-          this.isAuth.next(true);
         }
-
       })
     );
   }
@@ -48,11 +44,12 @@ export class AccountService {
   regiater(registerData: IRegisterForm) {
     return this.http.post(this.baseUrl + 'account/register', registerData).pipe(
       map((res: IApiResponse<IUser>) => {
+        console.log(res);
         if (res.statusCode === 200) {
           localStorage.setItem('token', res.data.token);
           this.currrentUser.next(res.data);
-          this.isAuth.next(true);
         }
+        return res;
       })
     )
   }
@@ -60,12 +57,13 @@ export class AccountService {
   login(loginData: ILoginForm) {
     return this.http.post(this.baseUrl + 'account/login', loginData).pipe(
       map((res: IApiResponse<IUser>) => {
+        console.log(res);
         if (res.statusCode === 200) {
           console.log(res);
           localStorage.setItem('token', res.data.token);
           this.currrentUser.next(res.data);
-          this.isAuth.next(true);
         }
+        return res;
       })
     );
   }
@@ -73,7 +71,6 @@ export class AccountService {
   logout() {
     localStorage.removeItem('token');
     this.currrentUser.next(null);
-    this.isAuth.next(false);
     this.router.navigateByUrl('/');
   }
 

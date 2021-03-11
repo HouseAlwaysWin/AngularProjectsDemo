@@ -12,6 +12,10 @@ using EcommerceApi.Core.ErrorHandlers;
 using Microsoft.AspNetCore.Http;
 using EcommerceApi.Dtos.DataValidations;
 using FluentValidation.Results;
+using Microsoft.Extensions.Localization;
+using Microsoft.AspNetCore.Localization;
+using System;
+using System.Globalization;
 
 namespace EcommerceApi.Controllers
 {
@@ -23,19 +27,23 @@ namespace EcommerceApi.Controllers
         private readonly UserManager<ECUser> _userManager;
         private readonly SignInManager<ECUser> _signInManager;
         private readonly ITokenService _tokenService;
+        private readonly IStringLocalizer _localizer;
+
         public AccountController(
             SignInManager<ECUser> signInManager,
             UserManager<ECUser> userManager,
-            ITokenService tokenService
+            ITokenService tokenService,
+            IStringLocalizer<AccountController> localizer
         ){
             this._signInManager = signInManager;
             this._userManager = userManager;
             this._tokenService = tokenService;
+            this._localizer = localizer;
         }
 
         [Authorize]
-        [HttpGet("gettoken")]
-        public async Task<ActionResult<ApiResponse<UserDto>>> GetToken(){
+        [HttpGet("GetUserState")]
+        public async Task<ActionResult<ApiResponse<UserDto>>> GetUserState(){
             var email = HttpContext.User?.Claims?.FirstOrDefault(
                 x=>x.Type == ClaimTypes.Email)?.Value;
             
@@ -92,7 +100,7 @@ namespace EcommerceApi.Controllers
                 if(CheckEmailExistsAsync(register.Email).Result.Value){
                     return BadRequest(
                         new ApiResponse(StatusCodes.Status400BadRequest,
-                        "Email address is used"));
+                        _localizer["EmailAddressIsUsed"]));
                 }
 
                 var user = new ECUser {
@@ -109,7 +117,13 @@ namespace EcommerceApi.Controllers
                         result.Errors.FirstOrDefault().Description));
                 }
 
-                return Ok(new ApiResponse(message:"Register Successed"));
+                 return new ApiResponse<UserDto> {
+                    Data = new UserDto {
+                        Email = user.Email,
+                        DisplayName = user.DisplayName,
+                        Token = _tokenService.CreateToken(user)
+                    },
+                };
             }
 
             return new ApiResponse<UserDto> {

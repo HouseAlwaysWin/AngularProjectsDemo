@@ -12,6 +12,7 @@ import { FbAuthService } from '../fb-auth.service';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   returnUrl: string;
+  errors: string[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -23,6 +24,14 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.returnUrl = this.activatedRoute.snapshot.queryParams.returnUrl || '/shop';
     this.validateLoginForm();
+  }
+
+  get email() {
+    return this.loginForm.get('email');
+  }
+
+  get password() {
+    return this.loginForm.get('password');
   }
 
   validateLoginForm() {
@@ -39,15 +48,22 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     this.router.navigateByUrl('/shop');
-    this.accountService.login(this.loginForm.value).subscribe(() => {
-      if (!this.returnUrl) {
-        this.router.navigateByUrl(this.returnUrl);
+    this.accountService.login(this.loginForm.value).subscribe(res => {
+      console.log(res);
+      if (res.data) {
+        if (!this.returnUrl) {
+          this.router.navigateByUrl(this.returnUrl);
+        } else {
+          this.router.navigateByUrl('/home');
+        }
       } else {
-        this.router.navigateByUrl('/home');
+        this.errors[0] = res.message;
+        console.log(this.errors);
       }
+
     }, error => {
       console.log(error);
-      this.router.navigateByUrl('/account/login');
+      this.errors = error.errors;
     });
     // this.fbauth.login({
     //   email: this.loginForm.value.email,

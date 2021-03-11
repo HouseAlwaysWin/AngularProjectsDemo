@@ -1,0 +1,9 @@
+[
+    {
+        "Key": "EmailAddressIsUsed",
+        "Value": {
+            "en": "Email address is used",
+            "zh-TW": "電子郵件已經被使用"
+        }
+    }
+]

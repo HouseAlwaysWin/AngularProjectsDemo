@@ -12,7 +12,10 @@
     "Logout": "Logout",
     "PasswordConfirm": "Password Confirm",
     "EmailRequired": "Email is Required",
+    "EmailFormatWrong": "Email is wrong format",
     "PasswordRequired": "Password is Required",
-    "PasswordConfirmRequired": "PasswordConfirm is Required"
+    "PasswordConfirmRequired": "PasswordConfirm is Required",
+    "DisplayName": "DisplayName",
+    "DisplayNameRequired": "DisplayName is Required"
   }
 }

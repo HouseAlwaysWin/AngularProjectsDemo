@@ -1,6 +1,6 @@
 import { NavSideComponent } from './navigation/nav-side/nav-side.component';
 import { NavTopComponent } from './navigation/nav-top/nav-top.component';
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, TransferState } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -15,14 +15,11 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AccountService } from './account/account.service';
 import { ShopComponent } from './shop/shop.component';
-
-// AoT requires an exported function for factories
-export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http);
-}
+import { I18nInterceptor } from './core/interceptors/i18n.interceptor';
+import { I18nLoader, I18nLoaderFactory } from './core/i18n/i18n-loader';
 
 @NgModule({
   declarations: [
@@ -45,12 +42,14 @@ export function HttpLoaderFactory(http: HttpClient) {
       defaultLanguage: 'zh-TW',
       loader: {
         provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
+        useFactory: I18nLoaderFactory,
+        deps: []
       }
     })
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: I18nInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

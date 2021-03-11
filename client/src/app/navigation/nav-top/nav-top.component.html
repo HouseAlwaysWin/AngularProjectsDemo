@@ -16,18 +16,21 @@
       fxLayoutGap="15px"
       class="navigation-items"
       *ngIf="showBar">
-      <li *ngIf="!isAuth">
-        <a mat-button
-          routerLink="/account/login">{{'AccountForm.Login' | translate }}</a>
-      </li>
+      <ng-container *ngIf="!isAuth">
+        <li>
+          <a mat-button
+            routerLink="/account/login">{{'AccountForm.Login' | translate }}</a>
+        </li>
+        <li>
+          <a mat-button
+            routerLink="/account/register">{{ 'AccountForm.Register' | translate }}</a>
+        </li>
+      </ng-container>
+
       <li *ngIf="isAuth">
         <a mat-button
           routerLink="/home"
           (click)="onLogout()">{{'AccountForm.Logout' | translate }}</a>
-      </li>
-      <li *ngIf="!isAuth">
-        <a mat-button
-          routerLink="/account/register">{{ 'AccountForm.Register' | translate }}</a>
       </li>
       <li>
         <a mat-button

@@ -32,11 +32,12 @@ export class NavTopComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.showBar = false;
-    this.accountService.isAuth.subscribe(state => {
-      console.log(state);
-      this.isAuth = state;
+    this.accountService.currrentUser.subscribe(user => {
+      this.isAuth = user ? true : false;
       this.showBar = true;
+      console.log(this.isAuth);
     });
+
     // this.showBar = false;
     // this.authSubscription = this.fbAuthService
     //   .isAuth$.subscribe(authStatus => {
@@ -51,7 +52,7 @@ export class NavTopComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.accountService.isAuth.unsubscribe();
+    this.accountService.currrentUser.unsubscribe();
     // this.authSubscription.unsubscribe();
   }
 

@@ -20,6 +20,10 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using EcommerceApi.Core.Services.Interfaces;
 using EcommerceApi.Core.Services;
+using EcommerceApi.Helpers.Localization;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Options;
 
 namespace EcommerceApi
 {
@@ -70,6 +74,28 @@ namespace EcommerceApi
                     };
                 });
 
+            services.AddJsonLocalization(opts =>
+            {
+                opts.ResourcesPath = "Resources";
+            });
+
+            services.Configure<RequestLocalizationOptions>(opts =>
+            {
+                var supportCultures = new List<CultureInfo>
+                    {
+                        new CultureInfo("en"),
+                        new CultureInfo("zh-TW")
+                    };
+
+                opts.DefaultRequestCulture = new RequestCulture("zh-TW");
+                opts.SupportedCultures = supportCultures;
+                opts.SupportedUICultures = supportCultures;
+                opts.RequestCultureProviders = new List<IRequestCultureProvider>{
+                    new AcceptLanguageHeaderRequestCultureProvider()
+                };
+            });
+
+
             services.AddScoped<ITokenService,TokenService>();
 
             services.AddSwaggerGen();
@@ -92,13 +118,17 @@ namespace EcommerceApi
 
             // app.UseHttpsRedirection();
 
-
             app.UseRouting();
 
             app.UseCors("CorsPolicy");
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            var options = app.ApplicationServices
+                .GetService<IOptions<RequestLocalizationOptions>>();
+
+            app.UseRequestLocalization(options.Value);
 
 
             app.UseEndpoints(endpoints =>
