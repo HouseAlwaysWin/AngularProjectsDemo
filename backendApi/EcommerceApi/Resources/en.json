@@ -1,0 +1,8 @@
+{
+    "Email": "Email",
+    "EmailAddressIsUsed": "Email address is used",
+    "Password": "Password",
+    "{0}IsRequired": "{0} is required",
+    "{0}FormatIncorrect": "{0} format is incorrect",
+    "{0}{1}MinLength": "The {0} minimum length must be {1}"
+}
