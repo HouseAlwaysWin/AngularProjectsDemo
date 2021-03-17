@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MaterialModule } from '../material.module';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatCarouselComponent } from './components/mat-carousel/mat-carousel.component';
 
 
 
 @NgModule({
-  declarations: [],
+  declarations: [MatCarouselComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,

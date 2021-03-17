@@ -14,7 +14,6 @@ export class NavTopComponent implements OnInit, OnDestroy {
   @Output() navSideToggle = new EventEmitter();
   showBar = false;
   isAuth = false;
-  // authSubscription: Subscription;
 
   constructor(
     public translate: TranslateService,

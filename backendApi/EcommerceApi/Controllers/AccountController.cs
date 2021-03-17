@@ -1,4 +1,3 @@
-using System.Threading;
 using System.Security.Claims;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,16 +5,14 @@ using EcommerceApi.Core.Entities.Identity;
 using EcommerceApi.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using EcommerceApi.Dtos;
 using Microsoft.AspNetCore.Authorization;
-using EcommerceApi.Core.ErrorHandlers;
 using Microsoft.AspNetCore.Http;
-using EcommerceApi.Dtos.DataValidations;
 using FluentValidation.Results;
 using Microsoft.Extensions.Localization;
-using Microsoft.AspNetCore.Localization;
-using System;
 using System.Globalization;
+using EcommerceApi.Core.Entities;
+using EcommerceApi.Core.Models.Dtos;
+using EcommerceApi.Core.Models.Dtos.DataValidations;
 
 namespace EcommerceApi.Controllers
 {
@@ -33,7 +30,7 @@ namespace EcommerceApi.Controllers
             SignInManager<ECUser> signInManager,
             UserManager<ECUser> userManager,
             ITokenService tokenService,
-            IStringLocalizer<AccountController> localizer
+            IStringLocalizer localizer
         ){
             this._signInManager = signInManager;
             this._userManager = userManager;
@@ -42,8 +39,8 @@ namespace EcommerceApi.Controllers
         }
 
         [Authorize]
-        [HttpGet("GetUserState")]
-        public async Task<ActionResult<ApiResponse<UserDto>>> GetUserState(){
+        [HttpGet("getuser")]
+        public async Task<ActionResult<ApiResponse<UserDto>>> GetUser(){
             var email = HttpContext.User?.Claims?.FirstOrDefault(
                 x=>x.Type == ClaimTypes.Email)?.Value;
             
@@ -51,18 +48,17 @@ namespace EcommerceApi.Controllers
 
             var token = _tokenService.CreateToken(user);
 
-            return new ApiResponse<UserDto>{
-                Data = new UserDto{
+            return new ApiResponse<UserDto>(
+                new UserDto{
                     Email = user.Email,
                     DisplayName = user.DisplayName,
-                    Token = token
-                }
-            };
+                    Token = token});
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<ApiResponse<UserDto>>> Login(LoginDto login){
-            var loginValidator= new LoginDtoValidator();
+            var lang = CultureInfo.CurrentCulture;
+            var loginValidator= new LoginDtoValidator(_localizer);
             ValidationResult validateResult = await loginValidator.ValidateAsync(login);
             if(validateResult.IsValid){
                 var user = await _userManager.FindByEmailAsync(login.Email);
@@ -72,19 +68,19 @@ namespace EcommerceApi.Controllers
                 var result = await _signInManager.CheckPasswordSignInAsync(user,login.Password,false);
                 if(!result.Succeeded) return Unauthorized(new ApiResponse(StatusCodes.Status401Unauthorized));
 
-                return new ApiResponse<UserDto> {
-                    Data = new UserDto {
+                return Ok(new ApiResponse<UserDto> (
+                     new UserDto {
                         Email = user.Email,
                         DisplayName = user.DisplayName,
                         Token = _tokenService.CreateToken(user)
-                    },
-                };
+                }));
             }
 
-            return new ApiResponse<UserDto> {
-                    StatusCode= StatusCodes.Status400BadRequest,
-                    Message=validateResult.Errors.FirstOrDefault().ErrorMessage
-                     };
+            return BadRequest(new ApiResponse<UserDto> (
+                    null,
+                    StatusCodes.Status400BadRequest,
+                    validateResult.Errors.FirstOrDefault().ErrorMessage
+            ));
         }
 
         [HttpGet("emailexists")]
@@ -94,7 +90,7 @@ namespace EcommerceApi.Controllers
 
         [HttpPost("register")]
         public async Task<ActionResult<ApiResponse<UserDto>>> Register(RegisterDto register){
-            var registerValidator = new RegisterDtoValidator();
+            var registerValidator = new RegisterDtoValidator(_localizer);
             ValidationResult validateResult = await registerValidator.ValidateAsync(register);
             if(validateResult.IsValid){
                 if(CheckEmailExistsAsync(register.Email).Result.Value){
@@ -117,19 +113,20 @@ namespace EcommerceApi.Controllers
                         result.Errors.FirstOrDefault().Description));
                 }
 
-                 return new ApiResponse<UserDto> {
-                    Data = new UserDto {
+                 return Ok(new ApiResponse<UserDto> (
+                     new UserDto {
                         Email = user.Email,
                         DisplayName = user.DisplayName,
                         Token = _tokenService.CreateToken(user)
-                    },
-                };
+                    }
+                 ));
             }
 
-            return new ApiResponse<UserDto> {
-                    StatusCode= StatusCodes.Status400BadRequest,
-                    Message=validateResult.Errors.FirstOrDefault().ErrorMessage 
-                };
+            return BadRequest(new ApiResponse<UserDto>( 
+                    null,
+                    StatusCodes.Status400BadRequest,
+                    validateResult.Errors.FirstOrDefault().ErrorMessage 
+                ));
         }
 
        

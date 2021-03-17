@@ -4,27 +4,25 @@ using Microsoft.Extensions.Options;
 
 namespace EcommerceApi.Helpers.Localization
 {
-    public class JsonStringLocalizerFactory : IStringLocalizerFactory
+    public class JsonStringLocalizerFactory:IStringLocalizerFactory
     {
 
-        private readonly string _resourcesRelativePath;
+        private readonly IOptions<LocalizationOptions> _localizationOptions;
         public JsonStringLocalizerFactory(
              IOptions<LocalizationOptions> localizationOptions)
         {
-            if (localizationOptions == null)
-            {
-                throw new ArgumentNullException(nameof(localizationOptions));
-            }
-            _resourcesRelativePath = localizationOptions.Value.ResourcesPath ?? String.Empty;
+            this._localizationOptions = localizationOptions;
         }
-        public IStringLocalizer Create(string baseName, string location)
-        {
-             return new JsonStringLocalizer(_resourcesRelativePath); 
-        }
-
         public IStringLocalizer Create(Type resourceSource)
         {
-             return new JsonStringLocalizer(_resourcesRelativePath); 
+            return new JsonStringLocalizer(_localizationOptions);
         }
+
+        public IStringLocalizer Create(string baseName, string location)
+        {
+            return new JsonStringLocalizer(_localizationOptions);
+        }
+
+        
     }
 }

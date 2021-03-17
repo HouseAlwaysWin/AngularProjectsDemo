@@ -31,7 +31,7 @@ export class AccountService {
 
     let headers = new HttpHeaders();
     headers = headers.set('Authorization', `Bearer ${token}`);
-    return this.http.get(this.baseUrl + 'account/gettoken', { headers }).pipe(
+    return this.http.get(this.baseUrl + 'account/getuser', { headers }).pipe(
       map((res: IApiResponse<IUser>) => {
         if (res.statusCode === 200) {
           localStorage.setItem('token', res.data.token);
@@ -41,7 +41,7 @@ export class AccountService {
     );
   }
 
-  regiater(registerData: IRegisterForm) {
+  register(registerData: IRegisterForm) {
     return this.http.post(this.baseUrl + 'account/register', registerData).pipe(
       map((res: IApiResponse<IUser>) => {
         console.log(res);

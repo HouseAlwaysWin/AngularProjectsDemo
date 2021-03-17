@@ -4,10 +4,8 @@
     [formGroup]="registerForm"
     (ngSubmit)="onSubmit()">
 
-    <mat-error>
-      <div *ngFor="let error of errors">
-        {{ error }}
-      </div>
+    <mat-error *ngIf="error">
+      {{ error }}
     </mat-error>
 
     <mat-form-field>
@@ -65,10 +63,6 @@
         </div>
       </mat-error>
     </mat-form-field>
-
-    <mat-error *ngIf="errors">
-
-    </mat-error>
 
     <br />
     <button type="submit"

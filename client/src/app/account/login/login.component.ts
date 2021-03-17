@@ -12,7 +12,7 @@ import { FbAuthService } from '../fb-auth.service';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   returnUrl: string;
-  errors: string[] = [];
+  error: string;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -57,13 +57,12 @@ export class LoginComponent implements OnInit {
           this.router.navigateByUrl('/home');
         }
       } else {
-        this.errors[0] = res.message;
-        console.log(this.errors);
+        this.error = res.message;
       }
 
     }, error => {
       console.log(error);
-      this.errors = error.errors;
+      this.error = error.error.message;
     });
     // this.fbauth.login({
     //   email: this.loginForm.value.email,

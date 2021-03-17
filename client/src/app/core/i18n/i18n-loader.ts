@@ -19,7 +19,3 @@ export class I18nLoader implements TranslateLoader {
     return of(trans[lang].default);
   }
 }
-
-export function I18nLoaderFactory() {
-  return new I18nLoader();
-}

@@ -57,7 +57,9 @@ namespace EcommerceApi.Helpers.Localization
         internal static void AddJsonLocalizationServices(IServiceCollection services)
         {
             services.TryAddSingleton<IStringLocalizerFactory, JsonStringLocalizerFactory>();
-            services.TryAddTransient(typeof(IStringLocalizer<>), typeof(StringLocalizer<>));
+            // services.TryAddTransient(typeof(IStringLocalizer<>), typeof(StringLocalizer<>));
+            services.TryAddTransient<IStringLocalizer,JsonStringLocalizer>();
+
         }
 
         internal static void AddJsonLocalizationServices(

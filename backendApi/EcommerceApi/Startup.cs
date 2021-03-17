@@ -1,29 +1,26 @@
 using System.Text;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using EcommerceApi.Core.Entities.Identity;
-using EcommerceApi.Core.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using EcommerceApi.Core.Services.Interfaces;
 using EcommerceApi.Core.Services;
 using EcommerceApi.Helpers.Localization;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
+using EcommerceApi.Core.Data.Identity;
+using AutoMapper;
+using EcommerceApi.Core.Data;
+using EcommerceApi.Core.Data.Repositories;
+using EcommerceApi.Core.Data.Repositories.Interfaces;
 
 namespace EcommerceApi
 {
@@ -39,11 +36,16 @@ namespace EcommerceApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(AutomapperProfiles));
             services.AddControllers();
             services.AddDbContext<ECIdentityDbContext>(x =>
                 x.UseSqlServer(_config.GetConnectionString("IdentityConnection")));
             
+            services.AddDbContext<StoreContext>(x => 
+                x.UseSqlServer(_config.GetConnectionString("DefaultConnection")));
+            
             services.AddIdentityCore<ECUser>()
+                // .AddErrorDescriber<LocalizedIdentityErrorDescriber>()
                 .AddEntityFrameworkStores<ECIdentityDbContext>()
                 .AddSignInManager<SignInManager<ECUser>>();
             
@@ -62,6 +64,7 @@ namespace EcommerceApi
 
                 options.User.RequireUniqueEmail = true;
             });
+
             
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>{
@@ -76,7 +79,7 @@ namespace EcommerceApi
 
             services.AddJsonLocalization(opts =>
             {
-                opts.ResourcesPath = "Resources";
+                // opts.ResourcesPath = "Resources";
             });
 
             services.Configure<RequestLocalizationOptions>(opts =>
@@ -97,6 +100,9 @@ namespace EcommerceApi
 
 
             services.AddScoped<ITokenService,TokenService>();
+            services.AddScoped<IProductRepository,ProductRepository>();
+            services.AddScoped(typeof(IGenericRepository<>),(typeof(GenericRepository<>)));
+            services.AddScoped<IUnitOfWork,UnitOfWork>();
 
             services.AddSwaggerGen();
             services.AddCors(opt => {
@@ -119,6 +125,7 @@ namespace EcommerceApi
             // app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseStaticFiles();
 
             app.UseCors("CorsPolicy");
 

@@ -10,7 +10,6 @@ const routes: Routes = [
   { path: 'not-found', component: NotFoundComponent },
   {
     path: 'shop',
-    canActivate: [AuthGuard],
     loadChildren: () => import('./shop/shop.module').then(m => m.ShopModule),
   },
   {

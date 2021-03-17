@@ -19,6 +19,10 @@
       <ng-container *ngIf="!isAuth">
         <li>
           <a mat-button
+            routerLink="/shop">{{'AccountForm.Shop' | translate }}</a>
+        </li>
+        <li>
+          <a mat-button
             routerLink="/account/login">{{'AccountForm.Login' | translate }}</a>
         </li>
         <li>
@@ -32,6 +36,10 @@
           routerLink="/home"
           (click)="onLogout()">{{'AccountForm.Logout' | translate }}</a>
       </li>
+
+
+
+
       <li>
         <a mat-button
           [matMenuTriggerFor]="langList">

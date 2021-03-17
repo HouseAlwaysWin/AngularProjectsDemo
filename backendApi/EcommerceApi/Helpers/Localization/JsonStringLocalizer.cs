@@ -7,28 +7,38 @@ using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 using System.IO;
 using System.Linq;
+using Microsoft.Extensions.Options;
 
 namespace EcommerceApi.Helpers.Localization
 {
     public class JsonStringLocalizer : IStringLocalizer
     {
-        List<JsonLocalizationFormat> localization;
-        private readonly string _resourcesRelativePath;
-        public JsonStringLocalizer(string resourcesRelativePath)
+        private Dictionary<string,string> localization;
+        private string _resourcesRelativePath;
+        private readonly IOptions<LocalizationOptions> _localizationOptions;
+        public JsonStringLocalizer(IOptions<LocalizationOptions> localizationOptions)
         {
-            _resourcesRelativePath = resourcesRelativePath;
+            this._localizationOptions = localizationOptions;
+            var lang = CultureInfo.CurrentCulture.Name;
+            _resourcesRelativePath = localizationOptions.Value.ResourcesPath ?? String.Empty;
+            CheckResourcePath(_resourcesRelativePath,lang);
+        }
 
-             if (!String.IsNullOrWhiteSpace(_resourcesRelativePath))
-            {
-                var resourcePath = resourcesRelativePath + "\\localization.json";
-                localization = JsonConvert.DeserializeObject<List<JsonLocalizationFormat>>(
-                    File.ReadAllText(resourcePath));
+        private void CheckResourcePath(string path,string langName){
+            path = string.IsNullOrWhiteSpace(path)? Directory.GetCurrentDirectory()+"\\Resources":path;
+            var resourcePath = path + $"\\{langName}.json";
+
+            if(!File.Exists(resourcePath)){
+                Directory.CreateDirectory(path);
+                using (System.IO.FileStream fs = System.IO.File.Create(resourcePath)){
+                    string data = "{}";
+                    byte[] dataInfo = new UTF8Encoding(true).GetBytes(data);
+                    fs.Write(dataInfo,0,dataInfo.Length);
+                }
             }
-            else
-            {
-                localization = JsonConvert.DeserializeObject<List<JsonLocalizationFormat>>(
-                    File.ReadAllText(@"localization.json"));
-            }
+
+            localization = JsonConvert.DeserializeObject<Dictionary<string,string>>(
+                            File.ReadAllText(resourcePath));
         }
 
         public LocalizedString this[string name]  {
@@ -39,37 +49,55 @@ namespace EcommerceApi.Helpers.Localization
             }
         }
 
-        public LocalizedString this[string name, params object[] arguments] => throw new System.NotImplementedException();
+        public LocalizedString this[string name, params object[] arguments] {
+            get{
+               var value = GetString(name); 
+               value = string.Format(value,arguments);
+               return new LocalizedString(
+                    name, value ?? name, resourceNotFound: value == null);
 
+            }
+
+        }
         public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures)
         {
-            return localization.Where(
-                l => l.Value.Keys.Any(
-                    lv => lv == CultureInfo.CurrentCulture.Name))
-                    .Select(l => new LocalizedString(
-                        l.Key, l.Value[CultureInfo.CurrentCulture.Name],
-                        true));
+            List<LocalizedString> allStrings = new List<LocalizedString>();
+            if(!includeParentCultures){
+                foreach (var item in localization)
+                {
+                    allStrings.Add(new LocalizedString(item.Key,item.Value));
+                }
+                return allStrings;
+            }
+
+            string[] subdirs = Directory.GetDirectories(_resourcesRelativePath)
+                            .Select(Path.GetFileName)
+                            .ToArray();
+            
+            foreach(var fileName in subdirs){
+                CheckResourcePath(_resourcesRelativePath,fileName);
+                foreach (var item in localization)
+                {
+                    allStrings.Add(new LocalizedString(item.Key,item.Value,true,fileName));
+                }
+            }
+
+            return allStrings;
         }
 
         public IStringLocalizer WithCulture(CultureInfo culture)
         {
             CultureInfo.CurrentCulture = culture;
-            return new JsonStringLocalizer(_resourcesRelativePath);
+            return new JsonStringLocalizer(_localizationOptions);
         }
 
         private string GetString(string name)
         {
-            var query = localization.Where(
-                l => l.Value.Keys.Any(
-                    lv => lv == CultureInfo.CurrentCulture.Name));
-            var value = query.FirstOrDefault(l => l.Key == name);
-
-            if (value == null)
-            {
-                return name;
+            if(localization.ContainsKey(name)){
+                return localization[name];
             }
+            return name;
 
-            return value.Value[CultureInfo.CurrentCulture.Name];
         }
     }
 }

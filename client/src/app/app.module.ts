@@ -19,7 +19,7 @@ import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common
 import { AccountService } from './account/account.service';
 import { ShopComponent } from './shop/shop.component';
 import { I18nInterceptor } from './core/interceptors/i18n.interceptor';
-import { I18nLoader, I18nLoaderFactory } from './core/i18n/i18n-loader';
+import { I18nLoader } from './core/i18n/i18n-loader';
 
 @NgModule({
   declarations: [
@@ -42,8 +42,7 @@ import { I18nLoader, I18nLoaderFactory } from './core/i18n/i18n-loader';
       defaultLanguage: 'zh-TW',
       loader: {
         provide: TranslateLoader,
-        useFactory: I18nLoaderFactory,
-        deps: []
+        useClass: I18nLoader
       }
     })
   ],

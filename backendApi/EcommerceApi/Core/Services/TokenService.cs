@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using EcommerceApi.Core.Entities.Identity;
 using EcommerceApi.Core.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using EcommerceApi.Core.Entities.Identity;
 
 namespace EcommerceApi.Core.Services
 {

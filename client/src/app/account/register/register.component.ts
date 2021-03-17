@@ -13,7 +13,7 @@ export class RegisterComponent implements OnInit {
 
   returnUrl: string;
   registerForm: FormGroup;
-  errors: string[] = [];
+  error: string;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -67,25 +67,22 @@ export class RegisterComponent implements OnInit {
 
   onSubmit() {
     console.log(this.registerForm);
-    this.accountService.regiater({
-      displayName: this.registerForm.value.displayName,
-      email: this.registerForm.value.email,
-      password: this.registerForm.value.password
-    }).subscribe(res => {
-      if (res.data) {
-        if (!this.returnUrl) {
-          this.router.navigateByUrl(this.returnUrl);
+    this.accountService.register(this.registerForm.value)
+      .subscribe(res => {
+        console.log(res);
+        if (res.data) {
+          if (!this.returnUrl) {
+            this.router.navigateByUrl(this.returnUrl);
+          } else {
+            this.router.navigateByUrl('/home');
+          }
         } else {
-          this.router.navigateByUrl('/home');
+          this.error = res.message;
         }
-      } else {
-        this.errors[0] = res.message;
-        console.log(this.errors);
-      }
-    }, error => {
-      console.log(error);
-      this.errors = error.errors;
-    });
+      }, error => {
+        console.log(error);
+        this.error = error.error.message;
+      });
   }
 
 }

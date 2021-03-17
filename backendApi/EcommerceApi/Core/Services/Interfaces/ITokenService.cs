@@ -1,3 +1,4 @@
+
 using EcommerceApi.Core.Entities.Identity;
 
 namespace EcommerceApi.Core.Services.Interfaces

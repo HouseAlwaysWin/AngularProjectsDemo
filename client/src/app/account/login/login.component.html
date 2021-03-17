@@ -5,7 +5,7 @@
     (ngSubmit)="onSubmit()">
 
     <mat-error>
-      <div *ngFor="let error of errors">
+      <div *ngIf="error">
         {{ error }}
       </div>
     </mat-error>
