@@ -21,6 +21,7 @@ using AutoMapper;
 using EcommerceApi.Core.Data;
 using EcommerceApi.Core.Data.Repositories;
 using EcommerceApi.Core.Data.Repositories.Interfaces;
+using StackExchange.Redis;
 
 namespace EcommerceApi
 {
@@ -43,6 +44,13 @@ namespace EcommerceApi
             
             services.AddDbContext<StoreContext>(x => 
                 x.UseSqlServer(_config.GetConnectionString("DefaultConnection")));
+            
+            services.AddSingleton<IConnectionMultiplexer>(r =>{
+                var redisConfig = ConfigurationOptions.Parse(
+                    _config.GetConnectionString("Redis")
+                ,true);
+                return ConnectionMultiplexer.Connect(redisConfig);
+            });
             
             services.AddIdentityCore<ECUser>()
                 // .AddErrorDescriber<LocalizedIdentityErrorDescriber>()
@@ -103,6 +111,7 @@ namespace EcommerceApi
             services.AddScoped<IProductRepository,ProductRepository>();
             services.AddScoped(typeof(IGenericRepository<>),(typeof(GenericRepository<>)));
             services.AddScoped<IUnitOfWork,UnitOfWork>();
+            services.AddScoped<IBasketRepository,BasketRepository>();
 
             services.AddSwaggerGen();
             services.AddCors(opt => {

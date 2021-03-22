@@ -15,9 +15,21 @@ namespace EcommerceApi.Core.Data.QuerySpecs
         {
            AddInclude(p => p.ProductCategory);
            AddInclude(p => p.ProductBrand);
-           AddOrderBy(p => p.Name);
-           ApplyPaging(param.PageSize * (param.PageIndex-1),
+           ApplyPaging(param.PageSize * (param.PageIndex),
                    param.PageSize);
+
+           switch(param.Sort){
+                    case "priceAsc":
+                        AddOrderBy(p => p.Price);
+                        break;
+                    case "priceDesc":
+                        AddOrderByDescending(p => p.Price);
+                        break;
+                    default:
+                        AddOrderBy(n => n.Name);
+                        break;
+                }
+            
         }
 
         public GetProductQuerySpec(int id)

@@ -1,1 +1,29 @@
-<p>product-detail works!</p>
+<div>
+  <div *ngIf="product">
+    <div>
+      <img src="{{ product.imgUrl }}"
+        alt="{{ product.name }}" />
+    </div>
+
+    <div>
+      <h3>{{ product.name }}</h3>
+      <p>{{ product.price | currency}}</p>
+      <div>
+        <i (click)="decrementQuantity()"></i>
+        <span style="font-size:1.5em;">{{ quantity }}</span>
+        <i (click)="incrementQuantity()"></i>
+        <button (click)="addItemToBasket()">
+          Add to Cart
+        </button>
+      </div>
+    </div>
+
+    <div>
+      <div>
+        <h4>Description</h4>
+        <p>{{ product.description }}</p>
+      </div>
+    </div>
+
+  </div>
+</div>

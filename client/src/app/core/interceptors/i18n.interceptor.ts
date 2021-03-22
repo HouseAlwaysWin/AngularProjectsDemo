@@ -17,7 +17,6 @@ export class I18nInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     let lang = this.translate.currentLang;
-    console.log(lang);
     request = request.clone({
       setHeaders: {
         'Accept-Language': lang

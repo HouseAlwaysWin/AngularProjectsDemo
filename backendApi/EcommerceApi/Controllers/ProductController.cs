@@ -34,7 +34,7 @@ namespace EcommerceApi.Controllers
             this._mapper = mapper;
         }
 
-        [HttpGet("getproducts")]
+        [HttpGet]
         public async Task<ActionResult> GetProducts([FromQuery]GetProductParam param){
             var querySpec = new GetProductQuerySpec(param);
 
@@ -46,9 +46,12 @@ namespace EcommerceApi.Controllers
 
             var data = _mapper.Map<IReadOnlyList<Product>,IReadOnlyList<GetProductDto>>(products);
 
-            var pagingData = new Pagination<GetProductDto>(param.PageIndex,param.PageSize,totalItem,data);
-
-            return Ok(new ApiResponse<Pagination<GetProductDto>>(pagingData));
+            return Ok(new ApiPagingResponse<GetProductDto>(
+                param.PageIndex,
+                param.PageSize,
+                totalItem,
+                data
+            ));
         }
 
         [HttpGet("{id}")]
@@ -56,19 +59,17 @@ namespace EcommerceApi.Controllers
         public async Task<ActionResult> GetProduct(int id){
             var querySpec = new GetProductQuerySpec(id);
             var product = await _productRepo.GetEntityWithSpec(querySpec);
-            if(product == null) return NotFound(new ApiResponse(StatusCodes.Status404NotFound));
+            if(product == null) return NotFound(new ApiResponse(""));
 
             var data = _mapper.Map<Product,GetProductDto>(product);
 
-            return Ok(new ApiResponse<GetProductDto>(data));
+            return Ok(new ApiResponse<GetProductDto>(true,data));
         }
 
         [HttpGet("categories")]
         public async Task<ActionResult> GetProductCategories(){
             var categories = await _productCategoryRepo.ListAllAsync();
-            return Ok(
-                new ApiResponse<IReadOnlyList<ProductCategory>>(categories)
-            );
+            return Ok( new ApiResponse<IReadOnlyList<ProductCategory>>(true,categories));
         }
 
 
@@ -76,7 +77,7 @@ namespace EcommerceApi.Controllers
         public async Task<ActionResult> GetProductBrands(){
             var brands = await _productBrand.ListAllAsync();
             return Ok(
-                new ApiResponse<IReadOnlyList<ProductBrand>>(brands)
+                new ApiResponse<IReadOnlyList<ProductBrand>>(true,brands)
             );
         }
 

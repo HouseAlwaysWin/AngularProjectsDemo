@@ -1,8 +1,11 @@
 import { Component, OnInit, AfterViewInit, AfterContentInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { MatPaginatorIntl } from '@angular/material/paginator';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, ReplaySubject, Subscription } from 'rxjs';
 import { AccountService } from 'src/app/account/account.service';
 import { FbAuthService } from 'src/app/account/fb-auth.service';
+import { BasketService } from 'src/app/basket/basket.service';
+import { IBasket } from 'src/app/models/basket';
 import { IUser } from 'src/app/models/user';
 
 @Component({
@@ -12,21 +15,40 @@ import { IUser } from 'src/app/models/user';
 })
 export class NavTopComponent implements OnInit, OnDestroy {
   @Output() navSideToggle = new EventEmitter();
+
+  langChange = new ReplaySubject();
   showBar = false;
+  basketCount: string = '';
+  basketSub: Subscription;
   isAuth = false;
 
   constructor(
     public translate: TranslateService,
+    private basketService: BasketService,
     private fbAuthService: FbAuthService,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private matePage: MatPaginatorIntl
   ) {
-    translate.addLangs(['en']);
-    const browserLang = navigator.language;
-    translate.use(browserLang.match(/en|zh-TW/) ? browserLang : 'en');
+    // translate.addLangs(['en']);
+    // const browserLang = navigator.language;
+    // translate.use(browserLang.match(/en|zh-TW/) ? browserLang : 'en');
+    // translate.use('en');
   }
 
   onNavSideToggle() {
     this.navSideToggle.emit();
+  }
+
+  getBasket() {
+    this.basketSub = this.basketService.basket$.subscribe((basket: IBasket) => {
+      console.log(basket);
+      if (basket) {
+        this.basketCount = basket.basketItems.length.toString();
+      } else {
+        this.basketCount = '';
+      }
+    });
+
   }
 
   ngOnInit(): void {
@@ -34,8 +56,11 @@ export class NavTopComponent implements OnInit, OnDestroy {
     this.accountService.currrentUser.subscribe(user => {
       this.isAuth = user ? true : false;
       this.showBar = true;
-      console.log(this.isAuth);
     });
+    this.getBasket();
+
+    // this.basket$ = this.basketService.basket$;
+
 
     // this.showBar = false;
     // this.authSubscription = this.fbAuthService
@@ -52,7 +77,12 @@ export class NavTopComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.accountService.currrentUser.unsubscribe();
+    this.basketSub.unsubscribe();
     // this.authSubscription.unsubscribe();
+  }
+
+  changeLang(lang: string) {
+    this.translate.use(lang);
   }
 
 

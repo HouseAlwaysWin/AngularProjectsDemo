@@ -9,8 +9,8 @@ namespace EcommerceApi.Helpers.Localization {
         public AutomapperProfiles()
         {
            CreateMap<Product,GetProductDto>()
-            .ForMember(pd => pd.ProductCategory,m => m.MapFrom(p => p.Name))
-            .ForMember(pd => pd.ProductBrand,m => m.MapFrom(p => p.Name))
+            .ForMember(pd => pd.ProductCategoryId,m => m.MapFrom(p => p.ProductCategoryId))
+            .ForMember(pd => pd.ProductBrandId,m => m.MapFrom(p => p.ProductBrandId))
             .ForMember(pd => pd.ImgUrl,m => m.MapFrom<ProductUrlResolver>());
         }
     }

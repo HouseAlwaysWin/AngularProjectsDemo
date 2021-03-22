@@ -17,5 +17,17 @@
     "PasswordConfirmRequired": "密碼再確認為必填",
     "DisplayName": "顯示名稱",
     "DisplayNameRequired": "顯示名稱為必填"
+  },
+  "Paginator": {
+    "ItemsPerPage": "每頁數",
+    "LastPage": "最後一頁",
+    "NextPage": "下一頁",
+    "PreviousPage": "上一頁",
+    "PageRange": "{0}到{1},總共{2}個",
+    "PageRangeZero": "總共{0}個"
+  },
+  "NavBar": {
+    "Home": "首頁",
+    "Shop": "商店"
   }
 }

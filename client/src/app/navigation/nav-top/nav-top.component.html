@@ -1,26 +1,40 @@
-<mat-toolbar color="primary">
-  <div fxHide.gt-xs>
-    <button mat-icon-button
-      (click)="onNavSideToggle()">
-      <mat-icon>menu</mat-icon>
-    </button>
+<mat-toolbar color="primary"
+  fxLayout="row"
+  fxLayoutAlign="space-between center">
+  <div fxLayout="row"
+    fxLayoutAlign="start center">
+    <div fxHide.gt-xs>
+      <button mat-icon-button
+        (click)="onNavSideToggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </div>
+    <div>
+      <a routerLink="/home">Shop</a>
+    </div>
   </div>
+
   <div>
-    <a routerLink="/home">Shop</a>
+    <a mat-button
+      routerLink="/home">{{'NavBar.Home' | translate }}</a>
+    <a mat-button
+      routerLink="/shop">{{'NavBar.Shop' | translate }}</a>
   </div>
-  <div fxFlex
-    fxLayout
-    fxLayoutAlign="end"
-    fxHide.xs>
-    <ul fxLayout
-      fxLayoutGap="15px"
-      class="navigation-items"
+
+  <div>
+    <ul class="navigation-items"
+      fxLayout="row"
+      fxLayoutAlign="end center"
       *ngIf="showBar">
+      <li fxLayout="row">
+        <a mat-button
+          routerLink="/basket">
+          <mat-icon [matBadge]="basketCount"
+            matBadgeColor="warn">shopping_cart</mat-icon>
+        </a>
+      </li>
+
       <ng-container *ngIf="!isAuth">
-        <li>
-          <a mat-button
-            routerLink="/shop">{{'AccountForm.Shop' | translate }}</a>
-        </li>
         <li>
           <a mat-button
             routerLink="/account/login">{{'AccountForm.Login' | translate }}</a>
@@ -32,6 +46,14 @@
       </ng-container>
 
       <li *ngIf="isAuth">
+        <a mat-button
+          routerLink="/basket">
+          View Basket
+        </a>
+        <a mat-button
+          routerLink="/orders">
+          View Orders
+        </a>
         <a mat-button
           routerLink="/home"
           (click)="onLogout()">{{'AccountForm.Logout' | translate }}</a>
@@ -49,7 +71,7 @@
         <mat-menu #langList="matMenu">
           <button mat-menu-item
             *ngFor="let lang of translate.getLangs()"
-            (click)="translate.use(lang)">{{ 'Lang.'+lang | translate }}</button>
+            (click)="changeLang(lang)">{{ 'Lang.'+ lang | translate }}</button>
         </mat-menu>
       </li>
 

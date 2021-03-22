@@ -17,5 +17,17 @@
     "PasswordConfirmRequired": "PasswordConfirm is Required",
     "DisplayName": "DisplayName",
     "DisplayNameRequired": "DisplayName is Required"
+  },
+  "Paginator": {
+    "ItemsPerPage": "Items per page:",
+    "LastPage": "last page",
+    "NextPage": "next page",
+    "PreviousPage": "previous page",
+    "PageRange": "{0}-{1} of {2}",
+    "PageRangeZero": "0 of {0}"
+  },
+  "NavBar": {
+    "Home": "Home",
+    "Shop": "Shop"
   }
 }

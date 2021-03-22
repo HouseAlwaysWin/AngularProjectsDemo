@@ -6,3 +6,13 @@
 .content-block {
   background: #bbb;
 }
+
+li {
+  list-style: none;
+}
+
+.list-item {
+  &.active {
+    background-color: gray;
+  }
+}

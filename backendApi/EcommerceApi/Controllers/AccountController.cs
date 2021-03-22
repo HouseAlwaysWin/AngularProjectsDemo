@@ -49,6 +49,7 @@ namespace EcommerceApi.Controllers
             var token = _tokenService.CreateToken(user);
 
             return new ApiResponse<UserDto>(
+                true,
                 new UserDto{
                     Email = user.Email,
                     DisplayName = user.DisplayName,
@@ -63,12 +64,13 @@ namespace EcommerceApi.Controllers
             if(validateResult.IsValid){
                 var user = await _userManager.FindByEmailAsync(login.Email);
 
-                if(user == null) return Unauthorized(new ApiResponse(StatusCodes.Status401Unauthorized));
+                if(user == null) return Unauthorized(new ApiResponse(""));
 
                 var result = await _signInManager.CheckPasswordSignInAsync(user,login.Password,false);
-                if(!result.Succeeded) return Unauthorized(new ApiResponse(StatusCodes.Status401Unauthorized));
+                if(!result.Succeeded) return Unauthorized(new ApiResponse(""));
 
                 return Ok(new ApiResponse<UserDto> (
+                     true,
                      new UserDto {
                         Email = user.Email,
                         DisplayName = user.DisplayName,
@@ -76,16 +78,14 @@ namespace EcommerceApi.Controllers
                 }));
             }
 
-            return BadRequest(new ApiResponse<UserDto> (
-                    null,
-                    StatusCodes.Status400BadRequest,
+            return BadRequest(new ApiResponse (
                     validateResult.Errors.FirstOrDefault().ErrorMessage
             ));
         }
 
         [HttpGet("emailexists")]
         public async Task<ActionResult<bool>> CheckEmailExistsAsync([FromQuery]string email){
-            return await _userManager.FindByEmailAsync(email)!=null;
+            return Ok(await _userManager.FindByEmailAsync(email)!=null);
         }
 
         [HttpPost("register")]
@@ -95,8 +95,7 @@ namespace EcommerceApi.Controllers
             if(validateResult.IsValid){
                 if(CheckEmailExistsAsync(register.Email).Result.Value){
                     return BadRequest(
-                        new ApiResponse(StatusCodes.Status400BadRequest,
-                        _localizer["EmailAddressIsUsed"]));
+                        new ApiResponse(_localizer["EmailAddressIsUsed"]));
                 }
 
                 var user = new ECUser {
@@ -108,12 +107,11 @@ namespace EcommerceApi.Controllers
                 var result = await _userManager.CreateAsync(user,register.Password);
                 if(!result.Succeeded) {
                     return BadRequest(
-                    new ApiResponse(
-                        StatusCodes.Status400BadRequest,
-                        result.Errors.FirstOrDefault().Description));
+                    new ApiResponse(result.Errors.FirstOrDefault().Description));
                 }
 
                  return Ok(new ApiResponse<UserDto> (
+                     true,
                      new UserDto {
                         Email = user.Email,
                         DisplayName = user.DisplayName,
@@ -122,9 +120,7 @@ namespace EcommerceApi.Controllers
                  ));
             }
 
-            return BadRequest(new ApiResponse<UserDto>( 
-                    null,
-                    StatusCodes.Status400BadRequest,
+            return BadRequest(new ApiResponse( 
                     validateResult.Errors.FirstOrDefault().ErrorMessage 
                 ));
         }

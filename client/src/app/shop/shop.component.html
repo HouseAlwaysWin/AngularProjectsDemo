@@ -1,24 +1,59 @@
-<div>
+<div fxLayout="row">
   <div>
-    <ng-container fxLayout>
+    <ng-container>
       <h5>Sort</h5>
-      <select>
-        <option></option>
-      </select>
+      <mat-form-field appearance="fill">
+        <mat-select [(value)]="sortSelected"
+          (selectionChange)="onSortSelected()">
+          <mat-option *ngFor="let sort of sortOptions"
+            [value]="sort.value">
+            {{ sort.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
 
       <h5>Brands</h5>
       <ul>
-        <li></li>
+        <li class="list-item"
+          *ngFor="let brand of brands"
+          [class.active]="brand.id === shopParams.brandId"
+          [value]="brand.id"
+          (click)="onBrandSelected(brand.id)">
+          {{ brand.name }}
+        </li>
       </ul>
-      <h5>Types</h5>
+      <h5>Categories</h5>
       <ul>
-        <li></li>
+        <li class="list-item"
+          *ngFor="let category of categories"
+          [class.active]="category.id === shopParams.categoryId"
+          [value]="category.id"
+          (click)="onCategorySelected(category.id)">
+          {{ category.name }}
+        </li>
       </ul>
     </ng-container>
   </div>
 
-  <div>
+  <div fxLayout="column">
+    <div fxLayout="row layout-wrap"
+      fxLayoutAlign="start"
+      fxLayoutGap>
+      <app-product-item [product]="product"
+        *ngFor="let product of products"
+        fxFlex="25"></app-product-item>
+    </div>
+
+    <mat-paginator [length]="productTotalCount"
+      (page)="setPage($event)"
+      [pageSize]="shopParams.pageSize"
+      [pageIndex]="shopParams.pageIndex"
+      [pageSizeOptions]="[5,10,25,100]"
+      [showFirstLastButtons]="true">
+    </mat-paginator>
 
   </div>
+
 
 </div>

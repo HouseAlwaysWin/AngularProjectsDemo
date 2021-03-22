@@ -33,7 +33,7 @@ export class AccountService {
     headers = headers.set('Authorization', `Bearer ${token}`);
     return this.http.get(this.baseUrl + 'account/getuser', { headers }).pipe(
       map((res: IApiResponse<IUser>) => {
-        if (res.statusCode === 200) {
+        if (res.isSuccessed) {
           localStorage.setItem('token', res.data.token);
           this.currrentUser.next(res.data);
         }
@@ -45,7 +45,7 @@ export class AccountService {
     return this.http.post(this.baseUrl + 'account/register', registerData).pipe(
       map((res: IApiResponse<IUser>) => {
         console.log(res);
-        if (res.statusCode === 200) {
+        if (res.isSuccessed) {
           localStorage.setItem('token', res.data.token);
           this.currrentUser.next(res.data);
         }
@@ -58,7 +58,7 @@ export class AccountService {
     return this.http.post(this.baseUrl + 'account/login', loginData).pipe(
       map((res: IApiResponse<IUser>) => {
         console.log(res);
-        if (res.statusCode === 200) {
+        if (res.isSuccessed) {
           console.log(res);
           localStorage.setItem('token', res.data.token);
           this.currrentUser.next(res.data);

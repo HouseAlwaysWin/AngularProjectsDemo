@@ -7,7 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialModule } from './material.module';
+import { MaterialModule } from './material/material.module';
 import { HomeComponent } from './home/home.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { environment } from 'src/environments/environment';
@@ -20,6 +20,9 @@ import { AccountService } from './account/account.service';
 import { ShopComponent } from './shop/shop.component';
 import { I18nInterceptor } from './core/interceptors/i18n.interceptor';
 import { I18nLoader } from './core/i18n/i18n-loader';
+import { MatPaginatorIntl } from '@angular/material/paginator';
+import { PaginatorLocalize } from './material/paginator-localize';
+import { OrdersComponent } from './orders/orders.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +50,8 @@ import { I18nLoader } from './core/i18n/i18n-loader';
     })
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: I18nInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: I18nInterceptor, multi: true },
+    { provide: MatPaginatorIntl, useClass: PaginatorLocalize }
   ],
   bootstrap: [AppComponent]
 })
