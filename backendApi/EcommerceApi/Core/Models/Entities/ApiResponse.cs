@@ -7,7 +7,7 @@ namespace EcommerceApi.Core.Entities
     public class ApiPagingResponse<T>:ApiResponse{
         public ApiPagingResponse(
             bool isSuccessed, int pageIndex, int pageSize,
-            int totalCount,IReadOnlyList<T> data, string message = null)
+            int totalCount,T data, string message = null)
             : base(isSuccessed,message)
         {
            this.Data = data; 
@@ -17,7 +17,7 @@ namespace EcommerceApi.Core.Entities
         }
 
         public ApiPagingResponse(int pageIndex, int pageSize,
-            int totalCount,IReadOnlyList<T> data, string message = null)
+            int totalCount,T data, string message = null)
             : base(true,message)
         {
            this.Data = data; 
@@ -26,7 +26,7 @@ namespace EcommerceApi.Core.Entities
            this.TotalCount = totalCount;
         }
 
-        public IReadOnlyList<T> Data {get;set;}
+        public T Data {get;set;}
         public int PageIndex { get; set; } = 0;
         public int PageSize { get; set; } = 10;
         public int TotalCount { get; set; } = 0;
@@ -52,7 +52,7 @@ namespace EcommerceApi.Core.Entities
 
     public class ApiResponse
     {
-        public ApiResponse(bool isSuccessed,string message=null)
+        public ApiResponse(bool isSuccessed=true,string message=null)
         {
             this.IsSuccessed = isSuccessed;
             this.Message = message;
@@ -60,7 +60,7 @@ namespace EcommerceApi.Core.Entities
 
         public ApiResponse(string message=null)
         {
-            this.IsSuccessed = false;
+            this.IsSuccessed = true;
             this.Message = message;
         }
 

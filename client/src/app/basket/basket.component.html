@@ -1,47 +1,31 @@
-<div *ngIf="(basket$ | async)">
-  <table mat-table
-    [dataSource]="(basket$ | async).basketItems"
-    class="mat-elevation-z8">
+<app-basket-summary [items]="basket$"
+  (increment)="incrementItemQuantity($event)"
+  (decrement)="decrementItemQuantity($event)"
+  (remove)="removeBasketItem($event)"></app-basket-summary>
 
-    <!--- Note that these columns can be defined in any order.
-          The actual rendered columns are set as a property on the row definition" -->
+<div>
+  <div class="order-summary"
+    style="padding:1.20em;">
+    Order Summary
+  </div>
 
-    <!-- Position Column -->
-    <ng-container matColumnDef="index">
-      <th mat-header-cell
-        *matHeaderCellDef> No. </th>
-      <td mat-cell
-        *matCellDef="let item"> {{ item.id }} </td>
-    </ng-container>
-
-    <!-- Name Column -->
-    <ng-container matColumnDef="name">
-      <th mat-header-cell
-        *matHeaderCellDef> Name </th>
-      <td mat-cell
-        *matCellDef="let item"> {{ item.productName}} </td>
-    </ng-container>
-
-    <!-- Weight Column -->
-    <ng-container matColumnDef="price">
-      <th mat-header-cell
-        *matHeaderCellDef> Price </th>
-      <td mat-cell
-        *matCellDef="let item"> {{ item.price}} </td>
-    </ng-container>
-
-    <!-- Symbol Column -->
-    <ng-container matColumnDef="quantity">
-      <th mat-header-cell
-        *matHeaderCellDef> Quantity </th>
-      <td mat-cell
-        *matCellDef="let item"> {{ item.quantity}} </td>
-    </ng-container>
-
-    <!-- <tr mat-header-row
-      *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row
-      *matRowDef="let row; columns: displayedColumns;"></tr> -->
-  </table>
-
+  <div class="p-4">
+    <p class="order-summary-hint">
+      Shipping costs will be added depending on choices made during checkout
+    </p>
+    <ul class="order-summary-list">
+      <li class="order-subtotal">
+        <strong class="text-muted">Order subtotal </strong>
+        <strong> </strong>
+      </li>
+      <li class="order-summary-shipping">
+        <strong class="text-muted">Shipping and handling</strong>
+        <strong> </strong>
+      </li>
+      <li class="order-summary-total">
+        <strong class="text-muted">Total</strong>
+        <strong> </strong>
+      </li>
+    </ul>
+  </div>
 </div>

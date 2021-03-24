@@ -29,5 +29,13 @@
   "NavBar": {
     "Home": "Home",
     "Shop": "Shop"
+  },
+  "BasketTable": {
+    "No": "No",
+    "Name": "Name",
+    "Price": "Price",
+    "Quantity": "Quantity",
+    "Remove": "Remove",
+    "img": "Image"
   }
 }

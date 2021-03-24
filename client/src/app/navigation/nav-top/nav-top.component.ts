@@ -5,7 +5,8 @@ import { Observable, ReplaySubject, Subscription } from 'rxjs';
 import { AccountService } from 'src/app/account/account.service';
 import { FbAuthService } from 'src/app/account/fb-auth.service';
 import { BasketService } from 'src/app/basket/basket.service';
-import { IBasket } from 'src/app/models/basket';
+import { IApiResponse } from 'src/app/models/apiResponse';
+import { Basket, IBasket } from 'src/app/models/basket';
 import { IUser } from 'src/app/models/user';
 
 @Component({
@@ -40,8 +41,7 @@ export class NavTopComponent implements OnInit, OnDestroy {
   }
 
   getBasket() {
-    this.basketSub = this.basketService.basket$.subscribe((basket: IBasket) => {
-      console.log(basket);
+    this.basketSub = this.basketService.basket$.subscribe((basket: Basket) => {
       if (basket) {
         this.basketCount = basket.basketItems.length.toString();
       } else {

@@ -19,7 +19,7 @@ namespace EcommerceApi.Controllers
 
     [ApiController]
     [Route ("api/[controller]")]
-    public class AccountController:ControllerBase
+    public class AccountController:BaseApiController
     {
         private readonly UserManager<ECUser> _userManager;
         private readonly SignInManager<ECUser> _signInManager;
@@ -48,9 +48,7 @@ namespace EcommerceApi.Controllers
 
             var token = _tokenService.CreateToken(user);
 
-            return new ApiResponse<UserDto>(
-                true,
-                new UserDto{
+            return BaseApiOk(new UserDto{
                     Email = user.Email,
                     DisplayName = user.DisplayName,
                     Token = token});
@@ -64,28 +62,24 @@ namespace EcommerceApi.Controllers
             if(validateResult.IsValid){
                 var user = await _userManager.FindByEmailAsync(login.Email);
 
-                if(user == null) return Unauthorized(new ApiResponse(""));
+                if(user == null) return Unauthorized(new ApiResponse(false,""));
 
                 var result = await _signInManager.CheckPasswordSignInAsync(user,login.Password,false);
-                if(!result.Succeeded) return Unauthorized(new ApiResponse(""));
+                if(!result.Succeeded) return Unauthorized(new ApiResponse(false,""));
 
-                return Ok(new ApiResponse<UserDto> (
-                     true,
-                     new UserDto {
+                return BaseApiOk(new UserDto {
                         Email = user.Email,
                         DisplayName = user.DisplayName,
                         Token = _tokenService.CreateToken(user)
-                }));
+                });
             }
 
-            return BadRequest(new ApiResponse (
-                    validateResult.Errors.FirstOrDefault().ErrorMessage
-            ));
+            return BaseApiBadRequest(validateResult.Errors.FirstOrDefault().ErrorMessage);
         }
 
         [HttpGet("emailexists")]
         public async Task<ActionResult<bool>> CheckEmailExistsAsync([FromQuery]string email){
-            return Ok(await _userManager.FindByEmailAsync(email)!=null);
+            return BaseApiOk(await _userManager.FindByEmailAsync(email)!=null);
         }
 
         [HttpPost("register")]
@@ -94,8 +88,7 @@ namespace EcommerceApi.Controllers
             ValidationResult validateResult = await registerValidator.ValidateAsync(register);
             if(validateResult.IsValid){
                 if(CheckEmailExistsAsync(register.Email).Result.Value){
-                    return BadRequest(
-                        new ApiResponse(_localizer["EmailAddressIsUsed"]));
+                    return BaseApiBadRequest(_localizer["EmailAddressIsUsed"]);
                 }
 
                 var user = new ECUser {
@@ -106,23 +99,17 @@ namespace EcommerceApi.Controllers
                 
                 var result = await _userManager.CreateAsync(user,register.Password);
                 if(!result.Succeeded) {
-                    return BadRequest(
-                    new ApiResponse(result.Errors.FirstOrDefault().Description));
+                    return BaseApiBadRequest(result.Errors.FirstOrDefault().Description);
                 }
 
-                 return Ok(new ApiResponse<UserDto> (
-                     true,
-                     new UserDto {
+                 return BaseApiOk( new UserDto {
                         Email = user.Email,
                         DisplayName = user.DisplayName,
                         Token = _tokenService.CreateToken(user)
-                    }
-                 ));
+                    });
             }
 
-            return BadRequest(new ApiResponse( 
-                    validateResult.Errors.FirstOrDefault().ErrorMessage 
-                ));
+            return BaseApiBadRequest(validateResult.Errors.FirstOrDefault().ErrorMessage);
         }
 
        

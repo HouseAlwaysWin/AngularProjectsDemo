@@ -14,7 +14,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatBadgeModule } from '@angular/material/badge';
-
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [],
@@ -32,7 +33,9 @@ import { MatBadgeModule } from '@angular/material/badge';
     MatSelectModule,
     MatPaginatorModule,
     MatTableModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatDialogModule,
+    MatDividerModule
   ],
   exports: [
     MatToolbarModule,
@@ -48,7 +51,9 @@ import { MatBadgeModule } from '@angular/material/badge';
     MatSelectModule,
     MatPaginatorModule,
     MatTableModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatDialogModule,
+    MatDividerModule
   ]
 })
 export class MaterialModule { }

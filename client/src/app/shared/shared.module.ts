@@ -4,11 +4,12 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MaterialModule } from '../material/material.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatCarouselComponent } from './components/mat-carousel/mat-carousel.component';
+import { DialogComfirm } from './components/dialog-comfirm/dialog-comfirm.component';
 
 
 
 @NgModule({
-  declarations: [MatCarouselComponent],
+  declarations: [MatCarouselComponent, DialogComfirm],
   imports: [
     CommonModule,
     FlexLayoutModule,

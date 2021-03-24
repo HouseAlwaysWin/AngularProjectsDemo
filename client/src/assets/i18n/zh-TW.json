@@ -29,5 +29,13 @@
   "NavBar": {
     "Home": "首頁",
     "Shop": "商店"
+  },
+  "BasketTable": {
+    "No": "編號",
+    "Name": "名稱",
+    "Price": "價格",
+    "Quantity": "數量",
+    "Remove": "移除",
+    "img": "圖片"
   }
 }

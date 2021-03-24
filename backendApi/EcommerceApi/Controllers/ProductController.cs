@@ -12,9 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceApi.Controllers
 {
-    [ApiController]
-    [Route ("api/[controller]")]
-    public class ProductController : ControllerBase
+    public class ProductController : BaseApiController 
     {
         private readonly IGenericRepository<Product> _productRepo;
         private readonly IGenericRepository<ProductCategory> _productCategoryRepo;
@@ -46,12 +44,8 @@ namespace EcommerceApi.Controllers
 
             var data = _mapper.Map<IReadOnlyList<Product>,IReadOnlyList<GetProductDto>>(products);
 
-            return Ok(new ApiPagingResponse<GetProductDto>(
-                param.PageIndex,
-                param.PageSize,
-                totalItem,
-                data
-            ));
+            return BaseApiOk(data,param.PageIndex, param.PageSize, totalItem);
+            // return BaseApiOk(new ApiPagingResponse<IReadOnlyList<GetProductDto>>(true,param.PageIndex, param.PageSize, totalItem,data));
         }
 
         [HttpGet("{id}")]
@@ -59,26 +53,24 @@ namespace EcommerceApi.Controllers
         public async Task<ActionResult> GetProduct(int id){
             var querySpec = new GetProductQuerySpec(id);
             var product = await _productRepo.GetEntityWithSpec(querySpec);
-            if(product == null) return NotFound(new ApiResponse(""));
+            if(product == null) return BaseApiNotFound(new ApiResponse(false,""));
 
             var data = _mapper.Map<Product,GetProductDto>(product);
 
-            return Ok(new ApiResponse<GetProductDto>(true,data));
+            return BaseApiOk(data);
         }
 
         [HttpGet("categories")]
         public async Task<ActionResult> GetProductCategories(){
             var categories = await _productCategoryRepo.ListAllAsync();
-            return Ok( new ApiResponse<IReadOnlyList<ProductCategory>>(true,categories));
+            return BaseApiOk(categories);
         }
 
 
         [HttpGet("brands")]
         public async Task<ActionResult> GetProductBrands(){
             var brands = await _productBrand.ListAllAsync();
-            return Ok(
-                new ApiResponse<IReadOnlyList<ProductBrand>>(true,brands)
-            );
+            return BaseApiOk(brands);
         }
 
 

@@ -19,7 +19,7 @@ export class I18nInterceptor implements HttpInterceptor {
     let lang = this.translate.currentLang;
     request = request.clone({
       setHeaders: {
-        'Accept-Language': lang
+        'Accept-Language': lang,
       }
     })
     return next.handle(request);

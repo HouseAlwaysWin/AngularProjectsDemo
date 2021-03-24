@@ -27,7 +27,7 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     // this.authService.authListener();
     this.loadCurrentUser();
-    this.loadBasket();
+    this.basketService.loadBasket();
   }
 
   loadCurrentUser() {
@@ -40,14 +40,4 @@ export class AppComponent implements OnInit {
 
   }
 
-  loadBasket() {
-    const basketId = localStorage.getItem('basket_id');
-    if (basketId) {
-      this.basketService.getBasket(basketId).subscribe(() => {
-        console.log('load basket')
-      }, error => {
-        console.log(error);
-      });
-    }
-  }
 }
