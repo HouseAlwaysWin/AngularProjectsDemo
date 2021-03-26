@@ -1,0 +1,19 @@
+.stepper-label {
+  cursor: pointer;
+  height: 100%;
+  width: 100%;
+  background-color: gray;
+  border-color: gray;
+  margin-right: 0.5em;
+  padding: 1em;
+  text-align: center;
+  vertical-align: center;
+  border-style: solid;
+  color: white;
+  box-shadow: 2px 2px 2px rgba(110, 110, 110, 0.7);
+  border-radius: 0.5em;
+  &.active {
+    background-color: rgb(255, 60, 0);
+    border-color: rgb(255, 60, 0);
+  }
+}

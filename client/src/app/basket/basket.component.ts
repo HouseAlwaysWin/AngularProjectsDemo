@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { IBasket, IBasketItem, IBasketTotals } from '../models/basket';
@@ -17,6 +18,7 @@ export class BasketComponent implements OnInit {
 
   displayedColumns: string[] = []
   constructor(
+    private router: Router,
     public translate: TranslateService,
     private basketService: BasketService,
     public dialog: MatDialog) { }
@@ -54,7 +56,6 @@ export class BasketComponent implements OnInit {
         this.basketService.removeBasketItem(item);
       }
     });
-
   }
 
 }

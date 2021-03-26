@@ -1,0 +1,25 @@
+<div fxLayout="row"
+  fxLayout.xs="column">
+  <div fxFlex="50">
+    <app-checkout-stepper [linear]="true">
+      <cdk-step label="{{ 'Checkout.Address' | translate }}">
+        <app-checkout-address></app-checkout-address>
+      </cdk-step>
+
+      <cdk-step label="{{ 'Checkout.DeliveryMethod' | translate }}">
+        <app-checkout-delivery></app-checkout-delivery>
+      </cdk-step>
+
+      <cdk-step label="{{ 'Checkout.Review' | translate }}">
+        <app-checkout-review></app-checkout-review>
+      </cdk-step>
+
+      <cdk-step label="{{ 'Checkout.Payment' | translate }}">
+        <app-checkout-payment></app-checkout-payment>
+      </cdk-step>
+    </app-checkout-stepper>
+  </div>
+  <div fxFlex="50">
+    price
+  </div>
+</div>

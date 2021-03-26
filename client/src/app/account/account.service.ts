@@ -9,6 +9,8 @@ import { environment } from 'src/environments/environment';
 import { IApiResponse } from '../models/apiResponse';
 import { IUser } from '../models/user';
 import { map } from 'rxjs/operators';
+import { IAddress } from '../models/address';
+import { MatDialog } from '@angular/material/dialog';
 
 @Injectable({
   providedIn: 'root'
@@ -57,9 +59,7 @@ export class AccountService {
   login(loginData: ILoginForm) {
     return this.http.post(this.baseUrl + 'account/login', loginData).pipe(
       map((res: IApiResponse<IUser>) => {
-        console.log(res);
         if (res.isSuccessed) {
-          console.log(res);
           localStorage.setItem('token', res.data.token);
           this.currrentUser.next(res.data);
         }
@@ -72,6 +72,14 @@ export class AccountService {
     localStorage.removeItem('token');
     this.currrentUser.next(null);
     this.router.navigateByUrl('/');
+  }
+
+  getUserAddress() {
+    return this.http.get(this.baseUrl + 'account/address');
+  }
+
+  updateUserAddress(address: IAddress) {
+    return this.http.put(this.baseUrl + 'account/address', address);
   }
 
 }

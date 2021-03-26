@@ -3,7 +3,6 @@ import { MatPaginatorIntl } from '@angular/material/paginator';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, ReplaySubject, Subscription } from 'rxjs';
 import { AccountService } from 'src/app/account/account.service';
-import { FbAuthService } from 'src/app/account/fb-auth.service';
 import { BasketService } from 'src/app/basket/basket.service';
 import { IApiResponse } from 'src/app/models/apiResponse';
 import { Basket, IBasket } from 'src/app/models/basket';
@@ -26,7 +25,6 @@ export class NavTopComponent implements OnInit, OnDestroy {
   constructor(
     public translate: TranslateService,
     private basketService: BasketService,
-    private fbAuthService: FbAuthService,
     private accountService: AccountService,
     private matePage: MatPaginatorIntl
   ) {

@@ -14,9 +14,10 @@ namespace EcommerceApi.Core.Models.Entities
             IReadOnlyList<OrderItem> orderItems,
             string buyerName,
             string buyerEmail,
-            ShipAddress shipAddress,
+            OrderAddress shipAddress,
             DeliveryMethod deliveryMethod,
-            decimal totalPrice
+            decimal totalPrice,
+            string paymentIntentId
            )
         {
             OrderItems = orderItems;
@@ -25,16 +26,18 @@ namespace EcommerceApi.Core.Models.Entities
             TotalPrice = totalPrice;
             ShipAddress = shipAddress;
             DeliveryMethod = deliveryMethod;
+            PaymentIntentId = paymentIntentId;
         }
         public int Id  { get; set; }
         public string BuyerName  { get; set; }
         public string BuyerEmail { get; set; }
         public decimal TotalPrice { get; set; }
         public DateTimeOffset OrderDate { get; set; } = DateTimeOffset.UtcNow;
-        public ShipAddress ShipAddress { get; set; }
+        public OrderAddress ShipAddress { get; set; }
         public int ShipAddressId { get; set; }
         public DeliveryMethod DeliveryMethod { get; set; }
         public IReadOnlyList<OrderItem> OrderItems { get; set; }
         public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
+        public string PaymentIntentId { get; set; }
     }
 }

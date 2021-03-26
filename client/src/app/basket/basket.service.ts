@@ -57,32 +57,19 @@ export class BasketService {
   }
 
   addBasketItem(basketItem: IBasketItem) {
-    let basketId = this.getCurrentBasketValue().id;
+    const basket = this.getCurrentBasketValue() ?? this.createBasket();
 
-    let headers = new HttpHeaders({
-      'Content-Type': 'text/json'
-    });
-
-    let body = JSON.stringify({
-      basketId: basketId,
+    return this.http.post(this.baseUrl + 'basket/basketItemQuantity', {
+      basketId: basket.id,
       basketItem: basketItem
+    }).subscribe((res: IApiResponse<IBasket>) => {
+      if (res.isSuccessed) {
+        this.basketSource.next(res.data);
+      }
+      else {
+        console.log(res.message);
+      }
     });
-
-
-    let options = {
-      headers,
-      body
-    };
-
-    return this.http.post(this.baseUrl + 'basket/basketItemQuantity', options)
-      .subscribe((res: IApiResponse<IBasket>) => {
-        if (res.isSuccessed) {
-          this.basketSource.next(res.data);
-        }
-        else {
-          console.log(res.message);
-        }
-      });
   }
 
   getCurrentBasketValue(): IBasket {
@@ -92,6 +79,7 @@ export class BasketService {
   addItemToBasket(item: IProduct, quantity = 1) {
     const productItems: IBasketItem = this.mapProductItemToBasketItem(item, quantity);
     const basket = this.getCurrentBasketValue() ?? this.createBasket();
+    console.log(basket);
     basket.basketItems = this.addOrUpdateItem(
       basket.basketItems, productItems, quantity
     );

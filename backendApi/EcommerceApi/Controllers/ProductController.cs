@@ -45,7 +45,6 @@ namespace EcommerceApi.Controllers
             var data = _mapper.Map<IReadOnlyList<Product>,IReadOnlyList<GetProductDto>>(products);
 
             return BaseApiOk(data,param.PageIndex, param.PageSize, totalItem);
-            // return BaseApiOk(new ApiPagingResponse<IReadOnlyList<GetProductDto>>(true,param.PageIndex, param.PageSize, totalItem,data));
         }
 
         [HttpGet("{id}")]

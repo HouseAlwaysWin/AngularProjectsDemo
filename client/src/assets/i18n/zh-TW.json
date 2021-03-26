@@ -1,4 +1,8 @@
 {
+  "Shared": {
+    "Required": "{{ name }}為必填",
+    "Confirm": "確認"
+  },
   "Lang": {
     "langs": "語言",
     "en": "英文",
@@ -16,15 +20,16 @@
     "PasswordRequired": "密碼為必填",
     "PasswordConfirmRequired": "密碼再確認為必填",
     "DisplayName": "顯示名稱",
-    "DisplayNameRequired": "顯示名稱為必填"
+    "DisplayNameRequired": "顯示名稱為必填",
+    "LoginFailed": "登入失敗"
   },
   "Paginator": {
     "ItemsPerPage": "每頁數",
     "LastPage": "最後一頁",
     "NextPage": "下一頁",
     "PreviousPage": "上一頁",
-    "PageRange": "{0}到{1},總共{2}個",
-    "PageRangeZero": "總共{0}個"
+    "PageRange": "{{ start }}到{{ end }},總共{{ total }}個",
+    "PageRangeZero": "總共{{ total }}個"
   },
   "NavBar": {
     "Home": "首頁",
@@ -37,5 +42,20 @@
     "Quantity": "數量",
     "Remove": "移除",
     "img": "圖片"
+  },
+  "Checkout": {
+    "Address": "地址",
+    "DeliveryMethod": "運送方式",
+    "Review": "訂單總結",
+    "Payment": "付款"
+  },
+  "CheckoutAddress": {
+    "FirstName": "姓",
+    "LastName": "名稱",
+    "Street": "街道",
+    "City": "城市",
+    "State": "區域",
+    "ZipCode": "郵遞區號",
+    "ShippingAddress": "運送地址"
   }
 }

@@ -74,6 +74,9 @@ namespace EcommerceApi.Core.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PaymentIntentId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ShipAddressId")
                         .HasColumnType("int");
 
@@ -88,6 +91,36 @@ namespace EcommerceApi.Core.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("EcommerceApi.Core.Models.Entities.OrderAddress", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("State")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Street")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ZipCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ShipAddresses");
                 });
 
             modelBuilder.Entity("EcommerceApi.Core.Models.Entities.OrderItem", b =>
@@ -218,43 +251,13 @@ namespace EcommerceApi.Core.Data.Migrations
                     b.ToTable("ProductCategories");
                 });
 
-            modelBuilder.Entity("EcommerceApi.Core.Models.Entities.ShipAddress", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("State")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Street")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ZipCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ShipAddresses");
-                });
-
             modelBuilder.Entity("EcommerceApi.Core.Models.Entities.Order", b =>
                 {
                     b.HasOne("EcommerceApi.Core.Models.Entities.DeliveryMethod", "DeliveryMethod")
                         .WithMany()
                         .HasForeignKey("DeliveryMethodId");
 
-                    b.HasOne("EcommerceApi.Core.Models.Entities.ShipAddress", "ShipAddress")
+                    b.HasOne("EcommerceApi.Core.Models.Entities.OrderAddress", "ShipAddress")
                         .WithOne("Order")
                         .HasForeignKey("EcommerceApi.Core.Models.Entities.Order", "ShipAddressId")
                         .OnDelete(DeleteBehavior.Cascade)

@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { DialogMessage } from 'src/app/shared/components/dialog-message/dialog-message.component';
 import { AccountService } from '../account.service';
-import { FbAuthService } from '../fb-auth.service';
 
 @Component({
   selector: 'app-login',
@@ -15,10 +17,11 @@ export class LoginComponent implements OnInit {
   error: string;
 
   constructor(
+    public dialog: MatDialog,
     private formBuilder: FormBuilder,
-    private fbauth: FbAuthService,
     private accountService: AccountService,
     private activatedRoute: ActivatedRoute,
+    public translate: TranslateService,
     private router: Router) { }
 
   ngOnInit(): void {
@@ -35,10 +38,7 @@ export class LoginComponent implements OnInit {
   }
 
   validateLoginForm() {
-    // this.loginForm = new FormGroup({
-    //   email: new FormControl('', [Validators.required, Validators.email]),
-    //   password: new FormControl('', Validators.required)
-    // });
+
     this.loginForm = this.formBuilder.group({
       email: [null, [Validators.required, Validators.email]
       ],
@@ -47,10 +47,9 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    this.router.navigateByUrl('/shop');
     this.accountService.login(this.loginForm.value).subscribe(res => {
       console.log(res);
-      if (res.data) {
+      if (res.isSuccessed) {
         if (!this.returnUrl) {
           this.router.navigateByUrl(this.returnUrl);
         } else {
@@ -61,8 +60,12 @@ export class LoginComponent implements OnInit {
       }
 
     }, error => {
-      console.log(error);
-      this.error = error.error.message;
+      var message = error.error.message ? error.error.message : this.translate.instant('AccountForm.LoginFailed');
+      this.dialog.open(DialogMessage, {
+        data: {
+          message: message
+        }
+      });
     });
     // this.fbauth.login({
     //   email: this.loginForm.value.email,

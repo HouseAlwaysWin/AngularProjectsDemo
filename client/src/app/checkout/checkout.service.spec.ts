@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { FbAuthService } from './fb-auth.service';
+import { CheckoutService } from './checkout.service';
 
-describe('FbAuthService', () => {
-  let service: FbAuthService;
+describe('CheckoutService', () => {
+  let service: CheckoutService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(FbAuthService);
+    service = TestBed.inject(CheckoutService);
   });
 
   it('should be created', () => {

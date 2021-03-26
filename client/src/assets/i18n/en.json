@@ -1,4 +1,8 @@
 {
+  "Shared": {
+    "Required": "{{ name }} is Required",
+    "Confirm": "Confirm"
+  },
   "Lang": {
     "langs": "Lang",
     "en": "English",
@@ -16,15 +20,16 @@
     "PasswordRequired": "Password is Required",
     "PasswordConfirmRequired": "PasswordConfirm is Required",
     "DisplayName": "DisplayName",
-    "DisplayNameRequired": "DisplayName is Required"
+    "DisplayNameRequired": "DisplayName is Required",
+    "LoginFailed": "Login Failed"
   },
   "Paginator": {
     "ItemsPerPage": "Items per page:",
     "LastPage": "last page",
     "NextPage": "next page",
     "PreviousPage": "previous page",
-    "PageRange": "{0}-{1} of {2}",
-    "PageRangeZero": "0 of {0}"
+    "PageRange": "{{ start }}-{{ end }} of {{ total }}",
+    "PageRangeZero": "0 of {{ total }}"
   },
   "NavBar": {
     "Home": "Home",
@@ -37,5 +42,20 @@
     "Quantity": "Quantity",
     "Remove": "Remove",
     "img": "Image"
+  },
+  "Checkout": {
+    "Address": "Address",
+    "DeliveryMethod": "Delivery",
+    "Review": "Review",
+    "Payment": "Payment"
+  },
+  "CheckoutAddress": {
+    "FirstName": "FirstName",
+    "LastName": "LastName",
+    "Street": "Street",
+    "City": "City",
+    "State": "State",
+    "ZipCode": "ZipCode",
+    "ShippingAddress": "Shipping Address"
   }
 }

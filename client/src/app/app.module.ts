@@ -1,6 +1,6 @@
 import { NavSideComponent } from './navigation/nav-side/nav-side.component';
 import { NavTopComponent } from './navigation/nav-top/nav-top.component';
-import { BrowserModule, TransferState } from '@angular/platform-browser';
+import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -14,15 +14,13 @@ import { environment } from 'src/environments/environment';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AccountService } from './account/account.service';
-import { ShopComponent } from './shop/shop.component';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { I18nInterceptor } from './core/interceptors/i18n.interceptor';
 import { I18nLoader } from './core/i18n/i18n-loader';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { PaginatorLocalize } from './material/paginator-localize';
-import { OrdersComponent } from './orders/orders.component';
+import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
+
 
 @NgModule({
   declarations: [
@@ -51,7 +49,8 @@ import { OrdersComponent } from './orders/orders.component';
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: I18nInterceptor, multi: true },
-    { provide: MatPaginatorIntl, useClass: PaginatorLocalize }
+    { provide: MatPaginatorIntl, useClass: PaginatorLocalize },
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]
 })

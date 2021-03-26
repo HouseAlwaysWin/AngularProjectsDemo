@@ -1,6 +1,7 @@
 
 
 using AutoMapper;
+using EcommerceApi.Core.Entities.Identity;
 using EcommerceApi.Core.Models.Dtos;
 using EcommerceApi.Core.Models.Entities;
 
@@ -12,6 +13,8 @@ namespace EcommerceApi.Helpers.Localization {
             .ForMember(pd => pd.ProductCategoryId,m => m.MapFrom(p => p.ProductCategoryId))
             .ForMember(pd => pd.ProductBrandId,m => m.MapFrom(p => p.ProductBrandId))
             .ForMember(pd => pd.ImgUrl,m => m.MapFrom<ProductUrlResolver>());
+        
+            CreateMap<AddressDto,UserAddress>().ReverseMap();
 
         }
     }

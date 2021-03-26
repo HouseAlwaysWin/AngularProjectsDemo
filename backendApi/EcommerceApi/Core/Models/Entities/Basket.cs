@@ -19,5 +19,6 @@ namespace EcommerceApi.Core.Models.Entities
         public int? DeliveryMethod { get; set; }
         public string ClientSecret { get; set; }
         public decimal ShippingPrice { get; set; }
+        public string PaymentIntentId { get; set; }
     }
 }

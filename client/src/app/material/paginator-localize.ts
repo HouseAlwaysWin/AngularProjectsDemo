@@ -1,7 +1,6 @@
 import { Injectable, OnInit } from "@angular/core";
 import { MatPaginatorIntl } from "@angular/material/paginator";
 import { TranslateService } from "@ngx-translate/core";
-import { StringFormat } from "../shared/utils/stringFormat";
 
 @Injectable()
 export class PaginatorLocalize extends MatPaginatorIntl {
@@ -28,9 +27,8 @@ export class PaginatorLocalize extends MatPaginatorIntl {
   }
 
   getRangeTag(page: number, pageSize: number, length: number) {
-    const trans = this.translate.instant('Paginator');
     if (length == 0 || pageSize == 0) {
-      return StringFormat(trans['PageRangeZero'], length);
+      return this.translate.instant('Paginator.PageRangeZero', { total: length });
     }
 
     length = Math.max(length, 0);
@@ -40,8 +38,7 @@ export class PaginatorLocalize extends MatPaginatorIntl {
     const endIndex = startIndex < length ?
       Math.min(startIndex + pageSize, length) :
       startIndex + pageSize;
-    let result = StringFormat(trans['PageRange'], startIndex + 1, endIndex, length);
-    return result;
+    return this.translate.instant('Paginator.PageRange', { start: startIndex + 1, end: endIndex, total: length });
   }
 
 }

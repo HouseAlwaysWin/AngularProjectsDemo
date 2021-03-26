@@ -13,6 +13,9 @@ using System.Globalization;
 using EcommerceApi.Core.Entities;
 using EcommerceApi.Core.Models.Dtos;
 using EcommerceApi.Core.Models.Dtos.DataValidations;
+using EcommerceApi.Core.Models.Entities;
+using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace EcommerceApi.Controllers
 {
@@ -25,17 +28,20 @@ namespace EcommerceApi.Controllers
         private readonly SignInManager<ECUser> _signInManager;
         private readonly ITokenService _tokenService;
         private readonly IStringLocalizer _localizer;
+        private readonly IMapper _mapper;
 
         public AccountController(
             SignInManager<ECUser> signInManager,
             UserManager<ECUser> userManager,
             ITokenService tokenService,
-            IStringLocalizer localizer
+            IStringLocalizer localizer,
+            IMapper mapper
         ){
             this._signInManager = signInManager;
             this._userManager = userManager;
             this._tokenService = tokenService;
             this._localizer = localizer;
+            this._mapper = mapper;
         }
 
         [Authorize]
@@ -112,6 +118,35 @@ namespace EcommerceApi.Controllers
             return BaseApiBadRequest(validateResult.Errors.FirstOrDefault().ErrorMessage);
         }
 
+
+        [HttpGet("address")]
+        public async Task<ActionResult> GetUserAddress(){
+            var email = HttpContext.User?.Claims?.FirstOrDefault(x=>x.Type == ClaimTypes.Email)?.Value;
+            var user = await _userManager.Users.Include(x=>x.Address).SingleOrDefaultAsync(x => x.Email == email);
+
+            var addressDto = _mapper.Map<UserAddress,AddressDto>(user.Address);
+
+            return BaseApiOk(addressDto);
+        }
+
+
+
+        [HttpPut("address")]
+        public async Task<ActionResult> UpdateUserAddress(AddressDto address){
+            var email = HttpContext.User?.Claims?.FirstOrDefault(x=>x.Type == ClaimTypes.Email)?.Value;
+            var user = await _userManager.Users.Include(x=>x.Address).SingleOrDefaultAsync(x => x.Email == email);
+
+            user.Address = _mapper.Map<AddressDto,UserAddress>(address);
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if(result.Succeeded){ 
+                var addressDto =  _mapper.Map<UserAddress,AddressDto>(user.Address);
+                return BaseApiOk(addressDto);
+            }
+
+            return BaseApiBadRequest(result.Errors.FirstOrDefault()?.Description);
+        }
        
         
     }

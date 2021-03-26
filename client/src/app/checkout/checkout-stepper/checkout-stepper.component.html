@@ -1,0 +1,14 @@
+<section class="checkout-stepper">
+  <header fxLayout="row">
+    <div *ngFor="let step of steps;let i = index"
+      class="stepper-label"
+      [class.active]="selectedIndex === i"
+      (click)="selectStepByIndex(i)">
+      {{ step.label }}
+    </div>
+  </header>
+
+  <div class="stepper-content"
+    [ngTemplateOutlet]="selected ? selected.content : null"></div>
+
+</section>

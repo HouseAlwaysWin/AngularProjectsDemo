@@ -4,7 +4,6 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Rout
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AccountService } from './account.service';
-import { FbAuthService } from './fb-auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +15,6 @@ export class AuthGuard implements CanActivate, CanLoad {
   constructor(
     private afAuth: AngularFireAuth,
     private accountService: AccountService,
-    private authService: FbAuthService,
     private router: Router) { }
   canLoad(route: Route, segments: UrlSegment[]): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
     return this.accountService.currrentUser.pipe(map(
@@ -43,7 +41,7 @@ export class AuthGuard implements CanActivate, CanLoad {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.authService.isAuth$.pipe(map(
+    return this.accountService.currrentUser.pipe(map(
       isAuth => {
         if (isAuth) {
           return true;

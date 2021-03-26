@@ -16,24 +16,23 @@
         formControlName="email"
         placeholder="{{ 'AccountForm.Email' | translate }}"
         name="email" />
-      <mat-error *ngIf="email.invalid && (email.dirty || email.touched)">
-        <div *ngIf="email.errors.required && email.touched">
+      <mat-error>
+        <div *ngIf="email.errors?.required">
           {{ 'AccountForm.EmailRequired' | translate }}
         </div>
-        <div *ngIf="email.errors.email && email.touched">
+        <div *ngIf="email.errors?.email">
           {{ 'AccountForm.EmailFormatWrong' | translate }}
         </div>
       </mat-error>
     </mat-form-field>
     <mat-form-field>
-      <mat-label>{{ 'AccountForm.Password' | translate }}</mat-label>
       <input matInput
         type="password"
         formControlName="password"
         placeholder="{{ 'AccountForm.Password' | translate }}"
         name="password" />
-      <mat-error *ngIf="password.invalid && (password.dirty || password.touched)">
-        <div *ngIf="password.errors.required && password.touched">
+      <mat-error>
+        <div *ngIf="password.errors?.required">
           {{ 'AccountForm.PasswordRequired' | translate}}
         </div>
       </mat-error>

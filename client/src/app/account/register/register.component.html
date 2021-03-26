@@ -14,8 +14,8 @@
         formControlName="displayName"
         placeholder="{{ 'AccountForm.DisplayName' | translate }}"
         name="displayName" />
-      <mat-error *ngIf="displayName.invalid && (displayName.dirty || displayName.touched)">
-        <div *ngIf="displayName.errors.required && displayName.touched">
+      <mat-error>
+        <div *ngIf="displayName.errors?.required">
           {{ 'AccountForm.DisplayNameRequired' | translate }}
         </div>
       </mat-error>
@@ -27,11 +27,11 @@
         formControlName="email"
         placeholder="{{ 'AccountForm.Email' | translate }}"
         name="email" />
-      <mat-error *ngIf="email.invalid && (email.dirty || email.touched)">
-        <div *ngIf="email.errors.required && email.touched">
+      <mat-error>
+        <div *ngIf="email.errors?.required">
           {{ 'AccountForm.EmailRequired' | translate }}
         </div>
-        <div *ngIf="email.errors.email && email.touched">
+        <div *ngIf="email.errors?.email">
           {{ 'AccountForm.EmailFormatWrong' | translate }}
         </div>
       </mat-error>
@@ -44,8 +44,8 @@
         formControlName="password"
         placeholder="{{ 'AccountForm.Password' | translate }}"
         name="password" />
-      <mat-error *ngIf="password.invalid && (password.dirty || password.touched)">
-        <div *ngIf="password.errors.required && password.touched">
+      <mat-error>
+        <div *ngIf="password.errors?.required">
           {{ 'AccountForm.PasswordRequired' | translate}}
         </div>
       </mat-error>
@@ -57,8 +57,8 @@
         formControlName="passwordConfirm"
         placeholder="{{ 'AccountForm.PasswordConfirm' | translate }}"
         name="password" />
-      <mat-error *ngIf="passwordConfirm.invalid && (passwordConfirm.dirty || passwordConfirm.touched)">
-        <div *ngIf="passwordConfirm.errors.required && passwordConfirm.touched">
+      <mat-error>
+        <div *ngIf="passwordConfirm.errors?.required">
           {{ 'AccountForm.PasswordConfirmRequired' | translate}}
         </div>
       </mat-error>

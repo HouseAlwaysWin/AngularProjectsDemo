@@ -1,13 +1,13 @@
 namespace EcommerceApi.Core.Models.Entities
 {
-    public class ShipAddress
+    public class OrderAddress
     {
         
-        public ShipAddress()
+        public OrderAddress()
         {
             
         }
-        public ShipAddress(string firstName, string lastName, string street, string city, string state, string zipCode)
+        public OrderAddress(string firstName, string lastName, string street, string city, string state, string zipCode)
         {
             FirstName = firstName;
             LastName = lastName;

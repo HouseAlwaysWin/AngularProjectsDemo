@@ -12,7 +12,6 @@ import { SharedModule } from '../shared/shared.module';
   imports: [
     AccountRoutingModule,
     MaterialModule,
-    ReactiveFormsModule,
     SharedModule
   ]
 })
