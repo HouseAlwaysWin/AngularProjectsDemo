@@ -1,5 +1,4 @@
 using EcommerceApi.Core.Entities;
-using EcommerceApi.Helpers.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 

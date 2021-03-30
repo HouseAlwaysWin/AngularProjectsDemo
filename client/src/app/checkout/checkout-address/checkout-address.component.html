@@ -8,9 +8,10 @@
       color="primary">Set Address as same as UserAddress</button>
   </div>
 
-  <form [formGroup]="addressForm"
+  <form [formGroup]="checkoutForm"
     fxLayout="column">
-    <div fxLayout="row">
+    <div fxLayout="row"
+      formGroupName="addressForm">
       <mat-form-field fxFlex="50"
         class="addressField">
         <input matInput
@@ -35,7 +36,8 @@
       </mat-form-field>
     </div>
 
-    <div fxLayout="row">
+    <div fxLayout="row"
+      formGroupName="addressForm">
       <mat-form-field fxFlex="50"
         class="addressField">
         <input matInput
@@ -60,7 +62,8 @@
       </mat-form-field>
     </div>
 
-    <div fxLayout="row">
+    <div fxLayout="row"
+      formGroupName="addressForm">
       <mat-form-field fxFlex="50"
         class="addressField">
         <input matInput
@@ -94,6 +97,7 @@
       color="warn">&larr;</button>
     <button mat-raised-button
       cdkStepperNext
+      [disabled]="addressForm.invalid"
       color="warn">&rarr;</button>
   </div>
 </div>

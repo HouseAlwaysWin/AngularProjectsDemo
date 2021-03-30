@@ -9,6 +9,7 @@ import { CheckoutComponent } from './checkout.component';
 import { CheckoutRoutingModule } from './checkout-routing.module';
 import { SharedModule } from '../shared/shared.module';
 import { CheckoutStepper } from './checkout-stepper/checkout-stepper.component';
+import { BasketModule } from '../basket/basket.module';
 
 
 
@@ -21,11 +22,11 @@ import { CheckoutStepper } from './checkout-stepper/checkout-stepper.component';
     CheckoutPaymentComponent,
     CheckoutReviewComponent,
     CheckoutSuccessComponent,
-
   ],
   imports: [
     CommonModule,
     CheckoutRoutingModule,
+    BasketModule,
     SharedModule
   ]
 })

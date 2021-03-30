@@ -69,26 +69,6 @@ namespace EcommerceApi.Core.Entities
         // public int StatusCode { get; set; }
         public bool IsSuccessed { get; set; }
         public string Message { get; set; }
-
-
-        // private string GetMessageForStatusCode(int statusCode){
-        //     switch(statusCode){
-        //         case StatusCodes.Status200OK:
-        //             return "Successed";
-        //         case StatusCodes.Status400BadRequest:
-        //             return "Bad Request";
-        //         case StatusCodes.Status401Unauthorized:
-        //             return "UnAuthorized";
-        //         case StatusCodes.Status404NotFound:
-        //             return "NotFound";
-        //         case StatusCodes.Status500InternalServerError:
-        //             return "InternalServerError";
-        //         default:
-        //             return "Bad Request";
-        //     }
-        // }
-
-
         
     }
 }

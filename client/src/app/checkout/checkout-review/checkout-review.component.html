@@ -1,5 +1,9 @@
+<app-basket-summary [items]="basket$"
+  [showQuantityAdj]="false"
+  (remove)="removeBasketItem($event)"></app-basket-summary>
 <div fxLayout="row"
   fxLayoutAlign="space-between center">
+
   <button mat-raised-button
     cdkStepperPrevious
     color="warn">&larr;</button>

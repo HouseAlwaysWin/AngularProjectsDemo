@@ -7,11 +7,10 @@ namespace EcommerceApi.Core.Models.Entities
             
         }
 
-        public OrderItem(int productId,int quantity,Product productInfo)
+        public OrderItem(int productId,int quantity)
         {
             ProductInfoId = productId;
             Quantity = quantity; 
-            ProductInfo = productInfo;
         }
 
         public int Id  { get; set; }

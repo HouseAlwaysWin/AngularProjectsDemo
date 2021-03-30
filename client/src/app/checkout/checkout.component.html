@@ -1,13 +1,14 @@
 <div fxLayout="row"
-  fxLayout.xs="column">
-  <div fxFlex="50">
+  fxLayout.xs="column"
+  fxLayoutAlign="space-between">
+  <div fxFlex="60">
     <app-checkout-stepper [linear]="true">
       <cdk-step label="{{ 'Checkout.Address' | translate }}">
-        <app-checkout-address></app-checkout-address>
+        <app-checkout-address [checkoutForm]="checkoutForm"></app-checkout-address>
       </cdk-step>
 
       <cdk-step label="{{ 'Checkout.DeliveryMethod' | translate }}">
-        <app-checkout-delivery></app-checkout-delivery>
+        <app-checkout-delivery [checkoutForm]="checkoutForm"></app-checkout-delivery>
       </cdk-step>
 
       <cdk-step label="{{ 'Checkout.Review' | translate }}">
@@ -15,11 +16,13 @@
       </cdk-step>
 
       <cdk-step label="{{ 'Checkout.Payment' | translate }}">
-        <app-checkout-payment></app-checkout-payment>
+        <app-checkout-payment [checkoutForm]="checkoutForm"></app-checkout-payment>
       </cdk-step>
     </app-checkout-stepper>
   </div>
-  <div fxFlex="50">
-    price
+  <div fxFlex="40">
+    <app-baske-total-summary [subtotal]="(basketTotals$|async).subtotal"
+      [shipping]="(basketTotals$|async).shipping"
+      [total]="(basketTotals$|async).total"></app-baske-total-summary>
   </div>
 </div>

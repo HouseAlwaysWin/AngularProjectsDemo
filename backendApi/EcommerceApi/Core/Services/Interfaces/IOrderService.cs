@@ -6,7 +6,7 @@ namespace EcommerceApi.Core.Services.Interfaces
 {
     public interface IOrderService
     {
-        Task<Order> CreateOrderAsync(string buyerEmail,int deliveryMethod,string basektId,OrderAddress address) ;
+        Task<Order> CreateOrderAsync(string buyerEmail,string buyerName, int deliveryMethodId, string baseketId, OrderAddress address) ;
 
         Task<IReadOnlyList<Order>> GetOrdersForUserAsync(string buyerEmail);
 

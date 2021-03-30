@@ -62,7 +62,6 @@ namespace EcommerceApi.Controllers
 
         [HttpPost("login")]
         public async Task<ActionResult<ApiResponse<UserDto>>> Login(LoginDto login){
-            var lang = CultureInfo.CurrentCulture;
             var loginValidator= new LoginDtoValidator(_localizer);
             ValidationResult validateResult = await loginValidator.ValidateAsync(login);
             if(validateResult.IsValid){

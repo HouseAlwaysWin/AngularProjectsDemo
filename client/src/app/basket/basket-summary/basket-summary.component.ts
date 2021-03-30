@@ -12,6 +12,7 @@ import { BasketService } from '../basket.service';
 })
 export class BasketSummaryComponent implements OnInit, AfterViewInit {
   @Input() items: Observable<IBasket>;
+  @Input() showQuantityAdj: boolean = true;
   pageItems: MatTableDataSource<IBasketItem>;
 
   @Output() increment: EventEmitter<IBasketItem> = new EventEmitter();

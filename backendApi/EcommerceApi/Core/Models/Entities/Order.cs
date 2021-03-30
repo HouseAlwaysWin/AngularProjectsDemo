@@ -15,7 +15,7 @@ namespace EcommerceApi.Core.Models.Entities
             string buyerName,
             string buyerEmail,
             OrderAddress shipAddress,
-            DeliveryMethod deliveryMethod,
+            int deliveryMethodId,
             decimal totalPrice,
             string paymentIntentId
            )
@@ -25,7 +25,7 @@ namespace EcommerceApi.Core.Models.Entities
             BuyerEmail = buyerEmail;
             TotalPrice = totalPrice;
             ShipAddress = shipAddress;
-            DeliveryMethod = deliveryMethod;
+            DeliveryMethodId = deliveryMethodId;
             PaymentIntentId = paymentIntentId;
         }
         public int Id  { get; set; }
@@ -36,6 +36,7 @@ namespace EcommerceApi.Core.Models.Entities
         public OrderAddress ShipAddress { get; set; }
         public int ShipAddressId { get; set; }
         public DeliveryMethod DeliveryMethod { get; set; }
+        public int DeliveryMethodId { get; set; }
         public IReadOnlyList<OrderItem> OrderItems { get; set; }
         public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
         public string PaymentIntentId { get; set; }

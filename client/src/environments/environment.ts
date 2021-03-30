@@ -13,7 +13,8 @@ export const environment = {
     messagingSenderId: "1009208781701",
     appId: "1:1009208781701:web:1ee300cabff46cc3e8f2ec",
     measurementId: "G-TJK83XCEKN"
-  }
+  },
+  stripeKey: "pk_test_51II6tAHjD7oTH7SYPp6sRD0OhA89NWpAdOSz4hmVpao82ShdycNurUW8zNRXMD7Cd5NB32yeMoAHBs2eIyS0lZgY00UDIoXm6P"
 };
 
 /*

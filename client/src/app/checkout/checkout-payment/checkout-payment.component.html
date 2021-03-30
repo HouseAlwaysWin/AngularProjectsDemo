@@ -1,9 +1,33 @@
+<div [formGroup]="checkoutForm"
+  class="paymentForm">
+  <div formGroupName="paymentForm">
+    <input placeholder="Name"
+      class="card-input"
+      formControlName="nameOnCard" />
+    <div #cardNumber
+      class="card-input">
+    </div>
+    <div #cardExpiry
+      class="card-input"></div>
+    <div #cardCvc
+      class="card-input"></div>
+  </div>
+  <ng-container *ngIf="cardErrors">
+    <mat-error>
+      {{ cardErrors }}
+    </mat-error>
+  </ng-container>
+  <button mat-raised-button
+    class="payment-submit"
+    [disabled]="checkoutForm.get('paymentForm').invalid || !cardNumberValid || !cardExpiryValid || !cardCvcValid"
+    (click)="submitOrder()"
+    color="primary">Submit Order</button>
+</div>
+
+
 <div fxLayout="row"
   fxLayoutAlign="space-between center">
   <button mat-raised-button
     cdkStepperPrevious
     color="warn">&larr;</button>
-  <button mat-raised-button
-    cdkStepperNext
-    color="warn">&rarr;</button>
 </div>

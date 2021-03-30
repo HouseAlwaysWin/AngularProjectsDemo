@@ -15,6 +15,7 @@ namespace EcommerceApi.Helpers.Localization {
             .ForMember(pd => pd.ImgUrl,m => m.MapFrom<ProductUrlResolver>());
         
             CreateMap<AddressDto,UserAddress>().ReverseMap();
+            CreateMap<AddressDto,OrderAddress>().ReverseMap();
 
         }
     }

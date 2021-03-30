@@ -11,29 +11,20 @@ import { IApiResponse } from 'src/app/models/apiResponse';
   styleUrls: ['./checkout-address.component.scss']
 })
 export class CheckoutAddressComponent implements OnInit {
-  @Input() addressForm: FormGroup;
+  @Input() checkoutForm: FormGroup;
 
+  get addressForm() {
+    return this.checkoutForm.get('addressForm');
+  }
   constructor(
     public translate: TranslateService,
-    private accountService: AccountService,
-    private formBuilder: FormBuilder) { }
+    private accountService: AccountService
+  ) { }
 
 
   ngOnInit(): void {
-    this.validateLoginForm();
   }
 
-  validateLoginForm() {
-
-    this.addressForm = this.formBuilder.group({
-      firstName: [null, [Validators.required]],
-      lastName: [null, [Validators.required]],
-      street: [null, [Validators.required]],
-      city: [null, [Validators.required]],
-      state: [null, [Validators.required]],
-      zipCode: [null, [Validators.required]],
-    });
-  }
 
   getTranslate(name: string) {
 
@@ -46,7 +37,7 @@ export class CheckoutAddressComponent implements OnInit {
   setUserAddress() {
     this.accountService.getUserAddress().subscribe((res: IApiResponse<IAddress>) => {
       if (res.data) {
-        this.addressForm.reset(res.data);
+        this.checkoutForm.get('addressForm').reset(res.data);
       }
     }, error => {
 

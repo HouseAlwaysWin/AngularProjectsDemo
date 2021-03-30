@@ -9,7 +9,6 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
 import { HomeComponent } from './home/home.component';
-import { ReactiveFormsModule } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
@@ -35,7 +34,6 @@ import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
     BrowserAnimationsModule,
     MaterialModule,
     FlexLayoutModule,
-    ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
     HttpClientModule,
@@ -45,7 +43,7 @@ import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
         provide: TranslateLoader,
         useClass: I18nLoader
       }
-    })
+    }),
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: I18nInterceptor, multi: true },

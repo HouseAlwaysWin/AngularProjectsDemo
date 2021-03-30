@@ -1,36 +1,50 @@
-<app-basket-summary [items]="basket$"
-  (increment)="incrementItemQuantity($event)"
-  (decrement)="decrementItemQuantity($event)"
-  (remove)="removeBasketItem($event)"></app-basket-summary>
+<div fxLayout="row"
+  fxLayout.xs="column"
+  fxLayoutAlign="space-between start">
 
-<div>
-  <div class="order-summary"
-    style="padding:1.20em;">
-    Order Summary
-  </div>
+  <app-basket-summary fxFlex="60"
+    [items]="basket$"
+    (increment)="incrementItemQuantity($event)"
+    (decrement)="decrementItemQuantity($event)"
+    (remove)="removeBasketItem($event)"></app-basket-summary>
 
-  <div class="p-4">
-    <p class="order-summary-hint">
-      Shipping costs will be added depending on choices made during checkout
-    </p>
-    <ul class="order-summary-list">
-      <li class="order-subtotal">
-        <strong class="text-muted">Order subtotal </strong>
-        <strong> </strong>
-      </li>
-      <li class="order-summary-shipping">
-        <strong class="text-muted">Shipping and handling</strong>
-        <strong> </strong>
-      </li>
-      <li class="order-summary-total">
-        <strong class="text-muted">Total</strong>
-        <strong> </strong>
-      </li>
-    </ul>
-    <button mat-raised-button
-      routerLink="/checkout"
-      color="primary">
-      Process to checkout
-    </button>
-  </div>
+
+  <app-baske-total-summary [subtotal]="(basketTotals$|async).subtotal"
+    [shipping]="(basketTotals$|async).shipping"
+    [total]="(basketTotals$|async).total"
+    [showHint]="true"
+    [showProcessBtn]="true"></app-baske-total-summary>
+  <!-- <div>
+    <div class="order-summary">
+      Order Summary
+    </div>
+    <div class="order-summary-list">
+      <p class="order-summary-hint">
+        Shipping costs will be added depending on choices made during checkout
+      </p>
+
+      <div class="order-list">
+        <strong>Order subtotal </strong>
+        <span>{{ (basketTotals$ | async).subtotal | currency}}</span>
+      </div>
+      <mat-divider></mat-divider>
+      <div class="order-list">
+        <strong>Shipping and handling</strong>
+        <span>{{ (basketTotals$ | async).shipping | currency}}</span>
+      </div>
+      <mat-divider></mat-divider>
+      <div class="order-list">
+        <strong>Total</strong>
+        <span>{{ (basketTotals$ | async).total | currency }}</span>
+      </div>
+    </div>
+    <div class="btn-process">
+      <button mat-raised-button
+        routerLink="/checkout"
+        color="primary">
+        Process to checkout
+      </button>
+    </div>
+  </div> -->
+
 </div>
