@@ -1,7 +1,8 @@
 <div fxLayout="row">
-  <div>
+  <div fxFlex="15"
+    class="bar-area">
     <ng-container>
-      <h5>Sort</h5>
+      <h4 class="bar-list-title">Sort</h4>
       <mat-form-field appearance="fill">
         <mat-select [(value)]="sortSelected"
           (selectionChange)="onSortSelected()">
@@ -13,36 +14,31 @@
       </mat-form-field>
 
 
-      <h5>Brands</h5>
-      <ul>
-        <li class="list-item"
-          *ngFor="let brand of brands"
-          [class.active]="brand.id === shopParams.brandId"
-          [value]="brand.id"
-          (click)="onBrandSelected(brand.id)">
-          {{ brand.name }}
-        </li>
-      </ul>
-      <h5>Categories</h5>
-      <ul>
-        <li class="list-item"
-          *ngFor="let category of categories"
-          [class.active]="category.id === shopParams.categoryId"
-          [value]="category.id"
-          (click)="onCategorySelected(category.id)">
-          {{ category.name }}
-        </li>
-      </ul>
+      <h4 class="bar-list-title">Brands</h4>
+      <li class="list-item"
+        *ngFor="let brand of brands"
+        [class.active]="brand.id === shopParams.brandId"
+        [value]="brand.id"
+        (click)="onBrandSelected(brand.id)">
+        {{ brand.name }}
+      </li>
+
+      <h4 class="bar-list-title">Categories</h4>
+      <li class="list-item"
+        *ngFor="let category of categories"
+        [class.active]="category.id === shopParams.categoryId"
+        [value]="category.id"
+        (click)="onCategorySelected(category.id)">
+        {{ category.name }}
+      </li>
     </ng-container>
   </div>
 
-  <div fxLayout="column">
-    <div fxLayout="row layout-wrap"
-      fxLayoutAlign="start"
-      fxLayoutGap>
+  <div class="product-area"
+    *ngIf="productTotalCount>0;else productEmpty">
+    <div fxLayout="row start wrap">
       <app-product-item [product]="product"
-        *ngFor="let product of products"
-        fxFlex="25"></app-product-item>
+        *ngFor="let product of products"></app-product-item>
     </div>
 
     <mat-paginator [length]="productTotalCount"
@@ -54,6 +50,17 @@
     </mat-paginator>
 
   </div>
+  <ng-template #productEmpty>
+    <div fxFlex="75">
+      <div fxLayout="row"
+        fxLayoutAlign="center center"
+        class="product-notfound">
+        <h2>
+          No Products found.
+        </h2>
+      </div>
+    </div>
+  </ng-template>
 
 
 </div>

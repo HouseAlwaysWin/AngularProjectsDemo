@@ -40,10 +40,12 @@ export class NavTopComponent implements OnInit, OnDestroy {
 
   getBasket() {
     this.basketSub = this.basketService.basket$.subscribe((basket: Basket) => {
+
+      this.basketCount = '';
       if (basket) {
-        this.basketCount = basket.basketItems.length.toString();
-      } else {
-        this.basketCount = '';
+        if (basket.basketItems.length > 0) {
+          this.basketCount = basket.basketItems.length.toString();
+        }
       }
     });
 

@@ -14,7 +14,7 @@ import { IProduct } from '../models/product';
 })
 export class BasketService {
   baseUrl = environment.apiUrl;
-  private basketSource = new BehaviorSubject(null);
+  private basketSource = new BehaviorSubject<IBasket>(new Basket());
   basket$ = this.basketSource.asObservable();
   private basketTotalsSource = new BehaviorSubject<IBasketTotals>(null);
   basketTotals$ = this.basketTotalsSource.asObservable();
@@ -26,14 +26,16 @@ export class BasketService {
 
   loadBasket() {
     const basketId = localStorage.getItem('basket_id');
-    if (basketId) {
-      this.getBasket(basketId);
+    if (!basketId) {
+      this.createBasket();
     }
+    this.getBasket(basketId);
   }
 
   getBasket(id: string) {
     return this.http.get(this.baseUrl + 'basket?id=' + id)
       .subscribe((res: IApiResponse<IBasket>) => {
+        console.log(res);
         if (res.isSuccessed) {
           this.basketSource.next(res.data);
           this.calculateTotal();
@@ -92,7 +94,6 @@ export class BasketService {
   addItemToBasket(item: IProduct, quantity = 1) {
     const productItems: IBasketItem = this.mapProductItemToBasketItem(item, quantity);
     const basket = this.getCurrentBasketValue() ?? this.createBasket();
-    console.log(basket);
     basket.basketItems = this.addOrUpdateItem(
       basket.basketItems, productItems, quantity
     );
@@ -141,7 +142,7 @@ export class BasketService {
         });
     }
     else {
-      this.basketSource.next(null);
+      this.basketSource.next(new Basket());
       this.calculateTotal();
       localStorage.removeItem('basket_id');
     }
@@ -155,16 +156,27 @@ export class BasketService {
   }
 
   decrementItemQuantity(item: IBasketItem) {
-    if (item.quantity > 0) {
-      item.quantity--;
+    item.quantity--;
+    if (item.quantity <= 0) {
+      this.removeBasketItem(item);
+      return;
     }
     this.addBasketItem(item);
   }
 
-  deleteLocalBasket(id: string) {
-    this.basketSource.next(null);
+  deleteLocalBasket() {
+    this.basketSource.next(new Basket());
     this.basketTotalsSource.next(null);
     localStorage.removeItem('basket_id');
+  }
+
+  createPaymentIntent() {
+    return this.http.post(this.baseUrl + `payments/${this.getCurrentBasketValue().id}`, {})
+      .pipe(map((res: IApiResponse<IBasket>) => {
+        if (res.isSuccessed) {
+          this.basketSource.next(res.data);
+        }
+      }));
   }
 
 

@@ -7,12 +7,44 @@
   background: #bbb;
 }
 
-li {
-  list-style: none;
+mat-form-field {
+  width: 100%;
+}
+
+.bar-list-title {
+  text-align: center;
+  color: white;
+  background-color: rgb(5, 43, 126);
+  box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.3);
+  border-radius: 2px;
 }
 
 .list-item {
+  list-style: none;
+  padding: 4px;
+  cursor: pointer;
+  text-align: center;
+  border-radius: 5px;
+  background-color: rgb(164, 211, 243);
+  border-style: solid;
+  border-color: white;
+  width: 95%;
+
   &.active {
-    background-color: gray;
+    color: white;
+    background-color: rgb(8, 77, 167);
+
+    // box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.1);
   }
+}
+
+.product-notfound {
+  text-align: center;
+  margin: 2em;
+  padding: 5em;
+  border-radius: 1em;
+  border-style: solid;
+  color: rgb(240, 94, 94);
+  font-weight: bold;
+  text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
 }

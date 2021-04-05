@@ -15,11 +15,11 @@ export class CheckoutService {
   constructor(private http: HttpClient) { }
 
   createOrder(order: IOrderToCreate) {
-    return this.http.post(this.baseUrl + 'order/create', order);
+    return this.http.post(this.baseUrl + 'orders/create', order);
   }
 
   getDeliveryMethods() {
-    return this.http.get(this.baseUrl + 'order/deliveryMethods').pipe(
+    return this.http.get(this.baseUrl + 'orders/deliveryMethods').pipe(
       map((dm: IApiResponse<IDeliveryMethod[]>) => {
         return dm.data.sort((a, b) => b.price - a.price);
       }));

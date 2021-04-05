@@ -51,6 +51,15 @@
     "TotalPrice": "Total Price",
     "ProcessCheckout": "Process Checkout"
   },
+  "OrderTable": {
+    "No": "No",
+    "BuyerEmail": "BuyerEmail",
+    "BuyerName": "BuyerName",
+    "TotalPrice": "TotalPrice",
+    "DeliveryMethod": "DeliveryMethod",
+    "OrderStatus": "OrderStatus",
+    "OrderDate": "OrderDate"
+  },
   "Checkout": {
     "Address": "Address",
     "DeliveryMethod": "Delivery",

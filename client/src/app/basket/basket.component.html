@@ -1,50 +1,31 @@
 <div fxLayout="row"
   fxLayout.xs="column"
   fxLayoutAlign="space-between start">
+  <ng-container *ngIf="(basket$ | async).basketItems.length > 0">
 
-  <app-basket-summary fxFlex="60"
-    [items]="basket$"
-    (increment)="incrementItemQuantity($event)"
-    (decrement)="decrementItemQuantity($event)"
-    (remove)="removeBasketItem($event)"></app-basket-summary>
+    <app-basket-summary fxFlex="60"
+      [items]="basket$"
+      (increment)="incrementItemQuantity($event)"
+      (decrement)="decrementItemQuantity($event)"
+      (remove)="removeBasketItem($event)"></app-basket-summary>
+
+    <app-baske-total-summary [subtotal]="(basketTotals$|async).subtotal"
+      [shipping]="(basketTotals$|async).shipping"
+      [total]="(basketTotals$|async).total"
+      [showHint]="true"
+      [showProcessBtn]="true"></app-baske-total-summary>
+  </ng-container>
 
 
-  <app-baske-total-summary [subtotal]="(basketTotals$|async).subtotal"
-    [shipping]="(basketTotals$|async).shipping"
-    [total]="(basketTotals$|async).total"
-    [showHint]="true"
-    [showProcessBtn]="true"></app-baske-total-summary>
-  <!-- <div>
-    <div class="order-summary">
-      Order Summary
-    </div>
-    <div class="order-summary-list">
-      <p class="order-summary-hint">
-        Shipping costs will be added depending on choices made during checkout
-      </p>
-
-      <div class="order-list">
-        <strong>Order subtotal </strong>
-        <span>{{ (basketTotals$ | async).subtotal | currency}}</span>
-      </div>
-      <mat-divider></mat-divider>
-      <div class="order-list">
-        <strong>Shipping and handling</strong>
-        <span>{{ (basketTotals$ | async).shipping | currency}}</span>
-      </div>
-      <mat-divider></mat-divider>
-      <div class="order-list">
-        <strong>Total</strong>
-        <span>{{ (basketTotals$ | async).total | currency }}</span>
-      </div>
-    </div>
-    <div class="btn-process">
-      <button mat-raised-button
-        routerLink="/checkout"
-        color="primary">
-        Process to checkout
-      </button>
-    </div>
-  </div> -->
-
+</div>
+<div class="empty-cart-area">
+  <div class="empty-cart"
+    *ngIf="(basket$ | async).basketItems.length === 0">
+    <h4>
+      The Cart is Empty
+    </h4>
+    <button mat-raised-button
+      color="warn"
+      routerLink="/shop">Keep Shopping</button>
+  </div>
 </div>

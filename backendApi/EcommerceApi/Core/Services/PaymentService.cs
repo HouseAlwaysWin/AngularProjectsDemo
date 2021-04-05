@@ -28,7 +28,7 @@ namespace EcommerceApi.Core.Services
         }
         public async Task<Basket> CreateOrUpdatePaymentIntent(string basketId)
         {
-            StripeConfiguration.ApiKey = _config["StripeSetting:SecretKey"];
+            StripeConfiguration.ApiKey = _config["StripeSettings:SecretKey"];
 
             var basket = await _basketRepository.GetBasketAsync(basketId);
 
@@ -55,7 +55,8 @@ namespace EcommerceApi.Core.Services
 
             if(string.IsNullOrEmpty(basket.PaymentIntentId)){
                 var options = new PaymentIntentCreateOptions{
-                    Amount = (long) basket.BasketItems.Sum(i => i.Quantity * i.Price) + (long)shippingPrice,
+                    // Because price is decimal so we need multiplue 100 to convert to long type.
+                    Amount = (long) basket.BasketItems.Sum(i => i.Quantity *  i.Price *100 ) + (long)shippingPrice,
                     Currency = "usd",
                     PaymentMethodTypes = new List<string>{"card"}
                 };
@@ -65,7 +66,8 @@ namespace EcommerceApi.Core.Services
             }
             else{
                 var options = new PaymentIntentUpdateOptions{
-                    Amount =(long) basket.BasketItems.Sum(i => i.Quantity * i.Price) + (long)shippingPrice 
+                    // Because price is decimal so we need multiplue 100 to convert to long type.
+                    Amount =(long) basket.BasketItems.Sum(i => i.Quantity * i.Price *100) + (long)shippingPrice 
                 };
             }
 

@@ -8,11 +8,12 @@ import { DialogComfirm } from './components/dialog-comfirm/dialog-comfirm.compon
 import { CdkStepperModule } from '@angular/cdk/stepper';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DialogMessage } from './components/dialog-message/dialog-message.component';
+import { TrucateTextPipe } from './pipes/trucate-text.pipe';
 
 
 
 @NgModule({
-  declarations: [MatCarouselComponent, DialogComfirm, DialogMessage],
+  declarations: [MatCarouselComponent, DialogComfirm, DialogMessage, TrucateTextPipe],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -30,7 +31,8 @@ import { DialogMessage } from './components/dialog-message/dialog-message.compon
     CdkStepperModule,
     ReactiveFormsModule,
     FormsModule,
-    MatCarouselComponent
+    MatCarouselComponent,
+    TrucateTextPipe
   ]
 })
 export class SharedModule { }

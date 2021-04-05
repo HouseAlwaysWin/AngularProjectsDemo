@@ -1,6 +1,7 @@
 <app-basket-summary [items]="basket$"
   [showQuantityAdj]="false"
   (remove)="removeBasketItem($event)"></app-basket-summary>
+
 <div fxLayout="row"
   fxLayoutAlign="space-between center">
 
@@ -8,6 +9,6 @@
     cdkStepperPrevious
     color="warn">&larr;</button>
   <button mat-raised-button
-    cdkStepperNext
+    (click)="createPaymentIntent()"
     color="warn">&rarr;</button>
 </div>

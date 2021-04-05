@@ -15,7 +15,6 @@ import { CheckoutService } from '../checkout.service';
   styleUrls: ['./checkout-payment.component.scss']
 })
 export class CheckoutPaymentComponent implements OnInit, OnDestroy, AfterViewInit {
-  stripeApi: string = environment.stripeKey;
   @Input() checkoutForm: FormGroup;
   @ViewChild('cardNumber', { static: true }) cardNumberElement: ElementRef;
   @ViewChild('cardExpiry', { static: true }) cardExpiryElement: ElementRef;
@@ -44,7 +43,8 @@ export class CheckoutPaymentComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   async ngAfterViewInit(): Promise<void> {
-    this.stripe = await loadStripe(this.stripeApi);
+    console.log(environment.stripeKey);
+    this.stripe = await loadStripe(environment.stripeKey);
 
     const elements = this.stripe.elements();
 
@@ -90,11 +90,14 @@ export class CheckoutPaymentComponent implements OnInit, OnDestroy, AfterViewIni
 
   async submitOrder() {
     const basket = this.basketService.getCurrentBasketValue();
+    console.log(basket);
     try {
       const createOrder = await this.createOrder(basket);
+      console.log(createOrder);
       const paymentResult = await this.confirmPaymentWithStripe(basket);
+      console.log(paymentResult);
       if (paymentResult.paymentIntent) {
-        this.basketService.deleteLocalBasket(basket.id);
+        this.basketService.deleteLocalBasket();
         const navigationExtras: NavigationExtras = { state: createOrder };
         this.router.navigate(['checkout/success'], navigationExtras);
       }
@@ -102,7 +105,7 @@ export class CheckoutPaymentComponent implements OnInit, OnDestroy, AfterViewIni
 
       }
     } catch (error) {
-
+      console.log(error);
     }
   }
 
@@ -120,9 +123,6 @@ export class CheckoutPaymentComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   private async createOrder(basket: IBasket) {
-    console.log(basket);
-    console.log(this.checkoutForm.get('deliveryForm').get('deliveryMethodId').value);
-    console.log(this.checkoutForm.get('addressForm').value);
     const orderToCreate: IOrderToCreate =
     {
       basketId: basket.id,

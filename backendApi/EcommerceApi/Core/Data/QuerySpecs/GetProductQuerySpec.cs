@@ -15,7 +15,7 @@ namespace EcommerceApi.Core.Data.QuerySpecs
         {
            AddInclude(p => p.ProductCategory);
            AddInclude(p => p.ProductBrand);
-           ApplyPaging(param.PageSize * (param.PageIndex),
+           ApplyPaging(param.PageSize * param.PageIndex,
                    param.PageSize);
 
            switch(param.Sort){

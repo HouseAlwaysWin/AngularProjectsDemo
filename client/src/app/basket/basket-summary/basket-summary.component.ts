@@ -10,7 +10,7 @@ import { BasketService } from '../basket.service';
   templateUrl: './basket-summary.component.html',
   styleUrls: ['./basket-summary.component.scss']
 })
-export class BasketSummaryComponent implements OnInit, AfterViewInit {
+export class BasketSummaryComponent implements OnInit {
   @Input() items: Observable<IBasket>;
   @Input() showQuantityAdj: boolean = true;
   pageItems: MatTableDataSource<IBasketItem>;
@@ -25,18 +25,20 @@ export class BasketSummaryComponent implements OnInit, AfterViewInit {
     'no', 'imgUrl', 'name', 'price', 'quantity', 'remove'
   ];
 
-  constructor() {
+  constructor(private cdr: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
     this.items.subscribe((basket: IBasket) => {
-      this.pageItems = new MatTableDataSource<IBasketItem>(basket.basketItems);
+      console.log(basket);
+      if (basket) {
+        this.pageItems = new MatTableDataSource<IBasketItem>(basket.basketItems);
+        this.cdr.detectChanges();
+        this.pageItems.paginator = this.paginator;
+      }
     })
   }
 
-  ngAfterViewInit() {
-    this.pageItems.paginator = this.paginator;
-  }
 
   incrementItem(item: IBasketItem) {
     this.increment.emit(item);

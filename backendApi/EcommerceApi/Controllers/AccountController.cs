@@ -20,8 +20,6 @@ using AutoMapper;
 namespace EcommerceApi.Controllers
 {
 
-    [ApiController]
-    [Route ("api/[controller]")]
     public class AccountController:BaseApiController
     {
         private readonly UserManager<ECUser> _userManager;

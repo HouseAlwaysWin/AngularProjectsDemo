@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EcommerceApi.Core.Models.Dtos;
 using EcommerceApi.Core.Models.Entities;
 
 namespace EcommerceApi.Core.Services.Interfaces
@@ -11,6 +12,7 @@ namespace EcommerceApi.Core.Services.Interfaces
         Task<IReadOnlyList<Order>> GetOrdersForUserAsync(string buyerEmail);
 
         Task<Order> GetOrderByIdAsync(int id,string buyerEmail);
+        Task<IReadOnlyList<Order>> GetOrderByEmailListSpec(GetOrderParam param);
 
         Task<IReadOnlyList<DeliveryMethod>> GetDeliveryMethodAsync();
 

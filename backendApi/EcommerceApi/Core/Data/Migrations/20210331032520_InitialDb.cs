@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EcommerceApi.Core.Data.Migrations
 {
-    public partial class InitStore : Migration
+    public partial class InitialDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -21,6 +21,24 @@ namespace EcommerceApi.Core.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DeliveryMethods", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrderAddresses",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true),
+                    Street = table.Column<string>(nullable: true),
+                    City = table.Column<string>(nullable: true),
+                    State = table.Column<string>(nullable: true),
+                    ZipCode = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderAddresses", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -54,21 +72,37 @@ namespace EcommerceApi.Core.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ShipAddresses",
+                name: "Orders",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<long>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true),
-                    Street = table.Column<string>(nullable: true),
-                    City = table.Column<string>(nullable: true),
-                    State = table.Column<string>(nullable: true),
-                    ZipCode = table.Column<string>(nullable: true)
+                    CreatedDate = table.Column<DateTimeOffset>(nullable: false, defaultValueSql: "GETDATE()"),
+                    ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
+                    BuyerName = table.Column<string>(nullable: true),
+                    BuyerEmail = table.Column<string>(nullable: true),
+                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    OrderDate = table.Column<DateTimeOffset>(nullable: false),
+                    OrderAddressId = table.Column<long>(nullable: false),
+                    DeliveryMethodId = table.Column<int>(nullable: false),
+                    OrderStatus = table.Column<string>(nullable: false),
+                    PaymentIntentId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ShipAddresses", x => x.Id);
+                    table.PrimaryKey("PK_Orders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Orders_DeliveryMethods_DeliveryMethodId",
+                        column: x => x.DeliveryMethodId,
+                        principalTable: "DeliveryMethods",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Orders_OrderAddresses_OrderAddressId",
+                        column: x => x.OrderAddressId,
+                        principalTable: "OrderAddresses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -105,49 +139,22 @@ namespace EcommerceApi.Core.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Orders",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CreatedDate = table.Column<DateTimeOffset>(nullable: false, defaultValueSql: "GETDATE()"),
-                    ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
-                    BuyerName = table.Column<string>(nullable: true),
-                    BuyerEmail = table.Column<string>(nullable: true),
-                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    OrderDate = table.Column<DateTimeOffset>(nullable: false),
-                    ShipAddressId = table.Column<int>(nullable: false),
-                    DeliveryMethodId = table.Column<int>(nullable: true),
-                    OrderStatus = table.Column<string>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Orders", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Orders_DeliveryMethods_DeliveryMethodId",
-                        column: x => x.DeliveryMethodId,
-                        principalTable: "DeliveryMethods",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Orders_ShipAddresses_ShipAddressId",
-                        column: x => x.ShipAddressId,
-                        principalTable: "ShipAddresses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "OrderItems",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<long>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CreatedDate = table.Column<DateTimeOffset>(nullable: false, defaultValueSql: "GETDATE()"),
                     ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
-                    ProductInfoId = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    ImgUrl = table.Column<string>(nullable: true),
+                    LangCode = table.Column<string>(nullable: true),
+                    ProductBrand = table.Column<string>(nullable: true),
+                    ProductCategory = table.Column<string>(nullable: true),
                     Quantity = table.Column<int>(nullable: false),
-                    OrderId = table.Column<int>(nullable: true)
+                    OrderId = table.Column<long>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -158,12 +165,6 @@ namespace EcommerceApi.Core.Data.Migrations
                         principalTable: "Orders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_OrderItems_Products_ProductInfoId",
-                        column: x => x.ProductInfoId,
-                        principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -172,20 +173,14 @@ namespace EcommerceApi.Core.Data.Migrations
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderItems_ProductInfoId",
-                table: "OrderItems",
-                column: "ProductInfoId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Orders_DeliveryMethodId",
                 table: "Orders",
                 column: "DeliveryMethodId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_ShipAddressId",
+                name: "IX_Orders_OrderAddressId",
                 table: "Orders",
-                column: "ShipAddressId",
-                unique: true);
+                column: "OrderAddressId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_ProductBrandId",
@@ -204,22 +199,22 @@ namespace EcommerceApi.Core.Data.Migrations
                 name: "OrderItems");
 
             migrationBuilder.DropTable(
-                name: "Orders");
-
-            migrationBuilder.DropTable(
                 name: "Products");
 
             migrationBuilder.DropTable(
-                name: "DeliveryMethods");
-
-            migrationBuilder.DropTable(
-                name: "ShipAddresses");
+                name: "Orders");
 
             migrationBuilder.DropTable(
                 name: "ProductBrands");
 
             migrationBuilder.DropTable(
                 name: "ProductCategories");
+
+            migrationBuilder.DropTable(
+                name: "DeliveryMethods");
+
+            migrationBuilder.DropTable(
+                name: "OrderAddresses");
         }
     }
 }

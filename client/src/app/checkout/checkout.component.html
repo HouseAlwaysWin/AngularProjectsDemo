@@ -2,7 +2,8 @@
   fxLayout.xs="column"
   fxLayoutAlign="space-between">
   <div fxFlex="60">
-    <app-checkout-stepper [linear]="true">
+    <app-checkout-stepper [linear]="false"
+      #appStepper>
       <cdk-step label="{{ 'Checkout.Address' | translate }}">
         <app-checkout-address [checkoutForm]="checkoutForm"></app-checkout-address>
       </cdk-step>
@@ -12,7 +13,7 @@
       </cdk-step>
 
       <cdk-step label="{{ 'Checkout.Review' | translate }}">
-        <app-checkout-review></app-checkout-review>
+        <app-checkout-review [appStepper]="appStepper"></app-checkout-review>
       </cdk-step>
 
       <cdk-step label="{{ 'Checkout.Payment' | translate }}">

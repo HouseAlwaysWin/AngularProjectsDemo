@@ -1,8 +1,52 @@
 .product-image {
-  height: 200px;
-  width: 200px;
+  height: 150px;
+  width: 150px;
+  text-align: center;
+  margin-top: 5px;
+  &:focus {
+    @keyframes identifier {
+      from {
+        left: 0;
+      }
+      to {
+        left: 100px;
+      }
+    }
+  }
+}
+
+.product-add-btn {
+  animation-name: add-btn;
+  animation-duration: 2s;
+}
+
+mat-card-title {
+  height: 50px;
 }
 
 .product-card {
   width: 200px;
+  height: 380px;
+}
+
+.product-description {
+  height: 70px;
+  overflow-wrap: break-word;
+}
+
+.product-price {
+  text-align: center;
+  color: rgb(255, 247, 247);
+  border-radius: 5px;
+  padding-left: 1em;
+  background-color: rgb(3, 153, 10);
+  box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.4);
+}
+
+mat-card-actions {
+  text-align: center;
+}
+
+mat-card-header {
+  color: gray;
 }

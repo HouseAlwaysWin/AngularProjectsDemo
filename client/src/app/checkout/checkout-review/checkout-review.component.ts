@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { CdkStepper } from '@angular/cdk/stepper';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { BasketService } from 'src/app/basket/basket.service';
-import { IBasket, IBasketItem } from 'src/app/models/basket';
+import { Basket, IBasket, IBasketItem } from 'src/app/models/basket';
 import { DialogComfirm } from 'src/app/shared/components/dialog-comfirm/dialog-comfirm.component';
 
 @Component({
@@ -11,6 +12,7 @@ import { DialogComfirm } from 'src/app/shared/components/dialog-comfirm/dialog-c
   styleUrls: ['./checkout-review.component.scss']
 })
 export class CheckoutReviewComponent implements OnInit {
+  @Input() appStepper: CdkStepper;
   basket$: Observable<IBasket>;
   constructor(
     public dialog: MatDialog,
@@ -18,6 +20,15 @@ export class CheckoutReviewComponent implements OnInit {
 
   ngOnInit(): void {
     this.basket$ = this.basketService.basket$;
+  }
+
+  createPaymentIntent() {
+    return this.basketService.createPaymentIntent().subscribe(result => {
+      console.log(result);
+      this.appStepper.next();
+    }, error => {
+      console.log(error);
+    });
   }
 
 

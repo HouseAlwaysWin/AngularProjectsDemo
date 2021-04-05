@@ -11,6 +11,9 @@ namespace EcommerceApi.Core.Data.EntityConfig
             builder.Property(o => o.CreatedDate)
                 .HasDefaultValueSql("GETDATE()")
                 .IsRequired();
+            
+            builder.Property(o => o.Price)
+                .HasColumnType("decimal(18,2)");
         }
     }
 }

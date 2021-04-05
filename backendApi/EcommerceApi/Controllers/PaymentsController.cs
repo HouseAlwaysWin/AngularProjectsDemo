@@ -13,7 +13,7 @@ namespace EcommerceApi.Controllers
     {
         private readonly IPaymentService _paymentService;
         private readonly ILogger<IPaymentService> _logger;
-        private readonly string WhSecret = "";
+        private readonly string WhSecret = "whsec_DPWXxisCfoIq6aXoZrpU9SPhX7Etdk3z";
         public PaymentsController(IPaymentService paymentService,ILogger<IPaymentService> logger)
         {
             this._logger = logger;
@@ -39,7 +39,7 @@ namespace EcommerceApi.Controllers
             Core.Models.Entities.Order order;
 
             switch(stripeEvent.Type){
-                case "payment_intent.successed":
+                case "payment_intent.succeeded":
                     intent =(PaymentIntent) stripeEvent.Data.Object;
                     _logger.LogInformation("Payment Successed",intent.Id);
                     order = await _paymentService.UpdateOrderPaymentSuccessed(intent.Id);
