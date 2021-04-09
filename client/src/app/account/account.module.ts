@@ -11,7 +11,6 @@ import { SharedModule } from '../shared/shared.module';
   declarations: [LoginComponent, RegisterComponent],
   imports: [
     AccountRoutingModule,
-    MaterialModule,
     SharedModule
   ]
 })

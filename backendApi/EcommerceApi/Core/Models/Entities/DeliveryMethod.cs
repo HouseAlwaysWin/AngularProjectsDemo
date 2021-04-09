@@ -9,5 +9,6 @@ namespace EcommerceApi.Core.Models.Entities
         public string DeliveryTime { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }
+        public string LangCode { get; set; }
     }
 }

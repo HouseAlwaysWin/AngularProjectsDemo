@@ -26,7 +26,7 @@ export class OrdersComponent implements OnInit {
   ];
   pageItems: MatTableDataSource<IOrder>;
   orderListParam: OrderListParam = new OrderListParam();
-  orderList: IOrder[];
+  orderList: IOrder[] = [];
   expandedElement: IBasketItem[] | null;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -55,18 +55,5 @@ export class OrdersComponent implements OnInit {
     this.router.navigate(['/orders/detail']);
   }
 
-  applyFilter(event: any) {
-
-  }
-
-  // setOrderPaginate() {
-  //   this.items.subscribe((basket: IBasket) => {
-  //     console.log(basket);
-  //     if (basket) {
-  //       this.pageItems = new MatTableDataSource<IBasketItem>(basket.basketItems);
-  //       this.cdr.detectChanges();
-  //       this.pageItems.paginator = this.paginator;
-  //     }
-  //   })
 }
 

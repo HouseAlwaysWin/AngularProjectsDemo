@@ -18,6 +18,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [],
@@ -39,7 +41,8 @@ import { MatRadioModule } from '@angular/material/radio';
     MatDialogModule,
     MatDividerModule,
     MatCheckboxModule,
-    MatRadioModule
+    MatRadioModule,
+    MatProgressSpinnerModule
   ],
   exports: [
     MatToolbarModule,
@@ -59,7 +62,9 @@ import { MatRadioModule } from '@angular/material/radio';
     MatDialogModule,
     MatDividerModule,
     MatCheckboxModule,
-    MatRadioModule
+    MatRadioModule,
+    MatAutocompleteModule,
+    MatProgressSpinnerModule
   ]
 })
 export class MaterialModule { }

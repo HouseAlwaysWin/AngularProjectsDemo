@@ -10,5 +10,7 @@ namespace EcommerceApi.Core.Data.Repositories.Interfaces
         Task<IReadOnlyList<Product>> GetProductsAsync ();
         Task<IReadOnlyList<ProductBrand>> GetProductBrandsAsync ();
         Task<IReadOnlyList<ProductCategory>> GetProductCategoriesAsync ();
+        Task<List<ProductCategory>> GetProductCategoriesRootAsync();
+        Task<List<ProductCategory>> GetProductCategoriesByIdAsync(int id);
     }
 }

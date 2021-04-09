@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EcommerceApi.Core.Data.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    [Migration("20210331032520_InitialDb")]
-    partial class InitialDb
+    [Migration("20210408040651_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,6 +32,9 @@ namespace EcommerceApi.Core.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LangCode")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
@@ -187,7 +190,8 @@ namespace EcommerceApi.Core.Data.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
 
                     b.Property<string>("ImgUrl")
                         .IsRequired()
@@ -257,11 +261,28 @@ namespace EcommerceApi.Core.Data.Migrations
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("GETDATE()");
 
+                    b.Property<bool>("HasChild")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Index")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LangCode")
+                        .HasColumnType("nvarchar(10)")
+                        .HasMaxLength(10);
+
+                    b.Property<int>("Level")
+                        .HasColumnType("int");
+
                     b.Property<DateTimeOffset?>("ModifiedDate")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

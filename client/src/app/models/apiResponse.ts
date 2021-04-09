@@ -5,8 +5,6 @@ export interface IApiResponse<T> {
 }
 
 export interface IApiPagingResponse<T> {
-  pageIndex: number;
-  pageSize: number;
   totalCount: number;
   isSuccessed: boolean;
   message: string;

@@ -1,18 +1,83 @@
 [
     {
         "Id": 1,
-        "Name": "Boards"
+        "Name": "Books",
+        "HasChild": true,
+        "Level": 0,
+        "ParentId": null,
+        "LangCode": "en",
+        "Index": 0
     },
     {
         "Id": 2,
-        "Name": "Hats"
+        "Name": "Novels",
+        "HasChild": false,
+        "Level": 1,
+        "ParentId": 1,
+        "LangCode": "en",
+        "Index": 0
     },
     {
         "Id": 3,
-        "Name": "Boots"
+        "Name": "Business",
+        "HasChild": false,
+        "Level": 1,
+        "ParentId": 1,
+        "LangCode": "en",
+        "Index": 1
     },
     {
         "Id": 4,
-        "Name": "Gloves"
+        "Name": "Male-Clothes",
+        "HasChild": true,
+        "Level": 0,
+        "ParentId": null,
+        "LangCode": "en",
+        "Index": 1
+    },
+    {
+        "Id": 5,
+        "Name": "T-Shirts",
+        "HasChild": false,
+        "Level": 1,
+        "ParentId": 4,
+        "LangCode": "en",
+        "Index": 0
+    },
+    {
+        "Id": 6,
+        "Name": "Polo",
+        "HasChild": false,
+        "Level": 1,
+        "ParentId": 4,
+        "LangCode": "en",
+        "Index": 1
+    },
+    {
+        "Id": 7,
+        "Name": "Female-Clothes",
+        "HasChild": true,
+        "Level": 0,
+        "ParentId": null,
+        "LangCode": "en",
+        "Index": 2
+    },
+    {
+        "Id": 8,
+        "Name": "T-Shirts",
+        "HasChild": false,
+        "Level": 1,
+        "ParentId": 7,
+        "LangCode": "en",
+        "Index": 0
+    },
+    {
+        "Id": 9,
+        "Name": "Polo",
+        "HasChild": false,
+        "Level": 1,
+        "ParentId": 7,
+        "LangCode": "en",
+        "Index": 1
     }
 ]

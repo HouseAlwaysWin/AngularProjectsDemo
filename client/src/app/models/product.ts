@@ -7,3 +7,5 @@ export interface IProduct {
   productCategoryId: number;
   productBrandId: number;
 }
+
+

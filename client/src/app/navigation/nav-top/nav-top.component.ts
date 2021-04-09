@@ -1,12 +1,16 @@
-import { Component, OnInit, AfterViewInit, AfterContentInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, AfterContentInit, Output, EventEmitter, OnDestroy, HostListener } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, ReplaySubject, Subscription } from 'rxjs';
+import { Observable, of, ReplaySubject, Subscription } from 'rxjs';
+import { debounceTime, map, startWith } from 'rxjs/operators';
 import { AccountService } from 'src/app/account/account.service';
 import { BasketService } from 'src/app/basket/basket.service';
 import { IApiResponse } from 'src/app/models/apiResponse';
 import { Basket, IBasket } from 'src/app/models/basket';
+import { IProduct } from 'src/app/models/product';
 import { IUser } from 'src/app/models/user';
+import { ShopService } from 'src/app/shop/shop.service';
 
 @Component({
   selector: 'app-nav-top',
@@ -20,18 +24,17 @@ export class NavTopComponent implements OnInit, OnDestroy {
   showBar = false;
   basketCount: string = '';
   basketSub: Subscription;
+  productSub: Subscription;
   isAuth = false;
+  userInfo: IUser;
+
 
   constructor(
     public translate: TranslateService,
     private basketService: BasketService,
     private accountService: AccountService,
-    private matePage: MatPaginatorIntl
+    private shopService: ShopService
   ) {
-    // translate.addLangs(['en']);
-    // const browserLang = navigator.language;
-    // translate.use(browserLang.match(/en|zh-TW/) ? browserLang : 'en');
-    // translate.use('en');
   }
 
   onNavSideToggle() {
@@ -48,12 +51,14 @@ export class NavTopComponent implements OnInit, OnDestroy {
         }
       }
     });
-
   }
+
 
   ngOnInit(): void {
     this.showBar = false;
     this.accountService.currrentUser.subscribe(user => {
+      console.log(user);
+      this.userInfo = user;
       this.isAuth = user ? true : false;
       this.showBar = true;
     });
@@ -84,7 +89,6 @@ export class NavTopComponent implements OnInit, OnDestroy {
   changeLang(lang: string) {
     this.translate.use(lang);
   }
-
 
 
 }

@@ -25,8 +25,8 @@ namespace EcommerceApi.Controllers
 
         [ApiExplorerSettings(IgnoreApi = true)]
         [NonAction]
-        public OkObjectResult BaseApiOk<T>(T data,int pageIndex,int pageSize,int totalCount,string message=null)  {
-            return Ok(new ApiPagingResponse<T>(true,pageIndex,pageSize,totalCount,data,message));
+        public OkObjectResult BaseApiOk<T>(T data,int totalCount,string message=null)  {
+            return Ok(new ApiPagingResponse<T>(true,totalCount,data,message));
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]

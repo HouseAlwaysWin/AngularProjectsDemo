@@ -1,5 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { IApiPagingResponse, IApiResponse } from '../models/apiResponse';
@@ -13,6 +15,9 @@ import { ShopParams } from '../models/shopParams';
 })
 export class ShopService {
   baseUrl = environment.apiUrl;
+
+  productListSub: BehaviorSubject<IApiPagingResponse<IProduct[]>> = new BehaviorSubject(null);
+  productList$: Observable<IApiPagingResponse<IProduct[]>> = this.productListSub.asObservable();
 
   constructor(private http: HttpClient) { }
 
@@ -37,9 +42,51 @@ export class ShopService {
     params = params.append('pageSize', shopParams.pageSize.toString());
 
     var response = this.http.get<IApiPagingResponse<IProduct[]>>(
-      `${this.baseUrl}product/`, { observe: 'response', params })
+      `${this.baseUrl}product`, { observe: 'response', params })
       .pipe(
         map(response => {
+          this.productListSub.next(response.body);
+          return response.body;
+        })
+      );
+
+    return response;
+  }
+
+  getAutocomplete(shopParams: ShopParams) {
+    let params = new HttpParams();
+
+    if (shopParams.search) {
+      params = params.append('search', shopParams.search);
+    }
+    params = params.append('pageIndex', shopParams.pageIndex.toString());
+    params = params.append('pageSize', shopParams.pageSize.toString());
+
+    var response = this.http.get<IApiPagingResponse<IProduct[]>>(
+      `${this.baseUrl}product/autocomplete`, { observe: 'response', params })
+      .pipe(
+        map(response => {
+          return response.body;
+        })
+      );
+
+    return response;
+  }
+
+  getSearch(shopParams: ShopParams) {
+    let params = new HttpParams();
+
+    if (shopParams.search) {
+      params = params.append('search', shopParams.search);
+    }
+    params = params.append('pageIndex', shopParams.pageIndex.toString());
+    params = params.append('pageSize', shopParams.pageSize.toString());
+
+    var response = this.http.get<IApiPagingResponse<IProduct[]>>(
+      `${this.baseUrl}product/search`, { observe: 'response', params })
+      .pipe(
+        map(response => {
+          this.productListSub.next(response.body);
           return response.body;
         })
       );
@@ -55,7 +102,7 @@ export class ShopService {
 
   getCategories() {
     return this.http.get<IApiResponse<IProductCategory[]>>(
-      `${this.baseUrl}product/categories`
+      `${this.baseUrl}product/categoriestree`
     )
   }
 

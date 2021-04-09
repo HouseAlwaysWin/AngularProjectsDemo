@@ -16,9 +16,12 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { I18nInterceptor } from './core/interceptors/i18n.interceptor';
 import { I18nLoader } from './core/i18n/i18n-loader';
-import { MatPaginatorIntl } from '@angular/material/paginator';
+import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { PaginatorLocalize } from './material/paginator-localize';
 import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
+import { SharedModule } from './shared/shared.module';
+import { FormsModule } from '@angular/forms';
+import { AsyncPipe } from '@angular/common';
 
 
 @NgModule({
@@ -26,14 +29,13 @@ import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
     AppComponent,
     HomeComponent,
     NavTopComponent,
-    NavSideComponent,
+    NavSideComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    SharedModule,
     BrowserAnimationsModule,
-    MaterialModule,
-    FlexLayoutModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
     HttpClientModule,

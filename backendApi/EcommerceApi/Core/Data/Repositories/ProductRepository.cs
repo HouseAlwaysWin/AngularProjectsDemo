@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using EcommerceApi.Core.Data.Repositories.Interfaces;
 using EcommerceApi.Core.Models.Entities;
@@ -29,6 +31,15 @@ namespace EcommerceApi.Core.Data.Repositories
         public async Task<IReadOnlyList<ProductCategory>> GetProductCategoriesAsync()
         {
             return await _context.ProductCategories.ToListAsync();
+        }
+
+        public async Task<List<ProductCategory>> GetProductCategoriesRootAsync(){
+            return await _context.ProductCategories.Where(p=>!p.ParentId.HasValue).ToListAsync();
+        }
+
+        public async Task<List<ProductCategory>> GetProductCategoriesByIdAsync(int id){
+           return await  _context.ProductCategories
+                        .Where(p => p.ParentId == id).OrderBy(p => p.Index).ToListAsync();
         }
 
         public Task<IReadOnlyList<Product>> GetProductsAsync()

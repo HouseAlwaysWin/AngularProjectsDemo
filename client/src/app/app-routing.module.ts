@@ -3,13 +3,14 @@ import { HomeComponent } from './home/home.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from './account/auth.guard';
+import { ShopComponent } from './shop/shop.component';
 
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
+  { path: '', component: ShopComponent },
   { path: 'not-found', component: NotFoundComponent },
   {
-    path: 'shop',
+    path: 'home',
     loadChildren: () => import('./shop/shop.module').then(m => m.ShopModule),
   },
   {

@@ -8,6 +8,11 @@
     "en": "英文",
     "zh-TW": "繁體中文"
   },
+  "NavTop": {
+    "Login": "登入",
+    "Logout": "登出",
+    "OrdersHistory": "訂單紀錄"
+  },
   "AccountForm": {
     "Email": "電子信箱",
     "Password": "密碼",
@@ -50,6 +55,16 @@
     "ShippingPrice": "運費",
     "TotalPrice": "總計",
     "ProcessCheckout": "結帳"
+  },
+  "OrderTable": {
+    "No": "訂單編號",
+    "BuyerEmail": "電子郵件",
+    "BuyerName": "購買者姓名",
+    "TotalPrice": "總金額",
+    "DeliveryMethod": "配送方式",
+    "OrderStatus": "訂單狀態",
+    "OrderDate": "訂單日期",
+    "Detail": "訂單細節"
   },
   "Checkout": {
     "Address": "地址",

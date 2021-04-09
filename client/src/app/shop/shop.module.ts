@@ -5,7 +5,7 @@ import { ShopRoutingModule } from './shop-routing.module';
 import { ProductItemComponent } from './product-item/product-item.component';
 import { SharedModule } from '../shared/shared.module';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
-
+import { CdkTreeModule } from '@angular/cdk/tree';
 
 
 @NgModule({
@@ -13,6 +13,7 @@ import { ProductDetailComponent } from './product-detail/product-detail.componen
   imports: [
     CommonModule,
     SharedModule,
+    CdkTreeModule,
     ShopRoutingModule,
   ]
 })

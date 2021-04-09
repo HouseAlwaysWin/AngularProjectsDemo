@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EcommerceApi.Core.Data.Migrations
 {
-    public partial class InitialDb : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -16,7 +16,8 @@ namespace EcommerceApi.Core.Data.Migrations
                     ShortName = table.Column<string>(nullable: true),
                     DeliveryTime = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    LangCode = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -64,7 +65,12 @@ namespace EcommerceApi.Core.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CreatedDate = table.Column<DateTimeOffset>(nullable: false, defaultValueSql: "GETDATE()"),
                     ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
-                    Name = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(maxLength: 100, nullable: true),
+                    LangCode = table.Column<string>(maxLength: 10, nullable: true),
+                    Level = table.Column<int>(nullable: false),
+                    ParentId = table.Column<int>(nullable: true),
+                    HasChild = table.Column<bool>(nullable: false),
+                    Index = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -114,7 +120,7 @@ namespace EcommerceApi.Core.Data.Migrations
                     CreatedDate = table.Column<DateTimeOffset>(nullable: false, defaultValueSql: "GETDATE()"),
                     ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
                     Name = table.Column<string>(maxLength: 100, nullable: false),
-                    Description = table.Column<string>(nullable: false),
+                    Description = table.Column<string>(maxLength: 500, nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     ImgUrl = table.Column<string>(nullable: false),
                     LangCode = table.Column<string>(nullable: true),

@@ -1,3 +1,5 @@
+$active-color: rgb(40, 59, 170);
+
 .side-block {
   // background: #ddd;
   box-shadow: 10px rgba(0, 0, 0, 0.2);
@@ -19,25 +21,6 @@ mat-form-field {
   border-radius: 2px;
 }
 
-.list-item {
-  list-style: none;
-  padding: 4px;
-  cursor: pointer;
-  text-align: center;
-  border-radius: 5px;
-  background-color: rgb(164, 211, 243);
-  border-style: solid;
-  border-color: white;
-  width: 95%;
-
-  &.active {
-    color: white;
-    background-color: rgb(8, 77, 167);
-
-    // box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.1);
-  }
-}
-
 .product-notfound {
   text-align: center;
   margin: 2em;
@@ -47,4 +30,71 @@ mat-form-field {
   color: rgb(240, 94, 94);
   font-weight: bold;
   text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.product-area {
+  width: 100%;
+  margin-left: 1em;
+}
+
+.product-search {
+  width: 500px;
+}
+
+.mat-form-field.mat-focused {
+  width: 100%;
+}
+
+.category-tree-invisible {
+  display: none;
+}
+
+.category-root-node {
+  margin-top: 1em;
+  cursor: pointer;
+  width: 100%;
+}
+
+.category-child-node {
+  z-index: 1;
+  list-style: none;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+  padding: 0.5em;
+  border-left-style: solid;
+  border-left-color: rgb(89, 185, 230);
+  border-left-width: 0.5em;
+  margin-top: 2px;
+
+  &.active {
+    background-color: $active-color;
+    color: white;
+    border-left-style: solid;
+    border-left-color: $active-color;
+    border-left-width: 0.5em;
+    border-radius: 4px;
+  }
+}
+
+.category-child-block {
+  border-style: solid;
+  border-color: black;
+}
+
+.shop {
+  margin-top: 5em;
+}
+
+.category-all {
+  width: 100%;
+  &.active {
+    background-color: $active-color;
+    color: white;
+  }
+}
+
+mat-progress-spinner {
+  margin-left: 20%;
+  margin-top: 10%;
 }

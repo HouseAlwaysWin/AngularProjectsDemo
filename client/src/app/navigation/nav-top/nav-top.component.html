@@ -3,26 +3,31 @@
   fxLayoutAlign="space-between center">
   <div fxLayout="row"
     fxLayoutAlign="start center">
-    <div fxHide.gt-xs>
+    <div fxHide.gt-sm>
       <button mat-icon-button
         (click)="onNavSideToggle()">
         <mat-icon>menu</mat-icon>
       </button>
     </div>
-    <div>
+    <div fxHide
+      fxShow.gt-sm>
       <a routerLink="/home">Shop</a>
     </div>
   </div>
 
-  <div>
+
+
+  <!-- <div>
     <a mat-button
       routerLink="/home">{{'NavBar.Home' | translate }}</a>
     <a mat-button
       routerLink="/shop">{{'NavBar.Shop' | translate }}</a>
-  </div>
+  </div> -->
 
   <div>
     <ul class="navigation-items"
+      fxHide
+      fxShow.gt-sm
       fxLayout="row"
       fxLayoutAlign="end center"
       *ngIf="showBar">
@@ -46,13 +51,19 @@
       </ng-container>
 
       <li *ngIf="isAuth">
-        <a mat-button
+        <!-- <a mat-button
           routerLink="/orders">
           View Orders
-        </a>
+        </a> -->
         <a mat-button
-          routerLink="/home"
-          (click)="onLogout()">{{'AccountForm.Logout' | translate }}</a>
+          [matMenuTriggerFor]="usermenu">{{ userInfo.email }}</a>
+        <mat-menu #usermenu="matMenu">
+          <button mat-menu-item
+            routerLink="/orders">{{ 'NavTop.OrdersHistory' | translate}}</button>
+          <button mat-menu-item
+            routerLink="/home"
+            (click)="onLogout()">{{'NavTop.Logout' | translate }}</button>
+        </mat-menu>
       </li>
 
 

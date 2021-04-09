@@ -10,7 +10,7 @@ namespace EcommerceApi.Core.EntityConfig
         {
             builder.Property(p => p.Id).IsRequired();
             builder.Property(p => p.Name).IsRequired().HasMaxLength(100);
-            builder.Property (p => p.Description).IsRequired ();
+            builder.Property (p => p.Description).IsRequired().HasMaxLength(500);
             builder.Property (p => p.Price).HasColumnType ("decimal(18,2)");
             builder.Property (p => p.ImgUrl).IsRequired ();
 

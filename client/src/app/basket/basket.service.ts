@@ -35,7 +35,6 @@ export class BasketService {
   getBasket(id: string) {
     return this.http.get(this.baseUrl + 'basket?id=' + id)
       .subscribe((res: IApiResponse<IBasket>) => {
-        console.log(res);
         if (res.isSuccessed) {
           this.basketSource.next(res.data);
           this.calculateTotal();

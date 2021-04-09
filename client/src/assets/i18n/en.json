@@ -8,6 +8,11 @@
     "en": "English",
     "zh-TW": "Tranditional Chinese"
   },
+  "NavTop": {
+    "Login": "Login",
+    "Logout": "Logout",
+    "OrdersHistory": "Orders History"
+  },
   "AccountForm": {
     "Email": "Email",
     "Password": "Password",
@@ -58,7 +63,8 @@
     "TotalPrice": "TotalPrice",
     "DeliveryMethod": "DeliveryMethod",
     "OrderStatus": "OrderStatus",
-    "OrderDate": "OrderDate"
+    "OrderDate": "OrderDate",
+    "Detail": "Detail"
   },
   "Checkout": {
     "Address": "Address",

@@ -1,6 +1,7 @@
 <div fxLayout="row"
   fxLayout.xs="column"
-  fxLayoutAlign="space-between start">
+  fxLayoutAlign="start"
+  class="basket">
   <ng-container *ngIf="(basket$ | async).basketItems.length > 0">
 
     <app-basket-summary fxFlex="60"
@@ -9,7 +10,8 @@
       (decrement)="decrementItemQuantity($event)"
       (remove)="removeBasketItem($event)"></app-basket-summary>
 
-    <app-baske-total-summary [subtotal]="(basketTotals$|async).subtotal"
+    <app-baske-total-summary fxFlex="40"
+      [subtotal]="(basketTotals$|async).subtotal"
       [shipping]="(basketTotals$|async).shipping"
       [total]="(basketTotals$|async).total"
       [showHint]="true"

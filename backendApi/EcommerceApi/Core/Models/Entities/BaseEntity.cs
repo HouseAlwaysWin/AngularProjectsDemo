@@ -6,5 +6,6 @@ namespace EcommerceApi.Core.Models.Entities
     {
         public DateTimeOffset CreatedDate { get; set; } = DateTimeOffset.UtcNow;
         public DateTimeOffset? ModifiedDate { get; set; }
+
     }
 }

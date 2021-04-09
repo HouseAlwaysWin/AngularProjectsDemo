@@ -6,29 +6,21 @@ namespace EcommerceApi.Core.Entities
 
     public class ApiPagingResponse<T>:ApiResponse{
         public ApiPagingResponse(
-            bool isSuccessed, int pageIndex, int pageSize,
-            int totalCount,T data, string message = null)
+            bool isSuccessed, int totalCount,T data, string message = null)
             : base(isSuccessed,message)
         {
            this.Data = data; 
-           this.PageIndex = pageIndex;
-           this.PageSize = pageSize;
            this.TotalCount = totalCount;
         }
 
-        public ApiPagingResponse(int pageIndex, int pageSize,
-            int totalCount,T data, string message = null)
+        public ApiPagingResponse(int totalCount,T data, string message = null)
             : base(true,message)
         {
            this.Data = data; 
-           this.PageIndex = pageIndex;
-           this.PageSize = pageSize;
            this.TotalCount = totalCount;
         }
 
         public T Data {get;set;}
-        public int PageIndex { get; set; } = 0;
-        public int PageSize { get; set; } = 10;
         public int TotalCount { get; set; } = 0;
 
     }
