@@ -9,8 +9,10 @@
   </a>
 
   <a mat-list-item
-    routerLink="/basket">
+    routerLink="/basket"
+    (click)="onNavSideClose()">
     <mat-icon [matBadge]="basketCount"
+      matBadgeSize="small"
       matBadgeColor="warn">shopping_cart</mat-icon>
     <span class="nav-caption">
       {{ 'NavBar.ShopCart' | translate}}
@@ -38,7 +40,8 @@
   </a>
   <a mat-list-item
     *ngIf="isAuth"
-    routerLink="/orders">
+    routerLink="/orders"
+    (click)="onNavSideClose()">
     <mat-icon>list</mat-icon>
     <span class="nav-caption">
       {{ 'NavBar.OrdersHistory' | translate}}
@@ -50,7 +53,7 @@
     *ngIf="isAuth"
     routerLink="/home"
     (click)="onLogout()">
-    <mat-icon>translate</mat-icon>
+    <mat-icon>directions_run</mat-icon>
     <span class="nav-caption">
       {{'AccountForm.Logout' | translate }}
     </span>

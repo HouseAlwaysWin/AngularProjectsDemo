@@ -35,7 +35,8 @@
     "Home": "Home",
     "Shop": "Shop",
     "ShopCart": "Shop Cart",
-    "OrdersHistory": "Orders History"
+    "OrdersHistory": "Orders History",
+    "UserSetting": "User Settings"
   },
   "BasketTable": {
     "No": "No",

@@ -35,7 +35,8 @@
     "Home": "首頁",
     "Shop": "商店",
     "ShopCart": "購物車",
-    "OrdersHistory": "訂單紀錄"
+    "OrdersHistory": "訂單紀錄",
+    "UserSetting": "使用者設定"
   },
   "BasketTable": {
     "No": "編號",

@@ -49,13 +49,31 @@
 
       <li *ngIf="isAuth">
         <a mat-button
-          [matMenuTriggerFor]="usermenu">{{ userInfo.email }}</a>
+          [matMenuTriggerFor]="usermenu">
+          <mat-icon class="login-mat-icon">person</mat-icon>
+          {{ userInfo.displayName }}
+        </a>
         <mat-menu #usermenu="matMenu">
           <button mat-menu-item
-            routerLink="/orders">{{ 'NavTop.OrdersHistory' | translate}}</button>
+            routerLink="/orders">
+            <mat-icon>list</mat-icon>
+            {{ 'NavBar.OrdersHistory' | translate}}
+          </button>
+
+          <button mat-menu-item
+            routerLink="/orders">
+            <mat-icon>settings</mat-icon>
+            {{ 'NavBar.UserSetting' | translate}}
+          </button>
+
           <button mat-menu-item
             routerLink="/home"
-            (click)="onLogout()">{{'AccountForm.Logout' | translate }}</button>
+            (click)="onLogout()">
+            <mat-icon>directions_run</mat-icon>
+            {{'AccountForm.Logout' | translate }}
+          </button>
+
+
         </mat-menu>
       </li>
 

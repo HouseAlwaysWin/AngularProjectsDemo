@@ -52,10 +52,12 @@ export class NavSideComponent implements OnInit, OnDestroy {
       this.userInfo = user;
       this.isAuth = user ? true : false;
     });
+    this.getBasket();
   }
 
   onLogout() {
     this.accountService.logout();
+    this.onNavSideClose();
   }
 
   showLangList() {
