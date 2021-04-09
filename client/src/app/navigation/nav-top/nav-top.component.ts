@@ -64,15 +64,6 @@ export class NavTopComponent implements OnInit, OnDestroy {
     });
     this.getBasket();
 
-    // this.basket$ = this.basketService.basket$;
-
-
-    // this.showBar = false;
-    // this.authSubscription = this.fbAuthService
-    //   .isAuth$.subscribe(authStatus => {
-    //     this.isAuth = authStatus;
-    //     this.showBar = true;
-    //   });
   }
 
   onLogout() {

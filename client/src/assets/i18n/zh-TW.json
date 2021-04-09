@@ -8,11 +8,6 @@
     "en": "英文",
     "zh-TW": "繁體中文"
   },
-  "NavTop": {
-    "Login": "登入",
-    "Logout": "登出",
-    "OrdersHistory": "訂單紀錄"
-  },
   "AccountForm": {
     "Email": "電子信箱",
     "Password": "密碼",
@@ -38,7 +33,9 @@
   },
   "NavBar": {
     "Home": "首頁",
-    "Shop": "商店"
+    "Shop": "商店",
+    "ShopCart": "購物車",
+    "OrdersHistory": "訂單紀錄"
   },
   "BasketTable": {
     "No": "編號",
@@ -80,6 +77,12 @@
     "State": "區域",
     "ZipCode": "郵遞區號",
     "ShippingAddress": "運送地址"
+  },
+  "Dialog": {
+    "Cancel": "取消",
+    "Confirm": "確定",
+    "AreYouSure": "確定嗎?",
+    "Message": "訊息"
   },
   "StripeErrorMsg": {
     "account_already_exists": "The email address provided for the creation of a deferred account already has an account associated with it. Use the OAuth flow to connect the existing account to your platform.",

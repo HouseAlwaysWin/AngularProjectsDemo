@@ -8,11 +8,6 @@
     "en": "English",
     "zh-TW": "Tranditional Chinese"
   },
-  "NavTop": {
-    "Login": "Login",
-    "Logout": "Logout",
-    "OrdersHistory": "Orders History"
-  },
   "AccountForm": {
     "Email": "Email",
     "Password": "Password",
@@ -21,7 +16,7 @@
     "Logout": "Logout",
     "PasswordConfirm": "Password Confirm",
     "EmailRequired": "Email is Required",
-    "EmailFormatWrong": "Email is wrong format",
+    "EmailFormatWrong": "Email format incorrect.",
     "PasswordRequired": "Password is Required",
     "PasswordConfirmRequired": "PasswordConfirm is Required",
     "DisplayName": "DisplayName",
@@ -38,7 +33,9 @@
   },
   "NavBar": {
     "Home": "Home",
-    "Shop": "Shop"
+    "Shop": "Shop",
+    "ShopCart": "Shop Cart",
+    "OrdersHistory": "Orders History"
   },
   "BasketTable": {
     "No": "No",
@@ -80,6 +77,12 @@
     "State": "State",
     "ZipCode": "ZipCode",
     "ShippingAddress": "Shipping Address"
+  },
+  "Dialog": {
+    "Cancel": "Cancel",
+    "Confirm": "Confirm",
+    "AreYouSure": "Are you sure?",
+    "Message": "Message"
   },
   "StripeErrorMsg": {
     "account_already_exists": "The email address provided for the creation of a deferred account already has an account associated with it. Use the OAuth flow to connect the existing account to your platform.",

@@ -15,15 +15,6 @@
     </div>
   </div>
 
-
-
-  <!-- <div>
-    <a mat-button
-      routerLink="/home">{{'NavBar.Home' | translate }}</a>
-    <a mat-button
-      routerLink="/shop">{{'NavBar.Shop' | translate }}</a>
-  </div> -->
-
   <div>
     <ul class="navigation-items"
       fxHide
@@ -42,19 +33,21 @@
       <ng-container *ngIf="!isAuth">
         <li>
           <a mat-button
-            routerLink="/account/login">{{'AccountForm.Login' | translate }}</a>
+            routerLink="/account/login">
+            <mat-icon>person</mat-icon>
+            {{'AccountForm.Login' | translate }}
+          </a>
         </li>
         <li>
           <a mat-button
-            routerLink="/account/register">{{ 'AccountForm.Register' | translate }}</a>
+            routerLink="/account/register">
+            <mat-icon>person_add</mat-icon>
+            {{ 'AccountForm.Register' | translate }}
+          </a>
         </li>
       </ng-container>
 
       <li *ngIf="isAuth">
-        <!-- <a mat-button
-          routerLink="/orders">
-          View Orders
-        </a> -->
         <a mat-button
           [matMenuTriggerFor]="usermenu">{{ userInfo.email }}</a>
         <mat-menu #usermenu="matMenu">
@@ -62,7 +55,7 @@
             routerLink="/orders">{{ 'NavTop.OrdersHistory' | translate}}</button>
           <button mat-menu-item
             routerLink="/home"
-            (click)="onLogout()">{{'NavTop.Logout' | translate }}</button>
+            (click)="onLogout()">{{'AccountForm.Logout' | translate }}</button>
         </mat-menu>
       </li>
 
@@ -72,13 +65,16 @@
       <li>
         <a mat-button
           [matMenuTriggerFor]="langList">
-          <mat-icon>public</mat-icon>
+          <mat-icon>language</mat-icon>
           {{ 'Lang.langs' | translate }}
         </a>
         <mat-menu #langList="matMenu">
           <button mat-menu-item
             *ngFor="let lang of translate.getLangs()"
-            (click)="changeLang(lang)">{{ 'Lang.'+ lang | translate }}</button>
+            (click)="changeLang(lang)">
+            <mat-icon>translate</mat-icon>
+            {{ 'Lang.'+ lang | translate }}
+          </button>
         </mat-menu>
       </li>
 

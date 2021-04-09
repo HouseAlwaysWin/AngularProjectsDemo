@@ -25,7 +25,11 @@ export class BasketComponent implements OnInit {
 
 
   openDialog() {
-    const dialogRef = this.dialog.open(DialogComfirm);
+    const dialogRef = this.dialog.open(DialogComfirm, {
+      disableClose: false,
+      width: '500px',
+      role: 'alertdialog'
+    });
 
     dialogRef.afterClosed().subscribe(result => {
       this.basketService.loadBasket();
@@ -50,7 +54,10 @@ export class BasketComponent implements OnInit {
   }
 
   removeBasketItem(item: IBasketItem) {
-    const dialogRef = this.dialog.open(DialogComfirm);
+    const dialogRef = this.dialog.open(DialogComfirm, {
+      disableClose: false,
+      width: '400px',
+    });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {

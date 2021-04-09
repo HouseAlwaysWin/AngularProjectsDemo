@@ -1,11 +1,18 @@
-<h2 mat-dialog-title>Hint</h2>
-<mat-dialog-content>
-  <h1>Are you sure?</h1>
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-  <button mat-button
-    mat-dialog-close>Cancel</button>
-  <button mat-button
-    [mat-dialog-close]="true"
-    cdkFocusInitial>Confirm</button>
-</mat-dialog-actions>
+<div class="dialog">
+  <mat-dialog-content>
+    <mat-icon class="dialog-title"
+      [inline]="true">error_outline</mat-icon>
+
+    <h1>{{ 'Dialog.AreYouSure' | translate}}</h1>
+  </mat-dialog-content>
+  <mat-dialog-actions align="center">
+    <button mat-raised-button
+      color="primary"
+      [mat-dialog-close]="true"
+      cdkFocusInitial>{{ 'Dialog.Confirm'  | translate}}</button>
+
+    <button mat-raised-button
+      color="warn"
+      mat-dialog-close>{{ 'Dialog.Cancel' | translate}}</button>
+  </mat-dialog-actions>
+</div>

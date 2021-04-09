@@ -46,14 +46,22 @@
         *matHeaderCellDef>{{ 'BasketTable.Quantity' | translate }} </th>
       <td mat-cell
         *matCellDef="let item">
-        <div>
-          <i *ngIf="showQuantityAdj"
-            class="fa fa-plus-circle quantity-add"
-            (click)="incrementItem(item)"></i>
-          <span class="quantity-label">{{ item.quantity }}</span>
-          <i *ngIf="showQuantityAdj"
-            class="fa fa-minus-circle quantity-minus"
-            (click)="decrementItem(item)"></i>
+        <div fxLayout="row">
+          <div>
+            <mat-icon *ngIf="showQuantityAdj"
+              class="add-mat-icon noselect"
+              inline="true"
+              (click)="incrementItem(item)">add_circle</mat-icon>
+          </div>
+          <div>
+            <span class="quantity-label noselect">{{ item.quantity }}</span>
+          </div>
+          <div>
+            <mat-icon *ngIf="showQuantityAdj"
+              class="remove-mat-icon noselect"
+              inline="true"
+              (click)="decrementItem(item)">remove_circle</mat-icon>
+          </div>
         </div>
       </td>
     </ng-container>
@@ -63,7 +71,7 @@
         *matHeaderCellDef> {{ 'BasketTable.Remove' | translate }} </th>
       <td mat-cell
         *matCellDef="let item">
-        <span class="removewButton"
+        <span class="removewButton  noselect"
           (click)="removeBasketItem(item)">
           <mat-icon color="warn">delete</mat-icon>
         </span>
@@ -71,6 +79,7 @@
     </ng-container>
 
     <tr mat-header-row
+      class="noselect"
       *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row
       *matRowDef="let row; columns: displayedColumns;"></tr>

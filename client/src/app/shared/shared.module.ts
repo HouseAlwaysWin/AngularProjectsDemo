@@ -32,7 +32,8 @@ import { TrucateTextPipe } from './pipes/trucate-text.pipe';
     ReactiveFormsModule,
     FormsModule,
     MatCarouselComponent,
-    TrucateTextPipe
+    TrucateTextPipe,
+    DialogComfirm
   ]
 })
 export class SharedModule { }

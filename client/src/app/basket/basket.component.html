@@ -1,5 +1,5 @@
-<div fxLayout="row"
-  fxLayout.xs="column"
+<div fxLayout.gt-sm="row"
+  fxLayout="column"
   fxLayoutAlign="start"
   class="basket">
   <ng-container *ngIf="(basket$ | async).basketItems.length > 0">

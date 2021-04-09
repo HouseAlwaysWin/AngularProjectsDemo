@@ -1,3 +1,28 @@
+@import "../../../styles.scss";
+
 .loginForm {
   margin-top: 5em;
+  padding: 3em;
+}
+
+.login-title {
+  color: rgb(78, 109, 247);
+}
+
+.login-icon {
+  @include mat-icon-size(30px);
+  margin-right: 5px;
+  color: rgb(78, 109, 247);
+}
+
+.passwordInput,
+.emailInput,
+.loginBtn {
+  width: 200px;
+  margin: 20px 0 0 20px;
+}
+
+.input-warn {
+  color: red;
+  @include mat-icon-size(19px);
 }

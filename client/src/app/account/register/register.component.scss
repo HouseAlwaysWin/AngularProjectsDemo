@@ -1,3 +1,22 @@
+@import "../../../styles.scss";
+
 .registerForm {
   margin-top: 5em;
+  padding: 3em;
+}
+
+.register-title {
+  color: rgb(78, 109, 247);
+}
+
+.register-icon {
+  @include mat-icon-size(30px);
+  margin-right: 5px;
+  color: rgb(78, 109, 247);
+}
+
+mat-form-field,
+.registerBtn {
+  width: 200px;
+  margin: 20px 0 0 20px;
 }
