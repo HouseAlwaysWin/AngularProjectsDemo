@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EcommerceApi.Core.Data.EntityConfig
 {
-     public class DeliveryMethodConfiguration : IEntityTypeConfiguration<DeliveryMethod>
+     public class DeliveryMethodConfig : IEntityTypeConfiguration<DeliveryMethod>
     {
         public void Configure(EntityTypeBuilder<DeliveryMethod> builder)
         {

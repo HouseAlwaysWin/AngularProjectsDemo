@@ -25,6 +25,22 @@ namespace EcommerceApi.Core.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Language",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
+                    LangCulture = table.Column<string>(nullable: true),
+                    Published = table.Column<bool>(nullable: false),
+                    SeqNo = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Language", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OrderAddresses",
                 columns: table => new
                 {
@@ -43,18 +59,53 @@ namespace EcommerceApi.Core.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductBrands",
+                name: "Pictures",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CreatedDate = table.Column<DateTimeOffset>(nullable: false, defaultValueSql: "GETDATE()"),
+                    MimeType = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    UrlPath = table.Column<string>(nullable: true),
+                    AltAttribute = table.Column<string>(maxLength: 100, nullable: true),
+                    TitleAttribute = table.Column<string>(maxLength: 100, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Pictures", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductAttributes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreatedDate = table.Column<DateTimeOffset>(nullable: false),
                     ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
                     Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductBrands", x => x.Id);
+                    table.PrimaryKey("PK_ProductAttributes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductAttributeValues",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreatedDate = table.Column<DateTimeOffset>(nullable: false),
+                    ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    PriceAdjustment = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Quantity = table.Column<int>(nullable: false),
+                    SeqIndex = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductAttributeValues", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -75,6 +126,29 @@ namespace EcommerceApi.Core.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProductCategories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Localized",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    LocaleTable = table.Column<string>(nullable: true),
+                    LocaleKey = table.Column<string>(nullable: true),
+                    LocaleValue = table.Column<string>(nullable: true),
+                    LanguageId = table.Column<int>(nullable: false),
+                    TableId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Localized", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Localized_Language_LanguageId",
+                        column: x => x.LanguageId,
+                        principalTable: "Language",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -120,22 +194,15 @@ namespace EcommerceApi.Core.Data.Migrations
                     CreatedDate = table.Column<DateTimeOffset>(nullable: false, defaultValueSql: "GETDATE()"),
                     ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
                     Name = table.Column<string>(maxLength: 100, nullable: false),
-                    Description = table.Column<string>(maxLength: 500, nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    ImgUrl = table.Column<string>(nullable: false),
-                    LangCode = table.Column<string>(nullable: true),
-                    ProductBrandId = table.Column<int>(nullable: false),
+                    Description = table.Column<string>(maxLength: 500, nullable: false),
+                    Published = table.Column<bool>(nullable: false),
+                    Deleted = table.Column<bool>(nullable: false),
                     ProductCategoryId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Products", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Products_ProductBrands_ProductBrandId",
-                        column: x => x.ProductBrandId,
-                        principalTable: "ProductBrands",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Products_ProductCategories_ProductCategoryId",
                         column: x => x.ProductCategoryId,
@@ -173,6 +240,71 @@ namespace EcommerceApi.Core.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Product_Pictures",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductId = table.Column<int>(nullable: false),
+                    PictureId = table.Column<int>(nullable: false),
+                    SeqNo = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Product_Pictures", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Product_Pictures_Pictures_PictureId",
+                        column: x => x.PictureId,
+                        principalTable: "Pictures",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Product_Pictures_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Product_ProductAttributes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductAttributeId = table.Column<int>(nullable: false),
+                    ProductId = table.Column<int>(nullable: false),
+                    ProductAttributeValueId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Product_ProductAttributes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Product_ProductAttributes_ProductAttributes_ProductAttributeId",
+                        column: x => x.ProductAttributeId,
+                        principalTable: "ProductAttributes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Product_ProductAttributes_ProductAttributeValues_ProductAttributeValueId",
+                        column: x => x.ProductAttributeValueId,
+                        principalTable: "ProductAttributeValues",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Product_ProductAttributes_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Localized_LanguageId",
+                table: "Localized",
+                column: "LanguageId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_OrderItems_OrderId",
                 table: "OrderItems",
@@ -189,9 +321,29 @@ namespace EcommerceApi.Core.Data.Migrations
                 column: "OrderAddressId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Products_ProductBrandId",
-                table: "Products",
-                column: "ProductBrandId");
+                name: "IX_Product_Pictures_PictureId",
+                table: "Product_Pictures",
+                column: "PictureId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Product_Pictures_ProductId",
+                table: "Product_Pictures",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Product_ProductAttributes_ProductAttributeId",
+                table: "Product_ProductAttributes",
+                column: "ProductAttributeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Product_ProductAttributes_ProductAttributeValueId",
+                table: "Product_ProductAttributes",
+                column: "ProductAttributeValueId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Product_ProductAttributes_ProductId",
+                table: "Product_ProductAttributes",
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_ProductCategoryId",
@@ -202,25 +354,43 @@ namespace EcommerceApi.Core.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Localized");
+
+            migrationBuilder.DropTable(
                 name: "OrderItems");
 
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "Product_Pictures");
+
+            migrationBuilder.DropTable(
+                name: "Product_ProductAttributes");
+
+            migrationBuilder.DropTable(
+                name: "Language");
 
             migrationBuilder.DropTable(
                 name: "Orders");
 
             migrationBuilder.DropTable(
-                name: "ProductBrands");
+                name: "Pictures");
 
             migrationBuilder.DropTable(
-                name: "ProductCategories");
+                name: "ProductAttributes");
+
+            migrationBuilder.DropTable(
+                name: "ProductAttributeValues");
+
+            migrationBuilder.DropTable(
+                name: "Products");
 
             migrationBuilder.DropTable(
                 name: "DeliveryMethods");
 
             migrationBuilder.DropTable(
                 name: "OrderAddresses");
+
+            migrationBuilder.DropTable(
+                name: "ProductCategories");
         }
     }
 }

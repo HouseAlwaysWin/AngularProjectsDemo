@@ -12,7 +12,7 @@ namespace EcommerceApi.Core.Data.QuerySpecs
                 (string.IsNullOrEmpty(param.Search) || EF.Functions.Like(p.Name,$"{param.Search}%")))
         {
            AddInclude(p => p.ProductCategory);
-           AddInclude(p => p.ProductBrand);
+        //    AddInclude(p => p.ProductBrand);
            AddOrderBy(n => n.Name);
            ApplyPaging(param.PageSize * param.PageIndex,
                    param.PageSize);

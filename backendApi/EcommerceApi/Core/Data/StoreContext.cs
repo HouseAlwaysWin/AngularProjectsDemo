@@ -10,7 +10,14 @@ namespace EcommerceApi.Core.Data
 
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
-        public DbSet<ProductBrand> ProductBrands { get; set; }
+        public DbSet<ProductAttribute> ProductAttributes { get; set; }
+        public DbSet<ProductAttributeValue> ProductAttributeValues { get; set; }
+        public DbSet<Product_ProductAttribute> Product_ProductAttributes { get; set; }
+        public DbSet<Product_Picture> Product_Pictures { get; set; }
+        public DbSet<Picture> Pictures { get; set; }
+        public DbSet<Language> Language { get; set; }
+        public DbSet<Localized> Localized { get; set; }
+
         public DbSet<Order> Orders {get;set;}
         public DbSet<OrderItem> OrderItems {get;set;}
         public DbSet<DeliveryMethod> DeliveryMethods {get;set;}
@@ -26,7 +33,6 @@ namespace EcommerceApi.Core.Data
 
             base.OnModelCreating(builder);
             builder.ApplyConfigurationsFromAssembly (Assembly.GetExecutingAssembly ());
-
         }
         
     }

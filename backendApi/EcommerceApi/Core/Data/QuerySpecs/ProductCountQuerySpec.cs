@@ -5,10 +5,10 @@ namespace EcommerceApi.Core.Data.QuerySpecs
 {
     public class ProductCountQuerySpec:BaseQuerySpec<Product>
     {
-       public ProductCountQuerySpec(GetProductParam param)
+       public ProductCountQuerySpec(ProductListParam param)
             :base(p => 
                 (string.IsNullOrEmpty(param.Search) || p.Name.ToLower().Contains(param.Search)) &&
-                (!param.BrandId.HasValue || p.ProductBrandId == param.BrandId) &&
+                // (!param.BrandId.HasValue || p.ProductBrandId == param.BrandId) &&
                 (!param.CategoryId.HasValue || p.ProductCategoryId == param.CategoryId)) {
         }
     }

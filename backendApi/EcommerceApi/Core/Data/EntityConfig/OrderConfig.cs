@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EcommerceApi.Core.Data.EntityConfig
 {
-    public class OrderConfiguration : IEntityTypeConfiguration<Order>
+    public class OrderConfig : IEntityTypeConfiguration<Order>
     {
         public void Configure(EntityTypeBuilder<Order> builder)
         {

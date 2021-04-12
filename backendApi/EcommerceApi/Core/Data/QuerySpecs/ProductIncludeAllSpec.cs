@@ -6,7 +6,7 @@ namespace EcommerceApi.Core.Data.QuerySpecs
     {
          public ProductIncludeAllSpec(int id)
             :base(p => p.Id == id ) {
-                AddInclude(p => p.ProductBrand);
+                // AddInclude(p => p.ProductBrand);
                 AddInclude(p => p.ProductCategory);
         } 
     }

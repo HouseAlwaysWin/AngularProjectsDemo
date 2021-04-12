@@ -18,6 +18,8 @@ namespace EcommerceApi.Core.Data.QuerySpecs
 
         public List<Expression<Func<T, object>>> Includes {get;} = new List<Expression<Func<T, object>>>();
 
+        public List<Expression<Func<T, object>>> ThenIncludes {get;} = new List<Expression<Func<T, object>>>();
+
        public Expression<Func<T, object>> OrderBy  {get; private set;}
 
         public Expression<Func<T, object>> OrderByDescending  {get;private set;}
@@ -29,6 +31,7 @@ namespace EcommerceApi.Core.Data.QuerySpecs
 
        protected void AddInclude(Expression<Func<T,object>> includeExpression){
             Includes.Add(includeExpression);
+            
         }
 
         protected void AddOrderBy(Expression<Func<T,object>> orderByExpression){

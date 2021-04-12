@@ -41,7 +41,7 @@ namespace EcommerceApi.Core.Services
                 subTotal += (productItem.Price * item.Quantity);
 
                 var orderItem =  _mapper.Map<BasketItem,OrderItem>(item);
-                orderItem.ProductBrand = productItem.ProductBrand.Name;
+                // orderItem.ProductBrand = productItem.ProductBrand.Name;
                 orderItem.ProductCategory = productItem.ProductCategory.Name;
                 items.Add(orderItem);
              }

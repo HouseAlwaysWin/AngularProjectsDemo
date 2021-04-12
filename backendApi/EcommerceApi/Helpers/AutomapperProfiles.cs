@@ -1,3 +1,4 @@
+using System.Linq;
 
 
 using System.Collections.Generic;
@@ -10,10 +11,18 @@ namespace EcommerceApi.Helpers.Localization {
     public class AutomapperProfiles:Profile{
         public AutomapperProfiles()
         {
-           CreateMap<Product,GetProductDto>()
-            .ForMember(pd => pd.ProductCategoryId,m => m.MapFrom(p => p.ProductCategoryId))
-            .ForMember(pd => pd.ProductBrandId,m => m.MapFrom(p => p.ProductBrandId))
-            .ForMember(pd => pd.ImgUrl,m => m.MapFrom<ProductUrlResolver>());
+           CreateMap<Product,ProductDto>()
+                .ForMember(dto => dto.ProductAttributes,p=> p.MapFrom(p => p.ProductAttributeMap.Select(p=>p.ProductAttribute).ToList()))
+                .ForMember(dto => dto.ProductPictures,p=> p.MapFrom(p => p.ProductPictureMap.Select(p=>p.Picture).ToList()));
+
+           CreateMap<ProductAttribute,ProductAttributeDto>();
+           CreateMap<ProductAttributeValue,ProductAttributeValueDto>();
+           CreateMap<Product_ProductAttribute,Product_ProductAttributeDto>();
+           CreateMap<ProductCategory,ProductCategoryDto>();
+           CreateMap<Picture,PictureDto>();
+           CreateMap<Product_Picture,Product_PictureDto>();
+           CreateMap<Localized,LocalizedDto>();
+           CreateMap<Language,LanguageDto>();
         
             CreateMap<AddressDto,UserAddress>().ReverseMap();
             CreateMap<AddressDto,OrderAddress>().ReverseMap();

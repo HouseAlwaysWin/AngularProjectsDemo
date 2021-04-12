@@ -1,48 +1,43 @@
 [
     {
         "Id": 1,
-        "Name": "Books",
+        "Name": "Bitchip",
         "HasChild": true,
         "Level": 0,
         "ParentId": null,
-        "LangCode": "en",
-        "Index": 0
+        "SeqNo": 1
     },
     {
         "Id": 2,
-        "Name": "Novels",
+        "Name": "Giacopelo",
         "HasChild": false,
         "Level": 1,
         "ParentId": 1,
-        "LangCode": "en",
-        "Index": 0
+        "SeqNo": 1
     },
     {
         "Id": 3,
-        "Name": "Business",
+        "Name": "Bytecard",
         "HasChild": false,
         "Level": 1,
         "ParentId": 1,
-        "LangCode": "en",
-        "Index": 1
+        "SeqNo": 2
     },
     {
         "Id": 4,
-        "Name": "Male-Clothes",
+        "Name": "Andalax",
         "HasChild": true,
         "Level": 0,
         "ParentId": null,
-        "LangCode": "en",
-        "Index": 1
+        "SeqNo": 2
     },
     {
         "Id": 5,
-        "Name": "T-Shirts",
+        "Name": "Konklab",
         "HasChild": false,
         "Level": 1,
         "ParentId": 4,
-        "LangCode": "en",
-        "Index": 0
+        "SeqNo": 1
     },
     {
         "Id": 6,
@@ -50,34 +45,38 @@
         "HasChild": false,
         "Level": 1,
         "ParentId": 4,
-        "LangCode": "en",
-        "Index": 1
+        "SeqNo": 2
     },
     {
         "Id": 7,
-        "Name": "Female-Clothes",
+        "Name": "Voltsillam",
         "HasChild": true,
         "Level": 0,
         "ParentId": null,
-        "LangCode": "en",
-        "Index": 2
+        "SeqNo": 3
     },
     {
         "Id": 8,
-        "Name": "T-Shirts",
+        "Name": "Flowdesk",
         "HasChild": false,
         "Level": 1,
         "ParentId": 7,
-        "LangCode": "en",
-        "Index": 0
+        "SeqNo": 1
     },
     {
         "Id": 9,
-        "Name": "Polo",
+        "Name": "Asoka",
         "HasChild": false,
         "Level": 1,
         "ParentId": 7,
-        "LangCode": "en",
-        "Index": 1
+        "SeqNo": 2
+    },
+    {
+        "Id": 10,
+        "Name": "Cardify",
+        "HasChild": false,
+        "Level": 1,
+        "ParentId": 7,
+        "SeqNo": 3
     }
 ]

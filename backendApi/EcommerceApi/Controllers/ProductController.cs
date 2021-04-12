@@ -19,6 +19,7 @@ namespace EcommerceApi.Controllers
         private readonly IGenericRepository<ProductCategory> _productCategoryRepo;
         private readonly IGenericRepository<ProductBrand> _productBrand;
         private readonly IProductService _productService;
+        private readonly IProductRepository _productRepo;
         private readonly IMapper _mapper;
 
         public ProductController(
@@ -26,6 +27,7 @@ namespace EcommerceApi.Controllers
             IGenericRepository<ProductCategory> productCategoryRepo,
             IGenericRepository<ProductBrand> productBrand,
             IProductService productService,
+            IProductRepository productRepo,
             IMapper mapper
         )
         {
@@ -33,6 +35,7 @@ namespace EcommerceApi.Controllers
             this._productCategoryRepo = productCategoryRepo;
             this._productBrand = productBrand;
             this._productService = productService;
+            this._productRepo = productRepo;
             this._mapper = mapper;
         }
 
@@ -47,7 +50,7 @@ namespace EcommerceApi.Controllers
 
             var products = await _productRepoGeneric.ListAsync(querySpec);
 
-            var data =  _mapper.Map<IReadOnlyList<Product>,IReadOnlyList<GetProductDto>>(products);
+            var data =  _mapper.Map<IReadOnlyList<Product>,IReadOnlyList<ProductDto>>(products);
             return BaseApiOk(data, totalItem);
         }
 
@@ -62,21 +65,22 @@ namespace EcommerceApi.Controllers
 
             var products = await _productRepoGeneric.ListAsync(querySpec);
 
-            var data =  _mapper.Map<IReadOnlyList<Product>,IReadOnlyList<GetProductDto>>(products);
+            var data =  _mapper.Map<IReadOnlyList<Product>,IReadOnlyList<ProductDto>>(products);
             return BaseApiOk(data, totalItem);
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetProducts([FromQuery]GetProductParam param){
+        public async Task<ActionResult> GetProducts([FromQuery]ProductListParam param){
             var querySpec = new GetProductQuerySpec(param);
 
             var countSpec = new ProductCountQuerySpec(param);
 
             var totalItem = await _productRepoGeneric.CountAsync(countSpec);
 
-            var products = await _productRepoGeneric.ListAsync(querySpec);
+            // var products = await _productRepoGeneric.ListAsync(querySpec);
+            var products = await _productRepo.GetProductsAsync(param);
 
-            var data = _mapper.Map<IReadOnlyList<Product>,IReadOnlyList<GetProductDto>>(products);
+            var data = _mapper.Map<IReadOnlyList<Product>,IReadOnlyList<ProductDto>>(products);
 
             return BaseApiOk(data, totalItem);
         }
@@ -88,7 +92,7 @@ namespace EcommerceApi.Controllers
             var product = await _productRepoGeneric.GetEntityWithSpec(querySpec);
             if(product == null) return BaseApiNotFound(new ApiResponse(false,""));
 
-            var data = _mapper.Map<Product,GetProductDto>(product);
+            var data = _mapper.Map<Product,ProductDto>(product);
 
             return BaseApiOk(data);
         }

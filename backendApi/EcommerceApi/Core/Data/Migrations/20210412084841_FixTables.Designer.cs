@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EcommerceApi.Core.Data.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    [Migration("20210408040651_Initial")]
-    partial class Initial
+    [Migration("20210412084841_FixTables")]
+    partial class FixTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -46,6 +46,59 @@ namespace EcommerceApi.Core.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DeliveryMethods");
+                });
+
+            modelBuilder.Entity("EcommerceApi.Core.Models.Entities.Language", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("LangCulture")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Published")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("SeqNo")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Language");
+                });
+
+            modelBuilder.Entity("EcommerceApi.Core.Models.Entities.Localized", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("LanguageId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LocaleKey")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LocaleTable")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LocaleValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TableId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LanguageId");
+
+                    b.ToTable("Localized");
                 });
 
             modelBuilder.Entity("EcommerceApi.Core.Models.Entities.Order", b =>
@@ -176,6 +229,35 @@ namespace EcommerceApi.Core.Data.Migrations
                     b.ToTable("OrderItems");
                 });
 
+            modelBuilder.Entity("EcommerceApi.Core.Models.Entities.Picture", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AltAttribute")
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("MimeType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TitleAttribute")
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("UrlPath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Pictures");
+                });
+
             modelBuilder.Entity("EcommerceApi.Core.Models.Entities.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -188,17 +270,13 @@ namespace EcommerceApi.Core.Data.Migrations
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("GETDATE()");
 
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(500)")
                         .HasMaxLength(500);
-
-                    b.Property<string>("ImgUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LangCode")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset?>("ModifiedDate")
                         .HasColumnType("datetimeoffset");
@@ -211,22 +289,20 @@ namespace EcommerceApi.Core.Data.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("ProductBrandId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ProductCategoryId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<bool>("Published")
+                        .HasColumnType("bit");
 
-                    b.HasIndex("ProductBrandId");
+                    b.HasKey("Id");
 
                     b.HasIndex("ProductCategoryId");
 
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("EcommerceApi.Core.Models.Entities.ProductBrand", b =>
+            modelBuilder.Entity("EcommerceApi.Core.Models.Entities.ProductAttribute", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -234,9 +310,7 @@ namespace EcommerceApi.Core.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTimeOffset>("CreatedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<DateTimeOffset?>("ModifiedDate")
                         .HasColumnType("datetimeoffset");
@@ -246,7 +320,37 @@ namespace EcommerceApi.Core.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductBrands");
+                    b.ToTable("ProductAttributes");
+                });
+
+            modelBuilder.Entity("EcommerceApi.Core.Models.Entities.ProductAttributeValue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("ModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("PriceAdjustment")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SeqIndex")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProductAttributeValues");
                 });
 
             modelBuilder.Entity("EcommerceApi.Core.Models.Entities.ProductCategory", b =>
@@ -264,13 +368,6 @@ namespace EcommerceApi.Core.Data.Migrations
                     b.Property<bool>("HasChild")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Index")
-                        .HasColumnType("int");
-
-                    b.Property<string>("LangCode")
-                        .HasColumnType("nvarchar(10)")
-                        .HasMaxLength(10);
-
                     b.Property<int>("Level")
                         .HasColumnType("int");
 
@@ -284,9 +381,73 @@ namespace EcommerceApi.Core.Data.Migrations
                     b.Property<int?>("ParentId")
                         .HasColumnType("int");
 
+                    b.Property<int>("SeqNo")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("ProductCategories");
+                });
+
+            modelBuilder.Entity("EcommerceApi.Core.Models.Entities.Product_Picture", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("PictureId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SeqNo")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PictureId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Product_Pictures");
+                });
+
+            modelBuilder.Entity("EcommerceApi.Core.Models.Entities.Product_ProductAttribute", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ProductAttributeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductAttributeValueId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductAttributeId");
+
+                    b.HasIndex("ProductAttributeValueId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Product_ProductAttributes");
+                });
+
+            modelBuilder.Entity("EcommerceApi.Core.Models.Entities.Localized", b =>
+                {
+                    b.HasOne("EcommerceApi.Core.Models.Entities.Language", "Language")
+                        .WithMany()
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("EcommerceApi.Core.Models.Entities.Order", b =>
@@ -314,15 +475,45 @@ namespace EcommerceApi.Core.Data.Migrations
 
             modelBuilder.Entity("EcommerceApi.Core.Models.Entities.Product", b =>
                 {
-                    b.HasOne("EcommerceApi.Core.Models.Entities.ProductBrand", "ProductBrand")
-                        .WithMany()
-                        .HasForeignKey("ProductBrandId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("EcommerceApi.Core.Models.Entities.ProductCategory", "ProductCategory")
                         .WithMany()
                         .HasForeignKey("ProductCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("EcommerceApi.Core.Models.Entities.Product_Picture", b =>
+                {
+                    b.HasOne("EcommerceApi.Core.Models.Entities.Picture", "Picture")
+                        .WithMany("ProductPictureMap")
+                        .HasForeignKey("PictureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EcommerceApi.Core.Models.Entities.Product", "Product")
+                        .WithMany("ProductPictureMap")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("EcommerceApi.Core.Models.Entities.Product_ProductAttribute", b =>
+                {
+                    b.HasOne("EcommerceApi.Core.Models.Entities.ProductAttribute", "ProductAttribute")
+                        .WithMany("ProductAttributeMap")
+                        .HasForeignKey("ProductAttributeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EcommerceApi.Core.Models.Entities.ProductAttributeValue", "ProductAttributeValue")
+                        .WithMany("ProductAttributeMap")
+                        .HasForeignKey("ProductAttributeValueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EcommerceApi.Core.Models.Entities.Product", "Product")
+                        .WithMany("ProductAttributeMap")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

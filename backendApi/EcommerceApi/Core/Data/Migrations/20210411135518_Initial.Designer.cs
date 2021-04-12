@@ -4,14 +4,16 @@ using EcommerceApi.Core.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EcommerceApi.Core.Data.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    partial class StoreContextModelSnapshot : ModelSnapshot
+    [Migration("20210411135518_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -340,9 +342,6 @@ namespace EcommerceApi.Core.Data.Migrations
                     b.Property<decimal>("PriceAdjustment")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("ProductAttributeId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
@@ -350,8 +349,6 @@ namespace EcommerceApi.Core.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductAttributeId");
 
                     b.ToTable("ProductAttributeValues");
                 });
@@ -371,6 +368,13 @@ namespace EcommerceApi.Core.Data.Migrations
                     b.Property<bool>("HasChild")
                         .HasColumnType("bit");
 
+                    b.Property<int>("Index")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LangCode")
+                        .HasColumnType("nvarchar(10)")
+                        .HasMaxLength(10);
+
                     b.Property<int>("Level")
                         .HasColumnType("int");
 
@@ -382,9 +386,6 @@ namespace EcommerceApi.Core.Data.Migrations
                         .HasMaxLength(100);
 
                     b.Property<int?>("ParentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SeqNo")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -427,12 +428,17 @@ namespace EcommerceApi.Core.Data.Migrations
                     b.Property<int>("ProductAttributeId")
                         .HasColumnType("int");
 
+                    b.Property<int>("ProductAttributeValueId")
+                        .HasColumnType("int");
+
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProductAttributeId");
+
+                    b.HasIndex("ProductAttributeValueId");
 
                     b.HasIndex("ProductId");
 
@@ -480,15 +486,6 @@ namespace EcommerceApi.Core.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("EcommerceApi.Core.Models.Entities.ProductAttributeValue", b =>
-                {
-                    b.HasOne("EcommerceApi.Core.Models.Entities.ProductAttribute", "ProductAttribute")
-                        .WithMany("ProductAttributeValue")
-                        .HasForeignKey("ProductAttributeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("EcommerceApi.Core.Models.Entities.Product_Picture", b =>
                 {
                     b.HasOne("EcommerceApi.Core.Models.Entities.Picture", "Picture")
@@ -509,6 +506,12 @@ namespace EcommerceApi.Core.Data.Migrations
                     b.HasOne("EcommerceApi.Core.Models.Entities.ProductAttribute", "ProductAttribute")
                         .WithMany("ProductAttributeMap")
                         .HasForeignKey("ProductAttributeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EcommerceApi.Core.Models.Entities.ProductAttributeValue", "ProductAttributeValue")
+                        .WithMany("ProductAttributeMap")
+                        .HasForeignKey("ProductAttributeValueId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

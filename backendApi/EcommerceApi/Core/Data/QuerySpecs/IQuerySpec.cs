@@ -8,6 +8,7 @@ namespace EcommerceApi.Core.Data.QuerySpecs
     {
         Expression<Func<T,bool>> Where {get;}
         List<Expression<Func<T,object>>> Includes {get;}
+        List<Expression<Func<T,object>>> ThenIncludes {get;}
 
         Expression<Func<T,object>> OrderBy {get;}
         Expression<Func<T,object>> OrderByDescending {get;}

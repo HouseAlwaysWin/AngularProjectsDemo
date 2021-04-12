@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EcommerceApi.Core.Data.Repositories.Interfaces;
+using EcommerceApi.Core.Models.Dtos;
 using EcommerceApi.Core.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,15 +16,16 @@ namespace EcommerceApi.Core.Data.Repositories
         {
            this._context = context; 
         }
-        public async Task<IReadOnlyList<ProductBrand>> GetProductBrandsAsync()
-        {
-            return await _context.ProductBrands.ToListAsync();
-        }
+        // public async Task<IReadOnlyList<ProductBrand>> GetProductBrandsAsync()
+        // {
+        //     return await _context.ProductBrands.ToListAsync();
+        // }
 
         public async Task<Product> GetProductByIdAsync(int id)
         {
             return await _context.Products
-                    .Include(p=>p.ProductBrand)
+                    .Include(p=>p.ProductAttributeMap)
+                    .Include(p => p.ProductPictureMap)
                     .Include(p=>p.ProductCategory)
                     .FirstOrDefaultAsync(p=>p.Id == id);
         }
@@ -39,12 +41,32 @@ namespace EcommerceApi.Core.Data.Repositories
 
         public async Task<List<ProductCategory>> GetProductCategoriesByIdAsync(int id){
            return await  _context.ProductCategories
-                        .Where(p => p.ParentId == id).OrderBy(p => p.Index).ToListAsync();
+                        .Where(p => p.ParentId == id).OrderBy(p => p.SeqNo).ToListAsync();
         }
 
-        public Task<IReadOnlyList<Product>> GetProductsAsync()
+        public async Task<IReadOnlyList<Product>> GetProductsAsync(ProductListParam param)
         {
-            throw new System.NotImplementedException();
+            IQueryable<Product> query =  _context.Products.Where(p => 
+                (string.IsNullOrEmpty(param.Search) || p.Name.ToLower().Contains(param.Search)) &&
+                (!param.CategoryId.HasValue || p.ProductCategoryId == param.CategoryId));
+
+            if(param.LoadPictures){
+              query =  query.Include(p => p.ProductPictureMap
+              ).ThenInclude(p => p.Picture);
+            }
+
+            if(param.LoadAttributes){
+              query= query.Include(p => p.ProductAttributeMap)
+                .ThenInclude(p => p.ProductAttribute)
+                .ThenInclude(pa => pa.ProductAttributeValue);
+            }
+
+            if(param.LoadCategories){
+                query= query.Include(p => p.ProductCategory);
+            }
+
+             return await query.ToListAsync();
+
         }
     }
 }
