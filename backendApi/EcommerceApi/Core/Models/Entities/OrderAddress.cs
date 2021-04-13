@@ -1,6 +1,6 @@
 namespace EcommerceApi.Core.Models.Entities
 {
-    public class OrderAddress
+    public class OrderAddress:BaseEntity<long>
     {
         
         public OrderAddress()
@@ -17,7 +17,6 @@ namespace EcommerceApi.Core.Models.Entities
             ZipCode = zipCode;
         }
 
-        public long Id  { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Street { get; set; }

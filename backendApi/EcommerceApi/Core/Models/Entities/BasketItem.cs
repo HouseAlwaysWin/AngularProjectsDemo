@@ -1,7 +1,7 @@
 namespace EcommerceApi.Core.Models.Entities
 {
-    public class BasketItem{
-        public int Id  { get;  set; }
+    public class BasketItem :BaseEntity{
+        // public int Id  { get;  set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }

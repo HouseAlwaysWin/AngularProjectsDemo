@@ -1,13 +1,13 @@
 namespace EcommerceApi.Core.Models.Entities
 {
-    public class OrderItem:BaseEntity
+    public class OrderItem:BaseEntity<long>
     {
         public OrderItem()
         {
             
         }
 
-        public long Id { get; private set; }
+        // public long Id { get; private set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }

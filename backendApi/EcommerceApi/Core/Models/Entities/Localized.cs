@@ -1,8 +1,8 @@
 namespace EcommerceApi.Core.Models.Entities
 {
-    public class Localized
+    public class Localized:BaseEntity
     {
-        public int Id { get; set; }
+        // public int Id { get; set; }
         public string LocaleTable { get; set; }
         public string LocaleKey { get; set; }
         public string LocaleValue { get; set; }

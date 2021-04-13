@@ -22,6 +22,7 @@ using EcommerceApi.Core.Data;
 using EcommerceApi.Core.Data.Repositories;
 using EcommerceApi.Core.Data.Repositories.Interfaces;
 using StackExchange.Redis;
+using Microsoft.AspNetCore.Http;
 
 namespace EcommerceApi
 {
@@ -106,7 +107,7 @@ namespace EcommerceApi
                 };
             });
 
-
+            services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(_config.GetConnectionString("redis")));
             services.AddScoped<ITokenService,TokenService>();
             services.AddScoped<IProductRepository,ProductRepository>();
             services.AddScoped<IProductService,ProductService>();
@@ -115,6 +116,12 @@ namespace EcommerceApi
             services.AddScoped(typeof(IGenericRepository<>),(typeof(GenericRepository<>)));
             services.AddScoped<IUnitOfWork,UnitOfWork>();
             services.AddScoped<IBasketRepository,BasketRepository>();
+
+            services.AddScoped<IRedisCachedService,RedisCachedService>();
+            services.AddScoped<ILanguageService,LanguageService>();
+            services.AddSingleton<IHttpContextAccessor,HttpContextAccessor>();
+            services.AddScoped<ILocalizedService,LocalizedService>();
+
 
             services.AddSwaggerGen();
             services.AddCors(opt => {

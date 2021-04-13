@@ -30,7 +30,7 @@ namespace EcommerceApi.Core.Data.Repositories
                     .FirstOrDefaultAsync(p=>p.Id == id);
         }
 
-        public async Task<IReadOnlyList<ProductCategory>> GetProductCategoriesAsync()
+        public async Task<List<ProductCategory>> GetProductCategoriesAsync()
         {
             return await _context.ProductCategories.ToListAsync();
         }
@@ -44,7 +44,7 @@ namespace EcommerceApi.Core.Data.Repositories
                         .Where(p => p.ParentId == id).OrderBy(p => p.SeqNo).ToListAsync();
         }
 
-        public async Task<IReadOnlyList<Product>> GetProductsAsync(ProductListParam param)
+        public async Task<List<Product>> GetProductsAsync(ProductListParam param)
         {
             IQueryable<Product> query =  _context.Products.Where(p => 
                 (string.IsNullOrEmpty(param.Search) || p.Name.ToLower().Contains(param.Search)) &&

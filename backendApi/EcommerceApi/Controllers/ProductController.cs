@@ -78,9 +78,9 @@ namespace EcommerceApi.Controllers
             var totalItem = await _productRepoGeneric.CountAsync(countSpec);
 
             // var products = await _productRepoGeneric.ListAsync(querySpec);
-            var products = await _productRepo.GetProductsAsync(param);
-
-            var data = _mapper.Map<IReadOnlyList<Product>,IReadOnlyList<ProductDto>>(products);
+            // var products = await _productRepo.GetProductsAsync(param);
+            // var data = _mapper.Map<IReadOnlyList<Product>,IReadOnlyList<ProductDto>>(products);
+            var data = await _productService.GetProductDtosAsync(param);
 
             return BaseApiOk(data, totalItem);
         }

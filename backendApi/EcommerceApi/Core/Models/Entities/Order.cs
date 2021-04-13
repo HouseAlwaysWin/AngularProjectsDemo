@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace EcommerceApi.Core.Models.Entities
 {
-    public class Order : BaseEntity
+    public class Order : BaseEntity<long>
     {
         public Order()
         {
@@ -28,7 +28,7 @@ namespace EcommerceApi.Core.Models.Entities
             DeliveryMethodId = deliveryMethodId;
             PaymentIntentId = paymentIntentId;
         }
-        public long Id  { get; set; }
+        // public long Id  { get; set; }
         public string BuyerName  { get; set; }
         public string BuyerEmail { get; set; }
         public decimal TotalPrice { get; set; }
