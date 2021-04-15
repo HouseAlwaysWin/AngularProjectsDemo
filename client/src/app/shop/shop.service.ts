@@ -5,9 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { IApiPagingResponse, IApiResponse } from '../models/apiResponse';
-import { IProduct } from '../models/product';
-import { IProductBrand } from '../models/productBrand';
-import { IProductCategory } from '../models/productCategory';
+import { IProduct, IProductCategory } from '../models/product';
 import { ShopParams } from '../models/shopParams';
 
 @Injectable({
@@ -18,6 +16,8 @@ export class ShopService {
 
   productListSub: BehaviorSubject<IApiPagingResponse<IProduct[]>> = new BehaviorSubject(null);
   productList$: Observable<IApiPagingResponse<IProduct[]>> = this.productListSub.asObservable();
+  productCategoriesSub: BehaviorSubject<IProductCategory[]> = new BehaviorSubject(null);
+  productCategories$: Observable<IProductCategory[]> = this.productCategoriesSub.asObservable();
 
   constructor(private http: HttpClient) { }
 
@@ -40,13 +40,15 @@ export class ShopService {
     params = params.append('sort', shopParams.sort);
     params = params.append('pageIndex', shopParams.pageIndex.toString());
     params = params.append('pageSize', shopParams.pageSize.toString());
+    params = params.append('loadPictures', true.toString());
 
     var response = this.http.get<IApiPagingResponse<IProduct[]>>(
-      `${this.baseUrl}product`, { observe: 'response', params })
+      `${this.baseUrl}product`, { params })
       .pipe(
         map(response => {
-          this.productListSub.next(response.body);
-          return response.body;
+          if (response.isSuccessed) {
+            this.productListSub.next(response);
+          }
         })
       );
 
@@ -94,15 +96,18 @@ export class ShopService {
     return response;
   }
 
-  getBrands() {
-    return this.http.get<IApiResponse<IProductBrand[]>>(
-      `${this.baseUrl}product/brands`
-    )
-  }
-
   getCategories() {
     return this.http.get<IApiResponse<IProductCategory[]>>(
       `${this.baseUrl}product/categoriestree`
+    ).pipe(
+      map(response => {
+        if (response.isSuccessed) {
+          this.productCategoriesSub.next(response.data);
+        }
+        else {
+          console.log(response.message);
+        }
+      })
     )
   }
 

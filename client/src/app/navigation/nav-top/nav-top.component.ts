@@ -9,6 +9,7 @@ import { BasketService } from 'src/app/basket/basket.service';
 import { IApiResponse } from 'src/app/models/apiResponse';
 import { Basket, IBasket } from 'src/app/models/basket';
 import { IProduct } from 'src/app/models/product';
+import { ShopParams } from 'src/app/models/shopParams';
 import { IUser } from 'src/app/models/user';
 import { ShopService } from 'src/app/shop/shop.service';
 
@@ -79,6 +80,8 @@ export class NavTopComponent implements OnInit, OnDestroy {
 
   changeLang(lang: string) {
     this.translate.use(lang);
+    this.shopService.getCategories().subscribe();
+    this.shopService.getProducts(new ShopParams()).subscribe();
   }
 
 

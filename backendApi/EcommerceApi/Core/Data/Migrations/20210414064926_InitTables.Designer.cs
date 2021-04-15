@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EcommerceApi.Core.Data.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    [Migration("20210412084841_FixTables")]
-    partial class FixTables
+    [Migration("20210414064926_InitTables")]
+    partial class InitTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,6 +28,9 @@ namespace EcommerceApi.Core.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<string>("DeliveryTime")
                         .HasColumnType("nvarchar(max)");
 
@@ -36,6 +39,9 @@ namespace EcommerceApi.Core.Data.Migrations
 
                     b.Property<string>("LangCode")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("ModifiedDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -55,8 +61,14 @@ namespace EcommerceApi.Core.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<string>("LangCulture")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("ModifiedDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -79,16 +91,22 @@ namespace EcommerceApi.Core.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("EntityType")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("LanguageId")
                         .HasColumnType("int");
 
-                    b.Property<string>("LocaleKey")
+                    b.Property<DateTimeOffset?>("ModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("PropertyKey")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LocaleTable")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LocaleValue")
+                    b.Property<string>("PropertyValue")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TableId")
@@ -103,9 +121,9 @@ namespace EcommerceApi.Core.Data.Migrations
 
             modelBuilder.Entity("EcommerceApi.Core.Models.Entities.Order", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("BuyerEmail")
@@ -128,6 +146,9 @@ namespace EcommerceApi.Core.Data.Migrations
                     b.Property<long>("OrderAddressId")
                         .HasColumnType("bigint");
 
+                    b.Property<int?>("OrderAddressId1")
+                        .HasColumnType("int");
+
                     b.Property<DateTimeOffset>("OrderDate")
                         .HasColumnType("datetimeoffset");
 
@@ -145,26 +166,32 @@ namespace EcommerceApi.Core.Data.Migrations
 
                     b.HasIndex("DeliveryMethodId");
 
-                    b.HasIndex("OrderAddressId");
+                    b.HasIndex("OrderAddressId1");
 
                     b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("EcommerceApi.Core.Models.Entities.OrderAddress", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("ModifiedDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("State")
                         .HasColumnType("nvarchar(max)");
@@ -182,9 +209,9 @@ namespace EcommerceApi.Core.Data.Migrations
 
             modelBuilder.Entity("EcommerceApi.Core.Models.Entities.OrderItem", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTimeOffset>("CreatedDate")
@@ -207,8 +234,8 @@ namespace EcommerceApi.Core.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("OrderId")
-                        .HasColumnType("bigint");
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -240,8 +267,14 @@ namespace EcommerceApi.Core.Data.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<string>("MimeType")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("ModifiedDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -342,6 +375,9 @@ namespace EcommerceApi.Core.Data.Migrations
                     b.Property<decimal>("PriceAdjustment")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int>("ProductAttributeId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
@@ -349,6 +385,8 @@ namespace EcommerceApi.Core.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProductAttributeId");
 
                     b.ToTable("ProductAttributeValues");
                 });
@@ -396,6 +434,12 @@ namespace EcommerceApi.Core.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("ModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<int>("PictureId")
                         .HasColumnType("int");
 
@@ -421,10 +465,13 @@ namespace EcommerceApi.Core.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ProductAttributeId")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
 
-                    b.Property<int>("ProductAttributeValueId")
+                    b.Property<DateTimeOffset?>("ModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("ProductAttributeId")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductId")
@@ -433,8 +480,6 @@ namespace EcommerceApi.Core.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ProductAttributeId");
-
-                    b.HasIndex("ProductAttributeValueId");
 
                     b.HasIndex("ProductId");
 
@@ -460,9 +505,7 @@ namespace EcommerceApi.Core.Data.Migrations
 
                     b.HasOne("EcommerceApi.Core.Models.Entities.OrderAddress", "OrderAddress")
                         .WithMany()
-                        .HasForeignKey("OrderAddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("OrderAddressId1");
                 });
 
             modelBuilder.Entity("EcommerceApi.Core.Models.Entities.OrderItem", b =>
@@ -478,6 +521,15 @@ namespace EcommerceApi.Core.Data.Migrations
                     b.HasOne("EcommerceApi.Core.Models.Entities.ProductCategory", "ProductCategory")
                         .WithMany()
                         .HasForeignKey("ProductCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("EcommerceApi.Core.Models.Entities.ProductAttributeValue", b =>
+                {
+                    b.HasOne("EcommerceApi.Core.Models.Entities.ProductAttribute", "ProductAttribute")
+                        .WithMany("ProductAttributeValue")
+                        .HasForeignKey("ProductAttributeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -502,12 +554,6 @@ namespace EcommerceApi.Core.Data.Migrations
                     b.HasOne("EcommerceApi.Core.Models.Entities.ProductAttribute", "ProductAttribute")
                         .WithMany("ProductAttributeMap")
                         .HasForeignKey("ProductAttributeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EcommerceApi.Core.Models.Entities.ProductAttributeValue", "ProductAttributeValue")
-                        .WithMany("ProductAttributeMap")
-                        .HasForeignKey("ProductAttributeValueId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

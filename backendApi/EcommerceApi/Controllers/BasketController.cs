@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using EcommerceApi.Core.Data.Repositories.Interfaces;
+using EcommerceApi.Core.Data.Services.Interfaces;
 using EcommerceApi.Core.Entities;
 using EcommerceApi.Core.Models.Dtos;
 using EcommerceApi.Core.Models.Entities;
@@ -11,11 +12,11 @@ namespace EcommerceApi.Controllers
 
     public class BasketController:BaseApiController
     {
-        private readonly IBasketRepository _basketRepository;
+        private readonly IBasketService _basketRepository;
         private readonly IMapper _mapper;
 
         public BasketController(
-            IBasketRepository basketRepository,
+            IBasketService basketRepository,
             IMapper mapper)
         {
             this._mapper = mapper;

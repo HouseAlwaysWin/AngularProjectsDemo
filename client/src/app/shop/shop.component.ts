@@ -1,14 +1,12 @@
 import { ArrayDataSource } from '@angular/cdk/collections';
-import { FlatTreeControl, NestedTreeControl } from '@angular/cdk/tree';
+import { NestedTreeControl } from '@angular/cdk/tree';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { Observable } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
 import { IApiPagingResponse } from '../models/apiResponse';
-import { IProduct } from '../models/product';
-import { IProductBrand } from '../models/productBrand';
-import { IProductCategory } from '../models/productCategory';
+import { IProduct, IProductCategory } from '../models/product';
 import { ShopParams } from '../models/shopParams';
 import { ShopService } from './shop.service';
 
@@ -24,9 +22,9 @@ export class ShopComponent implements OnInit {
 
   shopParams: ShopParams = new ShopParams();
   products$: Observable<IApiPagingResponse<IProduct[]>>;
-  brands: IProductBrand[] = [];
 
   categories: ArrayDataSource<IProductCategory>;
+  categories$: Observable<IProductCategory[]>;
   categoriesTreeControl: NestedTreeControl<IProductCategory>;
 
   sortSelected = 'name';
@@ -49,16 +47,16 @@ export class ShopComponent implements OnInit {
 
   ngOnInit(): void {
     this.products$ = this.shopService.productList$;
+    this.categories$ = this.shopService.productCategories$;
 
     this.onAutoCompleteOptions();
     this.getProducts();
-    this.getProductBrands();
     this.getProductCategories();
   }
 
   getProducts() {
     this.isLoading = true;
-    this.shopService.getProducts(this.shopParams).subscribe(result => {
+    this.shopService.getProducts(this.shopParams).subscribe(() => {
       this.isLoading = false;
     });
   }
@@ -111,10 +109,8 @@ export class ShopComponent implements OnInit {
   }
 
   getProductCategories() {
-    this.shopService.getCategories().subscribe(response => {
-      // this.categories = [{ id: 0, name: 'All' }, ...response.data];
-      console.log(response);
-      this.categories = new ArrayDataSource(response.data);
+    this.shopService.getCategories().subscribe(() => {
+      this.categories = new ArrayDataSource(this.categories$);
       this.categoriesTreeControl = new NestedTreeControl<IProductCategory>(node => node.children);
     }, error => {
       console.log(error);
@@ -123,20 +119,6 @@ export class ShopComponent implements OnInit {
 
   hasChildCategories(_: number, node: IProductCategory) {
     return !!node.children && node.children.length > 0;
-  }
-
-  getProductBrands() {
-    this.shopService.getBrands().subscribe(response => {
-      this.brands = [{ id: 0, name: 'All' }, ...response.data]
-    }, error => {
-      console.log(error);
-    });
-  }
-
-  onBrandSelected(id: number) {
-    this.shopParams.brandId = id;
-    this.shopParams.pageIndex = 0;
-    this.getProducts();
   }
 
   onCategorySelected(id: number) {

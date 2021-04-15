@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace EcommerceApi.Core.Models.Entities
 {
-    public class Order : BaseEntity<long>
+    public class Order : BaseEntity
     {
         public Order()
         {

@@ -7,7 +7,7 @@
       class="product-image"
       routerLink="/shop/{{ product.id }}">
       <img mat-card-image
-        src="{{product.imgUrl}}"
+        src="{{ product.productPictures[0].urlPath }}"
         alt="{{ product.name }}">
     </a>
     <p class="product-description">

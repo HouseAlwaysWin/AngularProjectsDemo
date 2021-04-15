@@ -15,12 +15,10 @@ export interface IBasket {
 export interface IBasketItem {
   id: number;
   name: string;
-  description?: string;
+  description: string;
   price: number;
   imgUrl: string;
-  langCode: string;
-  productBrandId?: number;
-  productCategoryId?: number;
+  productCategoryName: string;
   quantity: number
 }
 

@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
 using EcommerceApi.Core.Models.Entities;
 
-namespace EcommerceApi.Core.Data.Repositories.Interfaces
+namespace EcommerceApi.Core.Data.Services.Interfaces
 {
-    public interface IBasketRepository
+    public interface IBasketService
     {
         Task<Basket> GetBasketAsync(string basketId);
         Task<Basket> UpdateBasketAsync(Basket basket);

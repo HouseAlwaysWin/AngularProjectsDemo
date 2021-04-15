@@ -39,5 +39,21 @@ namespace EcommerceApi.Core.Data.Repositories
             return (IGenericRepository<TEntity>) _repositories[type];
 
         }
+
+         public IEntityRepository<TEntity> EntityRepository<TEntity>() where TEntity : BaseEntity 
+        {
+            if(_repositories == null) _repositories = new Hashtable();
+
+            var type = typeof(TEntity).Name;
+
+            if(!_repositories.ContainsKey(type)){
+                var repositoryType = typeof(GenericRepository<>);
+                var repositoryInstance = Activator.CreateInstance(repositoryType.MakeGenericType(typeof(TEntity)),_context);
+                _repositories.Add(type,repositoryInstance);
+            }
+
+            return (IEntityRepository<TEntity>) _repositories[type];
+
+        }
     }
 }

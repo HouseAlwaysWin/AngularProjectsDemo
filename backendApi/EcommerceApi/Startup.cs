@@ -23,6 +23,8 @@ using EcommerceApi.Core.Data.Repositories;
 using EcommerceApi.Core.Data.Repositories.Interfaces;
 using StackExchange.Redis;
 using Microsoft.AspNetCore.Http;
+using EcommerceApi.Core.Data.Services.Interfaces;
+using EcommerceApi.Core.Services.Repositories;
 
 namespace EcommerceApi
 {
@@ -114,8 +116,9 @@ namespace EcommerceApi
             services.AddScoped<IOrderService,OrderService>();
             services.AddScoped<IPaymentService,PaymentService>();
             services.AddScoped(typeof(IGenericRepository<>),(typeof(GenericRepository<>)));
+            services.AddScoped(typeof(IEntityRepository<>),(typeof(EntityRepository<>)));
             services.AddScoped<IUnitOfWork,UnitOfWork>();
-            services.AddScoped<IBasketRepository,BasketRepository>();
+            services.AddScoped<IBasketService,BasketService>();
 
             services.AddScoped<IRedisCachedService,RedisCachedService>();
             services.AddScoped<ILanguageService,LanguageService>();

@@ -199,12 +199,10 @@ export class BasketService {
       id: item.id,
       name: item.name,
       price: item.price,
-      imgUrl: item.imgUrl,
+      imgUrl: item.productPictures[0].urlPath,
       description: item.description,
+      productCategoryName: item.productCategory.name,
       quantity,
-      langCode,
-      productBrandId: item.productBrandId,
-      productCategoryId: item.productCategoryId
     }
   }
 }

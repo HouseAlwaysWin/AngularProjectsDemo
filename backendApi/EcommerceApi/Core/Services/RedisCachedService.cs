@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using EcommerceApi.Core.Services.Interfaces;
 using Newtonsoft.Json;
 using StackExchange.Redis;
+using Microsoft.AspNetCore.Http;
+using System.Linq;
 
 namespace EcommerceApi.Core.Services
 {
@@ -13,10 +15,13 @@ namespace EcommerceApi.Core.Services
         private readonly IDatabase _db;
         
         private readonly IConnectionMultiplexer _redis;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public RedisCachedService(
+            IHttpContextAccessor httpContextAccessor,
             IConnectionMultiplexer redis)
         {
+            this._httpContextAccessor = httpContextAccessor;
             this._redis = redis;
             this._db = this._redis.GetDatabase();
         }
@@ -78,9 +83,19 @@ namespace EcommerceApi.Core.Services
             return data;
         }
 
+        public async Task<bool> DeleteAsync(string id)
+        {
+            return await _db.KeyDeleteAsync(id);
+        }
+
+
         public string CreateKey<T>(params object[] param){
             string typeName = typeof(T).Name;
-            StringBuilder builder  = new StringBuilder($"defaultKey_{typeName}");
+            var currentLang = _httpContextAccessor.HttpContext.Request.Headers["Accept-Language"].FirstOrDefault();
+            if(string.IsNullOrEmpty(currentLang)) {
+                currentLang = "en-US";
+            }
+            StringBuilder builder  = new StringBuilder($"defaultKey_{currentLang}_{typeName}_");
             foreach (var p in param)
             {
                builder.Append(p);
@@ -89,5 +104,6 @@ namespace EcommerceApi.Core.Services
             return builder.ToString();
         }
 
+        
     }
 }

@@ -1,6 +1,6 @@
 namespace EcommerceApi.Core.Models.Entities
 {
-    public class OrderAddress:BaseEntity<long>
+    public class OrderAddress:BaseEntity
     {
         
         public OrderAddress()

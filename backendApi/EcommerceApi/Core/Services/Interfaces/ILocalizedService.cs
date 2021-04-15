@@ -8,7 +8,7 @@ namespace EcommerceApi.Core.Services.Interfaces
     public interface ILocalizedService
     {
         Task<string> GetLocalizedAsync<TEntity, TProp>(TEntity entity, Expression<Func<TEntity, TProp>> keySelector, int? languageId =null) 
-                where TEntity : BaseEntity, ILocalizedEntity;
+                where TEntity : BaseEntity;
         Task<Localized> GetLocalizedObjectAsync(int languageId, int tableId, string localeTable, string localeKey);
     }
 }

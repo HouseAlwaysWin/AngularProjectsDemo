@@ -11,16 +11,16 @@ namespace EcommerceApi.Core.Services
 {
     public class LanguageService : ILanguageService
     {
-        private readonly IGenericRepository<Language> _languageGenericService;
+        private readonly IEntityRepository<Language> _languageEntityRepo;
         private readonly IRedisCachedService _redisCachedService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         public LanguageService(
             IRedisCachedService redisCachedService,
             IHttpContextAccessor httpContextAccessor,
-            IGenericRepository<Language> languageGenericService
+            IEntityRepository<Language> languageEntityRepo
             )
         {
-            this._languageGenericService = languageGenericService;
+            this._languageEntityRepo = languageEntityRepo;
             this._redisCachedService = redisCachedService;
             this._httpContextAccessor = httpContextAccessor;
         }
@@ -31,10 +31,10 @@ namespace EcommerceApi.Core.Services
             var key = _redisCachedService.CreateKey<Language>(methodName);
             var currentLang = _httpContextAccessor.HttpContext.Request.Headers["Accept-Language"].FirstOrDefault();
 
-            var langList = await _redisCachedService.GetAndSetAsync<IReadOnlyList<Language>>(key, async () =>
+            var langList = await _redisCachedService.GetAndSetAsync<List<Language>>(key, async () =>
             {
-                var source = await _languageGenericService.ListAllAsync();
-                return source;
+                var source =await _languageEntityRepo.GetAllAsync();
+                return source.ToList();;
             });
 
             var langResult = langList.FirstOrDefault(l => l.LangCulture == currentLang);

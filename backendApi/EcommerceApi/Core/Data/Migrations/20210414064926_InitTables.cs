@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EcommerceApi.Core.Data.Migrations
 {
-    public partial class Initial : Migration
+    public partial class InitTables : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,6 +13,8 @@ namespace EcommerceApi.Core.Data.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    CreatedDate = table.Column<DateTimeOffset>(nullable: false),
+                    ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
                     ShortName = table.Column<string>(nullable: true),
                     DeliveryTime = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
@@ -30,6 +32,8 @@ namespace EcommerceApi.Core.Data.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    CreatedDate = table.Column<DateTimeOffset>(nullable: false),
+                    ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
                     Name = table.Column<string>(nullable: true),
                     LangCulture = table.Column<string>(nullable: true),
                     Published = table.Column<bool>(nullable: false),
@@ -44,8 +48,10 @@ namespace EcommerceApi.Core.Data.Migrations
                 name: "OrderAddresses",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    CreatedDate = table.Column<DateTimeOffset>(nullable: false),
+                    ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
                     Street = table.Column<string>(nullable: true),
@@ -64,6 +70,8 @@ namespace EcommerceApi.Core.Data.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    CreatedDate = table.Column<DateTimeOffset>(nullable: false),
+                    ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
                     MimeType = table.Column<string>(nullable: true),
                     Name = table.Column<string>(nullable: true),
                     UrlPath = table.Column<string>(nullable: true),
@@ -91,24 +99,6 @@ namespace EcommerceApi.Core.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductAttributeValues",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CreatedDate = table.Column<DateTimeOffset>(nullable: false),
-                    ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
-                    PriceAdjustment = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Quantity = table.Column<int>(nullable: false),
-                    SeqIndex = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductAttributeValues", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ProductCategories",
                 columns: table => new
                 {
@@ -117,11 +107,10 @@ namespace EcommerceApi.Core.Data.Migrations
                     CreatedDate = table.Column<DateTimeOffset>(nullable: false, defaultValueSql: "GETDATE()"),
                     ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
                     Name = table.Column<string>(maxLength: 100, nullable: true),
-                    LangCode = table.Column<string>(maxLength: 10, nullable: true),
                     Level = table.Column<int>(nullable: false),
                     ParentId = table.Column<int>(nullable: true),
                     HasChild = table.Column<bool>(nullable: false),
-                    Index = table.Column<int>(nullable: false)
+                    SeqNo = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -134,9 +123,11 @@ namespace EcommerceApi.Core.Data.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    LocaleTable = table.Column<string>(nullable: true),
-                    LocaleKey = table.Column<string>(nullable: true),
-                    LocaleValue = table.Column<string>(nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(nullable: false),
+                    ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
+                    EntityType = table.Column<string>(nullable: true),
+                    PropertyKey = table.Column<string>(nullable: true),
+                    PropertyValue = table.Column<string>(nullable: true),
                     LanguageId = table.Column<int>(nullable: false),
                     TableId = table.Column<int>(nullable: false)
                 },
@@ -155,7 +146,7 @@ namespace EcommerceApi.Core.Data.Migrations
                 name: "Orders",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CreatedDate = table.Column<DateTimeOffset>(nullable: false, defaultValueSql: "GETDATE()"),
                     ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
@@ -163,6 +154,7 @@ namespace EcommerceApi.Core.Data.Migrations
                     BuyerEmail = table.Column<string>(nullable: true),
                     TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     OrderDate = table.Column<DateTimeOffset>(nullable: false),
+                    OrderAddressId1 = table.Column<int>(nullable: true),
                     OrderAddressId = table.Column<long>(nullable: false),
                     DeliveryMethodId = table.Column<int>(nullable: false),
                     OrderStatus = table.Column<string>(nullable: false),
@@ -178,9 +170,34 @@ namespace EcommerceApi.Core.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Orders_OrderAddresses_OrderAddressId",
-                        column: x => x.OrderAddressId,
+                        name: "FK_Orders_OrderAddresses_OrderAddressId1",
+                        column: x => x.OrderAddressId1,
                         principalTable: "OrderAddresses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductAttributeValues",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreatedDate = table.Column<DateTimeOffset>(nullable: false),
+                    ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    PriceAdjustment = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Quantity = table.Column<int>(nullable: false),
+                    SeqIndex = table.Column<int>(nullable: false),
+                    ProductAttributeId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductAttributeValues", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductAttributeValues_ProductAttributes_ProductAttributeId",
+                        column: x => x.ProductAttributeId,
+                        principalTable: "ProductAttributes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -215,7 +232,7 @@ namespace EcommerceApi.Core.Data.Migrations
                 name: "OrderItems",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CreatedDate = table.Column<DateTimeOffset>(nullable: false, defaultValueSql: "GETDATE()"),
                     ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
@@ -227,7 +244,7 @@ namespace EcommerceApi.Core.Data.Migrations
                     ProductBrand = table.Column<string>(nullable: true),
                     ProductCategory = table.Column<string>(nullable: true),
                     Quantity = table.Column<int>(nullable: false),
-                    OrderId = table.Column<long>(nullable: true)
+                    OrderId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -246,6 +263,8 @@ namespace EcommerceApi.Core.Data.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    CreatedDate = table.Column<DateTimeOffset>(nullable: false),
+                    ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
                     ProductId = table.Column<int>(nullable: false),
                     PictureId = table.Column<int>(nullable: false),
                     SeqNo = table.Column<int>(nullable: false)
@@ -273,9 +292,10 @@ namespace EcommerceApi.Core.Data.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductAttributeId = table.Column<int>(nullable: false),
+                    CreatedDate = table.Column<DateTimeOffset>(nullable: false),
+                    ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
                     ProductId = table.Column<int>(nullable: false),
-                    ProductAttributeValueId = table.Column<int>(nullable: false)
+                    ProductAttributeId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -284,12 +304,6 @@ namespace EcommerceApi.Core.Data.Migrations
                         name: "FK_Product_ProductAttributes_ProductAttributes_ProductAttributeId",
                         column: x => x.ProductAttributeId,
                         principalTable: "ProductAttributes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Product_ProductAttributes_ProductAttributeValues_ProductAttributeValueId",
-                        column: x => x.ProductAttributeValueId,
-                        principalTable: "ProductAttributeValues",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -316,9 +330,9 @@ namespace EcommerceApi.Core.Data.Migrations
                 column: "DeliveryMethodId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_OrderAddressId",
+                name: "IX_Orders_OrderAddressId1",
                 table: "Orders",
-                column: "OrderAddressId");
+                column: "OrderAddressId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Product_Pictures_PictureId",
@@ -336,14 +350,14 @@ namespace EcommerceApi.Core.Data.Migrations
                 column: "ProductAttributeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Product_ProductAttributes_ProductAttributeValueId",
-                table: "Product_ProductAttributes",
-                column: "ProductAttributeValueId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Product_ProductAttributes_ProductId",
                 table: "Product_ProductAttributes",
                 column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductAttributeValues_ProductAttributeId",
+                table: "ProductAttributeValues",
+                column: "ProductAttributeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_ProductCategoryId",
@@ -366,6 +380,9 @@ namespace EcommerceApi.Core.Data.Migrations
                 name: "Product_ProductAttributes");
 
             migrationBuilder.DropTable(
+                name: "ProductAttributeValues");
+
+            migrationBuilder.DropTable(
                 name: "Language");
 
             migrationBuilder.DropTable(
@@ -375,13 +392,10 @@ namespace EcommerceApi.Core.Data.Migrations
                 name: "Pictures");
 
             migrationBuilder.DropTable(
-                name: "ProductAttributes");
-
-            migrationBuilder.DropTable(
-                name: "ProductAttributeValues");
-
-            migrationBuilder.DropTable(
                 name: "Products");
+
+            migrationBuilder.DropTable(
+                name: "ProductAttributes");
 
             migrationBuilder.DropTable(
                 name: "DeliveryMethods");

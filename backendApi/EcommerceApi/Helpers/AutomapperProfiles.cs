@@ -20,10 +20,11 @@ namespace EcommerceApi.Helpers.Localization {
 
         public AutomapperProfiles()
         {
+
            CreateMap<Product,ProductDto>()
                 .ForMember(dto => dto.ProductAttributes,p=> p.MapFrom(p => p.ProductAttributeMap.Select(p=>p.ProductAttribute).ToList()))
                 .ForMember(dto => dto.ProductPictures,p=> p.MapFrom(p => p.ProductPictureMap.Select(pp=>pp.Picture).ToList()));
-
+           CreateMap(typeof(PagedList<Product>),typeof(PagedList<ProductDto>));
            CreateMap<ProductAttribute,ProductAttributeDto>();
            CreateMap<ProductAttributeValue,ProductAttributeValueDto>();
            CreateMap<Product_ProductAttribute,Product_ProductAttributeDto>();

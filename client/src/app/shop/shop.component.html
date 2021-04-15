@@ -23,7 +23,7 @@
           [class.active]="shopParams.categoryId === 0"
           class="category-all"
           (click)="onCategorySelected(0)">All</button>
-        <cdk-tree [dataSource]="categories"
+        <cdk-tree [dataSource]="(categories$ | async)"
           [treeControl]="categoriesTreeControl">
 
           <cdk-nested-tree-node *cdkTreeNodeDef="let node"
@@ -114,6 +114,7 @@
           [showFirstLastButtons]="true">
         </mat-paginator>
       </div>
+
       <ng-template #productEmpty>
         <div fxFlex="75">
           <div fxLayout="row"
