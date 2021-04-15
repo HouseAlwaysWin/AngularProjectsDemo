@@ -18,9 +18,6 @@ namespace EcommerceApi.Controllers
     public class ProductController : BaseApiController 
     {
         private readonly IEntityRepository<Product> _entityRepository;
-        private readonly IGenericRepository<Product> _productRepoGeneric;
-        private readonly IGenericRepository<ProductCategory> _productCategoryRepo;
-        private readonly IGenericRepository<ProductBrand> _productBrand;
         private readonly IProductService _productService;
         private readonly IProductRepository _productRepo;
         private readonly IMapper _mapper;
@@ -79,11 +76,6 @@ namespace EcommerceApi.Controllers
             return BaseApiOk(data);
         }
 
-        [HttpGet("categories")]
-        public async Task<ActionResult> GetProductCategories(){
-            var categories = await _productCategoryRepo.ListAllAsync();
-            return BaseApiOk(categories);
-        }
 
         [HttpGet("categoriestree")]
         public async Task<ActionResult> GetproductCategoriesTree(){
@@ -91,16 +83,6 @@ namespace EcommerceApi.Controllers
             var categories = await _productService.GetProductCategoriesTree();
 
             return BaseApiOk(categories);
-        }
-
-
-
-        [HttpGet("brands")]
-        public async Task<ActionResult> GetProductBrands(){
-
-            var brands = await _productBrand.ListAllAsync();
-
-            return BaseApiOk(brands);
         }
 
 

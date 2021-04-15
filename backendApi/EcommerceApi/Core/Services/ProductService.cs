@@ -12,7 +12,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceApi.Core.Services
 {
-
     public class ProductService : IProductService
     {
         private readonly IEntityRepository<Product> _productEntityRepo;
@@ -118,17 +117,19 @@ namespace EcommerceApi.Core.Services
 
         public async Task<List<ProductCategory>> GetProductCategoriesTree(bool useCached = false)
         {
-            List<ProductCategory>  categories = new List<ProductCategory>();
-            if(useCached){
-                 if (!string.IsNullOrEmpty(categoryCahcedKey))
+            List<ProductCategory> categories = new List<ProductCategory>();
+            if (useCached)
+            {
+                if (!string.IsNullOrEmpty(categoryCahcedKey))
                 {
                     categoryCahcedKey = await this.SetAllProductCategoriesToCachedReturnKeyAsync();
                 }
                 categories = await this._redisCachedService.GetAsync<List<ProductCategory>>(categoryCahcedKey);
             }
-            else{
-               var getCategories = await _categoryEntityRepo.GetAllAsync(query => query.Where(p => !p.ParentId.HasValue));
-               categories = getCategories.ToList();
+            else
+            {
+                var getCategories = await _categoryEntityRepo.GetAllAsync(query => query.Where(p => !p.ParentId.HasValue));
+                categories = getCategories.ToList();
             }
 
             List<ProductCategory> tree = new List<ProductCategory>();
