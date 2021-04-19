@@ -38,9 +38,9 @@ mat-form-field {
   width: 500px;
 }
 
-.mat-form-field.mat-focused {
-  width: 100%;
-}
+// .mat-form-field.mat-focused {
+//   width: 100%;
+// }
 
 .category-tree-invisible {
   display: none;
@@ -77,10 +77,6 @@ mat-form-field {
 .category-child-block {
   border-style: solid;
   border-color: black;
-}
-
-.shop {
-  margin-top: 5em;
 }
 
 .category-all {

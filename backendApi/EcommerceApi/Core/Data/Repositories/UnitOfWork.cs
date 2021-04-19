@@ -14,7 +14,7 @@ namespace EcommerceApi.Core.Data.Repositories
         {
            this._context = context; 
         }
-        public async Task<int> Complete()
+        public async Task<int> CompleteAsync()
         {
             return await _context.SaveChangesAsync();
         }
@@ -24,21 +24,21 @@ namespace EcommerceApi.Core.Data.Repositories
             this._context.Dispose();
         }
 
-        public IGenericRepository<TEntity> Repository<TEntity>() where TEntity : class 
-        {
-            if(_repositories == null) _repositories = new Hashtable();
+        // public IGenericRepository<TEntity> Repository<TEntity>() where TEntity : class 
+        // {
+        //     if(_repositories == null) _repositories = new Hashtable();
 
-            var type = typeof(TEntity).Name;
+        //     var type = typeof(TEntity).Name;
 
-            if(!_repositories.ContainsKey(type)){
-                var repositoryType = typeof(GenericRepository<>);
-                var repositoryInstance = Activator.CreateInstance(repositoryType.MakeGenericType(typeof(TEntity)),_context);
-                _repositories.Add(type,repositoryInstance);
-            }
+        //     if(!_repositories.ContainsKey(type)){
+        //         var repositoryType = typeof(GenericRepository<>);
+        //         var repositoryInstance = Activator.CreateInstance(repositoryType.MakeGenericType(typeof(TEntity)),_context);
+        //         _repositories.Add(type,repositoryInstance);
+        //     }
 
-            return (IGenericRepository<TEntity>) _repositories[type];
+        //     return (IGenericRepository<TEntity>) _repositories[type];
 
-        }
+        // }
 
          public IEntityRepository<TEntity> EntityRepository<TEntity>() where TEntity : BaseEntity 
         {
@@ -46,14 +46,18 @@ namespace EcommerceApi.Core.Data.Repositories
 
             var type = typeof(TEntity).Name;
 
-            if(!_repositories.ContainsKey(type)){
-                var repositoryType = typeof(GenericRepository<>);
-                var repositoryInstance = Activator.CreateInstance(repositoryType.MakeGenericType(typeof(TEntity)),_context);
-                _repositories.Add(type,repositoryInstance);
+            try{
+                if(!_repositories.ContainsKey(type)){
+                    var repositoryType = typeof(EntityRepository<>);
+                    var repositoryInstance = Activator.CreateInstance(repositoryType.MakeGenericType(typeof(TEntity)),_context);
+                    _repositories.Add(type,repositoryInstance);
+                }
+            }catch(Exception ex){
+                System.Console.WriteLine(ex);
+                throw ex;
             }
 
             return (IEntityRepository<TEntity>) _repositories[type];
-
         }
     }
 }

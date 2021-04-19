@@ -11,9 +11,9 @@ namespace EcommerceApi.Core.Models.Dtos
         public string Description { get; set; }
         public bool Published { get; set; }
         public bool Deleted { get; set; }
+        public int ProductCategoryId { get; set; }
         public ProductCategoryDto ProductCategory { get; set; }
         public List<ProductAttributeDto> ProductAttributes { get; set; }
-        // public List<ProductAttributeValueDto> ProductAttributeValues  { get; set; }
         public List<PictureDto> ProductPictures { get; set; }
        
     }

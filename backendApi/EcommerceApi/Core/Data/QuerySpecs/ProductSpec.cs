@@ -7,7 +7,7 @@ namespace EcommerceApi.Core.Data.QuerySpecs
 {
     public static class ProductSpec
     {
-       public static IQueryable<Product> GetProducts(IQueryable<Product> query,ProductListParam param){
+       public static IQueryable<Product> GetProducts(IQueryable<Product> query,ProductLikeParam param){
             query =  query.Where(p => 
                 (string.IsNullOrEmpty(param.Search) || p.Name.ToLower().Contains(param.Search)) &&
                 (!param.CategoryId.HasValue || p.ProductCategoryId == param.CategoryId));

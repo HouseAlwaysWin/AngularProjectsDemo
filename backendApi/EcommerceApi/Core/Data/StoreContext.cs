@@ -1,5 +1,4 @@
 using System.Reflection;
-using EcommerceApi.Core.Data.EntityConfig;
 using EcommerceApi.Core.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 

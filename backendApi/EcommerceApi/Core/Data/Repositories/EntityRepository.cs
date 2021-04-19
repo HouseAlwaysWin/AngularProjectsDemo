@@ -14,21 +14,13 @@ namespace EcommerceApi.Core.Data.Repositories
     public class EntityRepository<TEntity> : IEntityRepository<TEntity> where TEntity : BaseEntity
     {
 
-        private readonly IRedisCachedService _redisCachedService;
         private readonly StoreContext _context;
-        public EntityRepository(
-            StoreContext context,
-            IRedisCachedService redisCachedService)
+        public EntityRepository()
         {
-            this._redisCachedService = redisCachedService;
-            this._context = context;
         }
-
-        private async Task<IList<TEntity>> GetAllNoCachedAsync(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null)
+        public EntityRepository(StoreContext context)
         {
-            var query = _context.Set<TEntity>().AsQueryable();
-            query = func != null ? func(query) : query;
-            return await query.ToListAsync();
+            this._context = context;
         }
 
         private async Task<PagedList<TEntity>> GetAllPagedNoCachedAsync(int pageIndex, int pageSize, Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null)
@@ -46,22 +38,9 @@ namespace EcommerceApi.Core.Data.Repositories
 
         public virtual async Task<IList<TEntity>> GetAllAsync(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null, bool useCached = false, string key = null)
         {
-            if (useCached)
-            {
-                var methodName = nameof(GetAllAsync);
-                if (string.IsNullOrEmpty(key))
-                {
-                    key = _redisCachedService.CreateKey<TEntity>(methodName);
-                }
-
-
-                var result = await _redisCachedService.GetAndSetAsync<IList<TEntity>>(key, async () =>
-                {
-                    return await GetAllNoCachedAsync(func);
-                });
-                return result;
-            }
-            return await GetAllNoCachedAsync(func);
+            var query = _context.Set<TEntity>().AsQueryable();
+            query = func != null ? func(query) : query;
+            return await query.ToListAsync();
         }
 
 

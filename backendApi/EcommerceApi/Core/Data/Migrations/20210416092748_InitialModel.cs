@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EcommerceApi.Core.Data.Migrations
 {
-    public partial class InitTables : Migration
+    public partial class InitialModel : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -154,8 +154,7 @@ namespace EcommerceApi.Core.Data.Migrations
                     BuyerEmail = table.Column<string>(nullable: true),
                     TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     OrderDate = table.Column<DateTimeOffset>(nullable: false),
-                    OrderAddressId1 = table.Column<int>(nullable: true),
-                    OrderAddressId = table.Column<long>(nullable: false),
+                    OrderAddressId = table.Column<int>(nullable: false),
                     DeliveryMethodId = table.Column<int>(nullable: false),
                     OrderStatus = table.Column<string>(nullable: false),
                     PaymentIntentId = table.Column<string>(nullable: true)
@@ -170,11 +169,11 @@ namespace EcommerceApi.Core.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Orders_OrderAddresses_OrderAddressId1",
-                        column: x => x.OrderAddressId1,
+                        name: "FK_Orders_OrderAddresses_OrderAddressId",
+                        column: x => x.OrderAddressId,
                         principalTable: "OrderAddresses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -240,9 +239,7 @@ namespace EcommerceApi.Core.Data.Migrations
                     Description = table.Column<string>(nullable: true),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     ImgUrl = table.Column<string>(nullable: true),
-                    LangCode = table.Column<string>(nullable: true),
-                    ProductBrand = table.Column<string>(nullable: true),
-                    ProductCategory = table.Column<string>(nullable: true),
+                    ProductCategoryName = table.Column<string>(nullable: true),
                     Quantity = table.Column<int>(nullable: false),
                     OrderId = table.Column<int>(nullable: true)
                 },
@@ -330,9 +327,9 @@ namespace EcommerceApi.Core.Data.Migrations
                 column: "DeliveryMethodId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_OrderAddressId1",
+                name: "IX_Orders_OrderAddressId",
                 table: "Orders",
-                column: "OrderAddressId1");
+                column: "OrderAddressId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Product_Pictures_PictureId",

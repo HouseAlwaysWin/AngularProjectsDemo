@@ -7,5 +7,6 @@ namespace EcommerceApi.Core.Models.Dtos
        public decimal PriceAdjustment { get; set; }
        public int Quantity { get; set; }
        public int SeqIndex { get; set; }
+       public int ProductAttributeId { get; set; }
     }
 }

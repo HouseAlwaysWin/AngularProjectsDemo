@@ -33,11 +33,14 @@ namespace EcommerceApi.Helpers.Localization {
            CreateMap<Product_Picture,Product_PictureDto>();
            CreateMap<Localized,LocalizedDto>();
            CreateMap<Language,LanguageDto>();
+
+           CreateMap<ProductListParam,ProductLikeParam>().ReverseMap();
         
             CreateMap<AddressDto,UserAddress>().ReverseMap();
             CreateMap<AddressDto,OrderAddress>().ReverseMap();
 
             CreateMap<BasketItem,OrderItem>()
+                .ForMember(b => b.Id,opt => opt.Ignore())
                 .IgnoreAllPropertiesWithAnInaccessibleSetter()
                 .ReverseMap();
             

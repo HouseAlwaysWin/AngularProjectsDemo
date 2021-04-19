@@ -3,7 +3,7 @@ using EcommerceApi.Core.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace EcommerceApi.Core.Data.EntityConfig
+namespace EcommerceApi.Core.Models.Entities.EntityConfig
 {
     public class ProductAttributeValueConfig : IEntityTypeConfiguration<ProductAttributeValue>
     {

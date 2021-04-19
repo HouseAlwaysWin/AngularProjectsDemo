@@ -28,13 +28,12 @@ namespace EcommerceApi.Core.Models.Entities
             DeliveryMethodId = deliveryMethodId;
             PaymentIntentId = paymentIntentId;
         }
-        // public long Id  { get; set; }
         public string BuyerName  { get; set; }
         public string BuyerEmail { get; set; }
         public decimal TotalPrice { get; set; }
         public DateTimeOffset OrderDate { get; set; } = DateTimeOffset.UtcNow;
         public OrderAddress OrderAddress { get; set; }
-        public long OrderAddressId { get; set; }
+        public int OrderAddressId { get; set; }
         public DeliveryMethod DeliveryMethod { get; set; }
         public int DeliveryMethodId { get; set; }
         public IReadOnlyList<OrderItem> OrderItems { get; set; }

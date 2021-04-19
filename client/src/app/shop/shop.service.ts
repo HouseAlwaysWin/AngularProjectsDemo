@@ -55,6 +55,16 @@ export class ShopService {
     return response;
   }
 
+  getProductById(id: string) {
+    return this.http.get<IApiResponse<IProduct>>(
+      `${this.baseUrl}product/${id}`
+    ).pipe(
+      map(response => {
+        return response.data;
+      })
+    );
+  }
+
   getAutocomplete(shopParams: ShopParams) {
     let params = new HttpParams();
 

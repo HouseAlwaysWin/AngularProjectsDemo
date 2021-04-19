@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -49,9 +50,7 @@ namespace EcommerceApi.Core.Services
              }
 
              var deliveryMethod = await _unitOfWork.EntityRepository<DeliveryMethod>().GetByIdAsync(deliveryMethodId);
-
-
-            //  var spec = new GetOrderPaymentIntentIdSpec(basket.PaymentIntentId);
+             subTotal += deliveryMethod.Price;
 
             var order = new Order(
                 items,
@@ -64,17 +63,22 @@ namespace EcommerceApi.Core.Services
             );
 
             await _unitOfWork.EntityRepository<Order>().AddAsync(order);
-
-            var result = await _unitOfWork.Complete();
-
-            if(result <=0) return null;
+            try{
+                var result = await _unitOfWork.CompleteAsync();
+                if(result <=0) return null;
              
-             return order;
-        }
+                return order;
+
+            }
+            catch(Exception ex){
+                System.Console.WriteLine(ex);
+            }
+
+        return null;
+    }
 
         public async Task<IReadOnlyList<DeliveryMethod>> GetDeliveryMethodAsync()
         {
-            // var result = await _unitOfWork.Repository<DeliveryMethod>().ListAllAsync();
             var result = await _unitOfWork.EntityRepository<DeliveryMethod>().GetAllAsync();
             return result.ToList();
         }

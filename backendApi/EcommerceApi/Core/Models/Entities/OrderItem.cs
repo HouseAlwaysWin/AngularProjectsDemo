@@ -7,7 +7,6 @@ namespace EcommerceApi.Core.Models.Entities
             
         }
 
-        // public long Id { get; private set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }

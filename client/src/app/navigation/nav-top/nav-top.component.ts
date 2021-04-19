@@ -1,14 +1,9 @@
 import { Component, OnInit, AfterViewInit, AfterContentInit, Output, EventEmitter, OnDestroy, HostListener } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { MatPaginatorIntl } from '@angular/material/paginator';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, of, ReplaySubject, Subscription } from 'rxjs';
-import { debounceTime, map, startWith } from 'rxjs/operators';
+import { ReplaySubject, Subscription } from 'rxjs';
 import { AccountService } from 'src/app/account/account.service';
 import { BasketService } from 'src/app/basket/basket.service';
-import { IApiResponse } from 'src/app/models/apiResponse';
 import { Basket, IBasket } from 'src/app/models/basket';
-import { IProduct } from 'src/app/models/product';
 import { ShopParams } from 'src/app/models/shopParams';
 import { IUser } from 'src/app/models/user';
 import { ShopService } from 'src/app/shop/shop.service';

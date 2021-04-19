@@ -98,6 +98,13 @@
           </mat-autocomplete>
         </mat-form-field>
       </form>
+      <mat-paginator [length]="(products$ |async)?.totalCount"
+        (page)="setPage($event)"
+        [pageSize]="shopParams.pageSize"
+        [pageIndex]="shopParams.pageIndex"
+        [pageSizeOptions]="[5,10,25,100]"
+        [showFirstLastButtons]="true">
+      </mat-paginator>
     </div>
 
     <div *ngIf="!isLoading">

@@ -19,47 +19,38 @@ namespace EcommerceApi.Controllers
     {
         private readonly IEntityRepository<Product> _entityRepository;
         private readonly IProductService _productService;
-        private readonly IProductRepository _productRepo;
         private readonly IMapper _mapper;
 
         public ProductController(
             IEntityRepository<Product> entityRepository,
             IProductService productService,
-            IProductRepository productRepo,
             IMapper mapper
         )
         {
             this._entityRepository = entityRepository;
             this._productService = productService;
-            this._productRepo = productRepo;
             this._mapper = mapper;
         }
 
         [HttpGet("autocomplete")]
         public async Task<ActionResult> GetAutoComplete([FromQuery]ProductLikeParam param){
 
-            var products = await _productService.GetProductsLikeAsync(param);
-
-            var data =  _mapper.Map<List<Product>,List<ProductDto>>(products);
-            return BaseApiOk(data);
+            var products = await _productService.GetProductsLikeAsync(param,true);
+            return BaseApiOk(products);
         }
 
         [HttpGet("search")]
         public async Task<ActionResult> GetProductsSearch([FromQuery]ProductLikeParam param){
 
-            var products = await _productService.GetProductsLikeAsync(param);
+            var result = await _productService.GetProductsLikePagedAsync(param,true);
 
-            var data =  _mapper.Map<IReadOnlyList<Product>,IReadOnlyList<ProductDto>>(products);
-            return BaseApiOk(data);
+            return BaseApiOk(result.Data,result.TotalCount);
         }
 
         [HttpGet]
         public async Task<ActionResult> GetProducts([FromQuery]ProductListParam param){
 
-            var products = await _productService.GetProductsPagedAsync(param,true);
-
-            var result = _mapper.Map<PagedList<Product>,PagedList<ProductDto>>(products);
-
+            var result = await _productService.GetProductsPagedAsync(param,true);
             return BaseApiOk(result.Data,result.TotalCount);
         }
 

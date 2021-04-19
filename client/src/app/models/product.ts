@@ -31,5 +31,5 @@ export interface IProductCategory {
   parentId?: number;
   hasChild: boolean;
   seqNo: number;
-  children?: IProductCategory[];
+  children: IProductCategory[];
 }

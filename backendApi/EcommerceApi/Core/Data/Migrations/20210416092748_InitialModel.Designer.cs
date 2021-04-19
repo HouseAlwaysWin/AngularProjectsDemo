@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EcommerceApi.Core.Data.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    [Migration("20210414064926_InitTables")]
-    partial class InitTables
+    [Migration("20210416092748_InitialModel")]
+    partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -143,10 +143,7 @@ namespace EcommerceApi.Core.Data.Migrations
                     b.Property<DateTimeOffset?>("ModifiedDate")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<long>("OrderAddressId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int?>("OrderAddressId1")
+                    b.Property<int>("OrderAddressId")
                         .HasColumnType("int");
 
                     b.Property<DateTimeOffset>("OrderDate")
@@ -166,7 +163,7 @@ namespace EcommerceApi.Core.Data.Migrations
 
                     b.HasIndex("DeliveryMethodId");
 
-                    b.HasIndex("OrderAddressId1");
+                    b.HasIndex("OrderAddressId");
 
                     b.ToTable("Orders");
                 });
@@ -225,9 +222,6 @@ namespace EcommerceApi.Core.Data.Migrations
                     b.Property<string>("ImgUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LangCode")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTimeOffset?>("ModifiedDate")
                         .HasColumnType("datetimeoffset");
 
@@ -240,10 +234,7 @@ namespace EcommerceApi.Core.Data.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("ProductBrand")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProductCategory")
+                    b.Property<string>("ProductCategoryName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Quantity")
@@ -505,7 +496,9 @@ namespace EcommerceApi.Core.Data.Migrations
 
                     b.HasOne("EcommerceApi.Core.Models.Entities.OrderAddress", "OrderAddress")
                         .WithMany()
-                        .HasForeignKey("OrderAddressId1");
+                        .HasForeignKey("OrderAddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("EcommerceApi.Core.Models.Entities.OrderItem", b =>

@@ -111,21 +111,19 @@ namespace EcommerceApi
 
             services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(_config.GetConnectionString("redis")));
             services.AddScoped<ITokenService,TokenService>();
-            services.AddScoped<IProductRepository,ProductRepository>();
             services.AddScoped<IProductService,ProductService>();
             services.AddScoped<IOrderService,OrderService>();
             services.AddScoped<IPaymentService,PaymentService>();
-            services.AddScoped(typeof(IGenericRepository<>),(typeof(GenericRepository<>)));
-            services.AddScoped(typeof(IEntityRepository<>),(typeof(EntityRepository<>)));
-            services.AddScoped<IUnitOfWork,UnitOfWork>();
-            services.AddScoped<IBasketService,BasketService>();
-
+            // services.AddScoped(typeof(IGenericRepository<>),(typeof(GenericRepository<>)));
             services.AddScoped<IRedisCachedService,RedisCachedService>();
             services.AddScoped<ILanguageService,LanguageService>();
             services.AddSingleton<IHttpContextAccessor,HttpContextAccessor>();
             services.AddScoped<ILocalizedService,LocalizedService>();
+            services.AddScoped<IBasketService,BasketService>();
+            services.AddScoped(typeof(IEntityRepository<>),(typeof(EntityRepository<>)));
+            services.AddScoped<IUnitOfWork,UnitOfWork>();
 
-
+            
             services.AddSwaggerGen();
             services.AddCors(opt => {
                 opt.AddPolicy("CorsPolicy",policy=>{

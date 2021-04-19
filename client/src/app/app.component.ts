@@ -17,10 +17,10 @@ export class AppComponent implements OnInit {
     private accountService: AccountService,
     private basketService: BasketService,
   ) {
-    translate.addLangs(['en']);
+    translate.addLangs(['en-US', 'zh-TW']);
     const browserLang = navigator.language;
-    translate.use(browserLang.match(/en|zh-TW/) ? browserLang : 'en');
-    translate.use('en');
+    translate.use(browserLang.match(/en-US|zh-TW/) ? browserLang : 'en-US');
+    translate.use('zh-TW');
 
   }
   ngOnInit(): void {

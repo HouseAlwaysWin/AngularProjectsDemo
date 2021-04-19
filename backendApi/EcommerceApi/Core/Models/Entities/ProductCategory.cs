@@ -9,6 +9,6 @@ namespace EcommerceApi.Core.Models.Entities
         public int? ParentId { get; set; }
         public bool HasChild { get; set; }
         public int SeqNo { get; set; }
-        public List<ProductCategory> Children { get; set; }
+        // public List<ProductCategory> Children { get; set; }
     }
 }

@@ -10,7 +10,7 @@ const routes: Routes = [
   { path: '', component: ShopComponent },
   { path: 'not-found', component: NotFoundComponent },
   {
-    path: 'home',
+    path: 'products',
     loadChildren: () => import('./shop/shop.module').then(m => m.ShopModule),
   },
   {

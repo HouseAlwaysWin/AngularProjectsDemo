@@ -92,7 +92,7 @@ namespace EcommerceApi.Core.Services
             // _unitOfWork.Repository<Models.Entities.Order>().Update(order);
 
             _unitOfWork.EntityRepository<Models.Entities.Order>().Update(order);
-            await _unitOfWork.Complete();
+            await _unitOfWork.CompleteAsync();
             return null;
         }
 
@@ -108,7 +108,7 @@ namespace EcommerceApi.Core.Services
 
             order.OrderStatus = OrderStatus.PaymentReceived;
 
-            await _unitOfWork.Complete();
+            await _unitOfWork.CompleteAsync();
             return order;
         }
     }

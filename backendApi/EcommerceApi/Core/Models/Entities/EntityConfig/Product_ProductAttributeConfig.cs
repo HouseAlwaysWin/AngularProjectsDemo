@@ -2,7 +2,7 @@ using EcommerceApi.Core.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace EcommerceApi.Core.Data.EntityConfig
+namespace EcommerceApi.Core.Models.Entities.EntityConfig
 {
     public class Product_ProductAttributeConfig : IEntityTypeConfiguration<Product_ProductAttribute>
     {
@@ -18,10 +18,6 @@ namespace EcommerceApi.Core.Data.EntityConfig
                 .WithMany(p => p.ProductAttributeMap)
                 .HasForeignKey(pa => pa.ProductAttributeId);
  
-            //  builder.HasOne(pa => pa.ProductAttributeValue)
-            //     .WithMany(p => p.ProductAttributeMap)
-            //     .HasForeignKey(pa => pa.ProductAttributeValueId);
-
         }
     }
 }

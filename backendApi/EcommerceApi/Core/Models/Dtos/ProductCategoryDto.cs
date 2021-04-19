@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using EcommerceApi.Helpers;
 
 namespace EcommerceApi.Core.Models.Dtos
 {
-    public class ProductCategoryDto
+    public class ProductCategoryDto:ITreeNode<ProductCategoryDto>
     {
        public int Id  { get; set; }
         public string Name { get; set; }
@@ -10,6 +11,6 @@ namespace EcommerceApi.Core.Models.Dtos
         public int? ParentId { get; set; }
         public bool HasChild { get; set; }
         public int SeqNo { get; set; }
-        public List<ProductCategoryDto> Children { get; set; }
+        public IEnumerable<ProductCategoryDto> Children { get; set; }
     }
 }
