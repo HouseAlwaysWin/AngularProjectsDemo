@@ -7,10 +7,10 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace EcommerceApi.Core.Data.Migrations
+namespace EcommerceApi.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    [Migration("20210416092748_InitialModel")]
+    [Migration("20210420152632_InitialModel")]
     partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -367,9 +367,6 @@ namespace EcommerceApi.Core.Data.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ProductAttributeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.Property<int>("SeqIndex")

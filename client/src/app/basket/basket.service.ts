@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { IApiResponse } from '../models/apiResponse';
-import { Basket, IBasket, IBasketItem, IBasketTotals } from '../models/basket';
+import { Basket, BasketItem, IBasket, IBasketItem, IBasketTotals } from '../models/basket';
 import { IDeliveryMethod } from '../models/deliveryMethod';
 import { IProduct } from '../models/product';
 
@@ -90,13 +90,23 @@ export class BasketService {
     return this.basketSource.value;
   }
 
-  addItemToBasket(item: IProduct, quantity = 1) {
-    const productItems: IBasketItem = this.mapProductItemToBasketItem(item, quantity);
+
+  addItemToBasket(item: IProduct, attrs: string, quantity = 1) {
+    const productItems: IBasketItem = this.mapProductItemToBasketItem(item, attrs, quantity);
     const basket = this.getCurrentBasketValue() ?? this.createBasket();
     basket.basketItems = this.addOrUpdateItem(
       basket.basketItems, productItems, quantity
     );
     this.setBasket(basket);
+  }
+
+  getBasketItem(id: string) {
+    var basketItems = this.getCurrentBasketValue().basketItems;
+    let index = basketItems.findIndex(i => i.id === id);
+    if (index === -1) {
+      return;
+    }
+    return basketItems[index];
   }
 
   addOrUpdateItem(items: IBasketItem[], itemToAdd: IBasketItem, quantity: number): IBasketItem[] {
@@ -106,8 +116,8 @@ export class BasketService {
       items.push(itemToAdd);
     } else {
       items[index].quantity += quantity
+      console.log(items[index].quantity);
     }
-    console.log(items);
     return items;
   }
 
@@ -193,16 +203,17 @@ export class BasketService {
     return basket;
   }
 
-  private mapProductItemToBasketItem(item: IProduct, quantity: number): IBasketItem {
-    var langCode = this.translate.currentLang;
-    return {
-      id: item.id,
-      name: item.name,
-      price: item.price,
-      imgUrl: item.productPictures[0].urlPath,
-      description: item.description,
-      productCategoryName: item.productCategory.name,
-      quantity,
-    }
+  private mapProductItemToBasketItem(item: IProduct, attrs: string, quantity: number): IBasketItem {
+    const basketItem = new BasketItem();
+    basketItem.id = `${item.id}_${item.name}_${attrs}`;
+    basketItem.productId = item.id;
+    basketItem.name = `${item.name}_${attrs}`;
+    basketItem.price = item.price;
+    basketItem.imgUrl = item.productPictures[0].urlPath;
+    basketItem.description = item.description
+    basketItem.productCategoryName = item.productCategory.name
+    basketItem.quantity = quantity;
+    return basketItem;
+
   }
 }

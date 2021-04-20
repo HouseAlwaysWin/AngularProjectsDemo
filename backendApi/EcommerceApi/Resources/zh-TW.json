@@ -4,5 +4,8 @@
     "Password": "密碼",
     "{0}IsRequired": "{0}為必填.",
     "{0}FormatIncorrect": "{0}格式不正確",
-    "{0}{1}MinLength": "{0}最小長度必須為{1}"
+    "{0}{1}MinLength": "{0}最小長度必須為{1}",
+    "Pending": "未付款",
+    "PaymentRecived": "付款成功",
+    "PaymentFailed": "付款失敗"
 }

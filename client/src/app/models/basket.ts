@@ -13,7 +13,19 @@ export interface IBasket {
 
 
 export interface IBasketItem {
-  id: number;
+  id: string;
+  productId: number;
+  name: string;
+  description: string;
+  price: number;
+  imgUrl: string;
+  productCategoryName: string;
+  quantity: number
+}
+
+export class BasketItem implements IBasketItem {
+  id: string;
+  productId: number;
   name: string;
   description: string;
   price: number;

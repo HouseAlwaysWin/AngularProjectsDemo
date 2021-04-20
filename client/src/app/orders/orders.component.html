@@ -65,8 +65,8 @@
           <div>
             <!-- <app-order-detail [content]="item.basketItems"></app-order-detail> -->
             <button mat-raised-button
-              (click)="goDetail(item.orderItems)"
-              color="primary">Detail</button>
+              (click)="goDetail(item)"
+              color="primary">{{ 'OrderTable.Detail' | translate}}</button>
           </div>
         </td>
       </ng-container>
@@ -91,7 +91,7 @@
       <tr mat-row
         *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-    <mat-paginator class="basket-paging"
+    <mat-paginator class="order-paging"
       [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
 
   </div>

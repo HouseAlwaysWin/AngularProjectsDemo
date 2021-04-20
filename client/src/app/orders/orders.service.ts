@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { IApiPagingResponse } from '../models/apiResponse';
+import { IApiPagingResponse, IApiResponse } from '../models/apiResponse';
 import { IBasketItem } from '../models/basket';
 import { IOrder, IOrderItem, OrderListParam } from '../models/order';
 
@@ -31,5 +31,15 @@ export class OrdersService {
           return res.data;
         }
       }));
+  }
+
+  getOrderById(id: string) {
+    let params = new HttpParams();
+    return this.http.get(`${this.baseUrl}orders/${id}`).pipe(
+      map((res: IApiResponse<IOrder>) => {
+        if (res.isSuccessed) {
+          return res.data;
+        }
+      }))
   }
 }

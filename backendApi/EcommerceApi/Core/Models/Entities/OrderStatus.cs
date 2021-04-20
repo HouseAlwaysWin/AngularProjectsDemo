@@ -6,9 +6,9 @@ namespace EcommerceApi.Core.Models.Entities
     {
         [EnumMember(Value="Pending")]
         Pending,
-        [EnumMember(Value="Payment Recived")]
+        [EnumMember(Value="PaymentRecived")]
         PaymentReceived,
-        [EnumMember(Value="Payment Failed")]
+        [EnumMember(Value="PaymentFailed")]
         PaymentFailed
     }
 }

@@ -1,0 +1,81 @@
+@import "../../../styles.scss";
+
+.product-img {
+  height: 300px;
+  width: 300px;
+  border-radius: 10px;
+}
+
+.product-description {
+  margin: 1em 0em 1em 0em;
+  width: 300px;
+  // padding: 0em 150px 0em 150px;
+}
+
+.attr-selected {
+  margin-left: 20px;
+}
+
+.attr-title {
+  margin-bottom: 1em;
+}
+
+.attr-area {
+  border-style: solid;
+  padding: 0.5em;
+  margin-bottom: 1em;
+  width: 250px;
+  border-radius: 10px;
+  border-color: gray;
+}
+
+.attr-quantity-title {
+  font-size: 20px;
+  margin-right: 1em;
+}
+
+.attr-radio-button {
+  margin-bottom: 0.5em;
+}
+
+.attr-radio-group {
+  margin-bottom: 1em;
+}
+
+.quantity-area {
+  margin-bottom: 1em;
+  margin-left: 1em;
+}
+
+.btnAction {
+  margin: 0 1em 1em 0;
+}
+
+.product-price {
+  font-size: 20px;
+  margin-top: 1em;
+  text-shadow: 1px 1px rgba(110, 110, 110, 0.2);
+}
+
+.quantity-label {
+  font-size: 20px;
+}
+
+.current-cart-quantity {
+  font-size: 18px;
+}
+
+.add-mat-icon {
+  @include mat-icon-size(22px);
+  cursor: pointer;
+  color: rgb(0, 107, 0);
+  margin-right: 10px;
+}
+
+.remove-mat-icon {
+  @include mat-icon-size(22px);
+  cursor: pointer;
+  color: rgb(145, 1, 1);
+  margin-left: 10px;
+  margin-right: 5px;
+}

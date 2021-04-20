@@ -12,6 +12,7 @@ export class PaginatorLocalize extends MatPaginatorIntl {
     translate.onLangChange.subscribe(event => {
       this.getTranslations();
     });
+    this.getTranslations();
   }
 
   getTranslations() {

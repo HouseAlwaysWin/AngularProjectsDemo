@@ -23,11 +23,11 @@
 <div class="empty-cart-area">
   <div class="empty-cart"
     *ngIf="(basket$ | async).basketItems.length === 0">
-    <h4>
-      The Cart is Empty
-    </h4>
+    <h2>
+      {{ 'Basket.TheCartEmpty' | translate }}
+    </h2>
     <button mat-raised-button
       color="warn"
-      routerLink="/shop">Keep Shopping</button>
+      routerLink="/shop">{{ 'Basket.KeepShopping' | translate }}</button>
   </div>
 </div>

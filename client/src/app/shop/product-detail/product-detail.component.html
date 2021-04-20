@@ -1,28 +1,99 @@
-<div fxLayout="row"
+<div fxLayout="column"
+  fxLayoutAlign="center center"
   *ngIf="product">
-  <div fxFlex="50"
-    fxLayout="column"
-    fxAlignLayout="start start">
+
+  <div>
     <h1>{{ product.name }}</h1>
-    <img src="{{ product.productPictures[0].urlPath }}"
-      alt="{{ product.productPictures[0].altAttribute}}" />
-    <p>
-      {{ product.description}}
-    </p>
-    <div>
-      <p>{{ product.price | currency}}</p>
+  </div>
+
+  <div fxLayout.gt-sm="row"
+    fxLayout="column"
+    fxLayoutAlign.gt-sm="center start"
+    fxLayoutAlign="center center">
+    <div class="product-info"
+      fxLayout.gt-sm="column"
+      fxLayout="column"
+      fxLayoutAlign.gt-sm="center start"
+      fxLayoutAlign="center center">
+
+      <img class="product-img"
+        src="{{ product.productPictures[0].urlPath }}"
+        alt="{{ product.productPictures[0].altAttribute}}" />
+
+      <p class="product-price">
+        <label>{{ 'OrderDetail.Price' | translate }}</label> {{ totalPrice | currency}}
+      </p>
+      <p class="product-description">
+        <label>{{ 'OrderDetail.Description' | translate }}:</label> {{ product.description}}
+      </p>
     </div>
+
+    <div class="attr-selected"
+      fxLayout="column">
+      <ng-container *ngFor="let attr of product.productAttributes;let i = index">
+        <div class="attr-area">
+          <p class="attr-title">{{ attr.name }}</p>
+          <mat-radio-group (change)="onOptionChange($event,attr.name)"
+            [value]="attr.productAttributeValue[0]"
+            fxLayout="column"
+            class="attr-radio-group">
+            <mat-radio-button class="attr-radio-button"
+              *ngFor="let attrValue of attr.productAttributeValue"
+              [value]="attrValue">
+              {{ attrValue.name }}
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </ng-container>
+
+
+
+    </div>
+
   </div>
-  <div fxFlex="50"
-    fxLayout="column">
-    <ng-container *ngFor="let attr of product.productAttributes">
-      {{ attr.name }}
-      <mat-radio-group [(ngModel)]="productAttrs">
-        <mat-radio-button *ngFor="let attrValue of attr.productAttributeValue"
-          [value]="attrValue.name">
-          {{ attrValue.name }}
-        </mat-radio-button>
-      </mat-radio-group>
-    </ng-container>
+  <div fxLayout="column"
+    fxLayoutAlign="center center">
+    <div class="quantity-area"
+      fxLayoutAlign="center start"
+      fxLayout="row">
+      <p class="attr-quantity-title">{{ 'ProductDetail.Quantity' | translate }}</p>
+      <mat-icon class="add-mat-icon noselect"
+        inline="true"
+        (click)="incrementItemQuantity()">add_circle</mat-icon>
+      <span class="quantity-label noselect">{{ quantity }}</span>
+      <mat-icon class="remove-mat-icon noselect"
+        inline="true"
+        (click)="decrementItemQuantity()">remove_circle</mat-icon>
+      <h5 class="current-cart-quantity">
+        ({{ 'ProductDetail.CurrentCartQuantity' | translate }}: {{ cartQuantity }})
+      </h5>
+    </div>
+
+    <div fxLayout.gt-sm="row"
+      fxLayout="column">
+      <button mat-raised-button
+        (click)="addItemToBasket()"
+        class="btnAction"
+        color="warn">
+        {{ 'ProductDetail.AddToCart' | translate}}
+      </button>
+
+      <button mat-raised-button
+        routerLink="/basket"
+        class="btnAction"
+        color="primary">
+        {{ 'ProductDetail.GoToBasket' | translate }}
+      </button>
+
+      <button mat-raised-button
+        class="btnAction"
+        routerLink="/shop">
+        {{ 'ProductDetail.ReturnShop' | translate }}
+      </button>
+    </div>
+
+
   </div>
+
+
 </div>

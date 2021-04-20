@@ -3278,5 +3278,37 @@
         "PropertyValue": "尹智",
         "LanguageId": 2,
         "TableId": 10
+    },
+    {
+        "Id": 411,
+        "EntityType": "ProductAttribute",
+        "PropertyKey": "Name",
+        "PropertyValue": "顏色",
+        "LanguageId": 2,
+        "TableId": 1
+    },
+    {
+        "Id": 412,
+        "EntityType": "ProductAttribute",
+        "PropertyKey": "Name",
+        "PropertyValue": "Color",
+        "LanguageId": 1,
+        "TableId": 1
+    },
+    {
+        "Id": 413,
+        "EntityType": "ProductAttribute",
+        "PropertyKey": "Name",
+        "PropertyValue": "尺寸",
+        "LanguageId": 2,
+        "TableId": 2
+    },
+    {
+        "Id": 414,
+        "EntityType": "ProductAttribute",
+        "PropertyKey": "Name",
+        "PropertyValue": "Size",
+        "LanguageId": 1,
+        "TableId": 2
     }
 ]

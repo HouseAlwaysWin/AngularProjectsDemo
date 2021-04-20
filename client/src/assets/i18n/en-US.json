@@ -1,12 +1,24 @@
 {
   "Shared": {
     "Required": "{{ name }} is Required",
-    "Confirm": "Confirm"
+    "Confirm": "Confirm",
+    "Detail": "Detail"
   },
   "Lang": {
     "langs": "Lang",
     "en-US": "English",
     "zh-TW": "Tranditional Chinese"
+  },
+  "Shop": {
+    "Sort": "Sort",
+    "Categories": "Categories",
+    "All": "All",
+    "Shop": "Shop",
+    "Alphabetical": "Alphabetical",
+    "PriceLowToHight": "Price: Low to Height",
+    "PriceHightToLow": "Price: Height to Low",
+    "Detail": "Detail",
+    "NoProductsFound.": "No Products Found"
   },
   "AccountForm": {
     "Email": "Email",
@@ -38,6 +50,10 @@
     "OrdersHistory": "Orders History",
     "UserSetting": "User Settings"
   },
+  "Basket": {
+    "TheCartEmpty": "The Cart is Empty",
+    "KeepShopping": "Keep Shopping"
+  },
   "BasketTable": {
     "No": "No",
     "Name": "Name",
@@ -64,11 +80,31 @@
     "OrderDate": "OrderDate",
     "Detail": "Detail"
   },
+  "OrderDetail": {
+    "No": "No",
+    "ImgUrl": "Image",
+    "Name": "Name",
+    "Description": "Description",
+    "Price": "Price",
+    "Quantity": "Quantity",
+    "Return": "Return"
+  },
+  "ProductDetail": {
+    "Quantity": "Quantity",
+    "CurrentCartQuantity": "current cart's quantities",
+    "AddToCart": "Add to cart",
+    "GoToBasket": "Go to cart",
+    "ReturnShop": "Return to shop"
+  },
   "Checkout": {
     "Address": "Address",
     "DeliveryMethod": "Delivery",
     "Review": "Review",
-    "Payment": "Payment"
+    "Payment": "Payment",
+    "Previous": "Previous",
+    "Next": "Next",
+    "DeliverymethodTitle": "Choose your delivery method",
+    "SetAddress": "Set Address as same as UserAddress"
   },
   "CheckoutAddress": {
     "FirstName": "FirstName",

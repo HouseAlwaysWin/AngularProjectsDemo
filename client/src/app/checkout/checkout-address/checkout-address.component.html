@@ -5,7 +5,9 @@
     <h4>{{ 'CheckoutAddress.ShippingAddress' | translate}}</h4>
     <button mat-stroked-button
       (click)="setUserAddress()"
-      color="primary">Set Address as same as UserAddress</button>
+      color="primary">
+      {{ 'Checkout.SetAddress' | translate}}
+    </button>
   </div>
 
   <form [formGroup]="checkoutForm"
@@ -90,7 +92,18 @@
 
   </form>
 
+
   <div fxLayout="row"
+    fxLayoutAlign="space-between center">
+    <button mat-raised-button
+      routerLink="/basket">{{ 'Checkout.Previous' | translate}}</button>
+    <button mat-raised-button
+      color="primary"
+      matStepperNext
+      [disabled]="addressForm.invalid">{{ 'Checkout.Next' | translate }}</button>
+  </div>
+
+  <!-- <div fxLayout="row"
     fxLayoutAlign="space-between center">
     <button mat-raised-button
       routerLink="/basket"
@@ -99,5 +112,5 @@
       cdkStepperNext
       [disabled]="addressForm.invalid"
       color="warn">&rarr;</button>
-  </div>
+  </div> -->
 </div>

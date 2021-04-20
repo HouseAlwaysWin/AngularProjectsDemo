@@ -2,7 +2,17 @@
   [showQuantityAdj]="false"
   (remove)="removeBasketItem($event)"></app-basket-summary>
 
+
+
 <div fxLayout="row"
+  fxLayoutAlign="space-between center">
+  <button mat-raised-button
+    matStepperPrevious>{{ 'Checkout.Previous' | translate}}</button>
+  <button mat-raised-button
+    color="primary"
+    (click)="createPaymentIntent()">{{ 'Checkout.Next' | translate }}</button>
+</div>
+<!-- <div fxLayout="row"
   fxLayoutAlign="space-between center">
 
   <button mat-raised-button
@@ -11,4 +21,4 @@
   <button mat-raised-button
     (click)="createPaymentIntent()"
     color="warn">&rarr;</button>
-</div>
+</div> -->

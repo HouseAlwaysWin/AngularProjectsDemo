@@ -45,13 +45,13 @@ namespace EcommerceApi.Core.Services
                 shippingPrice = deliveryMethod.Price;
             }
 
-            foreach(var item in basket.BasketItems){
-                // var productItem = await _unitOfWork.Repository<Models.Entities.Product>().GetByIdAsync(item.Id);
-                var productItem = await _unitOfWork.EntityRepository<Models.Entities.Product>().GetByIdAsync(item.Id);
-                if(item.Price != productItem.Price){
-                    item.Price = productItem.Price;
-                }
-            }
+            // foreach(var item in basket.BasketItems){
+            //     // var productItem = await _unitOfWork.Repository<Models.Entities.Product>().GetByIdAsync(item.Id);
+            //     var productItem = await _unitOfWork.EntityRepository<Models.Entities.Product>().GetByIdAsync(item.Id);
+            //     if(item.Price != productItem.Price){
+            //         item.Price = productItem.Price;
+            //     }
+            // }
 
             var service = new PaymentIntentService();
 

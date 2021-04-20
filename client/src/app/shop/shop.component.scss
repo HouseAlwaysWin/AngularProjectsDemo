@@ -20,6 +20,10 @@ mat-form-field {
   border-radius: 2px;
 }
 
+.product-list {
+  margin-top: 1em;
+}
+
 .product-notfound {
   text-align: center;
   margin: 2em;
@@ -90,4 +94,8 @@ mat-form-field {
 mat-progress-spinner {
   margin-left: 20%;
   margin-top: 10%;
+}
+
+mat-paginator {
+  background-color: rgba(0, 0, 0, 0);
 }

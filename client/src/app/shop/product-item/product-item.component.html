@@ -21,6 +21,6 @@
     <button mat-raised-button
       class="product-add-btn"
       color="warn"
-      (click)="addItemToBasket()">Add To Cart</button>
+      routerLink="/products/{{ product.id }}">{{ 'Shop.Detail' | translate }}</button>
   </mat-card-actions>
 </mat-card>

@@ -19,9 +19,8 @@ export class AppComponent implements OnInit {
   ) {
     translate.addLangs(['en-US', 'zh-TW']);
     const browserLang = navigator.language;
-    translate.use(browserLang.match(/en-US|zh-TW/) ? browserLang : 'en-US');
+    translate.use(browserLang.match(/zh-TW|en-US/) ? browserLang : 'en-US');
     translate.use('zh-TW');
-
   }
   ngOnInit(): void {
     // this.authService.authListener();

@@ -6,6 +6,7 @@ import { ProductItemComponent } from './product-item/product-item.component';
 import { SharedModule } from '../shared/shared.module';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
 import { CdkTreeModule } from '@angular/cdk/tree';
+import { BasketModule } from '../basket/basket.module';
 
 
 @NgModule({
@@ -15,6 +16,7 @@ import { CdkTreeModule } from '@angular/cdk/tree';
     SharedModule,
     CdkTreeModule,
     ShopRoutingModule,
+    BasketModule
   ]
 })
 export class ShopModule { }

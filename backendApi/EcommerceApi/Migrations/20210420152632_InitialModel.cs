@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace EcommerceApi.Core.Data.Migrations
+namespace EcommerceApi.Migrations
 {
     public partial class InitialModel : Migration
     {
@@ -186,7 +186,6 @@ namespace EcommerceApi.Core.Data.Migrations
                     ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
                     Name = table.Column<string>(nullable: true),
                     PriceAdjustment = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Quantity = table.Column<int>(nullable: false),
                     SeqIndex = table.Column<int>(nullable: false),
                     ProductAttributeId = table.Column<int>(nullable: false)
                 },

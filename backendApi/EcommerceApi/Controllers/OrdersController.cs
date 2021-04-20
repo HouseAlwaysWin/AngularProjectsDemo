@@ -7,6 +7,7 @@ using EcommerceApi.Core.Models.Dtos;
 using EcommerceApi.Core.Models.Entities;
 using EcommerceApi.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 
 namespace EcommerceApi.Controllers
 {
@@ -14,12 +15,15 @@ namespace EcommerceApi.Controllers
     {
          private readonly IOrderService _orderService;
         private readonly IMapper _mapper;
+ private readonly IStringLocalizer _localizer;
 
         public OrdersController(IOrderService orderService,
+        IStringLocalizer localizer,
             IMapper mapper)
         {
             this._orderService = orderService;
             this._mapper = mapper;
+            this._localizer = localizer;
         }
 
         [HttpPost("create")]
@@ -61,16 +65,17 @@ namespace EcommerceApi.Controllers
         } 
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<OrderByIdDto>> GetOrderById(int id){
+        public async Task<ActionResult<OrderDto>> GetOrderById(int id){
             var email = HttpContext.User?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
-
+            email = "b@b.com";
             var order = await _orderService.GetOrderByIdAsync(id,email);
+            var test = _localizer[order.OrderStatus.ToString()].Value;
 
             if(order == null){
                 return BaseApiNotFound("Order Not Found.");
             }
-            var result =  _mapper.Map<Order,OrderByIdDto>(order);
-            return result;
+            var result =  _mapper.Map<Order,OrderDto>(order);
+            return BaseApiOk(result);
         }
     }
 }

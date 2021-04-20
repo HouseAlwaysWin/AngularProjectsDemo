@@ -8,6 +8,17 @@
     "en-US": "英文",
     "zh-TW": "繁體中文"
   },
+  "Shop": {
+    "Sort": "排序",
+    "Categories": "類別",
+    "All": "全部",
+    "Shop": "商店",
+    "Alphabetical": "字母排序",
+    "PriceLowToHight": "價格:低到高",
+    "PriceHightToLow": "價格:高到低",
+    "Detail": "詳細",
+    "NoProductsFound": "沒有找到產品"
+  },
   "AccountForm": {
     "Email": "電子信箱",
     "Password": "密碼",
@@ -38,6 +49,10 @@
     "OrdersHistory": "訂單紀錄",
     "UserSetting": "使用者設定"
   },
+  "Basket": {
+    "TheCartEmpty": "購物車為空",
+    "KeepShopping": "繼續購物"
+  },
   "BasketTable": {
     "No": "編號",
     "Name": "名稱",
@@ -64,11 +79,31 @@
     "OrderDate": "訂單日期",
     "Detail": "訂單細節"
   },
+  "OrderDetail": {
+    "No": "訂單號",
+    "ImgUrl": "圖片",
+    "Name": "名稱",
+    "Description": "說明",
+    "Price": "價格",
+    "Quantity": "數量",
+    "Return": "返回"
+  },
+  "ProductDetail": {
+    "Quantity": "數量",
+    "CurrentCartQuantity": "購物車目前數量",
+    "AddToCart": "加入購物車",
+    "GoToBasket": "前往購物車",
+    "ReturnShop": "返回商店"
+  },
   "Checkout": {
     "Address": "地址",
     "DeliveryMethod": "運送方式",
     "Review": "訂單總結",
-    "Payment": "付款"
+    "Payment": "付款",
+    "Previous": "上一步",
+    "Next": "下一步",
+    "DeliverymethodTitle": "選擇運送方式",
+    "SetAddress": "設定地址和帳戶一樣"
   },
   "CheckoutAddress": {
     "FirstName": "姓",

@@ -72,7 +72,7 @@
   </a>
   <mat-list *ngIf="showLangs">
     <mat-list-item *ngFor="let lang of translate.getLangs()"
-      (click)="translate.use(lang)">
+      (click)="changeLang(lang)">
       <span class="lang-list">
         <mat-icon>translate</mat-icon>
         {{ 'Lang.'+ lang | translate }}

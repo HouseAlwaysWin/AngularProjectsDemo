@@ -37,8 +37,8 @@ export class ShopComponent implements OnInit {
 
   sortOptions = [
     { name: 'Alphabetical', value: 'name' },
-    { name: 'Price: Low to Hight', value: 'priceAsc' },
-    { name: 'Price: High to Low', value: 'priceDesc' }
+    { name: 'PriceLowToHight', value: 'priceAsc' },
+    { name: 'PriceHightToLow', value: 'priceDesc' }
   ]
 
   constructor(private shopService: ShopService
@@ -111,6 +111,7 @@ export class ShopComponent implements OnInit {
   getProductCategories() {
     this.shopService.getCategories().subscribe(() => {
       this.categories = new ArrayDataSource(this.categories$);
+
       this.categoriesTreeControl = new NestedTreeControl<IProductCategory>(node => node.children);
     }, error => {
       console.log(error);

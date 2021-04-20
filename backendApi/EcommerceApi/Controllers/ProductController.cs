@@ -58,20 +58,15 @@ namespace EcommerceApi.Controllers
 
         public async Task<ActionResult> GetProduct(int id){
 
-            var product = await _productService.GetProductByIdAsync(id);
-
-            if(product == null) return BaseApiNotFound(new ApiResponse(false,""));
-
-            var data = _mapper.Map<Product,ProductDto>(product);
-
-            return BaseApiOk(data);
+            var product = await _productService.GetProductByIdAsync(id,true);
+            return BaseApiOk(product);
         }
 
 
         [HttpGet("categoriestree")]
         public async Task<ActionResult> GetproductCategoriesTree(){
 
-            var categories = await _productService.GetProductCategoriesTree();
+            var categories = await _productService.GetProductCategoriesTree(true);
 
             return BaseApiOk(categories);
         }

@@ -8,14 +8,20 @@ using EcommerceApi.Core.Entities.Identity;
 using EcommerceApi.Core.Models.Dtos;
 using EcommerceApi.Core.Models.Entities;
 using EcommerceApi.Core.Services.Interfaces;
+using Microsoft.Extensions.Localization;
+using EcommerceApi.Helpers.MapResolvers;
 
 namespace EcommerceApi.Helpers.Localization {
     public class AutomapperProfiles:Profile{
         private readonly ILocalizedService _localizedService;
+        private readonly IStringLocalizer _localizer;
 
-        public AutomapperProfiles(ILocalizedService localizedService)
+
+        public AutomapperProfiles(ILocalizedService localizedService,
+          IStringLocalizer localizer)
         {
             this._localizedService = localizedService;
+            this._localizer = localizer;
         }
 
         public AutomapperProfiles()
@@ -47,9 +53,10 @@ namespace EcommerceApi.Helpers.Localization {
             CreateMap<OrderItem,OrderItemDto>();
 
             CreateMap<Order,OrderDto>()
-                .ForMember(o => o.OrderStatus,od => od.MapFrom(od => od.OrderStatus.ToString()))
+                .ForMember(od => od.OrderStatus,o => o.MapFrom<OrderStatusResolver>())
                 .ForMember(o => o.CreatedDate,od => od.MapFrom(od => od.CreatedDate.ToString()));
             
+         
 
 
         }

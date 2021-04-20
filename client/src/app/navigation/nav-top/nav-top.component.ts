@@ -53,7 +53,6 @@ export class NavTopComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.showBar = false;
     this.accountService.currrentUser.subscribe(user => {
-      console.log(user);
       this.userInfo = user;
       this.isAuth = user ? true : false;
       this.showBar = true;
@@ -64,13 +63,11 @@ export class NavTopComponent implements OnInit, OnDestroy {
 
   onLogout() {
     this.accountService.logout();
-    // this.fbAuthService.logout();
   }
 
   ngOnDestroy() {
     this.accountService.currrentUser.unsubscribe();
     this.basketSub.unsubscribe();
-    // this.authSubscription.unsubscribe();
   }
 
   changeLang(lang: string) {

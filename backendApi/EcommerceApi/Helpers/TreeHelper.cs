@@ -37,8 +37,9 @@ namespace EcommerceApi.Helpers
             Func<TEntity,RootId> parentId_selector,
             RootId rootId=default(RootId)
 
-            )  where TEntity :ITreeNode<TEntity> {
-
+            )  where TEntity :ITreeNode<TEntity> 
+               where RootId: struct {
+            
             foreach(var item in collection.Where(c => EqualityComparer<RootId>.Default.Equals(parentId_selector(c),rootId))){
                 item.Children =  collection.GenerateITree(id_selector,parentId_selector,id_selector(item));
                 yield return item;

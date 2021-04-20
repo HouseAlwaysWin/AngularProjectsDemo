@@ -6,23 +6,23 @@
   <div fxFlex="15"
     class="bar-area">
     <ng-container>
-      <h4 class="bar-list-title">Sort</h4>
+      <h4 class="bar-list-title">{{ 'Shop.Sort' | translate}}</h4>
       <mat-form-field appearance="fill">
         <mat-select [(value)]="sortSelected"
           (selectionChange)="onSortSelected()">
           <mat-option *ngFor="let sort of sortOptions"
             [value]="sort.value">
-            {{ sort.name }}
+            {{ 'Shop.'+sort.name | translate}}
           </mat-option>
         </mat-select>
       </mat-form-field>
 
       <div *ngIf="categories">
-        <h4 class="bar-list-title">Categories</h4>
+        <h4 class="bar-list-title">{{ 'Shop.Categories' | translate }}</h4>
         <button mat-stroked-button
           [class.active]="shopParams.categoryId === 0"
           class="category-all"
-          (click)="onCategorySelected(0)">All</button>
+          (click)="onCategorySelected(0)">{{ 'Shop.All' | translate }}</button>
         <cdk-tree [dataSource]="(categories$ | async)"
           [treeControl]="categoriesTreeControl">
 
@@ -96,30 +96,41 @@
               {{ item.name }}
             </mat-option>
           </mat-autocomplete>
+
         </mat-form-field>
       </form>
-      <mat-paginator [length]="(products$ |async)?.totalCount"
-        (page)="setPage($event)"
-        [pageSize]="shopParams.pageSize"
-        [pageIndex]="shopParams.pageIndex"
-        [pageSizeOptions]="[5,10,25,100]"
-        [showFirstLastButtons]="true">
-      </mat-paginator>
     </div>
 
-    <div *ngIf="!isLoading">
+    <div *ngIf="!isLoading"
+      class="product-list">
       <div *ngIf="(products$ |async)?.totalCount;else productEmpty">
-        <div fxLayout="row start wrap">
-          <app-product-item [product]="product"
-            *ngFor="let product of (products$ |async).data"></app-product-item>
+        <div fxLayout="column"
+          fxLayoutAlign="start start">
+          <div>
+            <mat-paginator [length]="(products$ |async)?.totalCount"
+              (page)="setPage($event)"
+              [pageSize]="shopParams.pageSize"
+              [pageIndex]="shopParams.pageIndex"
+              [pageSizeOptions]="[5,10,25,100]"
+              [showFirstLastButtons]="true">
+            </mat-paginator>
+          </div>
+          <div fxLayout="row start wrap">
+            <app-product-item [product]="product"
+              *ngFor="let product of (products$ |async).data"></app-product-item>
+          </div>
+          <div>
+            <mat-paginator [length]="(products$ |async).totalCount"
+              (page)="setPage($event)"
+              [pageSize]="shopParams.pageSize"
+              [pageIndex]="shopParams.pageIndex"
+              [pageSizeOptions]="[5,10,25,100]"
+              [showFirstLastButtons]="true">
+            </mat-paginator>
+          </div>
         </div>
-        <mat-paginator [length]="(products$ |async).totalCount"
-          (page)="setPage($event)"
-          [pageSize]="shopParams.pageSize"
-          [pageIndex]="shopParams.pageIndex"
-          [pageSizeOptions]="[5,10,25,100]"
-          [showFirstLastButtons]="true">
-        </mat-paginator>
+
+
       </div>
 
       <ng-template #productEmpty>
@@ -128,7 +139,7 @@
             fxLayoutAlign="center center"
             class="product-notfound">
             <h2>
-              No Products found.
+              {{ 'Shop.NoProductsFound' | translate}}
             </h2>
           </div>
         </div>

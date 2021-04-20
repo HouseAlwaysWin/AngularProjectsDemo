@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace EcommerceApi.Core.Data.Migrations
+namespace EcommerceApi.Migrations
 {
     [DbContext(typeof(StoreContext))]
     partial class StoreContextModelSnapshot : ModelSnapshot
@@ -365,9 +365,6 @@ namespace EcommerceApi.Core.Data.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ProductAttributeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.Property<int>("SeqIndex")

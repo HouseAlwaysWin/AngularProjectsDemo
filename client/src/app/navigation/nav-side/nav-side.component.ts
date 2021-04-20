@@ -4,7 +4,9 @@ import { Subscription } from 'rxjs';
 import { AccountService } from 'src/app/account/account.service';
 import { BasketService } from 'src/app/basket/basket.service';
 import { Basket } from 'src/app/models/basket';
+import { ShopParams } from 'src/app/models/shopParams';
 import { IUser } from 'src/app/models/user';
+import { ShopService } from 'src/app/shop/shop.service';
 
 @Component({
   selector: 'app-nav-side',
@@ -23,7 +25,8 @@ export class NavSideComponent implements OnInit, OnDestroy {
   constructor(
     public translate: TranslateService,
     private basketService: BasketService,
-    private accountService: AccountService) { }
+    private accountService: AccountService,
+    private shopService: ShopService) { }
 
   ngOnDestroy(): void {
     this.accountService.currrentUser.unsubscribe();
@@ -48,7 +51,6 @@ export class NavSideComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.accountService.currrentUser.subscribe(user => {
-      console.log(user);
       this.userInfo = user;
       this.isAuth = user ? true : false;
     });
@@ -62,6 +64,12 @@ export class NavSideComponent implements OnInit, OnDestroy {
 
   showLangList() {
     this.showLangs = !this.showLangs;
+  }
+
+  changeLang(lang: string) {
+    this.translate.use(lang);
+    this.shopService.getCategories().subscribe();
+    this.shopService.getProducts(new ShopParams()).subscribe();
   }
 
 }

@@ -49,10 +49,11 @@ export class OrdersComponent implements OnInit {
         this.pageItems.paginator = this.paginator;
       })
   }
-  goDetail(item: IOrderItem[]) {
+  goDetail(item: IOrder) {
     console.log(item);
-    this.ordersService.orderDetailState.next(item);
-    this.router.navigate(['/orders/detail']);
+    // this.ordersService.orderDetailState.next(item);
+    // this.router.navigate(['/orders/detail']);
+    this.router.navigate([`/orders/${item.id}`]);
   }
 
 }

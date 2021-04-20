@@ -16,7 +16,6 @@ export class I18nLoader implements TranslateLoader {
   }
 
   public getTranslation(lang: string): Observable<any> {
-    console.log(lang);
     return of(trans[lang].default);
   }
 }

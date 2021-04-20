@@ -10,12 +10,9 @@ using EcommerceApi.Core.Models.Entities;
 using EcommerceApi.Core.Services.Interfaces;
 using EcommerceApi.Helpers;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceApi.Core.Services
 {
-  
-
     public class ProductService : IProductService
     {
         private readonly IEntityRepository<Product> _productEntityRepo;
@@ -122,7 +119,7 @@ namespace EcommerceApi.Core.Services
             return currentLang;
         }
 
-        private async Task<List<ProductDto>> GetProductsDtoCached()
+        private async Task<List<ProductDto>> GetProductsDtoCachedAsync()
         {
             return await _redisCachedService.GetAndSetAsync<List<ProductDto>>(_productKey, async () =>
            {
@@ -137,7 +134,7 @@ namespace EcommerceApi.Core.Services
            });
         }
 
-        private async Task<List<ProductAttributeDto>> GetProductAttributeDtosCached()
+        private async Task<List<ProductAttributeDto>> GetProductAttributeDtosCachedAsync()
         {
             return await _redisCachedService.GetAndSetAsync<List<ProductAttributeDto>>(_productAttrKey, async () =>
              {
@@ -151,7 +148,7 @@ namespace EcommerceApi.Core.Services
              });
         }
 
-        private async Task<List<ProductAttributeValueDto>> GetProductAttributeValueDtosCached()
+        private async Task<List<ProductAttributeValueDto>> GetProductAttributeValueDtosCachedAsync()
         {
             return await _redisCachedService.GetAndSetAsync<List<ProductAttributeValueDto>>(_productAttrValueKey, async () =>
            {
@@ -165,7 +162,7 @@ namespace EcommerceApi.Core.Services
            });
         }
 
-        private async Task<List<Product_ProductAttributeDto>> GetProductAttributeMapDtosAsync()
+        private async Task<List<Product_ProductAttributeDto>> GetProductAttributeMapDtosCachedAsync()
         {
             return await _redisCachedService.GetAndSetAsync<List<Product_ProductAttributeDto>>(_productAttrMapKey, async () =>
             {
@@ -175,7 +172,7 @@ namespace EcommerceApi.Core.Services
             });
         }
 
-        private async Task<List<ProductCategoryDto>> GetProductCategoryDtosAsync()
+        private async Task<List<ProductCategoryDto>> GetProductCategoryDtosCachedAsync()
         {
             return await _redisCachedService.GetAndSetAsync<List<ProductCategoryDto>>(_categoryKey, async () =>
             {
@@ -189,7 +186,7 @@ namespace EcommerceApi.Core.Services
             });
         }
 
-        private async Task<List<PictureDto>> GetPictureDtosAsync()
+        private async Task<List<PictureDto>> GetPictureDtosCachedAsync()
         {
             return await _redisCachedService.GetAndSetAsync<List<PictureDto>>(_pictureKey, async () =>
             {
@@ -199,7 +196,7 @@ namespace EcommerceApi.Core.Services
             });
         }
 
-        private async Task<List<Product_PictureDto>> GetProductPictureDtosMapAsync()
+        private async Task<List<Product_PictureDto>> GetProductPictureDtosMapCachedAsync()
         {
             return await _redisCachedService.GetAndSetAsync<List<Product_PictureDto>>(_pictureMapKey, async () =>
             {
@@ -214,21 +211,14 @@ namespace EcommerceApi.Core.Services
 
             var productQuerys = await _redisCachedService.GetAndSetAsync<List<ProductDto>>(_productAllQueryKey, async () =>
             {
+                var products = await GetProductsDtoCachedAsync();
+                var productAttrs = await GetProductAttributeDtosCachedAsync();
+                var productAttrValues = await GetProductAttributeValueDtosCachedAsync();
+                var productAttrMap = await GetProductAttributeMapDtosCachedAsync();
+                var productCategories = await GetProductCategoryDtosCachedAsync();
+                var productPictures = await GetPictureDtosCachedAsync();
+                var productPicturesMap = await GetProductPictureDtosMapCachedAsync();
 
-                var products = await GetProductsDtoCached();
-                
-                var productAttrs = await GetProductAttributeDtosCached();
-
-                var productAttrValues = await GetProductAttributeValueDtosCached();
-              
-                var productAttrMap = await GetProductAttributeMapDtosAsync();
-              
-                var productCategories = await GetProductCategoryDtosAsync();
-              
-                var productPictures = await GetPictureDtosAsync();
-              
-                var productPicturesMap = await GetProductPictureDtosMapAsync();
-              
                 var query = products
                     .GroupJoin(
                         productAttrMap,
@@ -278,22 +268,20 @@ namespace EcommerceApi.Core.Services
             ProductLikeParam paramTemp = null;
             if (useCached)
             {
-                // var cachedData = await GetProductDtosCachedDataAsync();
                 var cachedData = await GetAllProductRelatedCachedDataAsync();
-                    paramTemp = _mapper.Map<ProductListParam, ProductLikeParam>(param);
+                paramTemp = _mapper.Map<ProductListParam, ProductLikeParam>(param);
                 var query = GetFilterQuery(cachedData, paramTemp);
                 var totalCount = query.Count();
                 var pagedData = query.Skip(param.PageIndex * param.PageSize).Take(param.PageSize).ToList(); ;
                 productsDto = new PagedList<ProductDto>(pagedData, totalCount);
                 return productsDto;
             }
-            
+
             paramTemp = _mapper.Map<ProductListParam, ProductLikeParam>(param);
             var result = await _productEntityRepo.GetAllPagedAsync(
             param.PageIndex, param.PageSize, query => ProductSpec.GetProducts(query, paramTemp));
             await SetProductsTranslation(result.Data);
             productsDto = _mapper.Map<PagedList<Product>, PagedList<ProductDto>>(result);
-
 
             return productsDto;
         }
@@ -303,21 +291,19 @@ namespace EcommerceApi.Core.Services
             List<ProductDto> productDtos = new List<ProductDto>();
             if (useCached)
             {
-                // var cachedData = await GetProductDtosCachedDataAsync();
                 var cachedData = await GetAllProductRelatedCachedDataAsync();
                 var query = GetFilterQuery(cachedData, param);
                 productDtos = query.ToList();
+                return productDtos;
             }
-            else
+
+            var products = await _productEntityRepo.GetAllAsync(query => ProductSpec.GetProductLikeQuery(query, param));
+            foreach (var item in products)
             {
-                var products = await _productEntityRepo.GetAllAsync(query => ProductSpec.GetProductLikeQuery(query, param));
-                foreach (var item in products)
-                {
-                    item.Name = await _localizedService.GetLocalizedAsync(item, p => p.Name);
-                    item.Description = await _localizedService.GetLocalizedAsync(item, p => p.Description);
-                }
-                productDtos = _mapper.Map<List<Product>, List<ProductDto>>(products.ToList());
+                item.Name = await _localizedService.GetLocalizedAsync(item, p => p.Name);
+                item.Description = await _localizedService.GetLocalizedAsync(item, p => p.Description);
             }
+            productDtos = _mapper.Map<List<Product>, List<ProductDto>>(products.ToList());
 
             return productDtos;
         }
@@ -333,22 +319,28 @@ namespace EcommerceApi.Core.Services
                 var total = query.Count();
                 var pagedData = query.Skip(param.PageIndex * param.PageSize).Take(param.PageSize).ToList(); ;
                 productDtos = new PagedList<ProductDto>(pagedData, total);
+                return productDtos;
             }
-            else
-            {
-                var result = await _productEntityRepo.GetAllPagedAsync(
-                   param.PageIndex, param.PageSize, query => ProductSpec.GetProductLikeQuery(query, param));
-                await SetProductsTranslation(result.Data);
-                productDtos = _mapper.Map<PagedList<Product>, PagedList<ProductDto>>(result);
-            }
+            var result = await _productEntityRepo.GetAllPagedAsync(
+                param.PageIndex, param.PageSize, query => ProductSpec.GetProductLikeQuery(query, param));
+            await SetProductsTranslation(result.Data);
+            productDtos = _mapper.Map<PagedList<Product>, PagedList<ProductDto>>(result);
 
             return productDtos;
         }
 
-        public async Task<Product> GetProductByIdAsync(int id, bool useCached = false)
+        public async Task<ProductDto> GetProductByIdAsync(int id, bool useCached = false)
         {
+            ProductDto productDto = new ProductDto();
+            if (useCached)
+            {
+                var cachedData = await GetAllProductRelatedCachedDataAsync();
+                productDto = cachedData.FirstOrDefault(p => p.Id == id);
+                return productDto;
+            }
             var product = await _productEntityRepo.GetByIdAsync(id, q => ProductSpec.GetProductAll(q));
-            return product;
+            productDto = _mapper.Map<Product, ProductDto>(product);
+            return productDto;
         }
 
 
@@ -357,7 +349,7 @@ namespace EcommerceApi.Core.Services
             List<ProductCategoryDto> categories = new List<ProductCategoryDto>();
             if (useCached)
             {
-                categories = await GetProductCategoryDtosAsync();
+                categories = await GetProductCategoryDtosCachedAsync();
             }
             else
             {
@@ -371,11 +363,11 @@ namespace EcommerceApi.Core.Services
                 categories = _mapper.Map<List<ProductCategory>, List<ProductCategoryDto>>(data.ToList());
             }
 
-            List<ProductCategoryDto> tree = categories.GenerateITree<ProductCategoryDto,int?>(c => c.Id, c => c.ParentId).ToList();
-           
+            List<ProductCategoryDto> tree = categories.GenerateITree<ProductCategoryDto, int>(c => c.Id, c => c.ParentId.Value).ToList();
+
             return tree;
         }
 
-       
+
     }
 }

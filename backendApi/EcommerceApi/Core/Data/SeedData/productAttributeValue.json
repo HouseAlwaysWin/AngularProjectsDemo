@@ -3,7 +3,6 @@
         "Id": 1,
         "Name": "Blue",
         "PriceAdjustment": 1.000,
-        "Quantity": 1000,
         "SeqIndex": 1,
         "ProductAttributeId": 1
     },
@@ -11,7 +10,6 @@
         "Id": 2,
         "Name": "Red",
         "PriceAdjustment": 0,
-        "Quantity": 1000,
         "SeqIndex": 2,
         "ProductAttributeId": 1
     },
@@ -19,7 +17,6 @@
         "Id": 3,
         "Name": "Green",
         "PriceAdjustment": 1.000,
-        "Quantity": 1000,
         "SeqIndex": 3,
         "ProductAttributeId": 1
     },
@@ -27,7 +24,6 @@
         "Id": 4,
         "Name": "XS",
         "PriceAdjustment": 0.000,
-        "Quantity": 1000,
         "SeqIndex": 1,
         "ProductAttributeId": 2
     },
@@ -35,7 +31,6 @@
         "Id": 5,
         "Name": "S",
         "PriceAdjustment": 0.000,
-        "Quantity": 1000,
         "SeqIndex": 2,
         "ProductAttributeId": 2
     },
@@ -43,7 +38,6 @@
         "Id": 6,
         "Name": "M",
         "PriceAdjustment": 0.000,
-        "Quantity": 1000,
         "SeqIndex": 3,
         "ProductAttributeId": 2
     },
@@ -51,7 +45,6 @@
         "Id": 7,
         "Name": "L",
         "PriceAdjustment": 0.000,
-        "Quantity": 1000,
         "SeqIndex": 4,
         "ProductAttributeId": 2
     },
@@ -59,7 +52,6 @@
         "Id": 8,
         "Name": "XL",
         "PriceAdjustment": 0.000,
-        "Quantity": 1000,
         "SeqIndex": 5,
         "ProductAttributeId": 2
     }
