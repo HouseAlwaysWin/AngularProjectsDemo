@@ -104,7 +104,8 @@
     "Previous": "Previous",
     "Next": "Next",
     "DeliverymethodTitle": "Choose your delivery method",
-    "SetAddress": "Set Address as same as UserAddress"
+    "SetAddress": "Set Address as same as UserAddress",
+    "Submit": "Submit"
   },
   "CheckoutAddress": {
     "FirstName": "FirstName",

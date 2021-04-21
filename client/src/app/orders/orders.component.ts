@@ -7,6 +7,8 @@ import { AccountService } from '../account/account.service';
 import { IBasketItem } from '../models/basket';
 import { IOrder, IOrderItem, OrderListParam } from '../models/order';
 import { OrdersService } from './orders.service';
+import moment from 'moment';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-orders',
@@ -41,8 +43,18 @@ export class OrdersComponent implements OnInit {
 
   getOrderList() {
     this.ordersService.getOrderListPaging(this.orderListParam)
+      .pipe(
+        map((orders: IOrder[]) => {
+          orders.forEach(o => {
+            var twZone = o.orderDate;
+            console.log(twZone);
+            o.orderDate = moment.utc(o.orderDate + "-08:00").format('YYYY-MM-DD hh:mm:ss a');
+            console.log
+          });
+          return orders;
+        }),
+      )
       .subscribe((orderList: IOrder[]) => {
-        console.log(orderList);
         this.orderList = orderList;
         this.pageItems = new MatTableDataSource<IOrder>(orderList);
         this.cdr.detectChanges();

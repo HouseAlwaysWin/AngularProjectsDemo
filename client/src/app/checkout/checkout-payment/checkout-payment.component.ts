@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { MatStepper } from '@angular/material/stepper';
 import { NavigationExtras, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { loadStripe, Stripe, StripeCardCvcElement, StripeCardExpiryElement, StripeCardNumberElement } from '@stripe/stripe-js';
@@ -29,6 +30,7 @@ export class CheckoutPaymentComponent implements OnInit, OnDestroy, AfterViewIni
   cardNumberValid: boolean = false;
   cardExpiryValid: boolean = false;
   cardCvcValid: boolean = false;
+  isLoading: boolean = false;
 
 
   constructor(private basketService: BasketService,
@@ -43,13 +45,11 @@ export class CheckoutPaymentComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   async ngAfterViewInit(): Promise<void> {
-    console.log(environment.stripeKey);
     this.stripe = await loadStripe(environment.stripeKey);
 
     const elements = this.stripe.elements();
 
     this.cardNumber = elements.create('cardNumber');
-    console.log(this.cardNumber);
     this.cardNumber.mount(this.cardNumberElement.nativeElement);
     this.cardNumber.on('change', this.cardHandler);
 
@@ -63,7 +63,6 @@ export class CheckoutPaymentComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   onChange(event) {
-    console.log(event);
     if (event.error) {
       this.translate.onLangChange.subscribe(trans => {
         var stripeErrorMsg = trans.translations['StripeErrorMsg'];
@@ -89,22 +88,23 @@ export class CheckoutPaymentComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   async submitOrder() {
+    this.isLoading = true;
     const basket = this.basketService.getCurrentBasketValue();
-    console.log(basket);
     try {
       const createOrder = await this.createOrder(basket);
-      console.log(createOrder);
       const paymentResult = await this.confirmPaymentWithStripe(basket);
-      console.log(paymentResult);
       if (paymentResult.paymentIntent) {
         this.basketService.deleteLocalBasket();
         const navigationExtras: NavigationExtras = { state: createOrder };
+        this.isLoading = false;
         this.router.navigate(['checkout/success'], navigationExtras);
       }
       else {
-
       }
+
+      this.isLoading = false;
     } catch (error) {
+      this.isLoading = false;
       console.log(error);
     }
   }

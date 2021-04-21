@@ -13,7 +13,8 @@ import { DialogComfirm } from 'src/app/shared/components/dialog-comfirm/dialog-c
   styleUrls: ['./checkout-review.component.scss']
 })
 export class CheckoutReviewComponent implements OnInit {
-  @Input() appStepper: MatStepper;
+  @Input() stepper: MatStepper;
+  isLoading: boolean = false;
   basket$: Observable<IBasket>;
   constructor(
     public dialog: MatDialog,
@@ -23,15 +24,19 @@ export class CheckoutReviewComponent implements OnInit {
     this.basket$ = this.basketService.basket$;
   }
 
+
+
   createPaymentIntent() {
+    this.isLoading = true;
     return this.basketService.createPaymentIntent().subscribe(result => {
       console.log(result);
-      this.appStepper.next();
+      this.isLoading = false;
+      this.stepper.next();
     }, error => {
+      this.isLoading = false;
       console.log(error);
     });
   }
-
 
   removeBasketItem(item: IBasketItem) {
     const dialogRef = this.dialog.open(DialogComfirm);

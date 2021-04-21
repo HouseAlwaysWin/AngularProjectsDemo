@@ -68,6 +68,7 @@ mat-form-field {
   border-left-width: 0.5em;
   margin-top: 2px;
 
+  &:hover,
   &.active {
     background-color: $active-color;
     color: white;
@@ -88,6 +89,9 @@ mat-form-field {
   &.active {
     background-color: $active-color;
     color: white;
+  }
+  &:focus {
+    background-color: red;
   }
 }
 

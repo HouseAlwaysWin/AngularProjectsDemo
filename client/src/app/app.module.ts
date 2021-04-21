@@ -22,6 +22,7 @@ import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
 import { SharedModule } from './shared/shared.module';
 import { FormsModule } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
+import { FocusDirective } from './shared/directives/focus.directive';
 
 
 @NgModule({
@@ -29,7 +30,7 @@ import { AsyncPipe } from '@angular/common';
     AppComponent,
     HomeComponent,
     NavTopComponent,
-    NavSideComponent
+    NavSideComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,5 +1,8 @@
 <div fxLayout="column">
-  <div fxLayout="row"
+
+  <div></div>
+  <div fxLayout.gt-sm="row"
+    fxLayout="column"
     fxLayoutAlign="space-between"
     class="addressTitle">
     <h4>{{ 'CheckoutAddress.ShippingAddress' | translate}}</h4>
@@ -12,10 +15,11 @@
 
   <form [formGroup]="checkoutForm"
     fxLayout="column">
-    <div fxLayout="row"
+    <div fxLayout.gt-sm="row"
+      fxLayout="column"
       formGroupName="addressForm">
-      <mat-form-field fxFlex="50"
-        class="addressField">
+      <mat-form-field class="addressField"
+        fxFlex="50">
         <input matInput
           type="text"
           formControlName="firstName"
@@ -38,10 +42,11 @@
       </mat-form-field>
     </div>
 
-    <div fxLayout="row"
+    <div fxLayout.gt-sm="row"
+      fxLayout="column"
       formGroupName="addressForm">
-      <mat-form-field fxFlex="50"
-        class="addressField">
+      <mat-form-field class="addressField"
+        fxFlex="50">
         <input matInput
           type="text"
           formControlName="street"
@@ -64,10 +69,11 @@
       </mat-form-field>
     </div>
 
-    <div fxLayout="row"
+    <div fxLayout.gt-sm="row"
+      fxLayout="column"
       formGroupName="addressForm">
-      <mat-form-field fxFlex="50"
-        class="addressField">
+      <mat-form-field class="addressField"
+        fxFlex="50">
         <input matInput
           type="text"
           formControlName="state"

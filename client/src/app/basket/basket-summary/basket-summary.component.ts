@@ -30,7 +30,6 @@ export class BasketSummaryComponent implements OnInit {
 
   ngOnInit(): void {
     this.items.subscribe((basket: IBasket) => {
-      console.log(basket);
       if (basket) {
         this.pageItems = new MatTableDataSource<IBasketItem>(basket.basketItems);
         this.cdr.detectChanges();

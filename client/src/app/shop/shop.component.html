@@ -32,7 +32,9 @@
             fxLayout="column"
             fxLayoutAlign="center stretch"
             (click)="onCategorySelected(node.id)">
-            {{ node.name }}
+            <div class="category-item">
+              {{ node.name }}
+            </div>
           </cdk-nested-tree-node>
 
           <cdk-nested-tree-node *cdkTreeNodeDef="let node;when: hasChildCategories"
@@ -43,7 +45,7 @@
               class="category-root-node"
               cdkTreeNodeToggle>
               <mat-icon class="mat-icon-rtl-mirror">
-                {{categoriesTreeControl.isExpanded(node) ? 'arrow_drop_down' : 'arrow_right'}}
+                {{categoriesTreeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
               </mat-icon>
               {{ node.name }}
             </div>

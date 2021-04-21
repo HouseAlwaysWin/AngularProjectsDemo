@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { MatStepper } from '@angular/material/stepper';
 import { BasketService } from 'src/app/basket/basket.service';
 import { IDeliveryMethod } from 'src/app/models/deliveryMethod';
 import { CheckoutService } from '../checkout.service';
@@ -26,6 +27,7 @@ export class CheckoutDeliveryComponent implements OnInit {
         this.deliveryMethods = dm;
         if (!this.selectDeliveryMethods) {
           this.selectDeliveryMethods = dm[0];
+          console.log(this.selectDeliveryMethods);
           this.setShippingPrice(this.selectDeliveryMethods);
         }
       });
@@ -34,5 +36,7 @@ export class CheckoutDeliveryComponent implements OnInit {
   setShippingPrice(dm: IDeliveryMethod) {
     this.basketService.setShipping(dm);
   }
+
+
 
 }

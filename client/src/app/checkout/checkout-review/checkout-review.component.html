@@ -1,17 +1,31 @@
-<app-basket-summary [items]="basket$"
-  [showQuantityAdj]="false"
-  (remove)="removeBasketItem($event)"></app-basket-summary>
+<div *ngIf="!isLoading">
+  <app-basket-summary [items]="basket$"
+    [showQuantityAdj]="false"
+    (remove)="removeBasketItem($event)"></app-basket-summary>
 
 
 
-<div fxLayout="row"
-  fxLayoutAlign="space-between center">
-  <button mat-raised-button
-    matStepperPrevious>{{ 'Checkout.Previous' | translate}}</button>
-  <button mat-raised-button
-    color="primary"
-    (click)="createPaymentIntent()">{{ 'Checkout.Next' | translate }}</button>
+  <div fxLayout="row"
+    fxLayoutAlign="space-between center">
+    <button mat-raised-button
+      matStepperPrevious>{{ 'Checkout.Previous' | translate}}</button>
+    <button mat-raised-button
+      color="primary"
+      [disabled]="isLoading"
+      (click)="createPaymentIntent()">{{ 'Checkout.Next' | translate }}</button>
+  </div>
 </div>
+<div *ngIf="isLoading"
+  class="loading"
+  fxLayout="row"
+  fxLayoutAlign="center center">
+  <mat-progress-spinner mode="indeterminate"
+    color="accent"
+    diameter="120"></mat-progress-spinner>
+</div>
+
+
+
 <!-- <div fxLayout="row"
   fxLayoutAlign="space-between center">
 

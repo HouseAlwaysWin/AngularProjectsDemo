@@ -1,4 +1,4 @@
-import { CdkStepper } from '@angular/cdk/stepper';
+import { CdkStepper, StepState } from '@angular/cdk/stepper';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
@@ -14,6 +14,7 @@ import { IBasketTotals } from '../models/basket';
 export class CheckoutComponent implements OnInit {
   checkoutForm: FormGroup;
   basketTotals$: Observable<IBasketTotals>;
+  stepState: StepState;
   constructor(
     private formBuilder: FormBuilder,
     public translate: TranslateService,
@@ -41,6 +42,10 @@ export class CheckoutComponent implements OnInit {
         nameOnCard: [null, [Validators.required]]
       })
     })
+  }
+
+  onChangeSelect(e) {
+    console.log(e);
   }
 
 }

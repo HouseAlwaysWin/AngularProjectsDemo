@@ -103,7 +103,8 @@
     "Previous": "上一步",
     "Next": "下一步",
     "DeliverymethodTitle": "選擇運送方式",
-    "SetAddress": "設定地址和帳戶一樣"
+    "SetAddress": "設定地址和帳戶一樣",
+    "Submit": "送出"
   },
   "CheckoutAddress": {
     "FirstName": "姓",

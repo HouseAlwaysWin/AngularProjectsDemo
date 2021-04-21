@@ -4,36 +4,9 @@
   class="checkout">
   <div fxFlex="60">
 
-    <mat-horizontal-stepper [linear]="true"
-      fxHide.xs
-      #stepper>
-      <mat-step [stepControl]="checkoutForm.get('addressForm')"
-        label="{{ 'Checkout.Address' | translate }}">
-        <app-checkout-address [checkoutForm]="checkoutForm"></app-checkout-address>
-      </mat-step>
-
-      <mat-step [stepControl]="checkoutForm.get('deliveryForm')"
-        label="{{ 'Checkout.DeliveryMethod' | translate }}">
-        <app-checkout-delivery [checkoutForm]="checkoutForm"></app-checkout-delivery>
-
-      </mat-step>
-
-      <mat-step label="{{ 'Checkout.Review' | translate }}">
-        <app-checkout-review [appStepper]="stepper"></app-checkout-review>
-      </mat-step>
-
-      <mat-step [stepControl]="checkoutForm.get('paymentForm')"
-        label="{{ 'Checkout.Payment' | translate }}">
-        <app-checkout-payment [checkoutForm]="checkoutForm"></app-checkout-payment>
-      </mat-step>
-
-    </mat-horizontal-stepper>
-
-
     <mat-vertical-stepper [linear]="true"
-      fxShow.xs
-      fxHide
       #stepper>
+
       <mat-step [stepControl]="checkoutForm.get('addressForm')"
         label="{{ 'Checkout.Address' | translate }}">
         <app-checkout-address [checkoutForm]="checkoutForm"></app-checkout-address>
@@ -46,7 +19,7 @@
       </mat-step>
 
       <mat-step label="{{ 'Checkout.Review' | translate }}">
-        <app-checkout-review [appStepper]="stepper"></app-checkout-review>
+        <app-checkout-review [stepper]="stepper"></app-checkout-review>
       </mat-step>
 
       <mat-step [stepControl]="checkoutForm.get('paymentForm')"
@@ -56,28 +29,11 @@
 
     </mat-vertical-stepper>
 
-
-    <!-- <app-checkout-stepper [linear]="false"
-      #appStepper>
-      <cdk-step label="{{ 'Checkout.Address' | translate }}">
-        <app-checkout-address [checkoutForm]="checkoutForm"></app-checkout-address>
-      </cdk-step>
-
-      <cdk-step label="{{ 'Checkout.DeliveryMethod' | translate }}">
-        <app-checkout-delivery [checkoutForm]="checkoutForm"></app-checkout-delivery>
-      </cdk-step>
-
-      <cdk-step label="{{ 'Checkout.Review' | translate }}">
-        <app-checkout-review [appStepper]="appStepper"></app-checkout-review>
-      </cdk-step>
-
-      <cdk-step label="{{ 'Checkout.Payment' | translate }}">
-        <app-checkout-payment [checkoutForm]="checkoutForm"></app-checkout-payment>
-      </cdk-step>
-    </app-checkout-stepper> -->
   </div>
 
-  <div fxFlex="40">
+  <div fxFlex="40"
+    fxLayout="column"
+    fxLayoutAlign="start stretch">
     <app-baske-total-summary [subtotal]="(basketTotals$|async).subtotal"
       [shipping]="(basketTotals$|async).shipping"
       [total]="(basketTotals$|async).total"></app-baske-total-summary>

@@ -18,7 +18,6 @@ export class PaginatorLocalize extends MatPaginatorIntl {
   getTranslations() {
 
     this.translate.get('Paginator').subscribe(trans => {
-      console.log(trans);
       this.itemsPerPageLabel = trans['ItemsPerPage'];
       this.nextPageLabel = '下一頁';
       this.previousPageLabel = '上一頁';

@@ -9,12 +9,12 @@ import { CdkStepperModule } from '@angular/cdk/stepper';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DialogMessage } from './components/dialog-message/dialog-message.component';
 import { TrucateTextPipe } from './pipes/trucate-text.pipe';
-import { ForLoopDirective } from './directives/for-loop/for-loop.directive';
+import { FocusDirective } from './directives/focus.directive';
 
 
 
 @NgModule({
-  declarations: [MatCarouselComponent, DialogComfirm, DialogMessage, TrucateTextPipe, ForLoopDirective],
+  declarations: [MatCarouselComponent, DialogComfirm, DialogMessage, TrucateTextPipe, FocusDirective],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -34,7 +34,8 @@ import { ForLoopDirective } from './directives/for-loop/for-loop.directive';
     FormsModule,
     MatCarouselComponent,
     TrucateTextPipe,
-    DialogComfirm
+    DialogComfirm,
+    FocusDirective
   ]
 })
 export class SharedModule { }
