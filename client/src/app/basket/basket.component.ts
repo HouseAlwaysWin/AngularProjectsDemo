@@ -28,7 +28,7 @@ export class BasketComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogComfirm, {
       disableClose: false,
       width: '500px',
-      role: 'alertdialog'
+      role: 'alertdialog',
     });
 
     dialogRef.afterClosed().subscribe(result => {

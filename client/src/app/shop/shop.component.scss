@@ -1,4 +1,4 @@
-$active-color: rgb(89, 185, 230);
+$active-color: rgb(214, 18, 18);
 .side-block {
   // background: #ddd;
   box-shadow: 10px rgba(0, 0, 0, 0.2);
@@ -64,7 +64,7 @@ mat-form-field {
   width: 100%;
   padding: 0.5em;
   border-left-style: solid;
-  border-left-color: rgb(89, 185, 230);
+  border-left-color: $active-color;
   border-left-width: 0.5em;
   margin-top: 2px;
 
@@ -84,14 +84,11 @@ mat-form-field {
   border-color: black;
 }
 
-.category-all {
+.category-all-btn {
   width: 100%;
   &.active {
     background-color: $active-color;
     color: white;
-  }
-  &:focus {
-    background-color: red;
   }
 }
 

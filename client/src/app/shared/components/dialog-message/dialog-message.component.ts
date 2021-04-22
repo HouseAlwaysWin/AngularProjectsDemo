@@ -1,10 +1,14 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { RotatedAnimation } from '../../animations/animation-triggers';
 
 @Component({
   selector: 'app-dialog-message',
   templateUrl: './dialog-message.component.html',
-  styleUrls: ['./dialog-message.component.scss']
+  styleUrls: ['./dialog-message.component.scss'],
+  animations: [
+    RotatedAnimation()
+  ]
 })
 export class DialogMessage implements OnInit {
 

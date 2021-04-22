@@ -21,6 +21,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatTreeModule } from '@angular/material/tree';
 @NgModule({
   declarations: [],
   imports: [
@@ -43,7 +44,8 @@ import { MatStepperModule } from '@angular/material/stepper';
     MatCheckboxModule,
     MatRadioModule,
     MatProgressSpinnerModule,
-    MatStepperModule
+    MatStepperModule,
+    MatTreeModule
   ],
   exports: [
     MatToolbarModule,
@@ -66,7 +68,8 @@ import { MatStepperModule } from '@angular/material/stepper';
     MatRadioModule,
     MatAutocompleteModule,
     MatProgressSpinnerModule,
-    MatStepperModule
+    MatStepperModule,
+    MatTreeModule
   ]
 })
 export class MaterialModule { }

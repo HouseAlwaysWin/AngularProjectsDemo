@@ -20,9 +20,6 @@ import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginato
 import { PaginatorLocalize } from './material/paginator-localize';
 import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
 import { SharedModule } from './shared/shared.module';
-import { FormsModule } from '@angular/forms';
-import { AsyncPipe } from '@angular/common';
-import { FocusDirective } from './shared/directives/focus.directive';
 
 
 @NgModule({

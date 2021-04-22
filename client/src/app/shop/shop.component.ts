@@ -1,5 +1,6 @@
+import { animate, group, query, stagger, state, style, transition, trigger } from '@angular/animations';
 import { ArrayDataSource } from '@angular/cdk/collections';
-import { NestedTreeControl } from '@angular/cdk/tree';
+import { FlatTreeControl, NestedTreeControl } from '@angular/cdk/tree';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
@@ -9,26 +10,34 @@ import { IApiPagingResponse } from '../models/apiResponse';
 import { IProduct, IProductCategory } from '../models/product';
 import { ShopParams } from '../models/shopParams';
 import { ShopService } from './shop.service';
+import { RotatedAnimation, FadeInGrowListAnimation } from '../shared/animations/animation-triggers';
 
 @Component({
   selector: 'app-shop',
   templateUrl: './shop.component.html',
   styleUrls: ['./shop.component.scss'],
+  animations: [
+    RotatedAnimation(),
+    FadeInGrowListAnimation()
+  ]
 })
 export class ShopComponent implements OnInit {
-
+  showTest: boolean = false;
   @ViewChild('searchInput') searchInput: ElementRef;
-
 
   shopParams: ShopParams = new ShopParams();
   products$: Observable<IApiPagingResponse<IProduct[]>>;
 
-  categories: ArrayDataSource<IProductCategory>;
+  categories;
   categories$: Observable<IProductCategory[]>;
   categoriesTreeControl: NestedTreeControl<IProductCategory>;
 
-  sortSelected = 'name';
 
+  treeControl: FlatTreeControl<IProductCategory>;
+  treeFlattener: any;
+  dataSource: any;
+
+  sortSelected = 'name';
   searchControl = new FormControl();
   searchOptions: IProduct[];
 
@@ -108,19 +117,36 @@ export class ShopComponent implements OnInit {
     this.getProducts();
   }
 
+  private _transformer = (node: IProductCategory, level: number) => {
+    return {
+      expandable: !!node.children && node.children.length > 0,
+      name: node.name,
+      level: level,
+    };
+  }
+
   getProductCategories() {
     this.shopService.getCategories().subscribe(() => {
       this.categories = new ArrayDataSource(this.categories$);
-
       this.categoriesTreeControl = new NestedTreeControl<IProductCategory>(node => node.children);
+
+      this.treeControl = new FlatTreeControl<IProductCategory>(
+        node => node.level, node => node.hasChild
+      );
+
     }, error => {
       console.log(error);
     });
   }
 
+  hasChild(_: number, node: IProductCategory) {
+    return !!node.children && node.children.length > 0;
+  }
+
   hasChildCategories(_: number, node: IProductCategory) {
     return !!node.children && node.children.length > 0;
   }
+
 
   onCategorySelected(id: number) {
     this.shopParams.categoryId = id;
@@ -131,11 +157,11 @@ export class ShopComponent implements OnInit {
   setPage(e: PageEvent) {
     this.shopParams.pageSize = e.pageSize;
     this.shopParams.pageIndex = e.pageIndex;
-    if (this.searchControl.value) {
-      this.Search();
-    } else {
-      this.getProducts();
-    }
+    // if (this.searchControl.value) {
+    //   this.Search();
+    // } else {
+    this.getProducts();
+    // }
   }
 
 

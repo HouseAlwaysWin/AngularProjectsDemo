@@ -24,6 +24,8 @@ export interface IProductAttributeValue {
   seqIndex: number;
 }
 
+
+
 export interface IProductCategory {
   id: number;
   name: string;

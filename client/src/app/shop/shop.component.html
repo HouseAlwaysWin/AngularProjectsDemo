@@ -3,8 +3,10 @@
   class="shop">
 
 
+
   <div fxFlex="15"
     class="bar-area">
+
     <ng-container>
       <h4 class="bar-list-title">{{ 'Shop.Sort' | translate}}</h4>
       <mat-form-field appearance="fill">
@@ -21,8 +23,9 @@
         <h4 class="bar-list-title">{{ 'Shop.Categories' | translate }}</h4>
         <button mat-stroked-button
           [class.active]="shopParams.categoryId === 0"
-          class="category-all"
+          class="category-all-btn"
           (click)="onCategorySelected(0)">{{ 'Shop.All' | translate }}</button>
+
         <cdk-tree [dataSource]="(categories$ | async)"
           [treeControl]="categoriesTreeControl">
 
@@ -37,25 +40,31 @@
             </div>
           </cdk-nested-tree-node>
 
-          <cdk-nested-tree-node *cdkTreeNodeDef="let node;when: hasChildCategories"
+          <cdk-nested-tree-node *cdkTreeNodeDef="let node;when: hasChild"
             fxLayout="column"
             fxLayoutAlign="start stretch">
+
             <div fxLayout="row"
               [attr.aria-label]="'Toggle ' + node.name"
               class="category-root-node"
               cdkTreeNodeToggle>
-              <mat-icon class="mat-icon-rtl-mirror">
-                {{categoriesTreeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+              <mat-icon class="mat-icon-rtl-mirror"
+                [@rotated]="categoriesTreeControl.isExpanded(node) ? 'end':'start'">
+                chevron_right
               </mat-icon>
               {{ node.name }}
             </div>
-            <span [class.category-tree-invisible]="!categoriesTreeControl.isExpanded(node)">
+            <span fadeInOut
+              [fadeShow]="categoriesTreeControl.isExpanded(node)"
+              [class.category-tree-invisible]="!categoriesTreeControl.isExpanded(node)">
               <ng-container cdkTreeNodeOutlet>
               </ng-container>
             </span>
           </cdk-nested-tree-node>
 
         </cdk-tree>
+
+
       </div>
     </ng-container>
   </div>
@@ -94,6 +103,7 @@
 
           <mat-autocomplete #autocompleteTemplateRefId="matAutocomplete">
             <mat-option *ngFor="let item of searchOptions"
+              [@fadeInGrowList]
               [value]="item.name">
               {{ item.name }}
             </mat-option>
@@ -117,7 +127,8 @@
               [showFirstLastButtons]="true">
             </mat-paginator>
           </div>
-          <div fxLayout="row start wrap">
+          <div fxLayout="row start wrap"
+            [@fadeInGrowList]>
             <app-product-item [product]="product"
               *ngFor="let product of (products$ |async).data"></app-product-item>
           </div>
