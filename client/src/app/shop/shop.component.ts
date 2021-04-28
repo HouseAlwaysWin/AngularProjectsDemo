@@ -1,16 +1,19 @@
 import { animate, group, query, stagger, state, style, transition, trigger } from '@angular/animations';
 import { ArrayDataSource } from '@angular/cdk/collections';
 import { FlatTreeControl, NestedTreeControl } from '@angular/cdk/tree';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
-import { Observable } from 'rxjs';
-import { debounceTime, map } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import { debounceTime, map, tap } from 'rxjs/operators';
 import { IApiPagingResponse } from '../models/apiResponse';
 import { IProduct, IProductCategory } from '../models/product';
 import { ShopParams } from '../models/shopParams';
 import { ShopService } from './shop.service';
 import { RotatedAnimation, FadeInGrowListAnimation } from '../shared/animations/animation-triggers';
+import * as appReducer from '../store/app.reducer';
+import { Store } from '@ngrx/store';
+import * as ShopActions from './store/shop.actions';
 
 @Component({
   selector: 'app-shop',
@@ -21,26 +24,25 @@ import { RotatedAnimation, FadeInGrowListAnimation } from '../shared/animations/
     FadeInGrowListAnimation()
   ]
 })
-export class ShopComponent implements OnInit {
-  showTest: boolean = false;
+export class ShopComponent implements OnInit, OnDestroy {
   @ViewChild('searchInput') searchInput: ElementRef;
 
   shopParams: ShopParams = new ShopParams();
   products$: Observable<IApiPagingResponse<IProduct[]>>;
 
-  categories;
-  categories$: Observable<IProductCategory[]>;
+  shopSub: Subscription;
+  products: IProduct[];
+  productTotalcount: number = 0;
+
+  categories: ArrayDataSource<IProductCategory>;
+  categoriesSub: Subscription;
   categoriesTreeControl: NestedTreeControl<IProductCategory>;
 
-
   treeControl: FlatTreeControl<IProductCategory>;
-  treeFlattener: any;
-  dataSource: any;
 
   sortSelected = 'name';
   searchControl = new FormControl();
   searchOptions: IProduct[];
-
 
   isLoading: boolean = false;
 
@@ -50,24 +52,40 @@ export class ShopComponent implements OnInit {
     { name: 'PriceHightToLow', value: 'priceDesc' }
   ]
 
-  constructor(private shopService: ShopService
+  constructor(private store: Store<appReducer.AppState>
   ) {
   }
 
-  ngOnInit(): void {
-    this.products$ = this.shopService.productList$;
-    this.categories$ = this.shopService.productCategories$;
+  ngOnDestroy(): void {
+    this.shopSub.unsubscribe();
+  }
 
+  ngOnInit(): void {
     this.onAutoCompleteOptions();
     this.getProducts();
     this.getProductCategories();
   }
 
   getProducts() {
-    this.isLoading = true;
-    this.shopService.getProducts(this.shopParams).subscribe(() => {
-      this.isLoading = false;
-    });
+    this.store.dispatch(ShopActions.GetProductList(this.shopParams));
+    this._SetShopState();
+  }
+
+  private _SetShopState() {
+    this.shopSub = this.store.select('shop')
+      .subscribe((res) => {
+        console.log(res);
+        this.products = res.products;
+        this.productTotalcount = res.totalCount;
+        this.isLoading = res.loading;
+        this.searchOptions = res.searchOptions;
+
+        this.categories = new ArrayDataSource(res.productCategories);
+        this.categoriesTreeControl = new NestedTreeControl<IProductCategory>(node => node.children);
+        this.treeControl = new FlatTreeControl<IProductCategory>(
+          node => node.level, node => node.hasChild
+        );
+      });
   }
 
 
@@ -75,68 +93,37 @@ export class ShopComponent implements OnInit {
 
     this.searchControl.valueChanges
       .pipe(
-        debounceTime(500),
+        debounceTime(200),
         map(value => {
           if (!value) {
             this.getProducts();
           } else {
-            this.shopService.getAutocomplete({
+            this.store.dispatch(ShopActions.AutoComplete({
               search: value,
               pageIndex: 0,
               pageSize: this.shopParams.pageSize
-            }).subscribe(p => {
-              this.searchOptions = p.data;
-            });
+            }));
           }
         })).subscribe();
+
   }
 
   onSearch() {
-    this.shopParams.pageIndex = 0;
-    this.Search();
-  }
-
-
-  private Search() {
     if (this.searchControl.value) {
-      this.isLoading = true;
-      this.shopService.getSearch({
-        search: this.searchControl.value,
-        pageIndex: this.shopParams.pageIndex,
-        pageSize: this.shopParams.pageSize
-      }).subscribe(p => {
-        this.searchOptions = p.data;
-        this.isLoading = false;
-      });
+      this.shopParams.pageIndex = 0;
+      this.shopParams.search = this.searchControl.value;
+      this.store.dispatch(ShopActions.Search(this.shopParams));
+      this._SetShopState();
     }
   }
 
   onSortSelected() {
-    console.log(this.sortSelected);
     this.shopParams.sort = this.sortSelected;
     this.getProducts();
   }
 
-  private _transformer = (node: IProductCategory, level: number) => {
-    return {
-      expandable: !!node.children && node.children.length > 0,
-      name: node.name,
-      level: level,
-    };
-  }
-
   getProductCategories() {
-    this.shopService.getCategories().subscribe(() => {
-      this.categories = new ArrayDataSource(this.categories$);
-      this.categoriesTreeControl = new NestedTreeControl<IProductCategory>(node => node.children);
-
-      this.treeControl = new FlatTreeControl<IProductCategory>(
-        node => node.level, node => node.hasChild
-      );
-
-    }, error => {
-      console.log(error);
-    });
+    this.store.dispatch(ShopActions.GetCategories());
   }
 
   hasChild(_: number, node: IProductCategory) {
@@ -147,7 +134,6 @@ export class ShopComponent implements OnInit {
     return !!node.children && node.children.length > 0;
   }
 
-
   onCategorySelected(id: number) {
     this.shopParams.categoryId = id;
     this.shopParams.pageIndex = 0;
@@ -157,11 +143,7 @@ export class ShopComponent implements OnInit {
   setPage(e: PageEvent) {
     this.shopParams.pageSize = e.pageSize;
     this.shopParams.pageIndex = e.pageIndex;
-    // if (this.searchControl.value) {
-    //   this.Search();
-    // } else {
     this.getProducts();
-    // }
   }
 
 

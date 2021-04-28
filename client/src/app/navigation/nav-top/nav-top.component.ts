@@ -1,4 +1,5 @@
 import { Component, OnInit, AfterViewInit, AfterContentInit, Output, EventEmitter, OnDestroy, HostListener } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { ReplaySubject, Subscription } from 'rxjs';
 import { AccountService } from 'src/app/account/account.service';
@@ -7,6 +8,8 @@ import { Basket, IBasket } from 'src/app/models/basket';
 import { ShopParams } from 'src/app/models/shopParams';
 import { IUser } from 'src/app/models/user';
 import { ShopService } from 'src/app/shop/shop.service';
+import * as appReducer from '../../store/app.reducer';
+import * as ShopActions from '../../shop/store/shop.actions';
 
 @Component({
   selector: 'app-nav-top',
@@ -29,7 +32,8 @@ export class NavTopComponent implements OnInit, OnDestroy {
     public translate: TranslateService,
     private basketService: BasketService,
     private accountService: AccountService,
-    private shopService: ShopService
+    private shopService: ShopService,
+    private store: Store<appReducer.AppState>
   ) {
   }
 
@@ -72,8 +76,10 @@ export class NavTopComponent implements OnInit, OnDestroy {
 
   changeLang(lang: string) {
     this.translate.use(lang);
-    this.shopService.getCategories().subscribe();
-    this.shopService.getProducts(new ShopParams()).subscribe();
+    this.store.dispatch(ShopActions.GetCategories());
+    this.store.dispatch(ShopActions.GetProductList(new ShopParams()));
+    // this.shopService.getCategories().subscribe();
+    // this.shopService.getProducts(new ShopParams()).subscribe();
   }
 
 

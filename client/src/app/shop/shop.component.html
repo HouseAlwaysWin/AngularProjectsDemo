@@ -1,19 +1,19 @@
 <div fxLayout.gt-sm="row"
-  fxLayout="column"
-  class="shop">
+     fxLayout="column"
+     class="shop">
 
 
 
   <div fxFlex="15"
-    class="bar-area">
+       class="bar-area">
 
     <ng-container>
       <h4 class="bar-list-title">{{ 'Shop.Sort' | translate}}</h4>
       <mat-form-field appearance="fill">
         <mat-select [(value)]="sortSelected"
-          (selectionChange)="onSortSelected()">
+                    (selectionChange)="onSortSelected()">
           <mat-option *ngFor="let sort of sortOptions"
-            [value]="sort.value">
+                      [value]="sort.value">
             {{ 'Shop.'+sort.name | translate}}
           </mat-option>
         </mat-select>
@@ -22,41 +22,44 @@
       <div *ngIf="categories">
         <h4 class="bar-list-title">{{ 'Shop.Categories' | translate }}</h4>
         <button mat-stroked-button
-          [class.active]="shopParams.categoryId === 0"
-          class="category-all-btn"
-          (click)="onCategorySelected(0)">{{ 'Shop.All' | translate }}</button>
+                [class.active]="shopParams.categoryId === 0"
+                class="category-all-btn"
+                (click)="onCategorySelected(0)">{{ 'Shop.All' | translate }}</button>
 
-        <cdk-tree [dataSource]="(categories$ | async)"
-          [treeControl]="categoriesTreeControl">
+        <!-- <cdk-tree [dataSource]="(categories$ | async)"
+                  [treeControl]="categoriesTreeControl"> -->
+        <cdk-tree [dataSource]="categories"
+                  [treeControl]="categoriesTreeControl">
+
 
           <cdk-nested-tree-node *cdkTreeNodeDef="let node"
-            class="category-child-node"
-            [class.active]="shopParams.categoryId === node.id"
-            fxLayout="column"
-            fxLayoutAlign="center stretch"
-            (click)="onCategorySelected(node.id)">
+                                class="category-child-node"
+                                [class.active]="shopParams.categoryId === node.id"
+                                fxLayout="column"
+                                fxLayoutAlign="center stretch"
+                                (click)="onCategorySelected(node.id)">
             <div class="category-item">
               {{ node.name }}
             </div>
           </cdk-nested-tree-node>
 
           <cdk-nested-tree-node *cdkTreeNodeDef="let node;when: hasChild"
-            fxLayout="column"
-            fxLayoutAlign="start stretch">
+                                fxLayout="column"
+                                fxLayoutAlign="start stretch">
 
             <div fxLayout="row"
-              [attr.aria-label]="'Toggle ' + node.name"
-              class="category-root-node"
-              cdkTreeNodeToggle>
+                 [attr.aria-label]="'Toggle ' + node.name"
+                 class="category-root-node"
+                 cdkTreeNodeToggle>
               <mat-icon class="mat-icon-rtl-mirror"
-                [@rotated]="categoriesTreeControl.isExpanded(node) ? 'end':'start'">
+                        [@rotated]="categoriesTreeControl.isExpanded(node) ? 'end':'start'">
                 chevron_right
               </mat-icon>
               {{ node.name }}
             </div>
             <span fadeInOut
-              [fadeShow]="categoriesTreeControl.isExpanded(node)"
-              [class.category-tree-invisible]="!categoriesTreeControl.isExpanded(node)">
+                  [fadeShow]="categoriesTreeControl.isExpanded(node)"
+                  [class.category-tree-invisible]="!categoriesTreeControl.isExpanded(node)">
               <ng-container cdkTreeNodeOutlet>
               </ng-container>
             </span>
@@ -71,31 +74,31 @@
 
 
   <div class="product-area"
-    fxLayout="column">
+       fxLayout="column">
 
     <div>
       <form>
         <mat-form-field class="product-search">
           <button mat-button
-            type="submit"
-            (click)="onSearch()"
-            (keydown.enter)="onSearch()"
-            color="primary"
-            matPrefix>
+                  type="submit"
+                  (click)="onSearch()"
+                  (keydown.enter)="onSearch()"
+                  color="primary"
+                  matPrefix>
             <mat-icon>search</mat-icon>
           </button>
 
           <input matInput
-            #searchInput
-            [formControl]="searchControl"
-            [matAutocomplete]="autocompleteTemplateRefId">
+                 #searchInput
+                 [formControl]="searchControl"
+                 [matAutocomplete]="autocompleteTemplateRefId">
 
           <button mat-button
-            *ngIf="searchControl.value"
-            matSuffix
-            mat-icon-button
-            aria-label="Clear"
-            (click)="searchControl.setValue('')">
+                  *ngIf="searchControl.value"
+                  matSuffix
+                  mat-icon-button
+                  aria-label="Clear"
+                  (click)="searchControl.setValue('')">
             <mat-icon>close</mat-icon>
 
 
@@ -103,8 +106,8 @@
 
           <mat-autocomplete #autocompleteTemplateRefId="matAutocomplete">
             <mat-option *ngFor="let item of searchOptions"
-              [@fadeInGrowList]
-              [value]="item.name">
+                        [@fadeInGrowList]
+                        [value]="item.name">
               {{ item.name }}
             </mat-option>
           </mat-autocomplete>
@@ -114,31 +117,37 @@
     </div>
 
     <div *ngIf="!isLoading"
-      class="product-list">
-      <div *ngIf="(products$ |async)?.totalCount;else productEmpty">
+         class="product-list">
+      <!-- <div *ngIf="(products$ |async)?.totalCount;else productEmpty"> -->
+      <div *ngIf="productTotalcount;else productEmpty">
         <div fxLayout="column"
-          fxLayoutAlign="start start">
+             fxLayoutAlign="start start">
           <div>
-            <mat-paginator [length]="(products$ |async)?.totalCount"
-              (page)="setPage($event)"
-              [pageSize]="shopParams.pageSize"
-              [pageIndex]="shopParams.pageIndex"
-              [pageSizeOptions]="[5,10,25,100]"
-              [showFirstLastButtons]="true">
+            <!-- <mat-paginator [length]="(products$ |async)?.totalCount" -->
+            <mat-paginator [length]="productTotalcount"
+                           (page)="setPage($event)"
+                           [pageSize]="shopParams.pageSize"
+                           [pageIndex]="shopParams.pageIndex"
+                           [pageSizeOptions]="[5,10,25,100]"
+                           [showFirstLastButtons]="true">
             </mat-paginator>
           </div>
           <div fxLayout="row start wrap"
-            [@fadeInGrowList]>
+               [@fadeInGrowList]>
+            <!-- <app-product-item [product]="product"
+                              *ngFor="let product of (products$ |async).data"></app-product-item> -->
             <app-product-item [product]="product"
-              *ngFor="let product of (products$ |async).data"></app-product-item>
+                              *ngFor="let product of products"></app-product-item>
+
           </div>
           <div>
-            <mat-paginator [length]="(products$ |async).totalCount"
-              (page)="setPage($event)"
-              [pageSize]="shopParams.pageSize"
-              [pageIndex]="shopParams.pageIndex"
-              [pageSizeOptions]="[5,10,25,100]"
-              [showFirstLastButtons]="true">
+            <!-- <mat-paginator [length]="(products$ |async).totalCount" -->
+            <mat-paginator [length]="productTotalcount"
+                           (page)="setPage($event)"
+                           [pageSize]="shopParams.pageSize"
+                           [pageIndex]="shopParams.pageIndex"
+                           [pageSizeOptions]="[5,10,25,100]"
+                           [showFirstLastButtons]="true">
             </mat-paginator>
           </div>
         </div>
@@ -149,8 +158,8 @@
       <ng-template #productEmpty>
         <div fxFlex="75">
           <div fxLayout="row"
-            fxLayoutAlign="center center"
-            class="product-notfound">
+               fxLayoutAlign="center center"
+               class="product-notfound">
             <h2>
               {{ 'Shop.NoProductsFound' | translate}}
             </h2>
@@ -160,9 +169,9 @@
     </div>
 
     <mat-progress-spinner *ngIf="isLoading"
-      mode="indeterminate"
-      color="accent"
-      diameter="120"></mat-progress-spinner>
+                          mode="indeterminate"
+                          color="accent"
+                          diameter="120"></mat-progress-spinner>
   </div>
 
 

@@ -67,9 +67,7 @@ namespace EcommerceApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<OrderDto>> GetOrderById(int id){
             var email = HttpContext.User?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
-            email = "b@b.com";
             var order = await _orderService.GetOrderByIdAsync(id,email);
-            var test = _localizer[order.OrderStatus.ToString()].Value;
 
             if(order == null){
                 return BaseApiNotFound("Order Not Found.");

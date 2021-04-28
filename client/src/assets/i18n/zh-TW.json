@@ -104,7 +104,11 @@
     "Next": "下一步",
     "DeliverymethodTitle": "選擇運送方式",
     "SetAddress": "設定地址和帳戶一樣",
-    "Submit": "送出"
+    "Submit": "送出",
+    "NoOrdersfound": "無訂單",
+    "OrderSuccessTitle": "您的訂單已被確認",
+    "OrderId": "訂單編號",
+    "GoOrderDetail": "前往訂單紀錄"
   },
   "CheckoutAddress": {
     "FirstName": "姓",

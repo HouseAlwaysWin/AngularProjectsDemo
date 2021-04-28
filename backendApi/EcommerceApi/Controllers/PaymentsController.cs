@@ -4,6 +4,7 @@ using EcommerceApi.Core.Models.Entities;
 using EcommerceApi.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Stripe;
 
@@ -13,10 +14,16 @@ namespace EcommerceApi.Controllers
     {
         private readonly IPaymentService _paymentService;
         private readonly ILogger<IPaymentService> _logger;
-        private readonly string WhSecret = "whsec_DPWXxisCfoIq6aXoZrpU9SPhX7Etdk3z";
-        public PaymentsController(IPaymentService paymentService,ILogger<IPaymentService> logger)
+        private readonly IConfiguration _config;
+
+        // private readonly string WhSecret = "whsec_DPWXxisCfoIq6aXoZrpU9SPhX7Etdk3z";
+        public PaymentsController(
+            IPaymentService paymentService,
+            ILogger<IPaymentService> logger,
+            IConfiguration config)
         {
             this._logger = logger;
+            this._config = config;
             this._paymentService = paymentService;
         }
 
@@ -32,8 +39,10 @@ namespace EcommerceApi.Controllers
         [HttpPost("webhook")]
         public async Task<ActionResult> StripeWebhook(){
             var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
-
-            var stripeEvent = EventUtility.ConstructEvent(json,Request.Headers["Stripe-Signature"],WhSecret);
+            var secretKey = _config["StripeSettings:WebhookSecretKey"];
+            var stripeEvent = EventUtility.ConstructEvent(json,Request.Headers["Stripe-Signature"],
+                secretKey
+            );
 
             PaymentIntent intent;
             Core.Models.Entities.Order order;

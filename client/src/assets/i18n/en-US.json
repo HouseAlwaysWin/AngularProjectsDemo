@@ -105,7 +105,11 @@
     "Next": "Next",
     "DeliverymethodTitle": "Choose your delivery method",
     "SetAddress": "Set Address as same as UserAddress",
-    "Submit": "Submit"
+    "Submit": "Submit",
+    "NoOrdersfound": "No Orders found",
+    "OrderSuccessTitle": "Your order is confirmed",
+    "OrderId": "Order Id",
+    "GoOrderDetail": "Go to order detail"
   },
   "CheckoutAddress": {
     "FirstName": "FirstName",

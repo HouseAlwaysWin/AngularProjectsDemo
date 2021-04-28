@@ -25,11 +25,8 @@ export class ShopService {
   getProducts(shopParams: ShopParams) {
     let params = new HttpParams();
 
-    if (shopParams.brandId !== 0) {
-      params = params.append('brandId', shopParams.brandId.toString());
-    }
 
-    if (shopParams.categoryId !== 0) {
+    if (shopParams.categoryId) {
       params = params.append('categoryId', shopParams.categoryId.toString());
     }
 
@@ -49,6 +46,7 @@ export class ShopService {
           if (response.isSuccessed) {
             this.productListSub.next(response);
           }
+          return response;
         })
       );
 
@@ -117,6 +115,7 @@ export class ShopService {
         else {
           console.log(response.message);
         }
+        return response;
       })
     )
   }

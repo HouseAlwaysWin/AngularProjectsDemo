@@ -20,6 +20,11 @@ import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginato
 import { PaginatorLocalize } from './material/paginator-localize';
 import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
 import { SharedModule } from './shared/shared.module';
+import { StoreModule } from '@ngrx/store';
+import { appReducer } from './store/app.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { ShopEffects } from './shop/store/shop.effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 
 @NgModule({
@@ -44,6 +49,9 @@ import { SharedModule } from './shared/shared.module';
         useClass: I18nLoader
       }
     }),
+    StoreModule.forRoot(appReducer),
+    EffectsModule.forRoot([ShopEffects]),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: I18nInterceptor, multi: true },

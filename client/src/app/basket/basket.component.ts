@@ -6,6 +6,9 @@ import { Observable, Subscription } from 'rxjs';
 import { IBasket, IBasketItem, IBasketTotals } from '../models/basket';
 import { DialogComfirm } from '../shared/components/dialog-comfirm/dialog-comfirm.component';
 import { BasketService } from './basket.service';
+import * as appReducer from '../store/app.reducer'
+import * as BasketActions from '../basket/store/basket.actions';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-basket',
@@ -13,14 +16,16 @@ import { BasketService } from './basket.service';
   styleUrls: ['./basket.component.scss']
 })
 export class BasketComponent implements OnInit {
-  basket$: Observable<IBasket>;
-  basketTotals$: Observable<IBasketTotals>;
+  // basket$: Observable<IBasket>;
+  basket: IBasket;
+  // basketTotals$: Observable<IBasketTotals>;
+  basketTotals: IBasketTotals;
 
   displayedColumns: string[] = []
   constructor(
-    private router: Router,
     public translate: TranslateService,
     private basketService: BasketService,
+    private store: Store<appReducer.AppState>,
     public dialog: MatDialog) { }
 
 
@@ -38,19 +43,29 @@ export class BasketComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.basket$ = this.basketService.basket$;
-    console.log(this.basket$);
-    this.basketTotals$ = this.basketService.basketTotals$;
+    // this.basket$ = this.basketService.basket$;
+    // console.log(this.basket$);
+    // this.basketTotals$ = this.basketService.basketTotals$;
+    this._SetBasketState();
+  }
+
+  private _SetBasketState() {
+    this.store.select('basket').subscribe(res => {
+      this.basket = res.basket;
+      this.basketTotals = res.basketTotal
+    });
   }
 
 
 
   incrementItemQuantity(item: IBasketItem) {
-    this.basketService.incrementItemQuantity(item);
+    // this.basketService.incrementItemQuantity(item);
+    this.store.dispatch(BasketActions.IncrementItemQuantity(item));
   }
 
   decrementItemQuantity(item: IBasketItem) {
-    this.basketService.decrementItemQuantity(item);
+    // this.basketService.decrementItemQuantity(item);
+    this.store.dispatch(BasketActions.DecrementItemQuantity(item));
   }
 
   removeBasketItem(item: IBasketItem) {
@@ -61,7 +76,8 @@ export class BasketComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.basketService.removeBasketItem(item);
+        // this.basketService.removeBasketItem(item);
+        this.store.dispatch(BasketActions.RemoveBasketItem(item));
       }
     });
   }

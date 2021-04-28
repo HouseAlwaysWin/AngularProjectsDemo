@@ -28,7 +28,6 @@ export class FadeInOutDirective implements OnInit {
 
   @Input()
   set fadeShow(show: boolean) {
-    console.log(show);
     if (show) {
       if (this.player) {
         this.player.destroy();

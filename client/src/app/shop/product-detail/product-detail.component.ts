@@ -2,12 +2,15 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatRadioChange } from '@angular/material/radio';
 import { ActivatedRoute } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { BasketService } from 'src/app/basket/basket.service';
 import { IBasket, IBasketItem, IBasketTotals } from 'src/app/models/basket';
 import { IProduct, IProductAttributeValue } from 'src/app/models/product';
 import { ShopService } from '../shop.service';
+import * as appReducer from '../../store/app.reducer';
+import * as ShopActions from '../store/shop.actions';
 
 @Component({
   selector: 'app-product-detail',
@@ -28,6 +31,7 @@ export class ProductDetailComponent implements OnInit {
     public translate: TranslateService,
     private basketService: BasketService,
     public dialog: MatDialog,
+    private store: Store<appReducer.AppState>,
     private shopService: ShopService) { }
   ngOnInit(): void {
     this.getProductInfo();
@@ -37,18 +41,34 @@ export class ProductDetailComponent implements OnInit {
     this.basket$ = this.basketService.basket$;
   }
 
-  getProductInfo() {
-    var id = this.activeRoute.snapshot.paramMap.get('id');
-    this.shopService.getProductById(id).subscribe(product => {
-      this.product = product;
-      console.log(this.product);
+  private _SetProductState() {
+    this.store.select('shop').subscribe(res => {
+      console.log(res.product);
+      this.product = res.product;
       this.getDefaultTotalPrice();
       this.basketItem = this.getCurrentBasketItem();
 
       if (this.basketItem) {
         this.cartQuantity = this.basketItem.quantity;
       }
-    });
+
+    })
+  }
+
+  getProductInfo() {
+    var id = this.activeRoute.snapshot.paramMap.get('id');
+    this.store.dispatch(ShopActions.GetProductById({ id }));
+    this._SetProductState();
+    // this.shopService.getProductById(id).subscribe(product => {
+    //   this.product = product;
+    //   console.log(this.product);
+    //   this.getDefaultTotalPrice();
+    //   this.basketItem = this.getCurrentBasketItem();
+
+    //   if (this.basketItem) {
+    //     this.cartQuantity = this.basketItem.quantity;
+    //   }
+    // });
   }
 
   getDefaultTotalPrice() {

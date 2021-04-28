@@ -97,6 +97,7 @@ export class CheckoutPaymentComponent implements OnInit, OnDestroy, AfterViewIni
         this.basketService.deleteLocalBasket();
         const navigationExtras: NavigationExtras = { state: createOrder };
         this.isLoading = false;
+        console.log(navigationExtras);
         this.router.navigate(['checkout/success'], navigationExtras);
       }
       else {

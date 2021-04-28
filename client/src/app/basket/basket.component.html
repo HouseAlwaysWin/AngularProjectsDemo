@@ -1,33 +1,34 @@
 <div fxLayout.gt-sm="row"
-  fxLayout="column"
-  fxLayoutAlign="start"
-  class="basket">
-  <ng-container *ngIf="(basket$ | async).basketItems.length > 0">
+     fxLayout="column"
+     fxLayoutAlign="start"
+     class="basket">
+  <!-- <ng-container *ngIf="(basket$ | async).basketItems.length > 0"> -->
+  <ng-container *ngIf="basket.basketItems.length > 0">
 
     <app-basket-summary fxFlex="60"
-      [items]="basket$"
-      (increment)="incrementItemQuantity($event)"
-      (decrement)="decrementItemQuantity($event)"
-      (remove)="removeBasketItem($event)"></app-basket-summary>
+                        [items]="basket"
+                        (increment)="incrementItemQuantity($event)"
+                        (decrement)="decrementItemQuantity($event)"
+                        (remove)="removeBasketItem($event)"></app-basket-summary>
 
     <app-baske-total-summary fxFlex="40"
-      [subtotal]="(basketTotals$|async).subtotal"
-      [shipping]="(basketTotals$|async).shipping"
-      [total]="(basketTotals$|async).total"
-      [showHint]="true"
-      [showProcessBtn]="true"></app-baske-total-summary>
+                             [subtotal]="basketTotals.subtotal"
+                             [shipping]="basketTotals.shipping"
+                             [total]="basketTotals.total"
+                             [showHint]="true"
+                             [showProcessBtn]="true"></app-baske-total-summary>
   </ng-container>
 
 
 </div>
 <div class="empty-cart-area">
   <div class="empty-cart"
-    *ngIf="(basket$ | async).basketItems.length === 0">
+       *ngIf="basket.basketItems.length === 0">
     <h2>
       {{ 'Basket.TheCartEmpty' | translate }}
     </h2>
     <button mat-raised-button
-      color="warn"
-      routerLink="/shop">{{ 'Basket.KeepShopping' | translate }}</button>
+            color="warn"
+            routerLink="/shop">{{ 'Basket.KeepShopping' | translate }}</button>
   </div>
 </div>

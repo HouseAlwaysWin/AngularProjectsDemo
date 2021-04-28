@@ -1,3 +1,23 @@
-<div class="checkout-success">
-  <p>checkout-success works!</p>
+<div class="checkout-success"
+     fxLayout="column"
+     fxLayoutAlign="center center">
+  <h2>
+    <mat-icon class="success-icon">
+      check_circle
+    </mat-icon>
+    {{ 'Checkout.OrderSuccessTitle' | translate }}
+  </h2>
+  <div fxLayout="column">
+    <div class="order-info">
+      <label>{{ 'Checkout.OrderId' | translate }}</label>:
+      <p>{{ order.id }}</p>
+    </div>
+    <div>
+      <button mat-raised-button
+              [routerLink]="'/orders/'+order.id"
+              color="primary">
+        {{ 'Checkout.GoOrderDetail' | translate}}
+      </button>
+    </div>
+  </div>
 </div>
