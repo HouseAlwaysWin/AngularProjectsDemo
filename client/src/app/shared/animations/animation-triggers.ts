@@ -12,7 +12,7 @@ export function FadeInGrowListAnimation(
         stagger(`${staggerTime}ms`, [
           animate(`${animateTime}ms`, style({ opacity: 1 }))
         ])
-      ])
+      ], { optional: true })
     ])
   ])
 }

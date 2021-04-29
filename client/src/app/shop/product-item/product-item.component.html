@@ -4,10 +4,10 @@
   </mat-card-header>
   <mat-card-content>
     <a class="product-image"
-      routerLink="/products/{{ product.id }}">
+       routerLink="/products/{{ product.id }}">
       <img mat-card-image
-        src="{{ product.productPictures[0].urlPath }}"
-        alt="{{ product.name }}">
+           src="{{ product.productPictures[0].urlPath }}"
+           alt="{{ product.name }}">
     </a>
 
     <p class="product-description">
@@ -19,8 +19,8 @@
   </mat-card-content>
   <mat-card-actions>
     <button mat-raised-button
-      class="product-add-btn"
-      color="warn"
-      routerLink="/products/{{ product.id }}">{{ 'Shop.Detail' | translate }}</button>
+            class="product-add-btn"
+            color="warn"
+            routerLink="/products/{{ product.id }}">{{ 'Shop.View' | translate }}</button>
   </mat-card-actions>
 </mat-card>

@@ -1,46 +1,46 @@
 <mat-toolbar color="primary"
-  fxLayout="row"
-  fxLayoutAlign="space-between center">
+             fxLayout="row"
+             fxLayoutAlign="space-between center">
   <div fxLayout="row"
-    fxLayoutAlign="start center">
+       fxLayoutAlign="start center">
     <div fxHide.gt-sm>
       <button mat-icon-button
-        (click)="onNavSideToggle()">
+              (click)="onNavSideToggle()">
         <mat-icon>menu</mat-icon>
       </button>
     </div>
     <div fxHide
-      fxShow.gt-sm>
+         fxShow.gt-sm>
       <a routerLink="/home">{{ 'Shop.Shop' | translate }}</a>
     </div>
   </div>
 
   <div>
     <ul class="navigation-items"
-      fxHide
-      fxShow.gt-sm
-      fxLayout="row"
-      fxLayoutAlign="end center"
-      *ngIf="showBar">
+        fxHide
+        fxShow.gt-sm
+        fxLayout="row"
+        fxLayoutAlign="end center"
+        *ngIf="showBar">
       <li fxLayout="row">
         <a mat-button
-          routerLink="/basket">
+           routerLink="/basket">
           <mat-icon [matBadge]="basketCount"
-            matBadgeColor="warn">shopping_cart</mat-icon>
+                    matBadgeColor="warn">shopping_cart</mat-icon>
         </a>
       </li>
 
       <ng-container *ngIf="!isAuth">
         <li>
           <a mat-button
-            routerLink="/account/login">
+             routerLink="/account/login">
             <mat-icon>person</mat-icon>
             {{'AccountForm.Login' | translate }}
           </a>
         </li>
         <li>
           <a mat-button
-            routerLink="/account/register">
+             routerLink="/account/register">
             <mat-icon>person_add</mat-icon>
             {{ 'AccountForm.Register' | translate }}
           </a>
@@ -49,26 +49,26 @@
 
       <li *ngIf="isAuth">
         <a mat-button
-          [matMenuTriggerFor]="usermenu">
+           [matMenuTriggerFor]="usermenu">
           <mat-icon class="login-mat-icon">person</mat-icon>
           {{ userInfo.displayName }}
         </a>
         <mat-menu #usermenu="matMenu">
           <button mat-menu-item
-            routerLink="/orders">
+                  routerLink="/orders">
             <mat-icon>list</mat-icon>
             {{ 'NavBar.OrdersHistory' | translate}}
           </button>
 
-          <button mat-menu-item
+          <!-- <button mat-menu-item
             routerLink="/orders">
             <mat-icon>settings</mat-icon>
             {{ 'NavBar.UserSetting' | translate}}
-          </button>
+          </button> -->
 
           <button mat-menu-item
-            routerLink="/home"
-            (click)="onLogout()">
+                  routerLink="/home"
+                  (click)="onLogout()">
             <mat-icon>directions_run</mat-icon>
             {{'AccountForm.Logout' | translate }}
           </button>
@@ -82,14 +82,14 @@
 
       <li>
         <a mat-button
-          [matMenuTriggerFor]="langList">
+           [matMenuTriggerFor]="langList">
           <mat-icon>language</mat-icon>
           {{ 'Lang.langs' | translate }}
         </a>
         <mat-menu #langList="matMenu">
           <button mat-menu-item
-            *ngFor="let lang of translate.getLangs()"
-            (click)="changeLang(lang)">
+                  *ngFor="let lang of translate.getLangs()"
+                  (click)="changeLang(lang)">
             <mat-icon>translate</mat-icon>
             {{ 'Lang.'+ lang | translate }}
           </button>

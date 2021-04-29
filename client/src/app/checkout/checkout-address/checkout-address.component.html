@@ -2,29 +2,29 @@
 
   <div></div>
   <div fxLayout.gt-sm="row"
-    fxLayout="column"
-    fxLayoutAlign="space-between"
-    class="addressTitle">
+       fxLayout="column"
+       fxLayoutAlign="space-between"
+       class="addressTitle">
     <h4>{{ 'CheckoutAddress.ShippingAddress' | translate}}</h4>
-    <button mat-stroked-button
+    <!-- <button mat-stroked-button
       (click)="setUserAddress()"
       color="primary">
       {{ 'Checkout.SetAddress' | translate}}
-    </button>
+    </button> -->
   </div>
 
   <form [formGroup]="checkoutForm"
-    fxLayout="column">
+        fxLayout="column">
     <div fxLayout.gt-sm="row"
-      fxLayout="column"
-      formGroupName="addressForm">
+         fxLayout="column"
+         formGroupName="addressForm">
       <mat-form-field class="addressField"
-        fxFlex="50">
+                      fxFlex="50">
         <input matInput
-          type="text"
-          formControlName="firstName"
-          placeholder="{{ 'CheckoutAddress.FirstName' | translate }}"
-          name="firstName" />
+               type="text"
+               formControlName="firstName"
+               placeholder="{{ 'CheckoutAddress.FirstName' | translate }}"
+               name="firstName" />
         <mat-error>
           {{ 'Shared.Required' | translate:getTranslate('FirstName') }}
         </mat-error>
@@ -32,10 +32,10 @@
 
       <mat-form-field fxFlex="50">
         <input matInput
-          type="text"
-          formControlName="lastName"
-          placeholder="{{ 'CheckoutAddress.LastName' | translate }}"
-          name="lastName" />
+               type="text"
+               formControlName="lastName"
+               placeholder="{{ 'CheckoutAddress.LastName' | translate }}"
+               name="lastName" />
         <mat-error>
           {{ 'Shared.Required' | translate:getTranslate('LastName') }}
         </mat-error>
@@ -43,15 +43,15 @@
     </div>
 
     <div fxLayout.gt-sm="row"
-      fxLayout="column"
-      formGroupName="addressForm">
+         fxLayout="column"
+         formGroupName="addressForm">
       <mat-form-field class="addressField"
-        fxFlex="50">
+                      fxFlex="50">
         <input matInput
-          type="text"
-          formControlName="street"
-          placeholder="{{ 'CheckoutAddress.Street' | translate }}"
-          name="street" />
+               type="text"
+               formControlName="street"
+               placeholder="{{ 'CheckoutAddress.Street' | translate }}"
+               name="street" />
         <mat-error>
           {{ 'Shared.Required' | translate:getTranslate('Street') }}
         </mat-error>
@@ -59,10 +59,10 @@
 
       <mat-form-field fxFlex="50">
         <input matInput
-          type="text"
-          formControlName="city"
-          placeholder="{{ 'CheckoutAddress.City' | translate }}"
-          name="city" />
+               type="text"
+               formControlName="city"
+               placeholder="{{ 'CheckoutAddress.City' | translate }}"
+               name="city" />
         <mat-error>
           {{ 'Shared.Required' | translate:getTranslate('City') }}
         </mat-error>
@@ -70,15 +70,15 @@
     </div>
 
     <div fxLayout.gt-sm="row"
-      fxLayout="column"
-      formGroupName="addressForm">
+         fxLayout="column"
+         formGroupName="addressForm">
       <mat-form-field class="addressField"
-        fxFlex="50">
+                      fxFlex="50">
         <input matInput
-          type="text"
-          formControlName="state"
-          placeholder="{{ 'CheckoutAddress.State' | translate }}"
-          name="state" />
+               type="text"
+               formControlName="state"
+               placeholder="{{ 'CheckoutAddress.State' | translate }}"
+               name="state" />
         <mat-error>
           {{ 'Shared.Required' | translate:getTranslate('State') }}
         </mat-error>
@@ -86,10 +86,10 @@
 
       <mat-form-field fxFlex="50">
         <input matInput
-          type="text"
-          formControlName="zipCode"
-          placeholder="{{ 'CheckoutAddress.ZipCode' | translate }}"
-          name="zipCode" />
+               type="text"
+               formControlName="zipCode"
+               placeholder="{{ 'CheckoutAddress.ZipCode' | translate }}"
+               name="zipCode" />
         <mat-error>
           {{ 'Shared.Required' | translate:getTranslate('ZipCode') }}
         </mat-error>
@@ -100,13 +100,13 @@
 
 
   <div fxLayout="row"
-    fxLayoutAlign="space-between center">
+       fxLayoutAlign="space-between center">
     <button mat-raised-button
-      routerLink="/basket">{{ 'Checkout.Previous' | translate}}</button>
+            routerLink="/basket">{{ 'Checkout.Previous' | translate}}</button>
     <button mat-raised-button
-      color="primary"
-      matStepperNext
-      [disabled]="addressForm.invalid">{{ 'Checkout.Next' | translate }}</button>
+            color="primary"
+            matStepperNext
+            [disabled]="addressForm.invalid">{{ 'Checkout.Next' | translate }}</button>
   </div>
 
   <!-- <div fxLayout="row"

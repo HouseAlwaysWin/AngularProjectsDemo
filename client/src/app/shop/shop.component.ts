@@ -62,11 +62,24 @@ export class ShopComponent implements OnInit, OnDestroy {
     this.onAutoCompleteOptions();
     this.getProducts();
     this.getProductCategories();
+    this._SetCategoryState();
+    this._SetShopState();
   }
 
   getProducts() {
     this.store.dispatch(ShopActions.GetProductList(this.shopParams));
-    this._SetShopState();
+  }
+
+  private _SetCategoryState() {
+    this.store.select('category').subscribe(res => {
+      console.log('category');
+      this.categories = new ArrayDataSource(res.productCategories);
+      this.categoriesTreeControl = new NestedTreeControl<IProductCategory>(node => node.children);
+      this.treeControl = new FlatTreeControl<IProductCategory>(
+        node => node.level, node => node.hasChild
+      );
+
+    })
   }
 
   private _SetShopState() {
@@ -77,12 +90,9 @@ export class ShopComponent implements OnInit, OnDestroy {
         this.isLoading = res.loading;
         this.searchOptions = res.searchOptions;
 
-        this.categories = new ArrayDataSource(res.productCategories);
-        this.categoriesTreeControl = new NestedTreeControl<IProductCategory>(node => node.children);
-        this.treeControl = new FlatTreeControl<IProductCategory>(
-          node => node.level, node => node.hasChild
-        );
       });
+
+
   }
 
 

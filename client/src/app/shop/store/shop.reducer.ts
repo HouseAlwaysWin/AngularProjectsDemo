@@ -1,5 +1,5 @@
 import { state } from "@angular/animations";
-import { Action, createReducer, on } from "@ngrx/store";
+import { Action, createReducer, createReducerFactory, on } from "@ngrx/store";
 import { IApiPagingResponse } from "src/app/models/apiResponse";
 import { IProduct, IProductCategory } from "src/app/models/product";
 import { ShopParams } from "src/app/models/shopParams";
@@ -11,9 +11,12 @@ export interface State {
   products: IProduct[],
   searchOptions: IProduct[],
   product: IProduct,
-  productCategories: IProductCategory[],
   totalCount: number,
   loading: boolean;
+}
+
+export interface CategoryState {
+  productCategories: IProductCategory[],
 }
 
 
@@ -21,10 +24,27 @@ const initialState: State = {
   products: [],
   searchOptions: [],
   product: null,
-  productCategories: [],
   totalCount: 0,
   loading: false
 }
+
+const categoryState: CategoryState = {
+  productCategories: []
+}
+
+export const categoryReduct = createReducer(
+  categoryState,
+  on(ShopActions.GetCategories, (state, action) => ({
+    ...state,
+    loading: true
+  })),
+  on(ShopActions.GetProductCategoriesSuccess, (state, action) => ({
+    ...state,
+    productCategories: action.productCategories,
+    loading: false
+  })),
+
+)
 
 
 export const shopReducer = createReducer(
@@ -54,11 +74,11 @@ export const shopReducer = createReducer(
   }),
 
   // categories output
-  on(ShopActions.GetProductCategoriesSuccess, (state, action) => ({
-    ...state,
-    productCategories: action.productCategories,
-    loading: false
-  })),
+  // on(ShopActions.GetProductCategoriesSuccess, (state, action) => ({
+  //   ...state,
+  //   productCategories: action.productCategories,
+  //   loading: false
+  // })),
 
   // product input
   on(ShopActions.GetProductList, (state, action) => ({
@@ -77,10 +97,11 @@ export const shopReducer = createReducer(
     loading: true
   })),
 
-  on(ShopActions.GetCategories, (state, action) => ({
-    ...state,
-    loading: true
-  }))
+  // on(ShopActions.GetCategories, (state, action) => ({
+  //   ...state,
+  //   loading: true
+  // }))
+
 
 );
 
