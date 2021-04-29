@@ -5,6 +5,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { BasketService } from '../basket/basket.service';
 import { IBasketTotals } from '../models/basket';
+import * as appReducer from '../store/app.reducer';
+import * as BasketActions from '../basket/store/basket.actions';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-checkout',
@@ -14,16 +17,21 @@ import { IBasketTotals } from '../models/basket';
 export class CheckoutComponent implements OnInit {
   checkoutForm: FormGroup;
   basketTotals$: Observable<IBasketTotals>;
+  basketTotals: IBasketTotals;
   stepState: StepState;
   constructor(
     private formBuilder: FormBuilder,
     public translate: TranslateService,
-    private basketService: BasketService) { }
+    private store: Store<appReducer.AppState>
+  ) { }
 
   ngOnInit(): void {
     this.validateCheckoutForm();
-    this.basketTotals$ = this.basketService.basketTotals$;
+    this.store.select('basket').subscribe(res => {
+      this.basketTotals = res.basketTotal;
+    })
   }
+
 
   validateCheckoutForm() {
     this.checkoutForm = this.formBuilder.group({
@@ -42,10 +50,6 @@ export class CheckoutComponent implements OnInit {
         nameOnCard: [null, [Validators.required]]
       })
     })
-  }
-
-  onChangeSelect(e) {
-    console.log(e);
   }
 
 }

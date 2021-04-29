@@ -7,6 +7,10 @@ import { Basket } from 'src/app/models/basket';
 import { ShopParams } from 'src/app/models/shopParams';
 import { IUser } from 'src/app/models/user';
 import { ShopService } from 'src/app/shop/shop.service';
+import * as appReducer from '../../store/app.reducer';
+import * as ShopActions from '../../shop/store/shop.actions';
+import * as BasketActions from '../../basket/store/basket.actions';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-nav-side',
@@ -23,6 +27,7 @@ export class NavSideComponent implements OnInit, OnDestroy {
   basketSub: Subscription;
 
   constructor(
+    private store: Store<appReducer.AppState>,
     public translate: TranslateService,
     private basketService: BasketService,
     private accountService: AccountService,
@@ -38,15 +43,23 @@ export class NavSideComponent implements OnInit, OnDestroy {
   }
 
   getBasket() {
-    this.basketSub = this.basketService.basket$.subscribe((basket: Basket) => {
+    // this.basketSub = this.basketService.basket$.subscribe((basket: Basket) => {
 
-      this.basketCount = '';
-      if (basket) {
-        if (basket.basketItems.length > 0) {
-          this.basketCount = basket.basketItems.length.toString();
-        }
+    //   this.basketCount = '';
+    //   if (basket) {
+    //     if (basket.basketItems.length > 0) {
+    //       this.basketCount = basket.basketItems.length.toString();
+    //     }
+    //   }
+    // });
+    this.basketSub = this.store.select('basket').subscribe(res => {
+      if (res.basket) {
+        this.basketCount = res.basket.basketItems.length === 0 ? '' : res.basket.basketItems.length.toString();
       }
-    });
+      else {
+        this.basketCount = '';
+      }
+    })
   }
 
   ngOnInit(): void {
@@ -68,8 +81,10 @@ export class NavSideComponent implements OnInit, OnDestroy {
 
   changeLang(lang: string) {
     this.translate.use(lang);
-    this.shopService.getCategories().subscribe();
-    this.shopService.getProducts(new ShopParams()).subscribe();
+    // this.shopService.getCategories().subscribe();
+    // this.shopService.getProducts(new ShopParams()).subscribe();
+    this.store.dispatch(ShopActions.GetCategories());
+    this.store.dispatch(ShopActions.GetProductList(new ShopParams()));
   }
 
 }

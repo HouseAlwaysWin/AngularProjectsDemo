@@ -10,6 +10,7 @@ import { IUser } from 'src/app/models/user';
 import { ShopService } from 'src/app/shop/shop.service';
 import * as appReducer from '../../store/app.reducer';
 import * as ShopActions from '../../shop/store/shop.actions';
+import * as BasketActions from '../../basket/store/basket.actions';
 
 @Component({
   selector: 'app-nav-top',
@@ -42,15 +43,23 @@ export class NavTopComponent implements OnInit, OnDestroy {
   }
 
   getBasket() {
-    this.basketSub = this.basketService.basket$.subscribe((basket: Basket) => {
-
-      this.basketCount = '';
-      if (basket) {
-        if (basket.basketItems.length > 0) {
-          this.basketCount = basket.basketItems.length.toString();
-        }
+    this.basketSub = this.store.select('basket').subscribe(res => {
+      if (res.basket) {
+        this.basketCount = res.basket.basketItems.length === 0 ? '' : res.basket.basketItems.length.toString();
       }
-    });
+      else {
+        this.basketCount = '';
+      }
+    })
+    // this.basketSub = this.basketService.basket$.subscribe((basket: Basket) => {
+
+    //   this.basketCount = '';
+    //   if (basket) {
+    //     if (basket.basketItems.length > 0) {
+    //       this.basketCount = basket.basketItems.length.toString();
+    //     }
+    //   }
+    // });
   }
 
 

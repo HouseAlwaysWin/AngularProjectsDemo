@@ -11,13 +11,13 @@ export const DELETEBASKET_SUCCESS = '[Basket] Delete Basket Success';
 export const CREATEPAYMENTINTENT_SUCCESS = '[Basket] Create PaymentIntent Success';
 
 export const GetBasetSuccess = createAction(GETBASKETBYID_SUCCESS, props<IApiResponse<IBasket>>());
-export const UpdateBasketSuccess = createAction(UPDATEBASKET_SUCCESS, props<{ basket: IBasket, basketTotal: IBasketTotals }>());
+export const UpdateBasketSuccess = createAction(UPDATEBASKET_SUCCESS, props<{ basket: IBasket }>());
 export const DeleteBasketSuccess = createAction(DELETEBASKET_SUCCESS);
 export const CreatePaymentIntentSuccess = createAction(CREATEPAYMENTINTENT_SUCCESS, props<IBasket>());
 
 
 
-export const GETBASKETBYID = '[Basket] Get Basket By ID';
+export const GETBASKET = '[Basket] Get Basket By ID';
 export const GETBASKETITEM = '[Basket] Get Basket Item';
 export const UPDATEBASEKT = '[Basket] Update Basket';
 export const UPDATESHIPPING = '[Basket] Update Shipping';
@@ -29,12 +29,12 @@ export const DECREMENTITEMQUANTITY = '[Basket] Decrement item quantity';
 export const DELETEBASKET = '[Basket] Delete Local Basket';
 export const CREATEPAYMENTINTENT = '[Basket] Create paymentintent';
 
-export const GetBasketById = createAction(GETBASKETBYID, props<{ id: string }>())
+export const GetBasket = createAction(GETBASKET);
 export const GetBasketItemById = createAction(GETBASKETITEM, props<{ id: string }>());
 export const UpdateBasket = createAction(UPDATEBASEKT, props<IBasket>());
 export const UpdateShipping = createAction(UPDATESHIPPING, props<IDeliveryMethod>());
 export const UpdateOrAddBasketItem = createAction(UPDATEORADDBASKETITEM, props<{ basketItem: IBasketItem, id: string }>());
-export const AddProductToBasket = createAction(ADDPRODUCTTOBASKET, props<{ product: IProduct, attrs: string, quantity: number }>());
+export const AddProductToBasket = createAction(ADDPRODUCTTOBASKET, props<{ productToAdd: IProduct, key: string, quantity: number }>());
 export const RemoveBasketItem = createAction(REMOVEBASKETITEM, props<IBasketItem>());
 export const IncrementItemQuantity = createAction(INCREMENTITEMQUANTITY, props<IBasketItem>());
 export const DecrementItemQuantity = createAction(DECREMENTITEMQUANTITY, props<IBasketItem>());

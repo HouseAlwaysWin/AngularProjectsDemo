@@ -16,15 +16,12 @@ import { Store } from '@ngrx/store';
   styleUrls: ['./basket.component.scss']
 })
 export class BasketComponent implements OnInit {
-  // basket$: Observable<IBasket>;
   basket: IBasket;
-  // basketTotals$: Observable<IBasketTotals>;
   basketTotals: IBasketTotals;
 
   displayedColumns: string[] = []
   constructor(
     public translate: TranslateService,
-    private basketService: BasketService,
     private store: Store<appReducer.AppState>,
     public dialog: MatDialog) { }
 
@@ -37,15 +34,12 @@ export class BasketComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.basketService.loadBasket();
+      this._SetBasketState();
     });
 
   }
 
   ngOnInit(): void {
-    // this.basket$ = this.basketService.basket$;
-    // console.log(this.basket$);
-    // this.basketTotals$ = this.basketService.basketTotals$;
     this._SetBasketState();
   }
 
@@ -56,15 +50,11 @@ export class BasketComponent implements OnInit {
     });
   }
 
-
-
   incrementItemQuantity(item: IBasketItem) {
-    // this.basketService.incrementItemQuantity(item);
     this.store.dispatch(BasketActions.IncrementItemQuantity(item));
   }
 
   decrementItemQuantity(item: IBasketItem) {
-    // this.basketService.decrementItemQuantity(item);
     this.store.dispatch(BasketActions.DecrementItemQuantity(item));
   }
 
@@ -76,8 +66,8 @@ export class BasketComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // this.basketService.removeBasketItem(item);
         this.store.dispatch(BasketActions.RemoveBasketItem(item));
+        this.store.dispatch(BasketActions.GetBasket());
       }
     });
   }

@@ -1,29 +1,29 @@
 <div fxLayout="row"
-  fxLayout.xs="column"
-  fxLayoutAlign="space-between"
-  class="checkout">
+     fxLayout.xs="column"
+     fxLayoutAlign="space-between"
+     class="checkout">
   <div fxFlex="60">
 
     <mat-vertical-stepper [linear]="true"
-      #stepper>
+                          #stepper>
 
       <mat-step [stepControl]="checkoutForm.get('addressForm')"
-        label="{{ 'Checkout.Address' | translate }}">
+                label="{{ 'Checkout.Address' | translate }}">
         <app-checkout-address [checkoutForm]="checkoutForm"></app-checkout-address>
       </mat-step>
 
       <mat-step [stepControl]="checkoutForm.get('deliveryForm')"
-        label="{{ 'Checkout.DeliveryMethod' | translate }}">
+                label="{{ 'Checkout.DeliveryMethod' | translate }}">
         <app-checkout-delivery [checkoutForm]="checkoutForm"></app-checkout-delivery>
-
       </mat-step>
 
-      <mat-step label="{{ 'Checkout.Review' | translate }}">
+      <mat-step [completed]="false"
+                label="{{ 'Checkout.Review' | translate }}">
         <app-checkout-review [stepper]="stepper"></app-checkout-review>
       </mat-step>
 
       <mat-step [stepControl]="checkoutForm.get('paymentForm')"
-        label="{{ 'Checkout.Payment' | translate }}">
+                label="{{ 'Checkout.Payment' | translate }}">
         <app-checkout-payment [checkoutForm]="checkoutForm"></app-checkout-payment>
       </mat-step>
 
@@ -32,10 +32,14 @@
   </div>
 
   <div fxFlex="40"
-    fxLayout="column"
-    fxLayoutAlign="start stretch">
-    <app-baske-total-summary [subtotal]="(basketTotals$|async).subtotal"
-      [shipping]="(basketTotals$|async).shipping"
-      [total]="(basketTotals$|async).total"></app-baske-total-summary>
+       fxLayout="column"
+       fxLayoutAlign="start stretch">
+    <!-- <app-baske-total-summary [subtotal]="(basketTotals$|async).subtotal"
+                             [shipping]="(basketTotals$|async).shipping"
+                             [total]="(basketTotals$|async).total"></app-baske-total-summary> -->
+    <app-baske-total-summary [subtotal]="basketTotals.subtotal"
+                             [shipping]="basketTotals.shipping"
+                             [total]="basketTotals.total"></app-baske-total-summary>
+
   </div>
 </div>

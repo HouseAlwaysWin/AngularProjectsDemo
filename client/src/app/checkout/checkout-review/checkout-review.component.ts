@@ -1,11 +1,16 @@
 import { CdkStepper } from '@angular/cdk/stepper';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
 import { Observable } from 'rxjs';
 import { BasketService } from 'src/app/basket/basket.service';
-import { Basket, IBasket, IBasketItem } from 'src/app/models/basket';
+import { IBasket, IBasketItem } from 'src/app/models/basket';
 import { DialogComfirm } from 'src/app/shared/components/dialog-comfirm/dialog-comfirm.component';
+import * as appReducer from '../../store/app.reducer';
+import * as BasketActions from '../../basket/store/basket.actions';
+import { Store } from '@ngrx/store';
+import { IApiResponse } from 'src/app/models/apiResponse';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-checkout-review',
@@ -14,28 +19,34 @@ import { DialogComfirm } from 'src/app/shared/components/dialog-comfirm/dialog-c
 })
 export class CheckoutReviewComponent implements OnInit {
   @Input() stepper: MatStepper;
+  isComplete: boolean = false;
   isLoading: boolean = false;
-  basket$: Observable<IBasket>;
+  // basket$: Observable<IBasket>;
+
+  basket: IBasket;
+
   constructor(
     public dialog: MatDialog,
-    private basketService: BasketService) { }
+    private store: Store<appReducer.AppState>,
+    private basketService: BasketService
+  ) { }
 
   ngOnInit(): void {
-    this.basket$ = this.basketService.basket$;
+    // this.basket$ = this.basketService.basket$;
+    this.store.select('basket').subscribe(res => {
+      this.basket = res.basket;
+      this.isLoading = res.loading;
+      if (res.paymentIntentSuccess) {
+        this.stepper.selected.completed = true;
+        this.stepper.next();
+      }
+    })
   }
 
 
 
   createPaymentIntent() {
-    this.isLoading = true;
-    return this.basketService.createPaymentIntent().subscribe(result => {
-      console.log(result);
-      this.isLoading = false;
-      this.stepper.next();
-    }, error => {
-      this.isLoading = false;
-      console.log(error);
-    });
+    this.store.dispatch(BasketActions.CreatePaymentIntent());
   }
 
   removeBasketItem(item: IBasketItem) {
@@ -43,7 +54,7 @@ export class CheckoutReviewComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.basketService.removeBasketItem(item);
+        this.store.dispatch(BasketActions.RemoveBasketItem(item));
       }
     });
   }

@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -182,9 +183,7 @@ export class BasketService {
   createPaymentIntent() {
     return this.http.post(this.baseUrl + `payments/${this.getCurrentBasketValue().id}`, {})
       .pipe(map((res: IApiResponse<IBasket>) => {
-        if (res.isSuccessed) {
-          this.basketSource.next(res.data);
-        }
+        return res;
       }));
   }
 

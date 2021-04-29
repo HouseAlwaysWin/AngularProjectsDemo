@@ -10,8 +10,12 @@ import { IOrder } from 'src/app/models/order';
 export class CheckoutSuccessComponent implements OnInit {
   order: IOrder;
   constructor(private router: Router) {
-    this.order = this.router.getCurrentNavigation().extras.state.data;
-    console.log(this.order);
+    if (this.router.getCurrentNavigation().extras.state) {
+      this.order = this.router.getCurrentNavigation().extras.state.data;
+    }
+    else {
+      this.router.navigate(['/orders']);
+    }
   }
 
   ngOnInit(): void {

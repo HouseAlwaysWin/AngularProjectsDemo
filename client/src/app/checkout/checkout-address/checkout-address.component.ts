@@ -46,15 +46,4 @@ export class CheckoutAddressComponent implements OnInit {
     });
   }
 
-  // saveUserAddress() {
-  //   this.accountService.updateUserAddress(this.addressForm.value).subscribe((res: IApiResponse<IAddress>) => {
-  //     console.log(this.addressForm.value);
-  //     console.log(res.data);
-  //     this.addressForm.reset(res.data);
-  //   }, error => {
-
-  //   });
-  // }
-
-
 }

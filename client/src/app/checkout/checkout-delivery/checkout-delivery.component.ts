@@ -4,6 +4,9 @@ import { MatStepper } from '@angular/material/stepper';
 import { BasketService } from 'src/app/basket/basket.service';
 import { IDeliveryMethod } from 'src/app/models/deliveryMethod';
 import { CheckoutService } from '../checkout.service';
+import * as appReducer from '../../store/app.reducer';
+import * as BasketActions from '../../basket/store/basket.actions';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-checkout-delivery',
@@ -15,26 +18,26 @@ export class CheckoutDeliveryComponent implements OnInit {
   deliveryMethods: IDeliveryMethod[];
   selectDeliveryMethods: IDeliveryMethod;
   constructor(private checkoutService: CheckoutService,
-    private basketService: BasketService) { }
+    private store: Store<appReducer.AppState>) { }
 
   ngOnInit(): void {
     this.getDeliveryMethod();
   }
 
   getDeliveryMethod() {
+
     this.checkoutService.getDeliveryMethods().subscribe(
       (dm: IDeliveryMethod[]) => {
         this.deliveryMethods = dm;
         if (!this.selectDeliveryMethods) {
           this.selectDeliveryMethods = dm[0];
-          console.log(this.selectDeliveryMethods);
           this.setShippingPrice(this.selectDeliveryMethods);
         }
       });
   }
 
   setShippingPrice(dm: IDeliveryMethod) {
-    this.basketService.setShipping(dm);
+    this.store.dispatch(BasketActions.UpdateShipping(dm));
   }
 
 

@@ -4,6 +4,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs';
 import { IBasket, IBasketItem } from 'src/app/models/basket';
 import { BasketService } from '../basket.service';
+import * as appReducer from '../../store/app.reducer';
+import * as BasketActions from '../store/basket.actions';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-basket-summary',
@@ -11,8 +14,8 @@ import { BasketService } from '../basket.service';
   styleUrls: ['./basket-summary.component.scss']
 })
 export class BasketSummaryComponent implements OnInit {
-  @Input() items: Observable<IBasket>;
   @Input() showQuantityAdj: boolean = true;
+  @Input() hiddenRemove: boolean = false;
   pageItems: MatTableDataSource<IBasketItem>;
 
   @Output() increment: EventEmitter<IBasketItem> = new EventEmitter();
@@ -25,19 +28,21 @@ export class BasketSummaryComponent implements OnInit {
     'no', 'imgUrl', 'name', 'price', 'quantity', 'remove'
   ];
 
-  constructor(private cdr: ChangeDetectorRef) {
+  constructor(private cdr: ChangeDetectorRef,
+    private store: Store<appReducer.AppState>
+  ) {
   }
 
   ngOnInit(): void {
-    this.items.subscribe((basket: IBasket) => {
-      if (basket) {
-        this.pageItems = new MatTableDataSource<IBasketItem>(basket.basketItems);
+    this.store.select('basket').subscribe(res => {
+      if (res.basket) {
+        this.pageItems = new MatTableDataSource<IBasketItem>(res.basket.basketItems);
         this.cdr.detectChanges();
         this.pageItems.paginator = this.paginator;
       }
     })
-  }
 
+  }
 
   incrementItem(item: IBasketItem) {
     this.increment.emit(item);

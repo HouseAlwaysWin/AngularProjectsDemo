@@ -1,14 +1,15 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { MatStepper } from '@angular/material/stepper';
 import { NavigationExtras, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { loadStripe, Stripe, StripeCardCvcElement, StripeCardExpiryElement, StripeCardNumberElement } from '@stripe/stripe-js';
-import { BasketService } from 'src/app/basket/basket.service';
-import { Basket, IBasket } from 'src/app/models/basket';
+import { IBasket } from 'src/app/models/basket';
 import { IOrderToCreate } from 'src/app/models/order';
 import { environment } from 'src/environments/environment';
 import { CheckoutService } from '../checkout.service';
+import * as appReducer from '../../store/app.reducer';
+import * as BasketActions from '../../basket/store/basket.actions';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-checkout-payment',
@@ -20,6 +21,7 @@ export class CheckoutPaymentComponent implements OnInit, OnDestroy, AfterViewIni
   @ViewChild('cardNumber', { static: true }) cardNumberElement: ElementRef;
   @ViewChild('cardExpiry', { static: true }) cardExpiryElement: ElementRef;
   @ViewChild('cardCvc', { static: true }) cardCvcElement: ElementRef;
+  basket: IBasket;
   stripe: Stripe;
   cardNumber: StripeCardNumberElement;
   cardExpiry: StripeCardExpiryElement;
@@ -33,7 +35,9 @@ export class CheckoutPaymentComponent implements OnInit, OnDestroy, AfterViewIni
   isLoading: boolean = false;
 
 
-  constructor(private basketService: BasketService,
+  constructor(
+    // private basketService: BasketService,
+    private store: Store<appReducer.AppState>,
     public translate: TranslateService,
     private checkoutService: CheckoutService,
     private router: Router) { }
@@ -89,25 +93,29 @@ export class CheckoutPaymentComponent implements OnInit, OnDestroy, AfterViewIni
 
   async submitOrder() {
     this.isLoading = true;
-    const basket = this.basketService.getCurrentBasketValue();
+    // this.store.select('basket').subscribe(async res => {
+
+    const basket = this.basket;
+    console.log(basket);
     try {
       const createOrder = await this.createOrder(basket);
       const paymentResult = await this.confirmPaymentWithStripe(basket);
       if (paymentResult.paymentIntent) {
-        this.basketService.deleteLocalBasket();
+        localStorage.removeItem('basket_id');
+        this.store.dispatch(BasketActions.DeleteBasket());
+        this.store.dispatch(BasketActions.GetBasket());
+
         const navigationExtras: NavigationExtras = { state: createOrder };
         this.isLoading = false;
-        console.log(navigationExtras);
         this.router.navigate(['checkout/success'], navigationExtras);
       }
-      else {
-      }
-
       this.isLoading = false;
     } catch (error) {
       this.isLoading = false;
       console.log(error);
     }
+    // })
+
   }
 
   private async confirmPaymentWithStripe(basket: IBasket) {
@@ -134,6 +142,10 @@ export class CheckoutPaymentComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   ngOnInit(): void {
+    this.store.select('basket').subscribe(async res => {
+      this.basket = res.basket;
+    })
+
   }
 
 }

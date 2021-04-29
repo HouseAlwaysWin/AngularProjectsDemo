@@ -25,6 +25,7 @@ import { appReducer } from './store/app.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { ShopEffects } from './shop/store/shop.effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { BasketEffects } from './basket/store/basket.effects';
 
 
 @NgModule({
@@ -50,7 +51,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
       }
     }),
     StoreModule.forRoot(appReducer),
-    EffectsModule.forRoot([ShopEffects]),
+    EffectsModule.forRoot([ShopEffects, BasketEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
   ],
   providers: [

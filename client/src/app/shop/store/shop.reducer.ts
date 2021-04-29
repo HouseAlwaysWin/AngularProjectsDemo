@@ -46,10 +46,12 @@ export const shopReducer = createReducer(
   })),
 
   // product ouutput
-  on(ShopActions.GetProductByIdSuccess, (state, action) => ({
-    ...state,
-    product: action.product,
-  })),
+  on(ShopActions.GetProductByIdSuccess, (state, action) => {
+    return ({
+      ...state,
+      product: action.product,
+    })
+  }),
 
   // categories output
   on(ShopActions.GetProductCategoriesSuccess, (state, action) => ({
@@ -64,10 +66,10 @@ export const shopReducer = createReducer(
     loading: true
   })),
 
-  // // autocomplete input
-  on(ShopActions.AutoComplete, (state, action) => ({
-    ...state,
-  })),
+  // // // autocomplete input
+  // on(ShopActions.AutoComplete, (state, action) => ({
+  //   ...state,
+  // })),
 
   // search products input
   on(ShopActions.Search, (state, action) => ({

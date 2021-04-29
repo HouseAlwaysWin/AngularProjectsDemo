@@ -36,24 +36,24 @@ namespace EcommerceApi.Controllers
             return BaseApiOk(updateBasket);
         }
 
-        [HttpPost("basketItemQuantity")]
-        public async Task<ActionResult> UpdateBasketItemQuantityAsync(UpdateBasketItemDto basketItemDto){
+        // [HttpPost("basketItemQuantity")]
+        // public async Task<ActionResult> UpdateBasketItemQuantityAsync(UpdateBasketItemDto basketItemDto){
             
-            var updateBasket = await _basketRepository.UpdateBasketItemQuantityAsync(basketItemDto.BasketId,basketItemDto.BasketItem);
-            return BaseApiOk(updateBasket);
-        }
+        //     var updateBasket = await _basketRepository.UpdateBasketItemQuantityAsync(basketItemDto.BasketId,basketItemDto.BasketItem);
+        //     return BaseApiOk(updateBasket);
+        // }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<ActionResult> RemoveBasketAsync(string id){
             await _basketRepository.RemoveBasketAsync(id);
             return BaseApiOk();
         }
 
-        [HttpDelete("removeBasketItem")]
-        public async Task<ActionResult>  RemoveBasketItemAsync(UpdateBasketItemDto basketItemDto){
-            var basket = await _basketRepository.RemoveBasketItemAsync(basketItemDto.BasketId,basketItemDto.BasketItem);
-            return BaseApiOk(basket);
-        }
+        // [HttpDelete("removeBasketItem")]
+        // public async Task<ActionResult>  RemoveBasketItemAsync(UpdateBasketItemDto basketItemDto){
+        //     var basket = await _basketRepository.RemoveBasketItemAsync(basketItemDto.BasketId,basketItemDto.BasketItem);
+        //     return BaseApiOk(basket);
+        // }
 
 
 

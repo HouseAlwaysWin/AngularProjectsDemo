@@ -6,7 +6,6 @@
   <ng-container *ngIf="basket.basketItems.length > 0">
 
     <app-basket-summary fxFlex="60"
-                        [items]="basket"
                         (increment)="incrementItemQuantity($event)"
                         (decrement)="decrementItemQuantity($event)"
                         (remove)="removeBasketItem($event)"></app-basket-summary>

@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { AccountService } from './account/account.service';
 import { BasketService } from './basket/basket.service';
+import * as BasketActions from './basket/store/basket.actions';
+import * as appReducer from './store/app.reducer';
 
 @Component({
   selector: 'app-root',
@@ -14,6 +17,7 @@ export class AppComponent implements OnInit {
    */
   constructor(
     public translate: TranslateService,
+    private store: Store<appReducer.AppState>,
     private accountService: AccountService,
     private basketService: BasketService,
   ) {
@@ -26,6 +30,7 @@ export class AppComponent implements OnInit {
     // this.authService.authListener();
     this.loadCurrentUser();
     this.basketService.loadBasket();
+    this.loadBasket();
   }
 
   loadCurrentUser() {
@@ -35,7 +40,10 @@ export class AppComponent implements OnInit {
     }, error => {
       console.log(error);
     })
+  }
 
+  loadBasket() {
+    this.store.dispatch(BasketActions.GetBasket());
   }
 
 }

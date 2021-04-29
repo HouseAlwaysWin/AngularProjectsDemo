@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { map, switchMap, tap, withLatestFrom } from "rxjs/operators";
 import { IApiResponse } from "src/app/models/apiResponse";
-import { IBasket } from "src/app/models/basket";
+import { Basket, BasketItem, IBasket, IBasketItem } from "src/app/models/basket";
 import { environment } from "src/environments/environment";
 import { BasketService } from "../basket.service";
 import * as BasketActions from '../store/basket.actions';
@@ -17,19 +17,22 @@ export class BasketEffects {
   constructor(
     private action$: Actions,
     private store: Store<appReducer.AppState>,
-    private http: HttpClient,
-    private basketService: BasketService) {
+    private http: HttpClient
+  ) {
   }
 
-  getBasketById = createEffect(() =>
+  getBasket = createEffect(() =>
     this.action$.pipe(
-      ofType(BasketActions.GetBasketById),
-      switchMap(action => {
-
-        return this.http.get(this.baseUrl + 'basket?id=' + action.id)
+      ofType(BasketActions.GetBasket),
+      switchMap(() => {
+        let basketId = localStorage.getItem('basket_id');
+        if (!basketId) {
+          basketId = this.createBasket().id;
+        }
+        return this.http.get(this.baseUrl + 'basket?id=' + basketId)
           .pipe(
             map((res: IApiResponse<IBasket>) => {
-              return BasketActions.GetBasetSuccess(res);
+              return BasketActions.UpdateBasketSuccess({ basket: res.data });
             }));
       })
     ))
@@ -37,31 +40,38 @@ export class BasketEffects {
   updateBasket = createEffect(() =>
     this.action$.pipe(
       ofType(
-        BasketActions.UpdateBasket ||
-        BasketActions.UpdateShipping ||
-        BasketActions.UpdateOrAddBasketItem ||
-        BasketActions.AddProductToBasket ||
-        BasketActions.RemoveBasketItem ||
-        BasketActions.IncrementItemQuantity ||
+        BasketActions.AddProductToBasket,
+        BasketActions.UpdateBasket,
+        BasketActions.UpdateShipping,
+        BasketActions.UpdateOrAddBasketItem,
+        BasketActions.RemoveBasketItem,
+        BasketActions.IncrementItemQuantity,
         BasketActions.DecrementItemQuantity),
-      switchMap(action => {
-        return this.http.post(this.baseUrl + 'basket/updateBasket', action)
+      withLatestFrom(this.store.select('basket')),
+      switchMap(([action, state]) => {
+        let basket: IBasket = JSON.parse(JSON.stringify(state.basket)) ?? this.createBasket();
+        return this.http.post(this.baseUrl + 'basket/updateBasket', basket)
           .pipe(
             map((res: IApiResponse<IBasket>) => {
-              return BasketActions.UpdateBasketSuccess({ basket: res.data, basketTotal: null });
+              return BasketActions.UpdateBasketSuccess({ basket: res.data });
             })
           )
       })
     ))
+
 
   deleteBasket = createEffect(() =>
     this.action$.pipe(
       ofType(BasketActions.DELETEBASKET),
       withLatestFrom(this.store.select('basket')),
       switchMap(([action, state]) => {
-        return this.http.delete(`${this.baseUrl}'basket/removeBasketItem/${state.basket.id}`).pipe(
+        console.log(state);
+        return this.http.delete(`${this.baseUrl}basket/${state.basket.id}`).pipe(
           map(() => {
-            localStorage.removeItem('basket_id');
+            let basketId = localStorage.getItem('basket_id');
+            if (basketId) {
+              localStorage.removeItem('basket_id');
+            }
             return BasketActions.DeleteBasket();
           })
         );
@@ -75,14 +85,20 @@ export class BasketEffects {
       ofType(BasketActions.CreatePaymentIntent),
       withLatestFrom(this.store.select('basket')),
       switchMap(([action, state]) => {
-        return this.http.post(`${this.baseUrl}'basket/payments/${state.basket.id}`, {}).pipe(
+        return this.http.post(`${this.baseUrl}payments/${state.basket.id}`, {}).pipe(
           map((res: IApiResponse<IBasket>) => {
-            return BasketActions.GetBasetSuccess(res)
+            return BasketActions.CreatePaymentIntentSuccess(res.data)
           })
         );
       })
     ))
 
+
+  private createBasket(): IBasket {
+    const basket = new Basket();
+    localStorage.setItem('basket_id', basket.id);
+    return basket;
+  }
 
 
 }

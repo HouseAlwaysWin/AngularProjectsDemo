@@ -45,7 +45,6 @@ export class ShopEffects {
         `${this.baseUrl}product`, { params })
         .pipe(
           map(res => {
-            console.log(res);
             return ShopActions.GetProductListSuccess({
               products: res.data, totalCount: res.totalCount
             });
@@ -59,12 +58,10 @@ export class ShopEffects {
   productById = createEffect(() => this.action$.pipe(
     ofType(ShopActions.GetProductById),
     switchMap(action => {
-      console.log(action);
       return this.http.get<IApiResponse<IProduct>>(
         `${this.baseUrl}product/${action.id}`
       ).pipe(
         map(res => {
-          console.log(res.data);
           return ShopActions.GetProductByIdSuccess({ product: res.data });
         })
       );

@@ -11,6 +11,7 @@ import { IProduct, IProductAttributeValue } from 'src/app/models/product';
 import { ShopService } from '../shop.service';
 import * as appReducer from '../../store/app.reducer';
 import * as ShopActions from '../store/shop.actions';
+import * as BasketActions from '../../basket/store/basket.actions';
 
 @Component({
   selector: 'app-product-detail',
@@ -22,85 +23,40 @@ export class ProductDetailComponent implements OnInit {
   totalPrice: number;
   quantity: number = 1;
   cartQuantity: number = 0;
-  productToBasket: IProduct;
-  basket$: Observable<IBasket>;
+  basket: IBasket;
   basketItem: IBasketItem;
-  prevOptions = {};
+  attrOptions = {};
 
   constructor(private activeRoute: ActivatedRoute,
     public translate: TranslateService,
-    private basketService: BasketService,
     public dialog: MatDialog,
-    private store: Store<appReducer.AppState>,
-    private shopService: ShopService) { }
+    private store: Store<appReducer.AppState>) { }
   ngOnInit(): void {
-    this.getProductInfo();
+    this._getProductInfo();
     this.translate.onLangChange.subscribe(result => {
-      this.getProductInfo();
+      this._getProductInfo();
     })
-    this.basket$ = this.basketService.basket$;
-  }
-
-  private _SetProductState() {
-    this.store.select('shop').subscribe(res => {
-      console.log(res.product);
-      this.product = res.product;
-      this.getDefaultTotalPrice();
-      this.basketItem = this.getCurrentBasketItem();
-
-      if (this.basketItem) {
-        this.cartQuantity = this.basketItem.quantity;
-      }
-
-    })
-  }
-
-  getProductInfo() {
-    var id = this.activeRoute.snapshot.paramMap.get('id');
-    this.store.dispatch(ShopActions.GetProductById({ id }));
-    this._SetProductState();
-    // this.shopService.getProductById(id).subscribe(product => {
-    //   this.product = product;
-    //   console.log(this.product);
-    //   this.getDefaultTotalPrice();
-    //   this.basketItem = this.getCurrentBasketItem();
-
-    //   if (this.basketItem) {
-    //     this.cartQuantity = this.basketItem.quantity;
-    //   }
-    // });
-  }
-
-  getDefaultTotalPrice() {
-    let optionsPrice = this.product.productAttributes.map(a => {
-      this.prevOptions[a.name] = a.productAttributeValue[0];
-      return a.productAttributeValue[0]
-    }).reduce((pa, na) => pa + na.priceAdjustment, 0)
-    this.totalPrice = this.product.price + optionsPrice;
+    this._getAndSetProductState();
+    this._getAndSetBasketState();
   }
 
 
-  onOptionChange(data: MatRadioChange, prevOptionKey: string) {
+
+
+  onOptionChange(data: MatRadioChange, attrOptionKey: string) {
     let option: IProductAttributeValue = data.value;
-    let preOption = this.prevOptions[prevOptionKey];
+    let preOption = this.attrOptions[attrOptionKey];
 
     this.totalPrice = (this.totalPrice - preOption.priceAdjustment) + option.priceAdjustment;
-    this.prevOptions[prevOptionKey] = option;
+    this.attrOptions[attrOptionKey] = option;
 
-    this.basketItem = this.getCurrentBasketItem();
+    this._setSelectBasketState();
 
-    if (this.basketItem) {
-      this.cartQuantity = this.basketItem.quantity;
-    }
-    else {
-      this.cartQuantity = 0;
-    }
     this.quantity = 1;
   }
 
   incrementItemQuantity() {
     this.quantity++;
-
   }
 
   decrementItemQuantity() {
@@ -110,40 +66,73 @@ export class ProductDetailComponent implements OnInit {
   }
 
   addItemToBasket() {
-    let attrStr = this.getCurrentBasketItemAttr();
-
-    const product: IProduct = {
+    let keyAndAttrs = this._getBasketKeyAndAttrs(this.attrOptions);
+    const itemToAdd: IProduct = {
       id: this.product.id,
-      name: this.product.name,
+      name: `${this.product.name}_${keyAndAttrs.attrs}`,
       description: this.product.description,
       price: this.totalPrice,
       productAttributes: this.product.productAttributes,
       productCategory: this.product.productCategory,
       productPictures: this.product.productPictures
     };
-    console.log(this.quantity);
-    this.basketService.addItemToBasket(product, attrStr, this.quantity);
-
-    this.basketItem = this.getCurrentBasketItem();
-    this.cartQuantity = this.basketItem.quantity;
+    this.store.dispatch(BasketActions.AddProductToBasket({ productToAdd: itemToAdd, key: keyAndAttrs.key, quantity: this.quantity }));
+    this._setSelectBasketState();
     this.quantity = 1;
   }
 
-  private getCurrentBasketItem(): IBasketItem {
-    let attrs = this.getCurrentBasketItemAttr();
-    let basketItemKey = `${this.product.id}_${this.product.name}_${attrs}`
-    let currentBasket = this.basketService.getBasketItem(basketItemKey);
-    return currentBasket;
-  }
-
-  private getCurrentBasketItemAttr(): string {
+  private _getBasketKeyAndAttrs(attrOptions): { key: string, attrs: string } {
     let attrStr = '';
-    for (var [key, value] of Object.entries(this.prevOptions)) {
+    for (var [key, value] of Object.entries(attrOptions)) {
       attrStr += `_${key}_${value['name']}`;
     }
-    return attrStr;
+    let basketItemKey = `${this.product.id}_${this.product.name}${attrStr}`
+    return { key: basketItemKey, attrs: attrStr };
   }
 
+  private _getAndSetProductState() {
+    this.store.select('shop').subscribe(res => {
+      this.product = res.product;
+      if (this.product) {
+        this._getDefaultTotalPrice();
+      }
+    })
+  }
+
+  private _getAndSetBasketState() {
+    this.store.select('basket').subscribe(res => {
+      this.basket = res.basket;
+    })
+  }
+
+  private _setSelectBasketState() {
+    let key = this._getBasketKeyAndAttrs(this.attrOptions).key;
+    this.store.select('basket').subscribe(res => {
+      if (res.basket) {
+        let index = res.basket.basketItems.findIndex(i => i.id === key);
+        if (index !== -1) {
+          this.cartQuantity = res.basket.basketItems[index].quantity;
+        }
+        else {
+          this.cartQuantity = 0;
+        }
+      }
+    });
+  }
+
+  private _getProductInfo() {
+    var id = this.activeRoute.snapshot.paramMap.get('id');
+    this.store.dispatch(ShopActions.GetProductById({ id }));
+  }
+
+  private _getDefaultTotalPrice() {
+    let optionsPrice = this.product.productAttributes.map(a => {
+      this.attrOptions[a.name] = a.productAttributeValue[0];
+      return a.productAttributeValue[0]
+    }).reduce((pa, na) => pa + na.priceAdjustment, 0)
+
+    this.totalPrice = this.product.price + optionsPrice;
+  }
 
 
 }

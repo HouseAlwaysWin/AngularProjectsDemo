@@ -1,4 +1,3 @@
-import { animate, group, query, stagger, state, style, transition, trigger } from '@angular/animations';
 import { ArrayDataSource } from '@angular/cdk/collections';
 import { FlatTreeControl, NestedTreeControl } from '@angular/cdk/tree';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
@@ -9,7 +8,6 @@ import { debounceTime, map, tap } from 'rxjs/operators';
 import { IApiPagingResponse } from '../models/apiResponse';
 import { IProduct, IProductCategory } from '../models/product';
 import { ShopParams } from '../models/shopParams';
-import { ShopService } from './shop.service';
 import { RotatedAnimation, FadeInGrowListAnimation } from '../shared/animations/animation-triggers';
 import * as appReducer from '../store/app.reducer';
 import { Store } from '@ngrx/store';
@@ -74,7 +72,6 @@ export class ShopComponent implements OnInit, OnDestroy {
   private _SetShopState() {
     this.shopSub = this.store.select('shop')
       .subscribe((res) => {
-        console.log(res);
         this.products = res.products;
         this.productTotalcount = res.totalCount;
         this.isLoading = res.loading;
