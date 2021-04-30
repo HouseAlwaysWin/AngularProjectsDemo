@@ -16,6 +16,7 @@ using EcommerceApi.Core.Models.Dtos.DataValidations;
 using EcommerceApi.Core.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using System;
 
 namespace EcommerceApi.Controllers
 {
@@ -45,6 +46,7 @@ namespace EcommerceApi.Controllers
         [Authorize]
         [HttpGet("getuser")]
         public async Task<ActionResult<ApiResponse<UserDto>>> GetUser(){
+            try{
             var email = HttpContext.User?.Claims?.FirstOrDefault(
                 x=>x.Type == ClaimTypes.Email)?.Value;
             
@@ -56,6 +58,9 @@ namespace EcommerceApi.Controllers
                     Email = user.Email,
                     DisplayName = user.DisplayName,
                     Token = token});
+            }catch(Exception ex){
+                return BaseApiBadRequest(ex.Message);
+            }
         }
 
         [HttpPost("login")]

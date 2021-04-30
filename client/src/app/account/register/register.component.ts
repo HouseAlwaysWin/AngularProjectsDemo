@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { AccountService } from '../account.service';
 
 @Component({
@@ -9,17 +11,22 @@ import { AccountService } from '../account.service';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
 
   returnUrl: string;
   registerForm: FormGroup;
   error: string;
+  private _onDestroy = new Subject();
 
   constructor(
+    public translate: TranslateService,
     private formBuilder: FormBuilder,
     private accountService: AccountService,
     private activatedRoute: ActivatedRoute,
     private router: Router) {
+  }
+  ngOnDestroy(): void {
+    this._onDestroy.next();
   }
 
   get email() {
@@ -52,24 +59,12 @@ export class RegisterComponent implements OnInit {
       passwordConfirm: [null, Validators.required]
     });
 
-    // this.registerForm = new FormGroup({
-    //   email: new FormControl('', {
-    //     validators: [Validators.required, Validators.email]
-    //   }),
-    //   password: new FormControl('', {
-    //     validators: [Validators.required]
-    //   }),
-    //   passwordConfirm: new FormControl('', {
-    //     validators: [Validators.required]
-    //   })
-    // })
   }
 
   onSubmit() {
-    console.log(this.registerForm);
     this.accountService.register(this.registerForm.value)
+      .pipe(takeUntil(this._onDestroy))
       .subscribe(res => {
-        console.log(res);
         if (res.data) {
           if (!this.returnUrl) {
             this.router.navigateByUrl(this.returnUrl);
@@ -77,7 +72,12 @@ export class RegisterComponent implements OnInit {
             this.router.navigateByUrl('/home');
           }
         } else {
-          this.error = res.message;
+          if (res.message) {
+            this.error = res.message;
+          }
+          else {
+            this.error = this.translate.instant('AccountForm.RegisterFailed');
+          }
         }
       }, error => {
         console.log(error);

@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 import { AuthGuard } from './account/auth.guard';
 import { ShopComponent } from './shop/shop.component';
+import { CheckoutGuard } from './checkout/checkout.guard';
 
 
 const routes: Routes = [
@@ -20,17 +21,18 @@ const routes: Routes = [
   {
     path: 'basket',
     loadChildren: () => import('./basket/basket.module').then(m => m.BasketModule),
-    canLoad: [AuthGuard]
+    // canLoad: [AuthGuard]
   },
   {
     path: 'orders',
     loadChildren: () => import('./orders/orders.module').then(m => m.OrdersModule),
-    canLoad: [AuthGuard]
+    canActivate: [AuthGuard]
   },
   {
     path: 'checkout',
     loadChildren: () => import('./checkout/checkout.module').then(m => m.CheckoutModule),
-    canLoad: [AuthGuard]
+    canActivate: [AuthGuard],
+    canLoad: [CheckoutGuard]
   },
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];

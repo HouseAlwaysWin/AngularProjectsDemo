@@ -4,7 +4,7 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { FormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { Observable, Subscription } from 'rxjs';
-import { debounceTime, map, tap } from 'rxjs/operators';
+import { debounceTime, map, takeUntil, tap } from 'rxjs/operators';
 import { IApiPagingResponse } from '../models/apiResponse';
 import { IProduct, IProductCategory } from '../models/product';
 import { ShopParams } from '../models/shopParams';
@@ -12,6 +12,7 @@ import { RotatedAnimation, FadeInGrowListAnimation } from '../shared/animations/
 import * as appReducer from '../store/app.reducer';
 import { Store } from '@ngrx/store';
 import * as ShopActions from './store/shop.actions';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-shop',
@@ -24,6 +25,7 @@ import * as ShopActions from './store/shop.actions';
 })
 export class ShopComponent implements OnInit, OnDestroy {
   @ViewChild('searchInput') searchInput: ElementRef;
+  private _onDestroy = new Subject();
 
   shopParams: ShopParams = new ShopParams();
   products$: Observable<IApiPagingResponse<IProduct[]>>;
@@ -55,7 +57,7 @@ export class ShopComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.shopSub.unsubscribe();
+    this._onDestroy.next();
   }
 
   ngOnInit(): void {
@@ -71,19 +73,21 @@ export class ShopComponent implements OnInit, OnDestroy {
   }
 
   private _SetCategoryState() {
-    this.store.select('category').subscribe(res => {
-      console.log('category');
-      this.categories = new ArrayDataSource(res.productCategories);
-      this.categoriesTreeControl = new NestedTreeControl<IProductCategory>(node => node.children);
-      this.treeControl = new FlatTreeControl<IProductCategory>(
-        node => node.level, node => node.hasChild
-      );
+    this.store.select('category')
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(res => {
+        this.categories = new ArrayDataSource(res.productCategories);
+        this.categoriesTreeControl = new NestedTreeControl<IProductCategory>(node => node.children);
+        this.treeControl = new FlatTreeControl<IProductCategory>(
+          node => node.level, node => node.hasChild
+        );
 
-    })
+      })
   }
 
   private _SetShopState() {
-    this.shopSub = this.store.select('shop')
+    this.store.select('shop')
+      .pipe(takeUntil(this._onDestroy))
       .subscribe((res) => {
         this.products = res.products;
         this.productTotalcount = res.totalCount;
@@ -111,7 +115,9 @@ export class ShopComponent implements OnInit, OnDestroy {
               pageSize: this.shopParams.pageSize
             }));
           }
-        })).subscribe();
+        }))
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe();
 
   }
 

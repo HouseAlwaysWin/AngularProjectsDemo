@@ -1,12 +1,10 @@
 .order-summary {
-  // background-color: gray;
   border-radius: 0.1em;
   color: rgb(79, 101, 161);
   text-align: center;
   font-weight: bold;
   padding: 1.2em;
   font-size: 2em;
-  // box-shadow: 2px 2px 2px rgba(110, 110, 110, 1);
 }
 
 .order-summary-hint {
@@ -42,9 +40,4 @@
   color: black;
   font-weight: bold;
   text-shadow: 2px 2px rgba(110, 110, 110, 0.2);
-}
-
-app-basket-summary {
-  // background-color: rgba(255, 255, 255, 0);
-  // background-color: red;
 }

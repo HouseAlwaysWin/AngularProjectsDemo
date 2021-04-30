@@ -12,7 +12,7 @@ export class ProductItemComponent implements OnInit {
 
   @Input() product: IProduct;
 
-  constructor(private basketService: BasketService) { }
+  constructor() { }
 
   ngOnInit(): void {
   }

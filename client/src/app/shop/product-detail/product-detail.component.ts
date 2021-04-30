@@ -1,10 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatRadioChange } from '@angular/material/radio';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { BasketService } from 'src/app/basket/basket.service';
 import { IBasket, IBasketItem, IBasketTotals } from 'src/app/models/basket';
 import { IProduct, IProductAttributeValue } from 'src/app/models/product';
@@ -12,13 +12,14 @@ import { ShopService } from '../shop.service';
 import * as appReducer from '../../store/app.reducer';
 import * as ShopActions from '../store/shop.actions';
 import * as BasketActions from '../../basket/store/basket.actions';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-product-detail',
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.scss']
 })
-export class ProductDetailComponent implements OnInit {
+export class ProductDetailComponent implements OnInit, OnDestroy {
   product: IProduct;
   totalPrice: number;
   quantity: number = 1;
@@ -26,16 +27,24 @@ export class ProductDetailComponent implements OnInit {
   basket: IBasket;
   basketItem: IBasketItem;
   attrOptions = {};
+  private _onDestroy = new Subject();
 
   constructor(private activeRoute: ActivatedRoute,
     public translate: TranslateService,
     public dialog: MatDialog,
     private store: Store<appReducer.AppState>) { }
+
+  ngOnDestroy(): void {
+    this._onDestroy.next();
+  }
+
   ngOnInit(): void {
     this._getProductInfo();
-    this.translate.onLangChange.subscribe(result => {
-      this._getProductInfo();
-    })
+    this.translate.onLangChange
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(result => {
+        this._getProductInfo();
+      })
     this._getAndSetProductState();
     this._getAndSetBasketState();
   }
@@ -91,33 +100,39 @@ export class ProductDetailComponent implements OnInit {
   }
 
   private _getAndSetProductState() {
-    this.store.select('shop').subscribe(res => {
-      this.product = res.product;
-      if (this.product) {
-        this._getDefaultTotalPrice();
-      }
-    })
+    this.store.select('shop')
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(res => {
+        this.product = res.product;
+        if (this.product) {
+          this._getDefaultTotalPrice();
+        }
+      })
   }
 
   private _getAndSetBasketState() {
-    this.store.select('basket').subscribe(res => {
-      this.basket = res.basket;
-    })
+    this.store.select('basket')
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(res => {
+        this.basket = res.basket;
+      })
   }
 
   private _setSelectBasketState() {
     let key = this._getBasketKeyAndAttrs(this.attrOptions).key;
-    this.store.select('basket').subscribe(res => {
-      if (res.basket) {
-        let index = res.basket.basketItems.findIndex(i => i.id === key);
-        if (index !== -1) {
-          this.cartQuantity = res.basket.basketItems[index].quantity;
+    this.store.select('basket')
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(res => {
+        if (res.basket) {
+          let index = res.basket.basketItems.findIndex(i => i.id === key);
+          if (index !== -1) {
+            this.cartQuantity = res.basket.basketItems[index].quantity;
+          }
+          else {
+            this.cartQuantity = 0;
+          }
         }
-        else {
-          this.cartQuantity = 0;
-        }
-      }
-    });
+      });
   }
 
   private _getProductInfo() {

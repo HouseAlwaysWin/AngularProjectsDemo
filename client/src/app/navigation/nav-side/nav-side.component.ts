@@ -43,15 +43,7 @@ export class NavSideComponent implements OnInit, OnDestroy {
   }
 
   getBasket() {
-    // this.basketSub = this.basketService.basket$.subscribe((basket: Basket) => {
 
-    //   this.basketCount = '';
-    //   if (basket) {
-    //     if (basket.basketItems.length > 0) {
-    //       this.basketCount = basket.basketItems.length.toString();
-    //     }
-    //   }
-    // });
     this.basketSub = this.store.select('basket').subscribe(res => {
       if (res.basket) {
         this.basketCount = res.basket.basketItems.length === 0 ? '' : res.basket.basketItems.length.toString();

@@ -25,7 +25,6 @@ export class ShopEffects {
   productList = createEffect(() => this.action$.pipe(
     ofType(ShopActions.GetProductList),
     switchMap((action) => {
-      console.log(action);
       let params = new HttpParams();
 
       if (action.categoryId) {

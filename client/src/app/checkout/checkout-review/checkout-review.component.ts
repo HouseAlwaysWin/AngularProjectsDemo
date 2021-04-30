@@ -1,8 +1,8 @@
 import { CdkStepper } from '@angular/cdk/stepper';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { BasketService } from 'src/app/basket/basket.service';
 import { IBasket, IBasketItem } from 'src/app/models/basket';
 import { DialogComfirm } from 'src/app/shared/components/dialog-comfirm/dialog-comfirm.component';
@@ -10,20 +10,19 @@ import * as appReducer from '../../store/app.reducer';
 import * as BasketActions from '../../basket/store/basket.actions';
 import { Store } from '@ngrx/store';
 import { IApiResponse } from 'src/app/models/apiResponse';
-import { map } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-checkout-review',
   templateUrl: './checkout-review.component.html',
   styleUrls: ['./checkout-review.component.scss']
 })
-export class CheckoutReviewComponent implements OnInit {
+export class CheckoutReviewComponent implements OnInit, OnDestroy {
   @Input() stepper: MatStepper;
   isComplete: boolean = false;
   isLoading: boolean = false;
-  // basket$: Observable<IBasket>;
-
   basket: IBasket;
+  private _onDestroy = new Subject();
 
   constructor(
     public dialog: MatDialog,
@@ -31,16 +30,21 @@ export class CheckoutReviewComponent implements OnInit {
     private basketService: BasketService
   ) { }
 
+  ngOnDestroy(): void {
+    this._onDestroy.next();
+  }
+
   ngOnInit(): void {
-    // this.basket$ = this.basketService.basket$;
-    this.store.select('basket').subscribe(res => {
-      this.basket = res.basket;
-      this.isLoading = res.loading;
-      if (res.paymentIntentSuccess) {
-        this.stepper.selected.completed = true;
-        this.stepper.next();
-      }
-    })
+    this.store.select('basket')
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(res => {
+        this.basket = res.basket;
+        this.isLoading = res.loading;
+        if (res.paymentIntentSuccess) {
+          this.stepper.selected.completed = true;
+          this.stepper.next();
+        }
+      })
   }
 
 
@@ -52,11 +56,13 @@ export class CheckoutReviewComponent implements OnInit {
   removeBasketItem(item: IBasketItem) {
     const dialogRef = this.dialog.open(DialogComfirm);
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.store.dispatch(BasketActions.RemoveBasketItem(item));
-      }
-    });
+    dialogRef.afterClosed()
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(result => {
+        if (result) {
+          this.store.dispatch(BasketActions.RemoveBasketItem(item));
+        }
+      });
   }
 
 }

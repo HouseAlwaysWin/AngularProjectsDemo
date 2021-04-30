@@ -19,10 +19,13 @@ export class AuthGuard implements CanActivate, CanLoad {
   canLoad(route: Route, segments: UrlSegment[]): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
     return this.accountService.currrentUser.pipe(map(
       user => {
-        //   if (user === null) {
-        //     this.router.navigate(['/home']);
-        //   }
-        return true;
+        console.log(user);
+        if (user) {
+          return true;
+        }
+        this.router.navigate(['/account/login']);
+        return false;
+
       }
     ));
 

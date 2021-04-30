@@ -10,6 +10,10 @@ import { CheckoutService } from '../checkout.service';
 import * as appReducer from '../../store/app.reducer';
 import * as BasketActions from '../../basket/store/basket.actions';
 import { Store } from '@ngrx/store';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogMessage } from 'src/app/shared/components/dialog-message/dialog-message.component';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-checkout-payment',
@@ -37,15 +41,18 @@ export class CheckoutPaymentComponent implements OnInit, OnDestroy, AfterViewIni
 
   constructor(
     // private basketService: BasketService,
+    public dialog: MatDialog,
     private store: Store<appReducer.AppState>,
     public translate: TranslateService,
     private checkoutService: CheckoutService,
     private router: Router) { }
+  private _onDestroy = new Subject;
 
   ngOnDestroy(): void {
     this.cardNumber.destroy();
     this.cardExpiry.destroy();
     this.cardCvc.destroy();
+    this._onDestroy.next();
   }
 
   async ngAfterViewInit(): Promise<void> {
@@ -68,11 +75,19 @@ export class CheckoutPaymentComponent implements OnInit, OnDestroy, AfterViewIni
 
   onChange(event) {
     if (event.error) {
-      this.translate.onLangChange.subscribe(trans => {
-        var stripeErrorMsg = trans.translations['StripeErrorMsg'];
-        this.cardErrors = stripeErrorMsg[event.error.code];
-      });
-      var message = this.translate.instant(`StripeErrorMsg.${event.error.code}`);
+      this.translate.onLangChange
+        .pipe(takeUntil(this._onDestroy))
+        .subscribe(trans => {
+          var stripeErrorMsg =
+            trans.translations['StripeErrorMsg'].hasOwnProperty(event.error.code) ?
+              trans.translations['StripeErrorMsg'][event.error.code] :
+              event.error.message;
+          this.cardErrors = stripeErrorMsg;
+        });
+      var message = this.translate.instant('StripeErrorMsg').hasOwnProperty(event.error.code) ?
+        this.translate.instant(`StripeErrorMsg.${event.error.code}`) :
+        event.error.message;
+
       this.cardErrors = message;
     }
     else {
@@ -93,13 +108,12 @@ export class CheckoutPaymentComponent implements OnInit, OnDestroy, AfterViewIni
 
   async submitOrder() {
     this.isLoading = true;
-    // this.store.select('basket').subscribe(async res => {
 
     const basket = this.basket;
-    console.log(basket);
     try {
       const createOrder = await this.createOrder(basket);
       const paymentResult = await this.confirmPaymentWithStripe(basket);
+      console.log(paymentResult);
       if (paymentResult.paymentIntent) {
         localStorage.removeItem('basket_id');
         this.store.dispatch(BasketActions.DeleteBasket());
@@ -109,12 +123,37 @@ export class CheckoutPaymentComponent implements OnInit, OnDestroy, AfterViewIni
         this.isLoading = false;
         this.router.navigate(['checkout/success'], navigationExtras);
       }
+      else {
+        if (paymentResult.error.code === 'payment_intent_unexpected_state') {
+          localStorage.removeItem('basket_id');
+          this.store.dispatch(BasketActions.DeleteBasket());
+          this.store.dispatch(BasketActions.GetBasket());
+          this.dialog.open(DialogMessage, {
+            data: {
+              message: paymentResult.error.message
+            }
+          });
+          this.router.navigate(['/shop']);
+        }
+        else {
+          this.dialog.open(DialogMessage, {
+            data: {
+              message: paymentResult.error.message
+            }
+          });
+        }
+      }
       this.isLoading = false;
     } catch (error) {
       this.isLoading = false;
+      this.dialog.open(DialogMessage, {
+        data: {
+          message: this.translate.instant('StripeErrorMsg.PayFailed')
+        }
+      });
       console.log(error);
+      console.log(error.error);
     }
-    // })
 
   }
 
@@ -142,9 +181,11 @@ export class CheckoutPaymentComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   ngOnInit(): void {
-    this.store.select('basket').subscribe(async res => {
-      this.basket = res.basket;
-    })
+    this.store.select('basket')
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(async res => {
+        this.basket = res.basket;
+      })
 
   }
 

@@ -1,7 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { TranslateService } from '@ngx-translate/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { AccountService } from 'src/app/account/account.service';
 import { IAddress } from 'src/app/models/address';
 import { IApiResponse } from 'src/app/models/apiResponse';
@@ -11,7 +13,8 @@ import { IApiResponse } from 'src/app/models/apiResponse';
   templateUrl: './checkout-address.component.html',
   styleUrls: ['./checkout-address.component.scss']
 })
-export class CheckoutAddressComponent implements OnInit {
+export class CheckoutAddressComponent implements OnInit, OnDestroy {
+  private _onDestroy = new Subject();
   @Input() checkoutForm: FormGroup;
 
   get addressForm() {
@@ -21,6 +24,9 @@ export class CheckoutAddressComponent implements OnInit {
     public translate: TranslateService,
     private accountService: AccountService
   ) { }
+  ngOnDestroy(): void {
+    this._onDestroy.next();
+  }
 
 
   ngOnInit(): void {
@@ -37,13 +43,15 @@ export class CheckoutAddressComponent implements OnInit {
   }
 
   setUserAddress() {
-    this.accountService.getUserAddress().subscribe((res: IApiResponse<IAddress>) => {
-      if (res.data) {
-        this.checkoutForm.get('addressForm').reset(res.data);
-      }
-    }, error => {
+    this.accountService.getUserAddress()
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe((res: IApiResponse<IAddress>) => {
+        if (res.data) {
+          this.checkoutForm.get('addressForm').reset(res.data);
+        }
+      }, error => {
 
-    });
+      });
   }
 
 }

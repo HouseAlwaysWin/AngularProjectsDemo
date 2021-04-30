@@ -1,5 +1,5 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource, _MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
@@ -8,7 +8,8 @@ import { IBasketItem } from '../models/basket';
 import { IOrder, IOrderItem, OrderListParam } from '../models/order';
 import { OrdersService } from './orders.service';
 import moment from 'moment';
-import { map } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-orders',
@@ -22,7 +23,7 @@ import { map } from 'rxjs/operators';
     ])
   ]
 })
-export class OrdersComponent implements OnInit {
+export class OrdersComponent implements OnInit, OnDestroy {
   displayedColumns = [
     'no', 'totalPrice', 'deliveryMethod', 'orderStatus', 'orderDate', 'detail'
   ];
@@ -31,11 +32,15 @@ export class OrdersComponent implements OnInit {
   orderList: IOrder[] = [];
   expandedElement: IBasketItem[] | null;
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  private _onDestroy = new Subject();
 
   constructor(
     private router: Router,
     private ordersService: OrdersService,
     private cdr: ChangeDetectorRef) { }
+  ngOnDestroy(): void {
+    this._onDestroy.next();
+  }
 
   ngOnInit(): void {
     this.getOrderList();
@@ -46,14 +51,12 @@ export class OrdersComponent implements OnInit {
       .pipe(
         map((orders: IOrder[]) => {
           orders.forEach(o => {
-            var twZone = o.orderDate;
-            console.log(twZone);
             o.orderDate = moment.utc(o.orderDate + "-08:00").format('YYYY-MM-DD hh:mm:ss a');
-            console.log
           });
           return orders;
         }),
       )
+      .pipe(takeUntil(this._onDestroy))
       .subscribe((orderList: IOrder[]) => {
         this.orderList = orderList;
         this.pageItems = new MatTableDataSource<IOrder>(orderList);
@@ -62,9 +65,6 @@ export class OrdersComponent implements OnInit {
       })
   }
   goDetail(item: IOrder) {
-    console.log(item);
-    // this.ordersService.orderDetailState.next(item);
-    // this.router.navigate(['/orders/detail']);
     this.router.navigate([`/orders/${item.id}`]);
   }
 

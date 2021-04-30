@@ -1,9 +1,10 @@
-<mat-dialog-content>
+<mat-dialog-content class="content">
+  <mat-icon>warning</mat-icon>
   <h2>{{ data.message }}</h2>
 </mat-dialog-content>
 <mat-dialog-actions align="center">
   <button mat-raised-button
-    color="primary"
-    [mat-dialog-close]="true"
-    cdkFocusInitial>{{ 'Dialog.Confirm'  | translate}}</button>
+          color="primary"
+          [mat-dialog-close]="true"
+          cdkFocusInitial>{{ 'Dialog.Confirm'  | translate}}</button>
 </mat-dialog-actions>

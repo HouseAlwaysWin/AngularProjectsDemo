@@ -1,3 +1,11 @@
+@import "../../../../styles.scss";
+
 mat-dialog-content {
+  width: 400px;
+  text-align: center;
+}
+
+mat-icon {
+  @include mat-icon-size(30px);
   color: red;
 }

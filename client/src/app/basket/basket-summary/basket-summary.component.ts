@@ -1,19 +1,21 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { IBasket, IBasketItem } from 'src/app/models/basket';
 import { BasketService } from '../basket.service';
 import * as appReducer from '../../store/app.reducer';
 import * as BasketActions from '../store/basket.actions';
 import { Store } from '@ngrx/store';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-basket-summary',
   templateUrl: './basket-summary.component.html',
   styleUrls: ['./basket-summary.component.scss']
 })
-export class BasketSummaryComponent implements OnInit {
+export class BasketSummaryComponent implements OnInit, OnDestroy {
+  private _onDestroy = new Subject();
   @Input() showQuantityAdj: boolean = true;
   @Input() hiddenRemove: boolean = false;
   pageItems: MatTableDataSource<IBasketItem>;
@@ -32,15 +34,20 @@ export class BasketSummaryComponent implements OnInit {
     private store: Store<appReducer.AppState>
   ) {
   }
+  ngOnDestroy(): void {
+    this._onDestroy.next();
+  }
 
   ngOnInit(): void {
-    this.store.select('basket').subscribe(res => {
-      if (res.basket) {
-        this.pageItems = new MatTableDataSource<IBasketItem>(res.basket.basketItems);
-        this.cdr.detectChanges();
-        this.pageItems.paginator = this.paginator;
-      }
-    })
+    this.store.select('basket')
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(res => {
+        if (res.basket) {
+          this.pageItems = new MatTableDataSource<IBasketItem>(res.basket.basketItems);
+          this.cdr.detectChanges();
+          this.pageItems.paginator = this.paginator;
+        }
+      })
 
   }
 
