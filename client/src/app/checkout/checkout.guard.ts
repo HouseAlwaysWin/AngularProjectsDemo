@@ -19,16 +19,21 @@ export class CheckoutGuard implements CanLoad, OnInit {
 
   }
   canLoad(route: Route, segments: UrlSegment[]): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
+    console.log(route);
+    console.log(segments);
     this.store.dispatch(BasketActions.GetBasket());
     return this.store.select('basket').pipe(
       map(res => {
         let count = res.basket ? res.basket.basketItems.length : 0;
-        console.log(count);
-        if (count === 0) {
-          this.router.navigate(['/shop']);
+        if (route.canActivate) {
+          if (count === 0) {
+            this.router.navigate(['/shop']);
+            return false;
+          }
+          return true
+        } else {
           return false;
         }
-        return true
       })
     )
   }

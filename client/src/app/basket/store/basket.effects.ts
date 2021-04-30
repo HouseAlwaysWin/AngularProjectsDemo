@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { map, switchMap, tap, withLatestFrom } from "rxjs/operators";
+import { catchError, map, switchMap, tap, withLatestFrom } from "rxjs/operators";
 import { IApiResponse } from "src/app/models/apiResponse";
 import { Basket, BasketItem, IBasket, IBasketItem } from "src/app/models/basket";
 import { environment } from "src/environments/environment";
@@ -9,6 +9,7 @@ import { BasketService } from "../basket.service";
 import * as BasketActions from '../store/basket.actions';
 import * as appReducer from '../../store/app.reducer'
 import { Store } from "@ngrx/store";
+import { of } from "rxjs";
 
 @Injectable()
 export class BasketEffects {
@@ -33,7 +34,11 @@ export class BasketEffects {
           .pipe(
             map((res: IApiResponse<IBasket>) => {
               return BasketActions.UpdateBasketSuccess({ basket: res.data });
-            }));
+            }),
+            catchError(error => {
+              return of(BasketActions.FailedAction({ error }));
+            })
+          );
       })
     ))
 
@@ -54,6 +59,9 @@ export class BasketEffects {
           .pipe(
             map((res: IApiResponse<IBasket>) => {
               return BasketActions.UpdateBasketSuccess({ basket: res.data });
+            }),
+            catchError(error => {
+              return of(BasketActions.FailedAction({ error }));
             })
           )
       })
@@ -73,6 +81,9 @@ export class BasketEffects {
               localStorage.removeItem('basket_id');
             }
             return BasketActions.DeleteBasket();
+          }),
+          catchError(error => {
+            return of(BasketActions.FailedAction({ error }));
           })
         );
       })
@@ -85,11 +96,15 @@ export class BasketEffects {
       ofType(BasketActions.CreatePaymentIntent),
       withLatestFrom(this.store.select('basket')),
       switchMap(([action, state]) => {
-        return this.http.post(`${this.baseUrl}payments/${state.basket.id}`, {}).pipe(
-          map((res: IApiResponse<IBasket>) => {
-            return BasketActions.CreatePaymentIntentSuccess(res.data)
-          })
-        );
+        return this.http.post(`${this.baseUrl}payments/${state.basket.id}`, {})
+          .pipe(
+            map((res: IApiResponse<IBasket>) => {
+              return BasketActions.CreatePaymentIntentSuccess(res.data)
+            }),
+            catchError(error => {
+              return of(BasketActions.FailedAction({ error }));
+            })
+          );
       })
     ))
 

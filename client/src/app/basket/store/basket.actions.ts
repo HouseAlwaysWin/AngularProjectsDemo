@@ -28,6 +28,7 @@ export const INCREMENTITEMQUANTITY = '[Basket] Increment item quantity';
 export const DECREMENTITEMQUANTITY = '[Basket] Decrement item quantity';
 export const DELETEBASKET = '[Basket] Delete Local Basket';
 export const CREATEPAYMENTINTENT = '[Basket] Create paymentintent';
+export const FAILEDACTION = '[Basket] Failed Action';
 
 export const GetBasket = createAction(GETBASKET);
 export const GetBasketItemById = createAction(GETBASKETITEM, props<{ id: string }>());
@@ -40,3 +41,5 @@ export const IncrementItemQuantity = createAction(INCREMENTITEMQUANTITY, props<I
 export const DecrementItemQuantity = createAction(DECREMENTITEMQUANTITY, props<IBasketItem>());
 export const DeleteBasket = createAction(DELETEBASKET);
 export const CreatePaymentIntent = createAction(CREATEPAYMENTINTENT);
+export const FailedAction = createAction(FAILEDACTION, props<{ error: any }>());
+

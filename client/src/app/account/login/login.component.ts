@@ -54,12 +54,13 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
+
     this.accountService.login(this.loginForm.value)
       .pipe(takeUntil(this._onDestroy))
       .subscribe(res => {
         console.log(res);
         if (res.isSuccessed) {
-          if (!this.returnUrl) {
+          if (this.returnUrl) {
             this.router.navigateByUrl(this.returnUrl);
           } else {
             this.router.navigateByUrl('/home');

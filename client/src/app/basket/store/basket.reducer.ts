@@ -46,7 +46,8 @@ export const basektReducer = createReducer(
     return ({
       ...state,
       basket: action.basket,
-      basketTotal: { shipping, total, subtotal }
+      basketTotal: { shipping, total, subtotal },
+      loading: false
     })
   }),
 
@@ -175,9 +176,14 @@ export const basektReducer = createReducer(
       ...state,
       loading: true
     })
+  }),
 
+  on(BasketActions.FailedAction, (state, action) => {
+    return ({
+      ...state,
+      loading: false
+    })
   })
-
 
 )
 

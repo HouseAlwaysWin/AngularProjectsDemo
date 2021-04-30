@@ -18,7 +18,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class AccountService {
   baseUrl = environment.apiUrl;
   currrentUser = new ReplaySubject<IUser>();
-  // currentUser$ = this.currrentUser.asObservable();
+  currentUser$ = this.currrentUser.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -71,7 +71,7 @@ export class AccountService {
   logout() {
     localStorage.removeItem('token');
     this.currrentUser.next(null);
-    this.router.navigateByUrl('account/login');
+    this.router.navigateByUrl('/shop');
   }
 
   getUserAddress() {

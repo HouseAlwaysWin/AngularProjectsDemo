@@ -1,7 +1,7 @@
 [
     {
         "Id": 1,
-        "Name": "Bitchip",
+        "Name": "Type1",
         "HasChild": true,
         "Level": 0,
         "ParentId": 0,
@@ -9,7 +9,7 @@
     },
     {
         "Id": 2,
-        "Name": "Giacopelo",
+        "Name": "Type2",
         "HasChild": false,
         "Level": 1,
         "ParentId": 1,
@@ -17,7 +17,7 @@
     },
     {
         "Id": 3,
-        "Name": "Bytecard",
+        "Name": "Type3",
         "HasChild": false,
         "Level": 1,
         "ParentId": 1,
@@ -25,7 +25,7 @@
     },
     {
         "Id": 4,
-        "Name": "Andalax",
+        "Name": "Type4",
         "HasChild": true,
         "Level": 0,
         "ParentId": 0,
@@ -33,7 +33,7 @@
     },
     {
         "Id": 5,
-        "Name": "Konklab",
+        "Name": "Type5",
         "HasChild": false,
         "Level": 1,
         "ParentId": 4,
@@ -41,7 +41,7 @@
     },
     {
         "Id": 6,
-        "Name": "Polo",
+        "Name": "Type6",
         "HasChild": false,
         "Level": 1,
         "ParentId": 4,
@@ -49,7 +49,7 @@
     },
     {
         "Id": 7,
-        "Name": "Voltsillam",
+        "Name": "Type7",
         "HasChild": true,
         "Level": 0,
         "ParentId": 0,
@@ -57,7 +57,7 @@
     },
     {
         "Id": 8,
-        "Name": "Flowdesk",
+        "Name": "Type8",
         "HasChild": false,
         "Level": 1,
         "ParentId": 7,
@@ -65,7 +65,7 @@
     },
     {
         "Id": 9,
-        "Name": "Asoka",
+        "Name": "Type9",
         "HasChild": false,
         "Level": 1,
         "ParentId": 7,
@@ -73,7 +73,7 @@
     },
     {
         "Id": 10,
-        "Name": "Cardify",
+        "Name": "Type10",
         "HasChild": false,
         "Level": 1,
         "ParentId": 7,
