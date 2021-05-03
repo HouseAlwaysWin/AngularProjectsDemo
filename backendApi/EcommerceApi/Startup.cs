@@ -1,3 +1,5 @@
+using System.Diagnostics;
+using System.IO;
 using System.Text;
 using System.Collections.Generic;
 using EcommerceApi.Core.Entities.Identity;
@@ -25,6 +27,8 @@ using StackExchange.Redis;
 using Microsoft.AspNetCore.Http;
 using EcommerceApi.Core.Data.Services.Interfaces;
 using EcommerceApi.Core.Services.Repositories;
+using Microsoft.Extensions.FileProviders;
+using System;
 
 namespace EcommerceApi
 {
@@ -42,15 +46,105 @@ namespace EcommerceApi
         {
             services.AddAutoMapper(typeof(AutomapperProfiles));
             services.AddControllers();
-            services.AddDbContext<ECIdentityDbContext>(x =>
-                x.UseSqlServer(_config.GetConnectionString("IdentityConnection")));
+            // services.AddDbContext<ECIdentityDbContext>(x =>
+            //     // x.UseSqlServer(_config.GetConnectionString("IdentityConnection")));
+            //        x.UseNpgsql(_config.GetConnectionString("IdentityConnection")));
             
-            services.AddDbContext<StoreContext>(x => 
-                x.UseSqlServer(_config.GetConnectionString("DefaultConnection")));
-            
+            // services.AddDbContext<StoreContext>(x => 
+            //     // x.UseSqlServer(_config.GetConnectionString("DefaultConnection")));
+            //     x.UseNpgsql(_config.GetConnectionString("DefaultConnection")));
+
+           services.AddDbContext<ECIdentityDbContext>(options =>
+            {
+                var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+                string connStr;
+
+                // Depending on if in development or production, use either Heroku-provided
+                // connection string, or development connection string from env var.
+                if (env == "Development")
+                {
+                    // Use connection string from file.
+                    connStr = _config.GetConnectionString("IdentityConnection");
+                }
+                else
+                {
+                    // Use connection string provided at runtime by Heroku.
+                    var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+                    // Parse connection URL to connection string for Npgsql
+                    connUrl = connUrl.Replace("postgres://", string.Empty);
+                    var pgUserPass = connUrl.Split("@")[0];
+                    var pgHostPortDb = connUrl.Split("@")[1];
+                    var pgHostPort = pgHostPortDb.Split("/")[0];
+                    var pgDb = pgHostPortDb.Split("/")[1];
+                    var pgUser = pgUserPass.Split(":")[0];
+                    var pgPass = pgUserPass.Split(":")[1];
+                    var pgHost = pgHostPort.Split(":")[0];
+                    var pgPort = pgHostPort.Split(":")[1];
+
+                    connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};SSL Mode=Require;TrustServerCertificate=True";
+                }
+
+                // Whether the connection string came from the local development configuration file
+                // or from the environment variable from Heroku, use it to set up your DbContext.
+                options.UseNpgsql(connStr);
+            }); 
+
+            services.AddDbContext<StoreContext>(options =>
+            {
+                var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+                string connStr;
+
+                // Depending on if in development or production, use either Heroku-provided
+                // connection string, or development connection string from env var.
+                if (env == "Development")
+                {
+                    // Use connection string from file.
+                    connStr = _config.GetConnectionString("DefaultConnection");
+                }
+                else
+                {
+                    // Use connection string provided at runtime by Heroku.
+                    var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+                    // Parse connection URL to connection string for Npgsql
+                    connUrl = connUrl.Replace("postgres://", string.Empty);
+                    var pgUserPass = connUrl.Split("@")[0];
+                    var pgHostPortDb = connUrl.Split("@")[1];
+                    var pgHostPort = pgHostPortDb.Split("/")[0];
+                    var pgDb = pgHostPortDb.Split("/")[1];
+                    var pgUser = pgUserPass.Split(":")[0];
+                    var pgPass = pgUserPass.Split(":")[1];
+                    var pgHost = pgHostPort.Split(":")[0];
+                    var pgPort = pgHostPort.Split(":")[1];
+
+                    connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};SSL Mode=Require;TrustServerCertificate=True";
+                }
+
+                // Whether the connection string came from the local development configuration file
+                // or from the environment variable from Heroku, use it to set up your DbContext.
+                options.UseNpgsql(connStr);
+            });
+
+                    
             services.AddSingleton<IConnectionMultiplexer>(r =>{
+                var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+                string redisString = string.Empty;
+                if (env == "Development")
+                {
+                    redisString = _config.GetConnectionString("Redis");
+                }else{
+                    var tokens = Environment.GetEnvironmentVariable("REDIS_URL");
+                    Debug.Write(tokens);
+                    // redisString = tokens;
+                    var tokensParam = tokens.Replace("redis://", string.Empty).Split(':','@');
+                    redisString = $"{tokensParam[3]}:{tokensParam[4]},password={tokensParam[2]}";
+                }
+
                 var redisConfig = ConfigurationOptions.Parse(
-                    _config.GetConnectionString("Redis")
+                    redisString
                 ,true);
                 return ConnectionMultiplexer.Connect(redisConfig);
             });
@@ -146,6 +240,13 @@ namespace EcommerceApi
 
             app.UseRouting();
             app.UseStaticFiles();
+            app.UseStaticFiles(
+                new StaticFileOptions{
+                    FileProvider = new PhysicalFileProvider(
+                        Path.Combine(Directory.GetCurrentDirectory(),"wwwroot")
+                    ),
+                    RequestPath = "/content"
+            });
 
             app.UseCors("CorsPolicy");
 
@@ -161,6 +262,7 @@ namespace EcommerceApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapFallbackToController("Index","Fallback");
             });
         }
     }

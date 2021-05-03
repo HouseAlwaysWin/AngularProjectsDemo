@@ -1,23 +1,66 @@
-version: "3.8"
 services:
-  db:
-    build:
-      context: .
-      dockerfile: Dockerfile.mssql
-    # image: "mcr.microsoft.com/mssql/server"
-    container_name: db
+  redis:
+    image: redis:latest
     ports:
-      - "1500:1433"
+      - 6379:6379
+    command:  ["redis-server","--appendonly"]
+    # volumes:
+    #   - redis-data:/data
+  redis-commander:
+    image: rediscommander/redis-commander:latest
     environment:
-      SA_PASSWORD: "Your_password123"
-      ACCEPT_EULA: "Y"
-    deploy:
-      resources:
-        limits:
-          cpus: "0.1"
-          memory: 1500M
-        reservations:
-          memory: 1000M
+      - REDIS_HOSTS=local:redis:6379
+      - HTTP_USER=root
+      - HTTP_PASSWORD=secret
+    ports:
+      - 8081:8081
+    depends_on:
+      - redis
+  
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: secret
+      POSTGRES_USER: appuser
+    ports:
+      - 5432:5432
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+
+
+
+
+
+
+
+
+
+# version: "3.8"
+# services:
+#   db:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile.mssql
+#     # image: "mcr.microsoft.com/mssql/server"
+#     container_name: db
+#     ports:
+#       - "1500:1433"
+#     environment:
+#       SA_PASSWORD: "Your_password123"
+#       ACCEPT_EULA: "Y"
+#     deploy:
+#       resources:
+#         limits:
+#           cpus: "0.1"
+#           memory: 1500M
+#         reservations:
+#           memory: 1000M
   # api:
   #   build:
   #     context: .
@@ -45,28 +88,28 @@ services:
   #         memory: 400M
   #       reservations:
   #         memory: 200M
-  redis:
-    container_name: cache
-    image: "redis:alpine"
+  # redis:
+  #   container_name: cache
+  #   image: "redis:alpine"
 
-    command: redis-server --requirepass 111111
+  #   command: redis-server --requirepass 111111
 
-    ports:
-      - "6379:6379"
+  #   ports:
+  #     - "6379:6379"
 
-    volumes:
-      - D:/Users/redis/redis-data:/var/lib/redis
-      - D:/Users/redis/redis.conf:/usr/local/etc/redis/redis.conf
+  #   volumes:
+  #     - D:/Users/redis/redis-data:/var/lib/redis
+  #     - D:/Users/redis/redis.conf:/usr/local/etc/redis/redis.conf
 
-    environment:
-      - REDIS_REPLICATION_MODE/master
-    deploy:
-      resources:
-        limits:
-          cpus: "0.1"
-          memory: 400M
-        reservations:
-          memory: 200M
+  #   environment:
+  #     - REDIS_REPLICATION_MODE/master
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: "0.1"
+  #         memory: 400M
+  #       reservations:
+  #         memory: 200M
   # client:
   #   container_name: client
   #   build:
