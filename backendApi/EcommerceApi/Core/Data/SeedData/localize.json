@@ -3310,5 +3310,197 @@
         "PropertyValue": "Size",
         "LanguageId": 1,
         "TableId": 2
+    },
+    {
+        "Id": 415,
+        "EntityType": "DeliveryMethod",
+        "PropertyKey": "ShortName",
+        "PropertyValue": "Delivery1",
+        "LanguageId": 1,
+        "TableId": 1
+    },
+    {
+        "Id": 416,
+        "EntityType": "DeliveryMethod",
+        "PropertyKey": "ShortName",
+        "PropertyValue": "Delivery2",
+        "LanguageId": 1,
+        "TableId": 2
+    },
+    {
+        "Id": 417,
+        "EntityType": "DeliveryMethod",
+        "PropertyKey": "ShortName",
+        "PropertyValue": "Delivery3",
+        "LanguageId": 1,
+        "TableId": 3
+    },
+    {
+        "Id": 418,
+        "EntityType": "DeliveryMethod",
+        "PropertyKey": "ShortName",
+        "PropertyValue": "Delivery4",
+        "LanguageId": 1,
+        "TableId": 4
+    },
+    {
+        "Id": 419,
+        "EntityType": "DeliveryMethod",
+        "PropertyKey": "ShortName",
+        "PropertyValue": "配送方式1",
+        "LanguageId": 2,
+        "TableId": 1
+    },
+    {
+        "Id": 420,
+        "EntityType": "DeliveryMethod",
+        "PropertyKey": "ShortName",
+        "PropertyValue": "配送方式2",
+        "LanguageId": 2,
+        "TableId": 2
+    },
+    {
+        "Id": 421,
+        "EntityType": "DeliveryMethod",
+        "PropertyKey": "ShortName",
+        "PropertyValue": "配送方式3",
+        "LanguageId": 2,
+        "TableId": 3
+    },
+    {
+        "Id": 422,
+        "EntityType": "DeliveryMethod",
+        "PropertyKey": "ShortName",
+        "PropertyValue": "配送方式4",
+        "LanguageId": 2,
+        "TableId": 4
+    },
+    {
+        "Id": 423,
+        "EntityType": "DeliveryMethod",
+        "PropertyKey": "Description",
+        "PropertyValue": "Free! You get what you pay for",
+        "LanguageId": 1,
+        "TableId": 1
+    },
+    {
+        "Id": 424,
+        "EntityType": "DeliveryMethod",
+        "PropertyKey": "Description",
+        "PropertyValue": "Get it within 5 days",
+        "LanguageId": 1,
+        "TableId": 2
+    },
+    {
+        "Id": 425,
+        "EntityType": "DeliveryMethod",
+        "PropertyKey": "Description",
+        "PropertyValue": "Slower but cheap",
+        "LanguageId": 1,
+        "TableId": 3
+    },
+    {
+        "Id": 426,
+        "EntityType": "DeliveryMethod",
+        "PropertyKey": "Description",
+        "PropertyValue": "Fastest delivery time",
+        "LanguageId": 1,
+        "TableId": 4
+    },
+    {
+        "Id": 427,
+        "EntityType": "DeliveryMethod",
+        "PropertyKey": "Description",
+        "PropertyValue": "免費",
+        "LanguageId": 2,
+        "TableId": 1
+    },
+    {
+        "Id": 428,
+        "EntityType": "DeliveryMethod",
+        "PropertyKey": "Description",
+        "PropertyValue": "至少五天",
+        "LanguageId": 2,
+        "TableId": 2
+    },
+    {
+        "Id": 429,
+        "EntityType": "DeliveryMethod",
+        "PropertyKey": "Description",
+        "PropertyValue": "寄送時間慢但是便宜",
+        "LanguageId": 2,
+        "TableId": 3
+    },
+    {
+        "Id": 430,
+        "EntityType": "DeliveryMethod",
+        "PropertyKey": "Description",
+        "PropertyValue": "最快時間到達",
+        "LanguageId": 2,
+        "TableId": 4
+    },
+    {
+        "Id": 431,
+        "EntityType": "DeliveryMethod",
+        "PropertyKey": "DeliveryTime",
+        "PropertyValue": "1-2 Weeks",
+        "LanguageId": 1,
+        "TableId": 1
+    },
+    {
+        "Id": 432,
+        "EntityType": "DeliveryMethod",
+        "PropertyKey": "DeliveryTime",
+        "PropertyValue": "2-5 Days",
+        "LanguageId": 1,
+        "TableId": 2
+    },
+    {
+        "Id": 433,
+        "EntityType": "DeliveryMethod",
+        "PropertyKey": "DeliveryTime",
+        "PropertyValue": "5-10 Days",
+        "LanguageId": 1,
+        "TableId": 3
+    },
+    {
+        "Id": 434,
+        "EntityType": "DeliveryMethod",
+        "PropertyKey": "DeliveryTime",
+        "PropertyValue": "1-2 Days",
+        "LanguageId": 1,
+        "TableId": 4
+    },
+    {
+        "Id": 435,
+        "EntityType": "DeliveryMethod",
+        "PropertyKey": "DeliveryTime",
+        "PropertyValue": "1-2 禮拜",
+        "LanguageId": 2,
+        "TableId": 1
+    },
+    {
+        "Id": 436,
+        "EntityType": "DeliveryMethod",
+        "PropertyKey": "DeliveryTime",
+        "PropertyValue": "2-5 天",
+        "LanguageId": 2,
+        "TableId": 2
+    },
+    {
+        "Id": 437,
+        "EntityType": "DeliveryMethod",
+        "PropertyKey": "DeliveryTime",
+        "PropertyValue": "5-10 天",
+        "LanguageId": 1,
+        "TableId": 3
+    },
+    {
+        "Id": 438,
+        "EntityType": "DeliveryMethod",
+        "PropertyKey": "DeliveryTime",
+        "PropertyValue": "1-2 天",
+        "LanguageId": 1,
+        "TableId": 4
     }
 ]

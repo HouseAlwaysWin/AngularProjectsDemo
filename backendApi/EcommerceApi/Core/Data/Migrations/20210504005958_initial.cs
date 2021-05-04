@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace EcommerceApi.Core.Data.Migrations
 {
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,15 +12,14 @@ namespace EcommerceApi.Core.Data.Migrations
                 name: "DeliveryMethods",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CreatedDate = table.Column<DateTimeOffset>(nullable: false),
-                    ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
-                    ShortName = table.Column<string>(nullable: true),
-                    DeliveryTime = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
+                    ShortName = table.Column<string>(type: "text", nullable: true),
+                    DeliveryTime = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    LangCode = table.Column<string>(nullable: true)
+                    CreatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    ModifiedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -31,14 +30,14 @@ namespace EcommerceApi.Core.Data.Migrations
                 name: "Language",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CreatedDate = table.Column<DateTimeOffset>(nullable: false),
-                    ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
-                    LangCulture = table.Column<string>(nullable: true),
-                    Published = table.Column<bool>(nullable: false),
-                    SeqNo = table.Column<int>(nullable: false)
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    LangCulture = table.Column<string>(type: "text", nullable: true),
+                    Published = table.Column<bool>(type: "boolean", nullable: false),
+                    SeqNo = table.Column<int>(type: "integer", nullable: false),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    ModifiedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -49,16 +48,16 @@ namespace EcommerceApi.Core.Data.Migrations
                 name: "OrderAddresses",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CreatedDate = table.Column<DateTimeOffset>(nullable: false),
-                    ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
-                    FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true),
-                    Street = table.Column<string>(nullable: true),
-                    City = table.Column<string>(nullable: true),
-                    State = table.Column<string>(nullable: true),
-                    ZipCode = table.Column<string>(nullable: true)
+                    FirstName = table.Column<string>(type: "text", nullable: true),
+                    LastName = table.Column<string>(type: "text", nullable: true),
+                    Street = table.Column<string>(type: "text", nullable: true),
+                    City = table.Column<string>(type: "text", nullable: true),
+                    State = table.Column<string>(type: "text", nullable: true),
+                    ZipCode = table.Column<string>(type: "text", nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    ModifiedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -69,15 +68,15 @@ namespace EcommerceApi.Core.Data.Migrations
                 name: "Pictures",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CreatedDate = table.Column<DateTimeOffset>(nullable: false),
-                    ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
-                    MimeType = table.Column<string>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
-                    UrlPath = table.Column<string>(nullable: true),
-                    AltAttribute = table.Column<string>(maxLength: 100, nullable: true),
-                    TitleAttribute = table.Column<string>(maxLength: 100, nullable: true)
+                    MimeType = table.Column<string>(type: "text", nullable: true),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    UrlPath = table.Column<string>(type: "text", nullable: true),
+                    AltAttribute = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    TitleAttribute = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    ModifiedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -88,11 +87,11 @@ namespace EcommerceApi.Core.Data.Migrations
                 name: "ProductAttributes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CreatedDate = table.Column<DateTimeOffset>(nullable: false),
-                    ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
-                    Name = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    ModifiedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -103,15 +102,15 @@ namespace EcommerceApi.Core.Data.Migrations
                 name: "ProductCategories",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CreatedDate = table.Column<DateTimeOffset>(nullable: false, defaultValueSql: "GETDATE()"),
-                    ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
-                    Name = table.Column<string>(maxLength: 100, nullable: true),
-                    Level = table.Column<int>(nullable: false),
-                    ParentId = table.Column<int>(nullable: true),
-                    HasChild = table.Column<bool>(nullable: false),
-                    SeqNo = table.Column<int>(nullable: false)
+                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    Level = table.Column<int>(type: "integer", nullable: false),
+                    ParentId = table.Column<int>(type: "integer", nullable: true),
+                    HasChild = table.Column<bool>(type: "boolean", nullable: false),
+                    SeqNo = table.Column<int>(type: "integer", nullable: false),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    ModifiedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -122,15 +121,15 @@ namespace EcommerceApi.Core.Data.Migrations
                 name: "Localized",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CreatedDate = table.Column<DateTimeOffset>(nullable: false),
-                    ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
-                    EntityType = table.Column<string>(nullable: true),
-                    PropertyKey = table.Column<string>(nullable: true),
-                    PropertyValue = table.Column<string>(nullable: true),
-                    LanguageId = table.Column<int>(nullable: false),
-                    TableId = table.Column<int>(nullable: false)
+                    EntityType = table.Column<string>(type: "text", nullable: true),
+                    PropertyKey = table.Column<string>(type: "text", nullable: true),
+                    PropertyValue = table.Column<string>(type: "text", nullable: true),
+                    LanguageId = table.Column<int>(type: "integer", nullable: false),
+                    TableId = table.Column<int>(type: "integer", nullable: false),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    ModifiedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -147,18 +146,18 @@ namespace EcommerceApi.Core.Data.Migrations
                 name: "Orders",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CreatedDate = table.Column<DateTimeOffset>(nullable: false, defaultValueSql: "GETDATE()"),
-                    ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
-                    BuyerName = table.Column<string>(nullable: true),
-                    BuyerEmail = table.Column<string>(nullable: true),
+                    BuyerName = table.Column<string>(type: "text", nullable: true),
+                    BuyerEmail = table.Column<string>(type: "text", nullable: true),
                     TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    OrderDate = table.Column<DateTimeOffset>(nullable: false),
-                    OrderAddressId = table.Column<int>(nullable: false),
-                    DeliveryMethodId = table.Column<int>(nullable: false),
-                    OrderStatus = table.Column<string>(nullable: false),
-                    PaymentIntentId = table.Column<string>(nullable: true)
+                    OrderDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    OrderAddressId = table.Column<int>(type: "integer", nullable: false),
+                    DeliveryMethodId = table.Column<int>(type: "integer", nullable: false),
+                    OrderStatus = table.Column<string>(type: "text", nullable: false),
+                    PaymentIntentId = table.Column<string>(type: "text", nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    ModifiedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -181,14 +180,14 @@ namespace EcommerceApi.Core.Data.Migrations
                 name: "ProductAttributeValues",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CreatedDate = table.Column<DateTimeOffset>(nullable: false),
-                    ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(type: "text", nullable: true),
                     PriceAdjustment = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    SeqIndex = table.Column<int>(nullable: false),
-                    ProductAttributeId = table.Column<int>(nullable: false)
+                    SeqIndex = table.Column<int>(type: "integer", nullable: false),
+                    ProductAttributeId = table.Column<int>(type: "integer", nullable: false),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    ModifiedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -205,16 +204,16 @@ namespace EcommerceApi.Core.Data.Migrations
                 name: "Products",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CreatedDate = table.Column<DateTimeOffset>(nullable: false, defaultValueSql: "GETDATE()"),
-                    ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
-                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Description = table.Column<string>(maxLength: 500, nullable: false),
-                    Published = table.Column<bool>(nullable: false),
-                    Deleted = table.Column<bool>(nullable: false),
-                    ProductCategoryId = table.Column<int>(nullable: false)
+                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
+                    Published = table.Column<bool>(type: "boolean", nullable: false),
+                    Deleted = table.Column<bool>(type: "boolean", nullable: false),
+                    ProductCategoryId = table.Column<int>(type: "integer", nullable: false),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    ModifiedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -231,17 +230,17 @@ namespace EcommerceApi.Core.Data.Migrations
                 name: "OrderItems",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CreatedDate = table.Column<DateTimeOffset>(nullable: false, defaultValueSql: "GETDATE()"),
-                    ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    ImgUrl = table.Column<string>(nullable: true),
-                    ProductCategoryName = table.Column<string>(nullable: true),
-                    Quantity = table.Column<int>(nullable: false),
-                    OrderId = table.Column<int>(nullable: true)
+                    ImgUrl = table.Column<string>(type: "text", nullable: true),
+                    ProductCategoryName = table.Column<string>(type: "text", nullable: true),
+                    Quantity = table.Column<int>(type: "integer", nullable: false),
+                    OrderId = table.Column<int>(type: "integer", nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    ModifiedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -258,13 +257,13 @@ namespace EcommerceApi.Core.Data.Migrations
                 name: "Product_Pictures",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CreatedDate = table.Column<DateTimeOffset>(nullable: false),
-                    ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
-                    ProductId = table.Column<int>(nullable: false),
-                    PictureId = table.Column<int>(nullable: false),
-                    SeqNo = table.Column<int>(nullable: false)
+                    ProductId = table.Column<int>(type: "integer", nullable: false),
+                    PictureId = table.Column<int>(type: "integer", nullable: false),
+                    SeqNo = table.Column<int>(type: "integer", nullable: false),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    ModifiedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -287,12 +286,12 @@ namespace EcommerceApi.Core.Data.Migrations
                 name: "Product_ProductAttributes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CreatedDate = table.Column<DateTimeOffset>(nullable: false),
-                    ModifiedDate = table.Column<DateTimeOffset>(nullable: true),
-                    ProductId = table.Column<int>(nullable: false),
-                    ProductAttributeId = table.Column<int>(nullable: false)
+                    ProductId = table.Column<int>(type: "integer", nullable: false),
+                    ProductAttributeId = table.Column<int>(type: "integer", nullable: false),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    ModifiedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {

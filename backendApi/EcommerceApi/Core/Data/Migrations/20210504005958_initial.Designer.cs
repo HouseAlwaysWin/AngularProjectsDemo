@@ -10,23 +10,23 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EcommerceApi.Core.Data.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    [Migration("20210503035415_Initial")]
-    partial class Initial
+    [Migration("20210504005958_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
-                .HasAnnotation("ProductVersion", "3.1.0")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+                .UseIdentityByDefaultColumns()
+                .HasAnnotation("Relational:MaxIdentifierLength", 63)
+                .HasAnnotation("ProductVersion", "5.0.2");
 
             modelBuilder.Entity("EcommerceApi.Core.Models.Entities.DeliveryMethod", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .UseIdentityByDefaultColumn();
 
                     b.Property<DateTimeOffset>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -35,9 +35,6 @@ namespace EcommerceApi.Core.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<string>("LangCode")
                         .HasColumnType("text");
 
                     b.Property<DateTimeOffset?>("ModifiedDate")
@@ -59,7 +56,7 @@ namespace EcommerceApi.Core.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .UseIdentityByDefaultColumn();
 
                     b.Property<DateTimeOffset>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -89,7 +86,7 @@ namespace EcommerceApi.Core.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .UseIdentityByDefaultColumn();
 
                     b.Property<DateTimeOffset>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -124,7 +121,7 @@ namespace EcommerceApi.Core.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .UseIdentityByDefaultColumn();
 
                     b.Property<string>("BuyerEmail")
                         .HasColumnType("text");
@@ -133,9 +130,7 @@ namespace EcommerceApi.Core.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTimeOffset>("CreatedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("DeliveryMethodId")
                         .HasColumnType("integer");
@@ -173,7 +168,7 @@ namespace EcommerceApi.Core.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .UseIdentityByDefaultColumn();
 
                     b.Property<string>("City")
                         .HasColumnType("text");
@@ -209,12 +204,10 @@ namespace EcommerceApi.Core.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .UseIdentityByDefaultColumn();
 
                     b.Property<DateTimeOffset>("CreatedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
@@ -252,11 +245,11 @@ namespace EcommerceApi.Core.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .UseIdentityByDefaultColumn();
 
                     b.Property<string>("AltAttribute")
-                        .HasColumnType("character varying(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTimeOffset>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -271,8 +264,8 @@ namespace EcommerceApi.Core.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("TitleAttribute")
-                        .HasColumnType("character varying(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("UrlPath")
                         .HasColumnType("text");
@@ -287,28 +280,26 @@ namespace EcommerceApi.Core.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .UseIdentityByDefaultColumn();
 
                     b.Property<DateTimeOffset>("CreatedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("Deleted")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("character varying(500)")
-                        .HasMaxLength(500);
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<DateTimeOffset?>("ModifiedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("character varying(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -331,7 +322,7 @@ namespace EcommerceApi.Core.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .UseIdentityByDefaultColumn();
 
                     b.Property<DateTimeOffset>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -352,7 +343,7 @@ namespace EcommerceApi.Core.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .UseIdentityByDefaultColumn();
 
                     b.Property<DateTimeOffset>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -384,12 +375,10 @@ namespace EcommerceApi.Core.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .UseIdentityByDefaultColumn();
 
                     b.Property<DateTimeOffset>("CreatedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("HasChild")
                         .HasColumnType("boolean");
@@ -401,8 +390,8 @@ namespace EcommerceApi.Core.Data.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
-                        .HasColumnType("character varying(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<int?>("ParentId")
                         .HasColumnType("integer");
@@ -420,7 +409,7 @@ namespace EcommerceApi.Core.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .UseIdentityByDefaultColumn();
 
                     b.Property<DateTimeOffset>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -451,7 +440,7 @@ namespace EcommerceApi.Core.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .UseIdentityByDefaultColumn();
 
                     b.Property<DateTimeOffset>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -481,6 +470,8 @@ namespace EcommerceApi.Core.Data.Migrations
                         .HasForeignKey("LanguageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Language");
                 });
 
             modelBuilder.Entity("EcommerceApi.Core.Models.Entities.Order", b =>
@@ -496,6 +487,10 @@ namespace EcommerceApi.Core.Data.Migrations
                         .HasForeignKey("OrderAddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("DeliveryMethod");
+
+                    b.Navigation("OrderAddress");
                 });
 
             modelBuilder.Entity("EcommerceApi.Core.Models.Entities.OrderItem", b =>
@@ -513,6 +508,8 @@ namespace EcommerceApi.Core.Data.Migrations
                         .HasForeignKey("ProductCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ProductCategory");
                 });
 
             modelBuilder.Entity("EcommerceApi.Core.Models.Entities.ProductAttributeValue", b =>
@@ -522,6 +519,8 @@ namespace EcommerceApi.Core.Data.Migrations
                         .HasForeignKey("ProductAttributeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ProductAttribute");
                 });
 
             modelBuilder.Entity("EcommerceApi.Core.Models.Entities.Product_Picture", b =>
@@ -537,6 +536,10 @@ namespace EcommerceApi.Core.Data.Migrations
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Picture");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("EcommerceApi.Core.Models.Entities.Product_ProductAttribute", b =>
@@ -552,6 +555,34 @@ namespace EcommerceApi.Core.Data.Migrations
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("ProductAttribute");
+                });
+
+            modelBuilder.Entity("EcommerceApi.Core.Models.Entities.Order", b =>
+                {
+                    b.Navigation("OrderItems");
+                });
+
+            modelBuilder.Entity("EcommerceApi.Core.Models.Entities.Picture", b =>
+                {
+                    b.Navigation("ProductPictureMap");
+                });
+
+            modelBuilder.Entity("EcommerceApi.Core.Models.Entities.Product", b =>
+                {
+                    b.Navigation("ProductAttributeMap");
+
+                    b.Navigation("ProductPictureMap");
+                });
+
+            modelBuilder.Entity("EcommerceApi.Core.Models.Entities.ProductAttribute", b =>
+                {
+                    b.Navigation("ProductAttributeMap");
+
+                    b.Navigation("ProductAttributeValue");
                 });
 #pragma warning restore 612, 618
         }

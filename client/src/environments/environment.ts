@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:5100/api/',
+  apiUrl: 'http://localhost:5000/api/',
   firebaseConfig: {
     apiKey: "AIzaSyBpisra8VJh78OHZWFyf9nslbCAUV2lUeY",
     authDomain: "ecommerce-demo-ff8b1.firebaseapp.com",

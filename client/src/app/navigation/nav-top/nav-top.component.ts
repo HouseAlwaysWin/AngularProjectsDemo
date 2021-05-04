@@ -10,8 +10,8 @@ import { IUser } from 'src/app/models/user';
 import { ShopService } from 'src/app/shop/shop.service';
 import * as appReducer from '../../store/app.reducer';
 import * as ShopActions from '../../shop/store/shop.actions';
-import * as BasketActions from '../../basket/store/basket.actions';
-import { takeUntil } from 'rxjs/operators';
+import * as CheckoutActions from '../../checkout/store/checkout.actions';
+import { CheckoutService } from 'src/app/checkout/checkout.service';
 
 @Component({
   selector: 'app-nav-top',
@@ -34,6 +34,7 @@ export class NavTopComponent implements OnInit, OnDestroy {
     public translate: TranslateService,
     private basketService: BasketService,
     private accountService: AccountService,
+    private checkoutService: CheckoutService,
     private shopService: ShopService,
     private store: Store<appReducer.AppState>
   ) {
@@ -80,6 +81,7 @@ export class NavTopComponent implements OnInit, OnDestroy {
     this.translate.use(lang);
     this.store.dispatch(ShopActions.GetCategories());
     this.store.dispatch(ShopActions.GetProductList(new ShopParams()));
+    this.store.dispatch(CheckoutActions.GetDeliveryMethod());
     // this.shopService.getCategories().subscribe();
     // this.shopService.getProducts(new ShopParams()).subscribe();
   }

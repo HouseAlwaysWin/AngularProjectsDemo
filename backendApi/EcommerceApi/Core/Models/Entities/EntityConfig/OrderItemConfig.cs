@@ -11,7 +11,7 @@ namespace EcommerceApi.Core.Models.Entities.EntityConfig
 
             builder.HasKey(o => o.Id);
             builder.Property(o => o.CreatedDate)
-                .HasDefaultValueSql("GETDATE()")
+                // .HasDefaultValueSql("GETDATE()")
                 .IsRequired();
             
             builder.Property(o => o.Price)

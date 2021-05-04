@@ -1,9 +1,8 @@
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace EcommerceApi.Core.Models.Entities
+namespace EcommerceApi.Core.Models.Dtos
 {
-    public class DeliveryMethod:BaseEntity
+    public class DeliveryMethodDto
     {
+        public int Id { get; set; }
         public string ShortName { get; set; }
         public string DeliveryTime { get; set; }
         public string Description { get; set; }

@@ -16,6 +16,7 @@ namespace EcommerceApi.Core.Data.Identity
         {
             base.OnModelCreating(builder);
 
+
             builder.Entity<ECUser>()
                 .HasOne(u => u.Address)
                 .WithOne(u => u.ECUser)
@@ -24,7 +25,7 @@ namespace EcommerceApi.Core.Data.Identity
             builder.Entity<ECUser>(a => {
                 a.ToTable("ECUsers");
                 a.Property(a=>a.CreatedDate)
-                    .HasDefaultValueSql("GETDATE()")
+                    // .HasDefaultValueSql("GETDATE()")
                     .IsRequired();
             });
 
@@ -32,7 +33,7 @@ namespace EcommerceApi.Core.Data.Identity
             {
                 b.ToTable("ECRoles");
                 b.Property(b=>b.CreatedDate)
-                    .HasDefaultValueSql("GETDATE()")
+                    // .HasDefaultValueSql("GETDATE()")
                     .IsRequired();
 
 

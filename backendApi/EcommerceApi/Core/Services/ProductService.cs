@@ -10,6 +10,7 @@ using EcommerceApi.Core.Models.Entities;
 using EcommerceApi.Core.Services.Interfaces;
 using EcommerceApi.Helpers;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace EcommerceApi.Core.Services
 {
@@ -22,19 +23,19 @@ namespace EcommerceApi.Core.Services
         private readonly IEntityRepository<ProductCategory> _categoryEntityRepo;
         private readonly IEntityRepository<Picture> _pictureEntityRepo;
         private readonly IEntityRepository<Product_Picture> _pictureMapRepo;
-        private readonly IRedisCachedService _redisCachedService;
+        private readonly ICachedService _cachedService;
         private readonly ILocalizedService _localizedService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
+        private readonly ILogger _logger;
 
-        private string _productAllQueryKey { get { return $"{GetCurrentLang()}_all__productAllQuery_key"; } }
-        private string _productKey { get { return $"{GetCurrentLang()}_all_products_key"; } }
-        private string _productAttrKey { get { return $"{GetCurrentLang()}_all_productAttr_key"; } }
-        private string _productAttrValueKey { get { return $"{GetCurrentLang()}_all_productAttrValue_key"; } }
-        private string _productAttrMapKey { get { return $"{GetCurrentLang()}_all_productAttrMap_key"; } }
-        private string _categoryKey { get { return $"{GetCurrentLang()}_all_categories_key"; } }
-        private string _pictureKey { get { return $"{GetCurrentLang()}_all_pictures_key"; } }
-        private string _pictureMapKey { get { return $"{GetCurrentLang()}_all_pictureMap_key"; } }
+        private string _productAllQueryKey { get { return $"{_cachedService.GetCurrentLang()}_all__productAllQuery_key"; } }
+        private string _productKey { get { return $"{_cachedService.GetCurrentLang()}_all_products_key"; } }
+        private string _productAttrKey { get { return $"{_cachedService.GetCurrentLang()}_all_productAttr_key"; } }
+        private string _productAttrValueKey { get { return $"{_cachedService.GetCurrentLang()}_all_productAttrValue_key"; } }
+        private string _productAttrMapKey { get { return $"{_cachedService.GetCurrentLang()}_all_productAttrMap_key"; } }
+        private string _categoryKey { get { return $"{_cachedService.GetCurrentLang()}_all_categories_key"; } }
+        private string _pictureKey { get { return $"{_cachedService.GetCurrentLang()}_all_pictures_key"; } }
+        private string _pictureMapKey { get { return $"{_cachedService.GetCurrentLang()}_all_pictureMap_key"; } }
 
         public ProductService(
             IEntityRepository<Product> productEntityRepo,
@@ -44,15 +45,14 @@ namespace EcommerceApi.Core.Services
             IEntityRepository<ProductCategory> categoryEntityRepo,
             IEntityRepository<Picture> pictureEntityRepo,
             IEntityRepository<Product_Picture> pictureMapRepo,
-            IRedisCachedService redisCachedService,
+            ICachedService cachedService,
             ILocalizedService localizedService,
-            IHttpContextAccessor httpContextAccessor,
-
+            ILogger<ProductService> logger,
             IMapper mapper)
         {
             this._localizedService = localizedService;
-            this._httpContextAccessor = httpContextAccessor;
             this._mapper = mapper;
+            this._logger = logger;
             this._productEntityRepo = productEntityRepo;
             this._attributeEntityRepo = attributeEntityRepo;
             this._attributeValueEntityRepo = attributeValueEntityRepo;
@@ -60,7 +60,7 @@ namespace EcommerceApi.Core.Services
             this._categoryEntityRepo = categoryEntityRepo;
             this._pictureEntityRepo = pictureEntityRepo;
             this._pictureMapRepo = pictureMapRepo;
-            this._redisCachedService = redisCachedService;
+            this._cachedService = cachedService;
         }
 
         private async Task SetProductsTranslation(List<Product> data)
@@ -109,19 +109,19 @@ namespace EcommerceApi.Core.Services
             return query;
         }
 
-        private string GetCurrentLang()
-        {
-            var currentLang = _httpContextAccessor.HttpContext.Request.Headers["Accept-Language"].FirstOrDefault();
-            if (string.IsNullOrEmpty(currentLang))
-            {
-                currentLang = "en-US";
-            }
-            return currentLang;
-        }
+        // private string GetCurrentLang()
+        // {
+        //     var currentLang = _httpContextAccessor.HttpContext.Request.Headers["Accept-Language"].FirstOrDefault();
+        //     if (string.IsNullOrEmpty(currentLang))
+        //     {
+        //         currentLang = "en-US";
+        //     }
+        //     return currentLang;
+        // }
 
         private async Task<List<ProductDto>> GetProductsDtoCachedAsync()
         {
-            return await _redisCachedService.GetAndSetAsync<List<ProductDto>>(_productKey, async () =>
+            return await _cachedService.GetAndSetAsync<List<ProductDto>>(_productKey, async () =>
            {
                var data = await _productEntityRepo.GetAllAsync(null, true, _productKey);
                foreach (var item in data)
@@ -136,7 +136,7 @@ namespace EcommerceApi.Core.Services
 
         private async Task<List<ProductAttributeDto>> GetProductAttributeDtosCachedAsync()
         {
-            return await _redisCachedService.GetAndSetAsync<List<ProductAttributeDto>>(_productAttrKey, async () =>
+            return await _cachedService.GetAndSetAsync<List<ProductAttributeDto>>(_productAttrKey, async () =>
              {
                  var data = await _attributeEntityRepo.GetAllAsync(null, true, _productAttrKey);
                  foreach (var item in data)
@@ -150,7 +150,7 @@ namespace EcommerceApi.Core.Services
 
         private async Task<List<ProductAttributeValueDto>> GetProductAttributeValueDtosCachedAsync()
         {
-            return await _redisCachedService.GetAndSetAsync<List<ProductAttributeValueDto>>(_productAttrValueKey, async () =>
+            return await _cachedService.GetAndSetAsync<List<ProductAttributeValueDto>>(_productAttrValueKey, async () =>
            {
                var data = await _attributeValueEntityRepo.GetAllAsync(null, true, _productAttrValueKey);
                foreach (var item in data)
@@ -164,7 +164,7 @@ namespace EcommerceApi.Core.Services
 
         private async Task<List<Product_ProductAttributeDto>> GetProductAttributeMapDtosCachedAsync()
         {
-            return await _redisCachedService.GetAndSetAsync<List<Product_ProductAttributeDto>>(_productAttrMapKey, async () =>
+            return await _cachedService.GetAndSetAsync<List<Product_ProductAttributeDto>>(_productAttrMapKey, async () =>
             {
                 var data = await _attributeMapEntityRepo.GetAllAsync(null, true, _productAttrMapKey);
                 var dtos = _mapper.Map<List<Product_ProductAttribute>, List<Product_ProductAttributeDto>>(data.ToList());
@@ -174,7 +174,7 @@ namespace EcommerceApi.Core.Services
 
         private async Task<List<ProductCategoryDto>> GetProductCategoryDtosCachedAsync()
         {
-            return await _redisCachedService.GetAndSetAsync<List<ProductCategoryDto>>(_categoryKey, async () =>
+            return await _cachedService.GetAndSetAsync<List<ProductCategoryDto>>(_categoryKey, async () =>
             {
                 var data = await _categoryEntityRepo.GetAllAsync(null, true, _categoryKey);
                 foreach (var item in data)
@@ -188,7 +188,7 @@ namespace EcommerceApi.Core.Services
 
         private async Task<List<PictureDto>> GetPictureDtosCachedAsync()
         {
-            return await _redisCachedService.GetAndSetAsync<List<PictureDto>>(_pictureKey, async () =>
+            return await _cachedService.GetAndSetAsync<List<PictureDto>>(_pictureKey, async () =>
             {
                 var data = await _pictureEntityRepo.GetAllAsync(null, true, _pictureKey);
                 var dtos = _mapper.Map<List<Picture>, List<PictureDto>>(data.ToList());
@@ -198,7 +198,7 @@ namespace EcommerceApi.Core.Services
 
         private async Task<List<Product_PictureDto>> GetProductPictureDtosMapCachedAsync()
         {
-            return await _redisCachedService.GetAndSetAsync<List<Product_PictureDto>>(_pictureMapKey, async () =>
+            return await _cachedService.GetAndSetAsync<List<Product_PictureDto>>(_pictureMapKey, async () =>
             {
                 var data = await _pictureMapRepo.GetAllAsync(null, true, _pictureMapKey);
                 var dtos = _mapper.Map<List<Product_Picture>, List<Product_PictureDto>>(data.ToList());
@@ -208,8 +208,8 @@ namespace EcommerceApi.Core.Services
 
         private async Task<List<ProductDto>> GetAllProductRelatedCachedDataAsync()
         {
-
-            var productQuerys = await _redisCachedService.GetAndSetAsync<List<ProductDto>>(_productAllQueryKey, async () =>
+            try{
+            var productQuerys = await _cachedService.GetAndSetAsync<List<ProductDto>>(_productAllQueryKey, async () =>
             {
                 var products = await GetProductsDtoCachedAsync();
                 var productAttrs = await GetProductAttributeDtosCachedAsync();
@@ -259,6 +259,10 @@ namespace EcommerceApi.Core.Services
             });
 
             return productQuerys;
+            }catch(Exception ex){
+                _logger.LogError(null,ex,ex.Message);
+            } 
+            return null;
         }
 
         public async Task<PagedList<ProductDto>> GetProductsPagedAsync(ProductListParam param, bool useCached = false)
@@ -269,12 +273,14 @@ namespace EcommerceApi.Core.Services
             if (useCached)
             {
                 var cachedData = await GetAllProductRelatedCachedDataAsync();
-                paramTemp = _mapper.Map<ProductListParam, ProductLikeParam>(param);
-                var query = GetFilterQuery(cachedData, paramTemp);
-                var totalCount = query.Count();
-                var pagedData = query.Skip(param.PageIndex * param.PageSize).Take(param.PageSize).ToList(); ;
-                productsDto = new PagedList<ProductDto>(pagedData, totalCount);
-                return productsDto;
+                if(cachedData!=null){
+                    paramTemp = _mapper.Map<ProductListParam, ProductLikeParam>(param);
+                    var query = GetFilterQuery(cachedData, paramTemp);
+                    var totalCount = query.Count();
+                    var pagedData = query.Skip(param.PageIndex * param.PageSize).Take(param.PageSize).ToList(); ;
+                    productsDto = new PagedList<ProductDto>(pagedData, totalCount);
+                    return productsDto;
+                }
             }
 
             paramTemp = _mapper.Map<ProductListParam, ProductLikeParam>(param);

@@ -26,9 +26,9 @@ namespace EcommerceApi.Core.Data
                         {
                            context.ProductCategories.Add(item);
                         }
-                        await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.ProductCategories ON");
+                        // await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.ProductCategories ON");
                         await context.SaveChangesAsync();
-                        await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.ProductCategories OFF");
+                        // await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.ProductCategories OFF");
                     }
 
 
@@ -42,9 +42,9 @@ namespace EcommerceApi.Core.Data
                         {
                            context.Products.Add(item);
                         }
-                        await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.Products ON");
+                        // await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.Products ON");
                         await context.SaveChangesAsync();
-                        await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.Products OFF");
+                        // await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.Products OFF");
                     }
 
                 
@@ -58,9 +58,9 @@ namespace EcommerceApi.Core.Data
                         {
                            context.DeliveryMethods.Add(item);
                         }
-                        await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.DeliveryMethods ON");
+                        // await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.DeliveryMethods ON");
                         await context.SaveChangesAsync();
-                        await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.DeliveryMethods OFF");
+                        // await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.DeliveryMethods OFF");
                     }
 
                     if(!context.Language.Any()){
@@ -73,9 +73,9 @@ namespace EcommerceApi.Core.Data
                         {
                            context.Language.Add(item);
                         }
-                        await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.Language ON");
+                        // await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.Language ON");
                         await context.SaveChangesAsync();
-                        await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.Language OFF");
+                        // await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.Language OFF");
                     }
 
 
@@ -89,9 +89,9 @@ namespace EcommerceApi.Core.Data
                         {
                            context.Localized.Add(item);
                         }
-                        await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.Localized ON");
+                        // await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.Localized ON");
                         await context.SaveChangesAsync();
-                        await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.Localized OFF");
+                        // await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.Localized OFF");
                     }
 
                      if(!context.Pictures.Any()){
@@ -104,9 +104,9 @@ namespace EcommerceApi.Core.Data
                         {
                            context.Pictures.Add(item);
                         }
-                        await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.Pictures ON");
+                        // await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.Pictures ON");
                         await context.SaveChangesAsync();
-                        await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.Pictures OFF");
+                        // await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.Pictures OFF");
                     }
 
 
@@ -120,9 +120,9 @@ namespace EcommerceApi.Core.Data
                         {
                            context.ProductAttributes.Add(item);
                         }
-                        await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.ProductAttributes ON");
+                        // await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.ProductAttributes ON");
                         await context.SaveChangesAsync();
-                        await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.ProductAttributes OFF");
+                        // await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.ProductAttributes OFF");
                     }
 
 
@@ -136,9 +136,9 @@ namespace EcommerceApi.Core.Data
                         {
                            context.ProductAttributeValues.Add(item);
                         }
-                        await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.ProductAttributeValues ON");
+                        // await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.ProductAttributeValues ON");
                         await context.SaveChangesAsync();
-                        await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.ProductAttributeValues OFF");
+                        // await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.ProductAttributeValues OFF");
                     }
 
               
@@ -157,9 +157,9 @@ namespace EcommerceApi.Core.Data
                         {
                            context.Product_Pictures.Add(item);
                         }
-                        await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.Product_Pictures ON");
+                        // await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.Product_Pictures ON");
                         await context.SaveChangesAsync();
-                        await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.Product_Pictures OFF");
+                        // await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.Product_Pictures OFF");
                     }
 
 
@@ -174,9 +174,9 @@ namespace EcommerceApi.Core.Data
                         {
                            context.Product_ProductAttributes.Add(item);
                         }
-                        await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.Product_ProductAttributes ON");
+                        // await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.Product_ProductAttributes ON");
                         await context.SaveChangesAsync();
-                        await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.Product_ProductAttributes OFF");
+                        // await context.Database.ExecuteSqlRawAsync ("SET IDENTITY_INSERT dbo.Product_ProductAttributes OFF");
                     }
 
                     await trans.CommitAsync();

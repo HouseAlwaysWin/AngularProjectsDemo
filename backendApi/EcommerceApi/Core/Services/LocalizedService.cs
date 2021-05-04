@@ -16,10 +16,10 @@ namespace EcommerceApi.Core.Services
     {
         private readonly IEntityRepository<Localized> _localizedEntityRepo;
         private readonly ILanguageService _languageService;
-        private readonly IRedisCachedService _redisCachedService;
+        private readonly ICachedService _redisCachedService;
 
         public LocalizedService(
-            IRedisCachedService redisCachedService,
+            ICachedService redisCachedService,
             IEntityRepository<Localized> localizedEntityRepo,
             ILanguageService languageService
         )

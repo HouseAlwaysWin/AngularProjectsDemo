@@ -59,7 +59,7 @@ namespace EcommerceApi.Controllers
         }
 
         [HttpGet("deliveryMethods")]
-        public async Task<ActionResult<IReadOnlyList<DeliveryMethod>>> GetDeliveryMethods(){
+        public async Task<ActionResult<List<DeliveryMethodDto>>> GetDeliveryMethods(){
             var result = await _orderService.GetDeliveryMethodAsync();
             return BaseApiOk(result);
         } 

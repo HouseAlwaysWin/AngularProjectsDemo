@@ -50,7 +50,6 @@ export const categoryReduct = createReducer(
 export const shopReducer = createReducer(
   initialState,
 
-  // productlist output
   on(ShopActions.GetProductListSuccess, (state, action) => ({
     ...state,
     products: action.products,
@@ -58,14 +57,12 @@ export const shopReducer = createReducer(
     loading: false
   })),
 
-  // productlist output
   on(ShopActions.GetAutocompleteSuccess, (state, action) => ({
     ...state,
     searchOptions: action.searchOptions,
     loading: false
   })),
 
-  // product ouutput
   on(ShopActions.GetProductByIdSuccess, (state, action) => {
     return ({
       ...state,
@@ -73,34 +70,15 @@ export const shopReducer = createReducer(
     })
   }),
 
-  // categories output
-  // on(ShopActions.GetProductCategoriesSuccess, (state, action) => ({
-  //   ...state,
-  //   productCategories: action.productCategories,
-  //   loading: false
-  // })),
-
-  // product input
   on(ShopActions.GetProductList, (state, action) => ({
     ...state,
     loading: true
   })),
 
-  // // // autocomplete input
-  // on(ShopActions.AutoComplete, (state, action) => ({
-  //   ...state,
-  // })),
-
-  // search products input
   on(ShopActions.Search, (state, action) => ({
     ...state,
     loading: true
   })),
-
-  // on(ShopActions.GetCategories, (state, action) => ({
-  //   ...state,
-  //   loading: true
-  // }))
 
 
 );

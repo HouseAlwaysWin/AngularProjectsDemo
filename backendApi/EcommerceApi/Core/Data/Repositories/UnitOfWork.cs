@@ -38,7 +38,6 @@ namespace EcommerceApi.Core.Data.Repositories
                 }
             }catch(Exception ex){
                 System.Console.WriteLine(ex);
-                throw ex;
             }
 
             return (IEntityRepository<TEntity>) _repositories[type];

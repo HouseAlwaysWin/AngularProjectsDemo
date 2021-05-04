@@ -27,6 +27,7 @@ import { BasketEffects } from './basket/store/basket.effects';
 import { NG_ENTITY_SERVICE_CONFIG } from '@datorama/akita-ng-entity-service';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
+import { CheckoutEffects } from './checkout/store/checkout.effects';
 
 
 @NgModule({
@@ -52,7 +53,7 @@ import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
       }
     }),
     StoreModule.forRoot(appReducer),
-    EffectsModule.forRoot([ShopEffects, BasketEffects]),
+    EffectsModule.forRoot([ShopEffects, BasketEffects, CheckoutEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
     environment.production ? [] : AkitaNgDevtools.forRoot(),
     AkitaNgRouterStoreModule,

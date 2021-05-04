@@ -56,7 +56,8 @@ namespace EcommerceApi.Helpers.Localization {
                 .ForMember(od => od.OrderStatus,o => o.MapFrom<OrderStatusResolver>())
                 .ForMember(o => o.CreatedDate,od => od.MapFrom(od => od.CreatedDate.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss")))
                 .ForMember(o => o.OrderDate,od => od.MapFrom(od => od.OrderDate.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss")));
-            
+
+            CreateMap<DeliveryMethod,DeliveryMethodDto>();
          
 
 

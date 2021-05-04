@@ -152,7 +152,6 @@ export class CheckoutPaymentComponent implements OnInit, OnDestroy, AfterViewIni
         }
       });
       console.log(error);
-      console.log(error.error);
     }
 
   }
@@ -171,6 +170,7 @@ export class CheckoutPaymentComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   private async createOrder(basket: IBasket) {
+    console.log(this.checkoutForm.get('deliveryForm').get('deliveryMethodId').value);
     const orderToCreate: IOrderToCreate =
     {
       basketId: basket.id,

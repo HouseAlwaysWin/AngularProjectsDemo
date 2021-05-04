@@ -18,7 +18,7 @@ namespace EcommerceApi.Core.Models.Entities.EntityConfig
                 .HasForeignKey (p => p.ProductCategoryId);
 
             builder.Property(o => o.CreatedDate)
-                .HasDefaultValueSql("GETDATE()")
+                // .HasDefaultValueSql("GETDATE()")
                 .IsRequired();
         }
     }

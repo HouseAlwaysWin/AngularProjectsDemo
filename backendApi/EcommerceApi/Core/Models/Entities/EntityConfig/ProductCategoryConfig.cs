@@ -9,7 +9,7 @@ namespace EcommerceApi.Core.Models.Entities.EntityConfig
         public void Configure(EntityTypeBuilder<ProductCategory> builder)
         {
             builder.Property(o => o.CreatedDate)
-                .HasDefaultValueSql("GETDATE()")
+                // .HasDefaultValueSql("GETDATE()")
                 .IsRequired();
             builder.Property(o => o.Name)
                 .HasMaxLength(100);

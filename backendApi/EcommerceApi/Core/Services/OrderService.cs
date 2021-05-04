@@ -17,8 +17,14 @@ namespace EcommerceApi.Core.Services
         private readonly IBasketService _basketRepo;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ICachedService _cachedService;
+        private readonly ILocalizedService _localizedService;
+
+          private string _deliveryMethodKey { get { return $"{_cachedService.GetCurrentLang()}_all_deliveryMethod_key"; } }
 
         public OrderService(
+            ILocalizedService localizedService,
+            ICachedService cachedService,
             IBasketService basketRepo,
             IMapper mapper,
             IUnitOfWork unitOfWork)
@@ -26,9 +32,11 @@ namespace EcommerceApi.Core.Services
             this._unitOfWork = unitOfWork;
             this._basketRepo = basketRepo;
             this._mapper = mapper;
+            this._cachedService = cachedService;
+            this._localizedService = localizedService;
         }
 
-        
+       
 
         public async Task<Order> CreateOrderAsync(string buyerEmail,string buyerName, int deliveryMethodId, string baseketId, OrderAddress address)
         {
@@ -77,13 +85,22 @@ namespace EcommerceApi.Core.Services
         return null;
     }
 
-        public async Task<IReadOnlyList<DeliveryMethod>> GetDeliveryMethodAsync()
+        public async Task<List<DeliveryMethodDto>> GetDeliveryMethodAsync()
         {
-            var result = await _unitOfWork.EntityRepository<DeliveryMethod>().GetAllAsync();
-            return result.ToList();
+            return await _cachedService.GetAndSetAsync<List<DeliveryMethodDto>>(_deliveryMethodKey, async () =>
+            {
+               var result = await _unitOfWork.EntityRepository<DeliveryMethod>().GetAllAsync();
+               foreach (var item in result)
+                {
+                    item.ShortName = await this._localizedService.GetLocalizedAsync(item,d => d.ShortName);
+                    item.Description = await this._localizedService.GetLocalizedAsync(item,d => d.Description);
+                    item.DeliveryTime = await this._localizedService.GetLocalizedAsync(item,d => d.DeliveryTime);
+                }
+                return _mapper.Map<List<DeliveryMethod>,List<DeliveryMethodDto>>(result.OrderBy(d => d.Id).ToList());
+           });
         }
 
-        public async Task<IReadOnlyList<Order>> GetOrderByEmailListSpec(GetOrderParam param)
+        public async Task<List<Order>> GetOrderByEmailListSpec(GetOrderParam param)
         {
             // var spec = new GetOrderByEmailListSpec(param);
             var result = await _unitOfWork.EntityRepository<Order>()
@@ -98,7 +115,7 @@ namespace EcommerceApi.Core.Services
             return result;
         }
 
-        public async Task<IReadOnlyList<Order>> GetOrdersForUserAsync(string buyerEmail)
+        public async Task<List<Order>> GetOrdersForUserAsync(string buyerEmail)
         {
             // var spec = new GetOrderWithItemsSpec(buyerEmail);
             var result = await _unitOfWork.EntityRepository<Order>().GetAllAsync(q => OrderSpec.GetOrderWithItemsSpec(q,buyerEmail));

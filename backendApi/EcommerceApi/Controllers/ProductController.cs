@@ -12,6 +12,7 @@ using EcommerceApi.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace EcommerceApi.Controllers
 {
@@ -20,16 +21,19 @@ namespace EcommerceApi.Controllers
         private readonly IEntityRepository<Product> _entityRepository;
         private readonly IProductService _productService;
         private readonly IMapper _mapper;
+        private readonly IDistributedCache _db;
 
         public ProductController(
             IEntityRepository<Product> entityRepository,
             IProductService productService,
-            IMapper mapper
+            IMapper mapper,
+            IDistributedCache db
         )
         {
             this._entityRepository = entityRepository;
             this._productService = productService;
             this._mapper = mapper;
+            this._db = db;
         }
 
         [HttpGet("autocomplete")]

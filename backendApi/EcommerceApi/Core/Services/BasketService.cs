@@ -14,18 +14,15 @@ namespace EcommerceApi.Core.Services.Repositories
 {
     public class BasketService : IBasketService
     {
-        private readonly IDatabase _database;
-        private readonly IRedisCachedService _redisCachedService;
+        private readonly ICachedService _redisCachedService;
         private readonly IMapper _mapper;
 
         public BasketService(
-            IConnectionMultiplexer redis,
-            IRedisCachedService  redisCachedService,
+            ICachedService  redisCachedService,
             IMapper mapper)
         {
             this._redisCachedService = redisCachedService;
             this._mapper = mapper;
-            this._database = redis.GetDatabase();
         }
 
         public async Task<bool> RemoveBasketAsync(string basketId)

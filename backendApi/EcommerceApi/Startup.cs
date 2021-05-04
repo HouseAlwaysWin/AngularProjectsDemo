@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
@@ -19,22 +18,22 @@ using System.Globalization;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
 using EcommerceApi.Core.Data.Identity;
-using AutoMapper;
 using EcommerceApi.Core.Data;
 using EcommerceApi.Core.Data.Repositories;
 using EcommerceApi.Core.Data.Repositories.Interfaces;
-using StackExchange.Redis;
 using Microsoft.AspNetCore.Http;
 using EcommerceApi.Core.Data.Services.Interfaces;
 using EcommerceApi.Core.Services.Repositories;
 using Microsoft.Extensions.FileProviders;
 using System;
+using StackExchange.Redis;
 
 namespace EcommerceApi
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration
+        )
         {
             _config = configuration;
         }
@@ -128,29 +127,39 @@ namespace EcommerceApi
                 options.UseNpgsql(connStr);
             });
 
-                    
-            services.AddSingleton<IConnectionMultiplexer>(r =>{
+
+            // services.AddDistributedMemoryCache(); 
+             services.AddStackExchangeRedisCache(options =>
+            {
+
                 var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
                 string redisString = string.Empty;
+                ConfigurationOptions config = null;
                 if (env == "Development")
                 {
-                    redisString = _config.GetConnectionString("Redis");
-                }else{
-                    var tokens = Environment.GetEnvironmentVariable("REDIS_URL");
-                    Debug.Write(tokens);
-                    // redisString = tokens;
-                    var tokensParam = tokens.Replace("redis://", string.Empty).Split(':','@');
-                    redisString = $"{tokensParam[3]}:{tokensParam[4]},password={tokensParam[2]}";
+                    redisString = _config.GetConnectionString("RedisUrl");
+                    config = ConfigurationOptions.Parse(
+                        redisString ,true);
+
+                }
+                else{
+                    var connUrl = Environment.GetEnvironmentVariable("REDIS_URL");
+                    connUrl = connUrl.Replace("redis://", string.Empty);
+                    var userInfo = connUrl.Split('@')[0];
+                    var host = connUrl.Split('@')[1];
+                    var password = userInfo.Split(':')[1];
+                    var domain = host.Split(':')[0];
+                    var port = host.Split(':')[1];
+                    redisString = $"{domain}:{port},abortConnect=False,password={password}";
+                    config = ConfigurationOptions.Parse(
+                        redisString ,true);
                 }
 
-                var redisConfig = ConfigurationOptions.Parse(
-                    redisString
-                ,true);
-                return ConnectionMultiplexer.Connect(redisConfig);
-            });
+                options.ConfigurationOptions = config;
+            }); 
+
             
             services.AddIdentityCore<ECUser>()
-                // .AddErrorDescriber<LocalizedIdentityErrorDescriber>()
                 .AddEntityFrameworkStores<ECIdentityDbContext>()
                 .AddSignInManager<SignInManager<ECUser>>();
             
@@ -203,13 +212,11 @@ namespace EcommerceApi
                 };
             });
 
-            services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(_config.GetConnectionString("redis")));
             services.AddScoped<ITokenService,TokenService>();
             services.AddScoped<IProductService,ProductService>();
             services.AddScoped<IOrderService,OrderService>();
             services.AddScoped<IPaymentService,PaymentService>();
-            // services.AddScoped(typeof(IGenericRepository<>),(typeof(GenericRepository<>)));
-            services.AddScoped<IRedisCachedService,RedisCachedService>();
+            services.AddScoped<ICachedService,CachedService>();
             services.AddScoped<ILanguageService,LanguageService>();
             services.AddSingleton<IHttpContextAccessor,HttpContextAccessor>();
             services.AddScoped<ILocalizedService,LocalizedService>();

@@ -12,10 +12,10 @@ namespace EcommerceApi.Core.Services
     public class LanguageService : ILanguageService
     {
         private readonly IEntityRepository<Language> _languageEntityRepo;
-        private readonly IRedisCachedService _redisCachedService;
+        private readonly ICachedService _redisCachedService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         public LanguageService(
-            IRedisCachedService redisCachedService,
+            ICachedService redisCachedService,
             IHttpContextAccessor httpContextAccessor,
             IEntityRepository<Language> languageEntityRepo
             )

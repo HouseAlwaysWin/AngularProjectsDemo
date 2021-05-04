@@ -6,6 +6,7 @@ import { IDeliveryMethod } from 'src/app/models/deliveryMethod';
 import { CheckoutService } from '../checkout.service';
 import * as appReducer from '../../store/app.reducer';
 import * as BasketActions from '../../basket/store/basket.actions';
+import * as CheckoutActions from '../../checkout/store/checkout.actions';
 import { Store } from '@ngrx/store';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -32,16 +33,27 @@ export class CheckoutDeliveryComponent implements OnInit, OnDestroy {
 
   getDeliveryMethod() {
 
-    this.checkoutService.getDeliveryMethods()
+    this.store.select('checkout')
       .pipe(takeUntil(this._onDestroy))
-      .subscribe(
-        (dm: IDeliveryMethod[]) => {
-          this.deliveryMethods = dm;
-          if (!this.selectDeliveryMethods) {
-            this.selectDeliveryMethods = dm[0];
-            this.setShippingPrice(this.selectDeliveryMethods);
-          }
-        });
+      .subscribe(res => {
+        this.deliveryMethods = res.deliveryMethods;
+        if (this.deliveryMethods[0]) {
+          this.selectDeliveryMethods = this.deliveryMethods[0];
+          this.setShippingPrice(this.selectDeliveryMethods);
+        }
+      })
+    this.store.dispatch(CheckoutActions.GetDeliveryMethod());
+
+    // this.checkoutService.getDeliveryMethods()
+    //   .pipe(takeUntil(this._onDestroy))
+    //   .subscribe(
+    //     (dm: IDeliveryMethod[]) => {
+    //       this.deliveryMethods = dm;
+    //       if (!this.selectDeliveryMethods) {
+    //         this.selectDeliveryMethods = dm[0];
+    //         this.setShippingPrice(this.selectDeliveryMethods);
+    //       }
+    //     });
   }
 
   setShippingPrice(dm: IDeliveryMethod) {

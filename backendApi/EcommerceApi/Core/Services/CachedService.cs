@@ -6,54 +6,63 @@ using Newtonsoft.Json;
 using StackExchange.Redis;
 using Microsoft.AspNetCore.Http;
 using System.Linq;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace EcommerceApi.Core.Services
 {
-    public class RedisCachedService : IRedisCachedService
+    public class CachedService : ICachedService
     {
 
-        private readonly IDatabase _db;
+        // private readonly IDatabase _db;
         
-        private readonly IConnectionMultiplexer _redis;
+        // private readonly IConnectionMultiplexer _redis;
+        private readonly IDistributedCache _db;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public RedisCachedService(
+        public CachedService(
             IHttpContextAccessor httpContextAccessor,
-            IConnectionMultiplexer redis)
+            // IConnectionMultiplexer redis
+            IDistributedCache db 
+            
+            )
         {
             this._httpContextAccessor = httpContextAccessor;
-            this._redis = redis;
-            this._db = this._redis.GetDatabase();
+            // this._redis = redis;
+            this._db = db;
+            // this._db = this._redis.GetDatabase();
         }
 
 
-        public async Task<T> GetAsync<T>(string key)
+        public async Task<T> GetAsync<T>(string key) where T:class
         {
-            RedisValue data = await _db.StringGetAsync(key);
-            if (!data.IsNullOrEmpty)
+            string data = await _db.GetStringAsync(key);
+
+            if (!string.IsNullOrEmpty(data))
             {
                 return JsonConvert.DeserializeObject<T>(data);
             }
-            return default(T);
+            return null;
         }
 
-        public async Task<bool> SetAsync<T>(string key, T data, TimeSpan? time)
+        public async Task<bool> SetAsync<T>(string key, T data, TimeSpan? time) where T:class
         {
             if (!time.HasValue)
             {
                 time = TimeSpan.FromDays(30);
             }
 
-            var result = await _db.StringSetAsync(
+            var options = new DistributedCacheEntryOptions(){
+                AbsoluteExpirationRelativeToNow = time
+            }; 
+
+            await _db.SetStringAsync(
                   key, JsonConvert.SerializeObject(data),
-                  time
-            );
+                  options);
 
-            return result;
-
+            return true;
         }
 
-        public async Task<T> GetAndSetAsync<T>(string key, T data, TimeSpan? time=null)
+        public async Task<T> GetAndSetAsync<T>(string key, T data, TimeSpan? time=null) where T:class
         {
             var cachedData = await GetAsync<T>(key);
             if (cachedData != null)
@@ -67,7 +76,7 @@ namespace EcommerceApi.Core.Services
             return default(T);
         }
 
-        public async Task<T> GetAndSetAsync<T>(string key, Func<Task<T>> acquire, TimeSpan? time=null)
+        public async Task<T> GetAndSetAsync<T>(string key, Func<Task<T>> acquire, TimeSpan? time=null) where T:class
         {
             var cachedData = await GetAsync<T>(key);
             if (cachedData != null)
@@ -85,7 +94,8 @@ namespace EcommerceApi.Core.Services
 
         public async Task<bool> DeleteAsync(string id)
         {
-            return await _db.KeyDeleteAsync(id);
+             await _db.RemoveAsync(id);
+             return true;
         }
 
 
@@ -105,5 +115,14 @@ namespace EcommerceApi.Core.Services
         }
 
         
+        public string GetCurrentLang()
+        {
+            var currentLang = _httpContextAccessor.HttpContext.Request.Headers["Accept-Language"].FirstOrDefault();
+            if (string.IsNullOrEmpty(currentLang))
+            {
+                currentLang = "en-US";
+            }
+            return currentLang;
+        }
     }
 }

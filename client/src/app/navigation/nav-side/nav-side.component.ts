@@ -10,6 +10,7 @@ import { ShopService } from 'src/app/shop/shop.service';
 import * as appReducer from '../../store/app.reducer';
 import * as ShopActions from '../../shop/store/shop.actions';
 import * as BasketActions from '../../basket/store/basket.actions';
+import * as CheckoutActions from '../../checkout/store/checkout.actions';
 import { Store } from '@ngrx/store';
 
 @Component({
@@ -77,6 +78,7 @@ export class NavSideComponent implements OnInit, OnDestroy {
     // this.shopService.getProducts(new ShopParams()).subscribe();
     this.store.dispatch(ShopActions.GetCategories());
     this.store.dispatch(ShopActions.GetProductList(new ShopParams()));
+    this.store.dispatch(CheckoutActions.GetDeliveryMethod());
   }
 
 }
