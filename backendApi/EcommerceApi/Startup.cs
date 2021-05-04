@@ -43,6 +43,8 @@ namespace EcommerceApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             services.AddAutoMapper(typeof(AutomapperProfiles));
             services.AddControllers();
             // services.AddDbContext<ECIdentityDbContext>(x =>
@@ -55,7 +57,6 @@ namespace EcommerceApi
 
            services.AddDbContext<ECIdentityDbContext>(options =>
             {
-                var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
                 string connStr;
 
@@ -92,7 +93,6 @@ namespace EcommerceApi
 
             services.AddDbContext<StoreContext>(options =>
             {
-                var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
                 string connStr;
 
@@ -132,7 +132,6 @@ namespace EcommerceApi
              services.AddStackExchangeRedisCache(options =>
             {
 
-                var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
                 string redisString = string.Empty;
                 ConfigurationOptions config = null;
                 if (env == "Development")

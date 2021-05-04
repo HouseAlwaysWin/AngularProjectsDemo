@@ -47,7 +47,8 @@ export const basektReducer = createReducer(
       ...state,
       basket: action.basket,
       basketTotal: { shipping, total, subtotal },
-      loading: false
+      loading: false,
+      paymentIntentSuccess: false
     })
   }),
 
@@ -79,7 +80,8 @@ export const basektReducer = createReducer(
     basket.basketItems = addOrUpdateItem(basket.basketItems, newBasketItem, action.quantity);
     return ({
       ...state,
-      basket
+      basket,
+      paymentIntentSuccess: false
     })
 
   }),
@@ -90,7 +92,8 @@ export const basektReducer = createReducer(
     basket.shippingPrice = action.price;
     return ({
       ...state,
-      basket
+      basket,
+      paymentIntentSuccess: false
     })
   }),
 
@@ -101,7 +104,8 @@ export const basektReducer = createReducer(
 
     return ({
       ...state,
-      basket
+      basket,
+      paymentIntentSuccess: false
     })
   }),
 
@@ -134,7 +138,8 @@ export const basektReducer = createReducer(
     return ({
       ...state,
       basket,
-      loading: true
+      loading: true,
+      paymentIntentSuccess: false
     })
 
   }),
