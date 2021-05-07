@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace EcommerceApi.Core.Services
         private readonly IBasketService _basketService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _config;
+        private readonly string  _env;
 
         public PaymentService(
             IBasketService basketService,
@@ -26,10 +28,11 @@ namespace EcommerceApi.Core.Services
             this._basketService = basketService;
             this._unitOfWork = unitOfWork;
             this._config = config;
+            _env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
         }
         public async Task<Basket> CreateOrUpdatePaymentIntent(string basketId)
         {
-            StripeConfiguration.ApiKey = _config["StripeSettings:SecretKey"];
+            StripeConfiguration.ApiKey = (_env =="Development")? _config["StripeSettings:SecretKey"]:Environment.GetEnvironmentVariable("StripeSettings:SecretKey");
 
             var basket = await _basketService.GetBasketAsync(basketId);
 

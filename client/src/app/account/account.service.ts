@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { ILoginForm } from '../models/loginForm';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { IRegisterForm } from '../models/registerForm';
-import { Observable, of, ReplaySubject, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { IApiResponse } from '../models/apiResponse';
 import { IUser } from '../models/user';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { IAddress } from '../models/address';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -17,7 +17,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class AccountService {
   baseUrl = environment.apiUrl;
-  currrentUser = new ReplaySubject<IUser>();
+  currrentUser = new BehaviorSubject<IUser>(null);
   currentUser$ = this.currrentUser.asObservable();
 
   constructor(
@@ -39,6 +39,11 @@ export class AccountService {
           localStorage.setItem('token', res.data.token);
           this.currrentUser.next(res.data);
         }
+      }),
+      catchError(error => {
+        localStorage.removeItem('token');
+        this.currrentUser.next(null);
+        return of(error);
       })
     );
   }

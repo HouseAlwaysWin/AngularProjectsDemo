@@ -44,6 +44,17 @@ namespace EcommerceApi.Core.Services
             return null;
         }
 
+        public T Get<T>(string key) where T:class
+        {
+            string data =  _db.GetString(key);
+
+            if (!string.IsNullOrEmpty(data))
+            {
+                return JsonConvert.DeserializeObject<T>(data);
+            }
+            return null;
+        }
+
         public async Task<bool> SetAsync<T>(string key, T data, TimeSpan? time) where T:class
         {
             if (!time.HasValue)
@@ -56,6 +67,24 @@ namespace EcommerceApi.Core.Services
             }; 
 
             await _db.SetStringAsync(
+                  key, JsonConvert.SerializeObject(data),
+                  options);
+
+            return true;
+        }
+
+        public  bool Set<T>(string key, T data, TimeSpan? time) where T:class
+        {
+            if (!time.HasValue)
+            {
+                time = TimeSpan.FromDays(30);
+            }
+
+            var options = new DistributedCacheEntryOptions(){
+                AbsoluteExpirationRelativeToNow = time
+            }; 
+
+            _db.SetString(
                   key, JsonConvert.SerializeObject(data),
                   options);
 
@@ -89,6 +118,21 @@ namespace EcommerceApi.Core.Services
                 await SetAsync<T>(key, data, time);
             }
 
+            return data;
+        }
+
+        public T GetAndSet<T>(string key, Func<T> acquire, TimeSpan? time=null) where T:class
+        {
+            var cachedData =  Get<T>(key);
+            if (cachedData != null)
+            {
+                return cachedData;
+            }
+            var data =  acquire();
+
+            if(data !=null){
+                Set<T>(key, data, time);
+            }
             return data;
         }
 

@@ -121,6 +121,8 @@ namespace EcommerceApi.Controllers
         }
 
 
+
+        [Authorize]
         [HttpGet("address")]
         public async Task<ActionResult> GetUserAddress(){
             var email = HttpContext.User?.Claims?.FirstOrDefault(x=>x.Type == ClaimTypes.Email)?.Value;
@@ -133,6 +135,7 @@ namespace EcommerceApi.Controllers
 
 
 
+        [Authorize]
         [HttpPut("address")]
         public async Task<ActionResult> UpdateUserAddress(AddressDto address){
             var email = HttpContext.User?.Claims?.FirstOrDefault(x=>x.Type == ClaimTypes.Email)?.Value;

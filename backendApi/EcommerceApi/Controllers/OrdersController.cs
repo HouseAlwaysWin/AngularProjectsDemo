@@ -6,11 +6,13 @@ using AutoMapper;
 using EcommerceApi.Core.Models.Dtos;
 using EcommerceApi.Core.Models.Entities;
 using EcommerceApi.Core.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 
 namespace EcommerceApi.Controllers
 {
+    [Authorize]
     public class OrdersController : BaseApiController
     {
          private readonly IOrderService _orderService;

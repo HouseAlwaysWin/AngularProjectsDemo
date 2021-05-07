@@ -1,3 +1,5 @@
+using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using EcommerceApi.Core.Models.Entities;
@@ -15,6 +17,7 @@ namespace EcommerceApi.Controllers
         private readonly IPaymentService _paymentService;
         private readonly ILogger<IPaymentService> _logger;
         private readonly IConfiguration _config;
+        private readonly string  _env;
 
         // private readonly string WhSecret = "whsec_DPWXxisCfoIq6aXoZrpU9SPhX7Etdk3z";
         public PaymentsController(
@@ -25,6 +28,8 @@ namespace EcommerceApi.Controllers
             this._logger = logger;
             this._config = config;
             this._paymentService = paymentService;
+
+             _env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
         }
 
         [Authorize]
@@ -39,10 +44,16 @@ namespace EcommerceApi.Controllers
         [HttpPost("webhook")]
         public async Task<ActionResult> StripeWebhook(){
             var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
-            var secretKey = _config["StripeSettings:WebhookSecretKey"];
+
+            var secretKey =(_env == "Development") ? _config["StripeSettings:WebhookSecretKey"] : Environment.GetEnvironmentVariable("StripeSettings:WebhookSecretKey");
+
             var stripeEvent = EventUtility.ConstructEvent(json,Request.Headers["Stripe-Signature"],
                 secretKey
             );
+
+            if(stripeEvent ==null){
+                return BaseApiBadRequest("StripeEvent is null");
+            }
 
             PaymentIntent intent;
             Core.Models.Entities.Order order;

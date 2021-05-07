@@ -178,13 +178,16 @@ namespace EcommerceApi
                 options.User.RequireUniqueEmail = true;
             });
 
+
+            var Issuer = (env == "Development") ?_config["Token:Issuer"] : Environment.GetEnvironmentVariable("Token:Issuer");
+            var tokenKey = (env == "Development") ?_config["Token:Key"] : Environment.GetEnvironmentVariable("Token:Key");
             
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>{
                     options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters{
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Token:Key"])),
-                        ValidIssuer = _config["Token:Issuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey)),
+                        ValidIssuer = Issuer,
                         ValidateIssuer = true,
                         ValidateAudience = false
                     };
@@ -215,7 +218,7 @@ namespace EcommerceApi
             services.AddScoped<IProductService,ProductService>();
             services.AddScoped<IOrderService,OrderService>();
             services.AddScoped<IPaymentService,PaymentService>();
-            services.AddScoped<ICachedService,CachedService>();
+            services.AddSingleton<ICachedService,CachedService>();
             services.AddScoped<ILanguageService,LanguageService>();
             services.AddSingleton<IHttpContextAccessor,HttpContextAccessor>();
             services.AddScoped<ILocalizedService,LocalizedService>();

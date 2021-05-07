@@ -47,6 +47,13 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.returnUrl = this.activatedRoute.snapshot.queryParams.returnUrl || '/shop';
+    this.accountService.currentUser$
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(user => {
+        if (user) {
+          this.router.navigate(['/']);
+        }
+      });
     this.validateRegisterForm();
   }
 

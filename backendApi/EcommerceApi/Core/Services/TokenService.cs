@@ -16,11 +16,15 @@ namespace EcommerceApi.Core.Services
 
         private readonly IConfiguration _config;
         private readonly SymmetricSecurityKey _key;
+        private readonly string _env;
         public TokenService(IConfiguration config)
         {
            this._config = config; 
+
+           this._env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+           var key = (_env == "Development") ?_config["Token:Key"] : Environment.GetEnvironmentVariable("Token:Key");
            this._key = new SymmetricSecurityKey(
-               Encoding.UTF8.GetBytes(_config["Token:Key"]));
+               Encoding.UTF8.GetBytes(key));
         }
         public string CreateToken(ECUser user)
         {
@@ -31,18 +35,21 @@ namespace EcommerceApi.Core.Services
 
             var creds = new SigningCredentials(_key,SecurityAlgorithms.HmacSha512Signature);
 
+            var issuer = (_env == "Development") ?_config["Token:Issuer"] : Environment.GetEnvironmentVariable("Token:Issuer");
+
             var tokenDescriptor = new SecurityTokenDescriptor {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddDays(7),
                 SigningCredentials = creds,
-                Issuer = _config["Token:Issuer"]
+                Issuer = issuer
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return tokenHandler.WriteToken(token);
+            var tokenstring= tokenHandler.WriteToken(token);
+            return tokenstring;
         }
     }
 }
