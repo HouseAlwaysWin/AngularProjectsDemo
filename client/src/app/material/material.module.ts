@@ -45,7 +45,7 @@ import { MatTreeModule } from '@angular/material/tree';
     MatRadioModule,
     MatProgressSpinnerModule,
     MatStepperModule,
-    MatTreeModule
+    MatTreeModule,
   ],
   exports: [
     MatToolbarModule,

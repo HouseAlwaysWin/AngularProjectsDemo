@@ -21,6 +21,7 @@ import { CheckoutService } from 'src/app/checkout/checkout.service';
 export class NavTopComponent implements OnInit, OnDestroy {
   @Output() navSideToggle = new EventEmitter();
 
+
   langChange = new ReplaySubject();
   showBar = false;
   basketCount: string = '';
@@ -32,10 +33,7 @@ export class NavTopComponent implements OnInit, OnDestroy {
 
   constructor(
     public translate: TranslateService,
-    private basketService: BasketService,
     private accountService: AccountService,
-    private checkoutService: CheckoutService,
-    private shopService: ShopService,
     private store: Store<appReducer.AppState>
   ) {
   }
@@ -65,7 +63,7 @@ export class NavTopComponent implements OnInit, OnDestroy {
       this.showBar = true;
     });
     this.getBasket();
-
+    // window.addEventListener('scroll', this.scrollEvent, true);
   }
 
   onLogout() {
@@ -75,6 +73,7 @@ export class NavTopComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.accountService.currrentUser.unsubscribe();
     this.basketSub.unsubscribe();
+    // window.removeEventListener('scroll', this.scrollEvent, true);
   }
 
   changeLang(lang: string) {

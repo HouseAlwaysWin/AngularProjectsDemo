@@ -1,7 +1,7 @@
 <mat-sidenav-container>
   <mat-sidenav #navside
-    mode="over"
-    role="navigation">
+               mode="over"
+               role="navigation">
     <app-nav-side (navSideClose)="navside.close()"></app-nav-side>
   </mat-sidenav>
 
@@ -10,5 +10,21 @@
     <main>
       <router-outlet></router-outlet>
     </main>
+
+
   </mat-sidenav-content>
+
 </mat-sidenav-container>
+<!-- <footer class="shop_footer">
+  <div fxLayout="row">
+    <div>
+      <ul class="footer-nav">
+        <li><a href="#">Shop</a></li>
+        <li><a href="#">About us</a></li>
+      </ul>
+    </div>
+  </div>
+  <div fxLayout="row">
+    @Copyright
+  </div>
+</footer> -->

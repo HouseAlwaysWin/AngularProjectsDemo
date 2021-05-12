@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
@@ -49,5 +49,6 @@ export class AppComponent implements OnInit, OnDestroy {
   loadBasket() {
     this.store.dispatch(BasketActions.GetBasket());
   }
+
 
 }

@@ -1,6 +1,6 @@
 import { ArrayDataSource } from '@angular/cdk/collections';
 import { FlatTreeControl, NestedTreeControl } from '@angular/cdk/tree';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { Observable, Subscription } from 'rxjs';
@@ -157,6 +157,12 @@ export class ShopComponent implements OnInit, OnDestroy {
     this.shopParams.pageSize = e.pageSize;
     this.shopParams.pageIndex = e.pageIndex;
     this.getProducts();
+  }
+
+  @HostListener('document:scroll', ['$event'])
+  onScroll(event) {
+    console.log(event);
+    console.log('scroll')
   }
 
 

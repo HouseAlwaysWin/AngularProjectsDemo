@@ -26,11 +26,36 @@
                 class="category-all-btn"
                 (click)="onCategorySelected(0)">{{ 'Shop.All' | translate }}</button>
 
-        <!-- <cdk-tree [dataSource]="(categories$ | async)"
-                  [treeControl]="categoriesTreeControl"> -->
         <cdk-tree [dataSource]="categories"
                   [treeControl]="categoriesTreeControl">
 
+
+          <cdk-nested-tree-node *cdkTreeNodeDef="let node;when: hasChild"
+                                class="tree-node-root"
+                                fxLayout="column"
+                                fxLayoutAlign="start stretch">
+
+            <div fxLayout="row"
+                 fxLayoutAlign="space-between stretch"
+                 [attr.aria-label]="'Toggle ' + node.name"
+                 class="category-root-node"
+                 cdkTreeNodeToggle>
+
+              <p class="category-root-name">
+                {{ node.name }}
+              </p>
+              <mat-icon class="mat-icon-rtl-mirror"
+                        [@rotated]="categoriesTreeControl.isExpanded(node) ? 'end':'start'">
+                chevron_right
+              </mat-icon>
+            </div>
+            <span fadeInOut
+                  [fadeShow]="categoriesTreeControl.isExpanded(node)"
+                  [class.category-tree-invisible]="!categoriesTreeControl.isExpanded(node)">
+              <ng-container cdkTreeNodeOutlet>
+              </ng-container>
+            </span>
+          </cdk-nested-tree-node>
 
           <cdk-nested-tree-node *cdkTreeNodeDef="let node"
                                 class="category-child-node"
@@ -41,28 +66,6 @@
             <div class="category-item">
               {{ node.name }}
             </div>
-          </cdk-nested-tree-node>
-
-          <cdk-nested-tree-node *cdkTreeNodeDef="let node;when: hasChild"
-                                fxLayout="column"
-                                fxLayoutAlign="start stretch">
-
-            <div fxLayout="row"
-                 [attr.aria-label]="'Toggle ' + node.name"
-                 class="category-root-node"
-                 cdkTreeNodeToggle>
-              <mat-icon class="mat-icon-rtl-mirror"
-                        [@rotated]="categoriesTreeControl.isExpanded(node) ? 'end':'start'">
-                chevron_right
-              </mat-icon>
-              {{ node.name }}
-            </div>
-            <span fadeInOut
-                  [fadeShow]="categoriesTreeControl.isExpanded(node)"
-                  [class.category-tree-invisible]="!categoriesTreeControl.isExpanded(node)">
-              <ng-container cdkTreeNodeOutlet>
-              </ng-container>
-            </span>
           </cdk-nested-tree-node>
 
         </cdk-tree>

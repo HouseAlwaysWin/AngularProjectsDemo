@@ -28,7 +28,7 @@ import { NG_ENTITY_SERVICE_CONFIG } from '@datorama/akita-ng-entity-service';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { CheckoutEffects } from './checkout/store/checkout.effects';
-
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @NgModule({
   declarations: [
@@ -57,6 +57,7 @@ import { CheckoutEffects } from './checkout/store/checkout.effects';
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
     environment.production ? [] : AkitaNgDevtools.forRoot(),
     AkitaNgRouterStoreModule,
+    ScrollingModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: I18nInterceptor, multi: true },

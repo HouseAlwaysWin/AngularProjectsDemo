@@ -18,7 +18,13 @@ a:active {
 
 mat-toolbar {
   position: fixed;
+  top: 0;
+  width: 100%;
   z-index: 1;
+}
+
+.hide {
+  display: none;
 }
 
 .login-mat-icon {
