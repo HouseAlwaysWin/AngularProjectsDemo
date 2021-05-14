@@ -1,99 +1,83 @@
-<div fxLayout="column"
-  fxLayoutAlign="center center"
-  *ngIf="product">
+<div *ngIf="product"
+     class="product">
 
-  <div>
+  <div class="product-title">
     <h1>{{ product.name }}</h1>
   </div>
 
-  <div fxLayout.gt-sm="row"
-    fxLayout="column"
-    fxLayoutAlign.gt-sm="center start"
-    fxLayoutAlign="center center">
-    <div class="product-info"
-      fxLayout.gt-sm="column"
-      fxLayout="column"
-      fxLayoutAlign.gt-sm="center start"
-      fxLayoutAlign="center center">
+  <div class="product-info">
+    <div class="product-info-main">
 
-      <img class="product-img"
-        src="{{ product.productPictures[0].urlPath }}"
-        alt="{{ product.productPictures[0].altAttribute}}" />
+      <div class="product-info-main-img">
+        <img src="{{ apiHost }}{{ product.productPictures[0].urlPath }}"
+             alt="{{ product.productPictures[0].altAttribute}}" />
+      </div>
 
-      <p class="product-price">
+      <div class="product-info-main-price">
         <label>{{ 'OrderDetail.Price' | translate }}</label> {{ totalPrice | currency}}
-      </p>
-      <p class="product-description">
+      </div>
+      <div class="product-info-main-description">
         <label>{{ 'OrderDetail.Description' | translate }}:</label> {{ product.description}}
-      </p>
+      </div>
     </div>
 
-    <div class="attr-selected"
-      fxLayout="column">
+    <div class="product-info-options">
       <ng-container *ngFor="let attr of product.productAttributes;let i = index">
-        <div class="attr-area">
-          <p class="attr-title">{{ attr.name }}</p>
-          <mat-radio-group (change)="onOptionChange($event,attr.name)"
-            [value]="attr.productAttributeValue[0]"
-            fxLayout="column"
-            class="attr-radio-group">
-            <mat-radio-button class="attr-radio-button"
-              *ngFor="let attrValue of attr.productAttributeValue"
-              [value]="attrValue">
-              {{ attrValue.name }}
-            </mat-radio-button>
-          </mat-radio-group>
-        </div>
+        <p class="product-info-options-title">{{ attr.name }}</p>
+        <mat-radio-group (change)="onOptionChange($event,attr.name)"
+                         [value]="attr.productAttributeValue[0]"
+                         class="product-info-options-attr">
+          <mat-radio-button class="product-info-options-radio"
+                            *ngFor="let attrValue of attr.productAttributeValue"
+                            [value]="attrValue">
+            {{ attrValue.name }}
+          </mat-radio-button>
+        </mat-radio-group>
       </ng-container>
 
 
 
     </div>
-
   </div>
-  <div fxLayout="column"
-    fxLayoutAlign="center center">
-    <div class="quantity-area"
-      fxLayoutAlign="center start"
-      fxLayout="row">
-      <p class="attr-quantity-title">{{ 'ProductDetail.Quantity' | translate }}</p>
-      <mat-icon class="add-mat-icon noselect"
-        inline="true"
-        (click)="incrementItemQuantity()">add_circle</mat-icon>
-      <span class="quantity-label noselect">{{ quantity }}</span>
-      <mat-icon class="remove-mat-icon noselect"
-        inline="true"
-        (click)="decrementItemQuantity()">remove_circle</mat-icon>
+
+  <div class="product-select">
+    <div class="product-select-quantity">
+      <p class="product-select-quantity-title">{{ 'ProductDetail.Quantity' | translate }}</p>
+      <mat-icon class="product-add-icon noselect"
+                inline="true"
+                (click)="incrementItemQuantity()">add_circle</mat-icon>
+      <span class="product-quantity-label noselect">{{ quantity }}</span>
+      <mat-icon class="product-remove-icon noselect"
+                inline="true"
+                (click)="decrementItemQuantity()">remove_circle</mat-icon>
       <h5 class="current-cart-quantity">
         ({{ 'ProductDetail.CurrentCartQuantity' | translate }}: {{ cartQuantity }})
       </h5>
     </div>
 
-    <div fxLayout.gt-sm="row"
-      fxLayout="column">
+    <div class="product-select-btns">
       <button mat-raised-button
-        (click)="addItemToBasket()"
-        class="btnAction"
-        color="warn">
+              (click)="addItemToBasket()"
+              class="btnAction"
+              color="warn">
         {{ 'ProductDetail.AddToCart' | translate}}
       </button>
 
       <button mat-raised-button
-        routerLink="/basket"
-        class="btnAction"
-        color="primary">
+              routerLink="/basket"
+              class="btnAction"
+              color="primary">
         {{ 'ProductDetail.GoToBasket' | translate }}
       </button>
 
       <button mat-raised-button
-        class="btnAction"
-        routerLink="/shop">
+              class="btnAction"
+              routerLink="/shop">
         {{ 'ProductDetail.ReturnShop' | translate }}
       </button>
     </div>
 
 
   </div>
-
 
 </div>

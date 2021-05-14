@@ -13,6 +13,7 @@ import * as appReducer from '../../store/app.reducer';
 import * as ShopActions from '../store/shop.actions';
 import * as BasketActions from '../../basket/store/basket.actions';
 import { takeUntil } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-product-detail',
@@ -20,6 +21,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./product-detail.component.scss']
 })
 export class ProductDetailComponent implements OnInit, OnDestroy {
+  apiHost = environment.apihost;
   product: IProduct;
   totalPrice: number;
   quantity: number = 1;

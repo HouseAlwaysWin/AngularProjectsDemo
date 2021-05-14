@@ -27,6 +27,7 @@ using EcommerceApi.Core.Services.Repositories;
 using Microsoft.Extensions.FileProviders;
 using System;
 using StackExchange.Redis;
+using Microsoft.OpenApi.Models;
 
 namespace EcommerceApi
 {
@@ -227,7 +228,32 @@ namespace EcommerceApi
             services.AddScoped<IUnitOfWork,UnitOfWork>();
 
             
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(c =>{
+                                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo{
+                                    Title = "Ecommerce",
+                                    Version = "v1"
+                                });
+
+                                var securitySchema = new OpenApiSecurityScheme{
+                                    Description = "JWT Auth Bearer Scheme",
+                                    Name = "Authorization",
+                                    In = ParameterLocation.Header,
+                                    Type = SecuritySchemeType.Http,
+                                    Scheme = "bearer",
+                                    Reference = new OpenApiReference{
+                                        Type = ReferenceType.SecurityScheme,
+                                        Id = "Bearer"
+                                    }
+                                };
+
+                                c.AddSecurityDefinition("Bearer",securitySchema);
+
+                                var securityRequirement = new OpenApiSecurityRequirement { {
+                                    securitySchema , new [] {"Bearer"}
+                                }};
+
+                                c.AddSecurityRequirement(securityRequirement);
+                            });
             services.AddCors(opt => {
                 opt.AddPolicy("CorsPolicy",policy=>{
                     policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4000");
@@ -267,12 +293,11 @@ namespace EcommerceApi
 
             app.UseRequestLocalization(options.Value);
 
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
                 endpoints.MapFallbackToController("Index","Fallback");
             });
-        }
+            }
     }
 }

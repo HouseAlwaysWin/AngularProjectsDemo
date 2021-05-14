@@ -24,7 +24,6 @@ import { Subject } from 'rxjs';
   ]
 })
 export class ShopComponent implements OnInit, OnDestroy {
-  @ViewChild('searchInput') searchInput: ElementRef;
   private _onDestroy = new Subject();
 
   shopParams: ShopParams = new ShopParams();

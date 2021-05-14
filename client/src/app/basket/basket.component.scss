@@ -1,3 +1,5 @@
+@import "../../styles/main.scss";
+
 .order-summary {
   border-radius: 0.1em;
   color: rgb(79, 101, 161);
@@ -31,10 +33,10 @@
 }
 
 .empty-cart {
+  height: 100%;
   text-align: center;
   border-width: 2px;
-  border-color: gray;
-  border-style: solid;
+  background-color: rgba($color-white, 0);
   border-radius: 3px;
   padding: 5em;
   color: black;

@@ -1,0 +1,38 @@
+@mixin mat-icon-size($size: 24px) {
+  font-size: $size;
+  height: $size;
+  width: $size;
+  line-height: $size;
+}
+
+@mixin respond($breakpoint) {
+  @if $breakpoint == smallest {
+    @media only screen and (max-width: $screen-smallest) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == small {
+    @media only screen and (max-width: $screen-small) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == medium {
+    @media only screen and (max-width: $screen-medium) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == large {
+    @media only screen and (max-width: $screen-large) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == largest {
+    @media only screen and (max-width: $screen-largest) {
+      @content;
+    }
+  }
+}

@@ -8,6 +8,7 @@ import * as appReducer from '../../store/app.reducer';
 import * as BasketActions from '../store/basket.actions';
 import { Store } from '@ngrx/store';
 import { takeUntil } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-basket-summary',
@@ -16,6 +17,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class BasketSummaryComponent implements OnInit, OnDestroy {
   private _onDestroy = new Subject();
+  apiHost = environment.apihost;
   @Input() showQuantityAdj: boolean = true;
   @Input() hiddenRemove: boolean = false;
   pageItems: MatTableDataSource<IBasketItem>;

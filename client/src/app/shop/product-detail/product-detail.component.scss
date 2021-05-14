@@ -1,81 +1,232 @@
 @import "../../../styles.scss";
 
-.product-img {
-  height: 300px;
-  width: 300px;
-  border-radius: 10px;
-}
+.product {
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
 
-.product-description {
-  margin: 1em 0em 1em 0em;
-  width: 300px;
-  // padding: 0em 150px 0em 150px;
-}
+  &-title {
+    color: $color-primary-dark;
+    font-size: 20rem;
+  }
 
-.attr-selected {
-  margin-left: 20px;
-}
+  &-info {
+    display: flex;
+    flex-flow: row wrap;
 
-.attr-title {
-  margin-bottom: 1em;
-}
+    @include respond(medium) {
+      flex-direction: column;
+      align-items: center;
+    }
 
-.attr-area {
-  border-style: solid;
-  padding: 0.5em;
-  margin-bottom: 1em;
-  width: 250px;
-  border-radius: 10px;
-  border-color: gray;
-}
+    &-main {
+      display: flex;
+      flex-flow: column wrap;
+      margin-right: 2rem;
 
-.attr-quantity-title {
-  font-size: 20px;
-  margin-right: 1em;
-}
+      &-img {
+        width: 25rem;
+        height: 25rem;
+        overflow: hidden;
+        margin-bottom: 1rem;
+        border-radius: 1rem;
 
-.attr-radio-button {
-  margin-bottom: 0.5em;
-}
+        & img {
+          width: inherit;
+          height: inherit;
+          object-fit: cover;
 
-.attr-radio-group {
-  margin-bottom: 1em;
-}
+          &:hover,
+          &:active {
+            transform: scale(1.1);
+            cursor: pointer;
+          }
+        }
+      }
 
-.quantity-area {
-  margin-bottom: 1em;
-  margin-left: 1em;
-}
+      &-price {
+        width: 25rem;
+        margin-bottom: 1rem;
+        @include respond(medium) {
+          text-align: center;
+        }
+      }
 
-.btnAction {
-  margin: 0 1em 1em 0;
-}
+      &-description {
+        width: 25rem;
+        overflow: hidden;
+        @include respond(medium) {
+          text-align: center;
+          margin-bottom: 1rem;
+        }
+      }
+    }
 
-.product-price {
-  font-size: 20px;
-  margin-top: 1em;
-  text-shadow: 1px 1px rgba(110, 110, 110, 0.2);
-}
+    &-options {
+      display: flex;
+      flex-direction: column;
 
-.quantity-label {
-  font-size: 20px;
+      &-title {
+        font-size: 1.6rem;
+      }
+
+      &-attr {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1rem;
+      }
+
+      &-radio {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+      }
+    }
+  }
+
+  &-select {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+
+    &-quantity {
+      display: flex;
+      flex-direction: row;
+
+      &-title {
+        margin-right: 1rem;
+      }
+    }
+
+    &-btns {
+      display: flex;
+      flex-direction: row;
+      @include respond(medium) {
+        flex-direction: column;
+      }
+      & button {
+        width: 100%;
+        font-size: 0.5rem;
+        margin-right: 1rem;
+        @include respond(medium) {
+          margin-bottom: 1rem;
+        }
+      }
+    }
+  }
+
+  &-add-icon {
+    margin-right: 0.5rem;
+    @include mat-icon-size(2rem);
+    color: rgb(0, 107, 0);
+    cursor: pointer;
+  }
+
+  &-remove-icon {
+    margin-left: 0.5rem;
+    @include mat-icon-size(2rem);
+    color: rgb(145, 1, 1);
+    cursor: pointer;
+  }
+
+  &-quantity-label {
+    font-size: 1.6rem;
+  }
 }
 
 .current-cart-quantity {
-  font-size: 18px;
+  margin-left: 1rem;
+  font-size: 1.2rem;
 }
 
-.add-mat-icon {
-  @include mat-icon-size(22px);
-  cursor: pointer;
-  color: rgb(0, 107, 0);
-  margin-right: 10px;
+.btnAction {
+  width: 2rem;
+  font-size: 0.5rem;
 }
 
-.remove-mat-icon {
-  @include mat-icon-size(22px);
-  cursor: pointer;
-  color: rgb(145, 1, 1);
-  margin-left: 10px;
-  margin-right: 5px;
-}
+// .product-img {
+//   height: 30rem;
+//   width: 30rem;
+//   border-radius: 10px;
+//   opacity: 0.9;
+//   object-fit: cover;
+//   background-color: rgba($color-black, 0.2);
+
+//   &:hover,
+//   &:active {
+//     transform: scale(1.1);
+//   }
+// }
+
+// .product-description {
+//   margin: 1em 0em 1em 0em;
+//   width: 300px;
+//   // padding: 0em 150px 0em 150px;
+// }
+
+// .attr-selected {
+//   margin-left: 20px;
+// }
+
+// .attr-title {
+//   margin-bottom: 1em;
+// }
+
+// .attr-area {
+//   border-style: solid;
+//   padding: 0.5em;
+//   margin-bottom: 1em;
+//   width: 250px;
+//   border-radius: 10px;
+//   border-color: gray;
+// }
+
+// .attr-quantity-title {
+//   font-size: 20px;
+//   margin-right: 1em;
+// }
+
+// .attr-radio-button {
+//   margin-bottom: 0.5em;
+// }
+
+// .attr-radio-group {
+//   margin-bottom: 1em;
+// }
+
+// .quantity-area {
+//   margin-bottom: 1em;
+//   margin-left: 1em;
+// }
+
+// .btnAction {
+//   margin: 0 1em 1em 0;
+// }
+
+// .product-price {
+//   font-size: 20px;
+//   margin-top: 1em;
+//   text-shadow: 1px 1px rgba(110, 110, 110, 0.2);
+// }
+
+// .quantity-label {
+//   font-size: 20px;
+// }
+
+// .current-cart-quantity {
+//   font-size: 18px;
+// }
+
+// .add-mat-icon {
+//   @include mat-icon-size(22px);
+//   cursor: pointer;
+//   color: rgb(0, 107, 0);
+//   margin-right: 10px;
+// }
+
+// .remove-mat-icon {
+//   @include mat-icon-size(22px);
+//   cursor: pointer;
+//   color: rgb(145, 1, 1);
+//   margin-left: 10px;
+//   margin-right: 5px;
+// }

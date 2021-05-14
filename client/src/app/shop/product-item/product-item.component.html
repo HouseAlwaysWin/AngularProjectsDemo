@@ -1,4 +1,45 @@
-<mat-card class="product-card">
+<div class="card">
+  <div class="card_side"
+       [ngClass]="currentSide ? 'card_side_front':'card_side_front_rotate'"
+       (click)="rotateSide()">
+    <div class="card_picture">
+      <img src="{{apiHost}}{{ product.productPictures[0].urlPath }}"
+           alt="{{ product.name }}">
+    </div>
+    <!-- <div class="card_heading">
+      {{ product.name }}
+    </div> -->
+    <div class="card_details">
+      <ul>
+        <li>
+          {{ product.productCategory.name }}
+        </li>
+        <li>
+          {{ product.name }}
+        </li>
+        <li>
+          {{ product.description | trucateText:50:60 }}
+        </li>
+      </ul>
+
+
+    </div>
+  </div>
+  <div class="card_side"
+       [ngClass]="currentSide ? 'card_side_back':'card_side_back_rotate'"
+       (click)="rotateSide()">
+    <div class="card_side_back_content">
+      <div class="card_price">{{ product.price | currency}}</div>
+      <button class="btn btn_white"
+              routerLink="/products/{{ product.id }}">{{ 'Shop.View' | translate }}</button>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- <mat-card class="product-card">
   <mat-card-header>
     <mat-card-title>{{ product.name }}</mat-card-title>
   </mat-card-header>
@@ -23,4 +64,4 @@
             color="warn"
             routerLink="/products/{{ product.id }}">{{ 'Shop.View' | translate }}</button>
   </mat-card-actions>
-</mat-card>
+</mat-card> -->
