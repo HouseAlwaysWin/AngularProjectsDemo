@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IBasketItem } from 'src/app/models/basket';
 import { IOrder, IOrderItem } from 'src/app/models/order';
+import { environment } from 'src/environments/environment';
 import { OrdersService } from '../orders.service';
 
 @Component({
@@ -12,6 +13,7 @@ import { OrdersService } from '../orders.service';
   styleUrls: ['./order-detail.component.scss']
 })
 export class OrderDetailComponent implements OnInit, OnDestroy {
+  apiHost = environment.apihost;
   content: IOrderItem[];
   order: IOrder;
   displayCols: string[] = [

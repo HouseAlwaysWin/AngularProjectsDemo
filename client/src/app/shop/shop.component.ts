@@ -91,8 +91,8 @@ export class ShopComponent implements OnInit, OnDestroy {
         this.products = res.products;
         this.productTotalcount = res.totalCount;
         this.isLoading = res.loading;
+        console.log(this.isLoading);
         this.searchOptions = res.searchOptions;
-
       });
 
 
