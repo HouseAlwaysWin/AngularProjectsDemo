@@ -7,6 +7,10 @@ using EcommerceApi.Core.Services;
 using EcommerceApi.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using EcommerceApi.Core.Data.Repositories.Interfaces;
+using LinqToDB.EntityFrameworkCore;
+using LinqToDB;
+using LinqToDB.Data;
+using LinqToDB.Tools;
 
 namespace EcommerceApi.Core.Data.Repositories
 {
@@ -17,10 +21,12 @@ namespace EcommerceApi.Core.Data.Repositories
         private readonly StoreContext _context;
         public EntityRepository()
         {
+            LinqToDBForEFTools.Initialize();
         }
         public EntityRepository(StoreContext context)
         {
             this._context = context;
+            LinqToDBForEFTools.Initialize();
         }
 
         private async Task<PagedList<TEntity>> GetAllPagedNoCachedAsync(int pageIndex, int pageSize, Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null)
@@ -28,9 +34,9 @@ namespace EcommerceApi.Core.Data.Repositories
             var query = _context.Set<TEntity>().AsQueryable();
             query = func != null ? func(query) : query;
 
-            var total = await query.CountAsync();
+            var total = await query.CountAsyncEF();
 
-            var data = await query.Skip(pageIndex * pageSize).Take(pageSize).ToListAsync();
+            var data = await query.Skip(pageIndex * pageSize).Take(pageSize).ToListAsyncEF();
 
             return new PagedList<TEntity>(data, total);
         }
@@ -40,7 +46,7 @@ namespace EcommerceApi.Core.Data.Repositories
         {
             var query = _context.Set<TEntity>().AsQueryable();
             query = func != null ? func(query) : query;
-            return await query.ToListAsync();
+            return await query.ToListAsyncEF();
         }
 
 
@@ -50,9 +56,9 @@ namespace EcommerceApi.Core.Data.Repositories
             var query = _context.Set<TEntity>().AsQueryable();
             query = func != null ? func(query) : query;
 
-            var total = await query.CountAsync();
+            var total = await query.CountAsyncEF();
 
-            var data = await query.Skip(pageIndex * pageSize).Take(pageSize).ToListAsync();
+            var data = await query.Skip(pageIndex * pageSize).Take(pageSize).ToListAsyncEF();
 
             return new PagedList<TEntity>(data, total);
 
@@ -63,7 +69,7 @@ namespace EcommerceApi.Core.Data.Repositories
         {
             var query = _context.Set<TEntity>().AsQueryable();
             query = func != null ? func(query) : query;
-            return await query.FirstOrDefaultAsync();
+            return await query.FirstOrDefaultAsyncEF();
         }
 
 
@@ -71,7 +77,7 @@ namespace EcommerceApi.Core.Data.Repositories
         {
             var query = _context.Set<TEntity>().AsQueryable();
             query = func != null ? func(query) : query;
-            return await query.FirstOrDefaultAsync(e => e.Id == id);
+            return await query.FirstOrDefaultAsyncEF(e => e.Id == id);
         }
 
 
@@ -82,6 +88,15 @@ namespace EcommerceApi.Core.Data.Repositories
                 throw new ArgumentNullException(nameof(entity));
             }
             await _context.Set<TEntity>().AddAsync(entity);
+        }
+
+        public virtual async Task BulkAddAsync(IEnumerable<TEntity> entities)
+        {
+            if (entities == null)
+            {
+                throw new ArgumentNullException(nameof(entities));
+            }
+            await _context.BulkCopyAsync(new BulkCopyOptions(), entities);
         }
 
 

@@ -75,6 +75,17 @@ namespace EcommerceApi.Controllers
             return BaseApiOk(categories);
         }
 
+        [HttpPost("add")]
+        public async Task<ActionResult> AddProduct(Product product){
+            await _productService.AddProductAsync(product);
+            return BaseApiOk();
+        }
+
+        public async Task<ActionResult> AddProducts(List<Product> products){
+            await _productService.AddProductsAsync(products);
+            return BaseApiOk();
+        }
+
 
     }
 }

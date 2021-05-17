@@ -8,6 +8,9 @@ namespace EcommerceApi.Core.Services.Interfaces
 {
     public interface IProductService
     {
+
+        Task AddProductsAsync(IEnumerable<Product> products);
+        Task AddProductAsync(Product product);
         Task<ProductDto> GetProductByIdAsync(int id, bool useCached = false);
         Task<List<ProductCategoryDto>> GetProductCategoriesTree(bool useCached = false);
         Task<List<ProductDto>> GetProductsLikeAsync(ProductLikeParam param, bool useCached = false);

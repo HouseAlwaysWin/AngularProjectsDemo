@@ -349,6 +349,22 @@ namespace EcommerceApi.Core.Services
             return productDto;
         }
 
+        public async Task AddProductAsync(Product product){
+            try{
+                await _productEntityRepo.AddAsync(product);
+            } catch(Exception ex) {
+
+            }
+        }
+
+        public async Task AddProductsAsync(IEnumerable<Product> products){
+            try{
+            await _productEntityRepo.BulkAddAsync(products);
+            } catch(Exception ex) {
+
+            }
+        }
+
 
         public async Task<List<ProductCategoryDto>> GetProductCategoriesTree(bool useCached = false)
         {
