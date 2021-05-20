@@ -16,13 +16,13 @@ namespace EcommerceApi.Core.Services
 {
     public class ProductService : IProductService
     {
-        private readonly IEntityRepository<Product> _productEntityRepo;
-        private readonly IEntityRepository<ProductAttribute> _attributeEntityRepo;
-        private readonly IEntityRepository<ProductAttributeValue> _attributeValueEntityRepo;
-        private readonly IEntityRepository<Product_ProductAttribute> _attributeMapEntityRepo;
-        private readonly IEntityRepository<ProductCategory> _categoryEntityRepo;
-        private readonly IEntityRepository<Picture> _pictureEntityRepo;
-        private readonly IEntityRepository<Product_Picture> _pictureMapRepo;
+        private readonly IStoreRepository<Product> _productEntityRepo;
+        private readonly IStoreRepository<ProductAttribute> _attributeEntityRepo;
+        private readonly IStoreRepository<ProductAttributeValue> _attributeValueEntityRepo;
+        private readonly IStoreRepository<Product_ProductAttribute> _attributeMapEntityRepo;
+        private readonly IStoreRepository<ProductCategory> _categoryEntityRepo;
+        private readonly IStoreRepository<Picture> _pictureEntityRepo;
+        private readonly IStoreRepository<Product_Picture> _pictureMapRepo;
         private readonly ICachedService _cachedService;
         private readonly ILocalizedService _localizedService;
         private readonly IMapper _mapper;
@@ -38,13 +38,13 @@ namespace EcommerceApi.Core.Services
         private string _pictureMapKey { get { return $"{_cachedService.GetCurrentLang()}_all_pictureMap_key"; } }
 
         public ProductService(
-            IEntityRepository<Product> productEntityRepo,
-            IEntityRepository<ProductAttribute> attributeEntityRepo,
-            IEntityRepository<ProductAttributeValue> attributeValueEntityRepo,
-            IEntityRepository<Product_ProductAttribute> attributeMapEntityRepo,
-            IEntityRepository<ProductCategory> categoryEntityRepo,
-            IEntityRepository<Picture> pictureEntityRepo,
-            IEntityRepository<Product_Picture> pictureMapRepo,
+            IStoreRepository<Product> productEntityRepo,
+            IStoreRepository<ProductAttribute> attributeEntityRepo,
+            IStoreRepository<ProductAttributeValue> attributeValueEntityRepo,
+            IStoreRepository<Product_ProductAttribute> attributeMapEntityRepo,
+            IStoreRepository<ProductCategory> categoryEntityRepo,
+            IStoreRepository<Picture> pictureEntityRepo,
+            IStoreRepository<Product_Picture> pictureMapRepo,
             ICachedService cachedService,
             ILocalizedService localizedService,
             ILogger<ProductService> logger,
@@ -353,7 +353,7 @@ namespace EcommerceApi.Core.Services
             try{
                 await _productEntityRepo.AddAsync(product);
             } catch(Exception ex) {
-
+                System.Console.WriteLine(ex);
             }
         }
 
@@ -361,7 +361,7 @@ namespace EcommerceApi.Core.Services
             try{
             await _productEntityRepo.BulkAddAsync(products);
             } catch(Exception ex) {
-
+                System.Console.WriteLine(ex);
             }
         }
 

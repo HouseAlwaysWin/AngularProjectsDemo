@@ -224,8 +224,13 @@ namespace EcommerceApi
             services.AddSingleton<IHttpContextAccessor,HttpContextAccessor>();
             services.AddScoped<ILocalizedService,LocalizedService>();
             services.AddScoped<IBasketService,BasketService>();
-            services.AddScoped(typeof(IEntityRepository<>),(typeof(EntityRepository<>)));
-            services.AddScoped<IUnitOfWork,UnitOfWork>();
+            services.AddScoped(typeof(IStoreRepository<>),typeof(StoreRepository<>));
+            services.AddScoped(typeof(IIdentityRepository<>),typeof(IdentityRepository<>));
+            services.AddScoped(typeof(IStoreUow),typeof(StoreUow));
+            services.AddScoped(typeof(IIdentityUow),typeof(IdentityUow));
+
+            // services.AddScoped(typeof(IEntityRepository<,>),(typeof(EntityRepository<>)));
+            // services.AddScoped<IUnitOfWork,UnitOfWork>();
 
             
             services.AddSwaggerGen(c =>{

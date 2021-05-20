@@ -18,13 +18,13 @@ namespace EcommerceApi.Controllers
 {
     public class ProductController : BaseApiController 
     {
-        private readonly IEntityRepository<Product> _entityRepository;
+        private readonly IStoreRepository<Product> _entityRepository;
         private readonly IProductService _productService;
         private readonly IMapper _mapper;
         private readonly IDistributedCache _db;
 
         public ProductController(
-            IEntityRepository<Product> entityRepository,
+            IStoreRepository<Product> entityRepository,
             IProductService productService,
             IMapper mapper,
             IDistributedCache db

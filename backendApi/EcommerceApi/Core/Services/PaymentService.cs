@@ -15,13 +15,13 @@ namespace EcommerceApi.Core.Services
     public class PaymentService : IPaymentService
     {
         private readonly IBasketService _basketService;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IStoreUow _unitOfWork;
         private readonly IConfiguration _config;
         private readonly string  _env;
 
         public PaymentService(
             IBasketService basketService,
-            IUnitOfWork unitOfWork,
+            IStoreUow unitOfWork,
             IConfiguration config
         )
         {
@@ -43,7 +43,7 @@ namespace EcommerceApi.Core.Services
             if(basket.DeliveryMethodId.HasValue){
                 // var deliveryMethod = await _unitOfWork.Repository<DeliveryMethod>()
                 //             .GetByIdAsync((int)basket.DeliveryMethodId);
-                var deliveryMethod = await _unitOfWork.EntityRepository<DeliveryMethod>()
+                var deliveryMethod = await _unitOfWork.EntityRepo<DeliveryMethod>()
                             .GetByIdAsync((int)basket.DeliveryMethodId);
                 shippingPrice = deliveryMethod.Price;
             }
@@ -86,7 +86,7 @@ namespace EcommerceApi.Core.Services
         public async Task<Models.Entities.Order> UpdateOrderPaymentFailed(string paymentIntentId)
         {
             // var spec = new OrderByPaymentIntentIdSpec(paymentIntentId);
-            var order = await _unitOfWork.EntityRepository<Models.Entities.Order>().GetByAsync(q => {
+            var order = await _unitOfWork.EntityRepo<Models.Entities.Order>().GetByAsync(q => {
                 return q.Where(o => o.PaymentIntentId == paymentIntentId);
             });
             if(order == null) return null;
@@ -94,7 +94,7 @@ namespace EcommerceApi.Core.Services
             order.OrderStatus = OrderStatus.PaymentFailed;
             // _unitOfWork.Repository<Models.Entities.Order>().Update(order);
 
-            _unitOfWork.EntityRepository<Models.Entities.Order>().Update(order);
+            _unitOfWork.EntityRepo<Models.Entities.Order>().Update(order);
             await _unitOfWork.CompleteAsync();
             return null;
         }
@@ -103,7 +103,7 @@ namespace EcommerceApi.Core.Services
         {
             //  var spec = new OrderByPaymentIntentIdSpec(paymentIntentId);
             // var order = await _unitOfWork.Repository<Models.Entities.Order>().GetEntityWithSpec(spec);
-            var order = await _unitOfWork.EntityRepository<Models.Entities.Order>().GetByAsync(q => {
+            var order = await _unitOfWork.EntityRepo<Models.Entities.Order>().GetByAsync(q => {
                 return q.Where(o => o.PaymentIntentId == paymentIntentId);
             });
 

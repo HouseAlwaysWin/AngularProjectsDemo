@@ -14,13 +14,13 @@ namespace EcommerceApi.Core.Services
 
     public class LocalizedService : ILocalizedService
     {
-        private readonly IEntityRepository<Localized> _localizedEntityRepo;
+        private readonly IStoreRepository<Localized> _localizedEntityRepo;
         private readonly ILanguageService _languageService;
         private readonly ICachedService _redisCachedService;
 
         public LocalizedService(
             ICachedService redisCachedService,
-            IEntityRepository<Localized> localizedEntityRepo,
+            IStoreRepository<Localized> localizedEntityRepo,
             ILanguageService languageService
         )
         {

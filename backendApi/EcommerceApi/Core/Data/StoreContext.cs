@@ -22,8 +22,6 @@ namespace EcommerceApi.Core.Data
         public DbSet<DeliveryMethod> DeliveryMethods {get;set;}
         public DbSet<OrderAddress> OrderAddresses {get;set;}
 
-
-
         public StoreContext(DbContextOptions<StoreContext> options):base (options)
         {
         }

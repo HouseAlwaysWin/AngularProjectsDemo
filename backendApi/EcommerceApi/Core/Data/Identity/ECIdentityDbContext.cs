@@ -1,13 +1,19 @@
 using System;
 using EcommerceApi.Core.Entities.Identity;
+using EcommerceApi.Core.Models.Entities;
+using EcommerceApi.Core.Models.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceApi.Core.Data.Identity
 {
-    public class ECIdentityDbContext:IdentityDbContext<ECUser,ECRole,int>
+    public class ECIdentityDbContext:
+        IdentityDbContext<ECUser,ECRole,int,
+        IdentityUserClaim<int>,ECUserRole,IdentityUserLogin<int>,
+        IdentityRoleClaim<int>,IdentityUserToken<int>>
     {
+        public DbSet<Message> Message { get; set; }
         public ECIdentityDbContext(DbContextOptions<ECIdentityDbContext> options ):base(options)
         {
             
@@ -35,9 +41,17 @@ namespace EcommerceApi.Core.Data.Identity
                 b.Property(b=>b.CreatedDate)
                     // .HasDefaultValueSql("GETDATE()")
                     .IsRequired();
-
-
             });
+
+            builder.Entity<Message>()
+                .HasOne(u => u.Recipient)
+                .WithMany(m => m.MessagesReceived)
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            builder.Entity<Message>()
+                .HasOne(u => u.Sender)
+                .WithMany(m => m.MessagesSent)
+                .OnDelete(DeleteBehavior.Restrict);
 
             
 
