@@ -65,7 +65,11 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "chatroom:build"
+            "sslCert": "./ssl/server.crt",
+            "sslKey": "./ssl/server.key",
+            "ssl": true,
+            "browserTarget": "chatroom:build",
+            "port": 4001
           },
           "configurations": {
             "production": {

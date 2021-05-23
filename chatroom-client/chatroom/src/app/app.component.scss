@@ -1,0 +1,19 @@
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: #aaa;
+  padding: 2rem;
+
+  & ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    list-style: none;
+    & li {
+      padding: 0 1rem;
+      color: #fff;
+      font-size: 2rem;
+    }
+  }
+}

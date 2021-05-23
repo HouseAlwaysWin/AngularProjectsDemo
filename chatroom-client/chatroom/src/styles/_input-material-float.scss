@@ -1,0 +1,78 @@
+@import "../styles/variables";
+
+.m-float-input-group {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+
+  & input {
+    border: none;
+    border-bottom: 1px solid $color-grey-dark;
+    border-radius: 0;
+    outline: none;
+    padding: 0.3rem;
+    background-color: transparent;
+    transition: all 1s;
+
+    &::placeholder {
+      color: transparent;
+      font-size: 5px;
+    }
+
+    &:focus {
+      border-bottom: 1px solid $color-primary;
+      & + label {
+        color: $color-primary;
+        transform: scale(0.9) translate(-10%, -140%);
+      }
+
+      &::placeholder {
+        color: $color-grey-light;
+      }
+    }
+
+    &:not(:placeholder-shown) {
+      & + label {
+        transform: scale(0.9) translate(-10%, -140%);
+      }
+    }
+  }
+
+  & label {
+    font-size: 1rem;
+    color: $color-grey-light;
+    position: absolute;
+    pointer-events: none;
+    transform: translate(0, 0) scale(1);
+    transition: all 0.4s;
+  }
+
+  &.error {
+    & label {
+      color: $color-error;
+    }
+
+    & input {
+      border-bottom: 1px solid $color-error;
+      &:focus {
+        border-bottom: 1px solid $color-error;
+        & + label {
+          color: $color-error;
+        }
+      }
+    }
+  }
+
+  & .error-message {
+    position: absolute;
+    color: $color-error;
+    transform: translateY(150%);
+    transition: all 0.2s;
+  }
+}
+
+.m-input-field {
+  padding: 2rem;
+}

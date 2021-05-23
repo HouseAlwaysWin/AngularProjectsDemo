@@ -1,0 +1,52 @@
+<form class="registerForm"
+      [formGroup]="registerForm"
+      (ngSubmit)="onSubmit()">
+
+  <div class="title">Register</div>
+
+
+  <div class="m-input-field">
+    <span class="m-float-input-group">
+      <input type="text"
+             formControlName="username"
+             name="username"
+             placeholder="Enter your name">
+      <label for="">Username</label>
+    </span>
+  </div>
+
+  <div class="m-input-field">
+    <span class="m-float-input-group">
+      <input type="text"
+             formControlName="email"
+             name="email"
+             placeholder="Enter your email">
+      <label for="">Email</label>
+    </span>
+  </div>
+
+  <div class="m-input-field">
+    <span class="m-float-input-group">
+      <input type="password"
+             formControlName="password"
+             name="password"
+             placeholder="Password">
+      <label for="">Password</label>
+    </span>
+  </div>
+
+  <div class="m-input-field">
+    <span class="m-float-input-group">
+      <input type="password"
+             formControlName="password"
+             name="password"
+             placeholder="Password Confirm">
+      <label for="">Password Confirm</label>
+    </span>
+  </div>
+
+  <button class="btn btn-primary"
+          [disabled]="!registerForm.valid"
+          type="submit">Sign up</button>
+
+</form>

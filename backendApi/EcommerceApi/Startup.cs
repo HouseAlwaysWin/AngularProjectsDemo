@@ -259,9 +259,12 @@ namespace EcommerceApi
 
                                 c.AddSecurityRequirement(securityRequirement);
                             });
+
             services.AddCors(opt => {
                 opt.AddPolicy("CorsPolicy",policy=>{
-                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4000");
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins(
+                        "http://localhost:4000",
+                        "https://localhost:4001");
                 });
             });
         }
@@ -276,7 +279,7 @@ namespace EcommerceApi
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "EcommerceApi v1"));
             }
 
-            // app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
 
             app.UseRouting();
             app.UseStaticFiles();

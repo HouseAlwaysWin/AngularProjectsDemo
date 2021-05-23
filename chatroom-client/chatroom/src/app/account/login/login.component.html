@@ -1,0 +1,52 @@
+<form class="loginForm"
+      [formGroup]="loginForm"
+      (ngSubmit)="onSubmit()">
+
+  <div class="title">Login</div>
+
+
+  <div class="m-input-field">
+    <span class="m-float-input-group"
+          [formFieldInvalid]="loginForm"
+          [fieldName]="'email'">
+      <input type="text"
+             [formControlName]="'email'"
+             name="email"
+             placeholder="Enter your email">
+      <label for="">Email</label>
+      <span class="error-message"
+            *ngIf="formService.field_error(loginForm,'email','required')">
+        {{ 'Email is required.' }}
+      </span>
+      <span class="error-message"
+            *ngIf="formService.field_error(loginForm,'email','email')">
+        {{ 'Email format incorrect.' }}
+      </span>
+    </span>
+  </div>
+
+  <div class="m-input-field">
+    <span class="m-float-input-group"
+          [formFieldInvalid]="loginForm"
+          [fieldName]="'password'">
+      <input type="password"
+             formControlName="password"
+             name="password"
+             placeholder="Enter password">
+      <label for="">Password</label>
+      <span class="error-message"
+            *ngIf="formService.field_error(loginForm,'password','required')">
+        {{ 'Password is required.' }}
+      </span>
+      <span class="error-message"
+            *ngIf="formService.field_error(loginForm,'password','minlength')">
+        {{ 'Password minium length is 6.' }}
+      </span>
+    </span>
+  </div>
+
+  <button class="btn btn-primary"
+          [disabled]="!loginForm.valid"
+          type="submit">Login</button>
+
+</form>
