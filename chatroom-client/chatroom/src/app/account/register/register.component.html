@@ -5,43 +5,95 @@
   <div class="title">Register</div>
 
 
-  <div class="m-input-field">
-    <span class="m-float-input-group">
+  <div class="input-field">
+    <span class="radio-group">
+      <input type="radio" />
+      <label>
+        <span></span>
+        Male</label>
+
+      <input type="radio" />
+      <label>
+        <span></span>
+        Female
+      </label>
+    </span>
+
+  </div>
+
+  <div class="input-field">
+    <span class="m-float-input-group"
+          [formFieldInvalid]="registerForm"
+          [fieldName]="'username'">
       <input type="text"
              formControlName="username"
              name="username"
              placeholder="Enter your name">
       <label for="">Username</label>
+      <span class="error-message"
+            *ngIf="formService.field_error(registerForm,'username','required')">
+        Username is required.
+      </span>
     </span>
   </div>
 
-  <div class="m-input-field">
-    <span class="m-float-input-group">
+  <div class="input-field">
+    <span class="m-float-input-group"
+          [formFieldInvalid]="registerForm"
+          [fieldName]="'email'">
       <input type="text"
              formControlName="email"
              name="email"
              placeholder="Enter your email">
       <label for="">Email</label>
+      <span class="error-message"
+            *ngIf="formService.field_error(registerForm,'email','required')">
+        Email is required.
+      </span>
+      <span class="error-message"
+            *ngIf="formService.field_error(registerForm,'email','email')">
+        Email format incorrect.
+      </span>
     </span>
   </div>
 
-  <div class="m-input-field">
-    <span class="m-float-input-group">
+  <div class="input-field">
+    <span class="m-float-input-group"
+          [formFieldInvalid]="registerForm"
+          [fieldName]="'password'">
       <input type="password"
              formControlName="password"
              name="password"
              placeholder="Password">
       <label for="">Password</label>
+      <span class="error-message"
+            *ngIf="formService.field_error(registerForm,'password','required')">
+        Password is required.
+      </span>
+      <span class="error-message"
+            *ngIf="formService.field_error(registerForm,'password','minlength')">
+        Password at least 6 letters.
+      </span>
     </span>
   </div>
 
-  <div class="m-input-field">
-    <span class="m-float-input-group">
+  <div class="input-field">
+    <span class="m-float-input-group"
+          [formFieldInvalid]="registerForm"
+          [fieldName]="'passwordConfirm'">
       <input type="password"
-             formControlName="password"
-             name="password"
+             formControlName="passwordConfirm"
+             name="passwordConfirm"
              placeholder="Password Confirm">
       <label for="">Password Confirm</label>
+      <span class="error-message"
+            *ngIf="formService.field_error(registerForm,'passwordConfirm','required')">
+        Confirm Password is required.
+      </span>
+      <span class="error-message"
+            *ngIf="formService.field_error(registerForm,'passwordConfirm','minlength')">
+        Confirm Password at least 6 letters.
+      </span>
     </span>
   </div>
 
