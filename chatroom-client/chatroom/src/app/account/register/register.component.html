@@ -2,27 +2,30 @@
       [formGroup]="registerForm"
       (ngSubmit)="onSubmit()">
 
-  <div class="title">Register</div>
+  <div class="title">
+    <h2>Register</h2>
+  </div>
 
 
+  <div class="gender-title">Gender</div>
   <div class="radio-field">
     <span class="radio-group">
-      <input name="male"
+      <input name="gender"
              id="male"
              type="radio" />
       <label for="male">
-        <span></span>
         Male
+        <span></span>
       </label>
     </span>
 
     <span class="radio-group">
-      <input name="female"
+      <input name="gender"
              id="female"
              type="radio" />
       <label for="female">
-        <span></span>
         Female
+        <span></span>
       </label>
     </span>
 

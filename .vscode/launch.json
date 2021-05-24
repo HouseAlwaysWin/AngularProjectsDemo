@@ -13,9 +13,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             "OS-COMMENT4": "If you have changed target frameworks, make sure to update the program path.",
-            "program": "${workspaceFolder}/backendApi/EcommerceApi/bin/Debug/netcoreapp5.0/EcommerceApi.dll",
+            "program": "${workspaceFolder}/backendApi/BackendApi/bin/Debug/netcoreapp5.0/BackendApi.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/backendApi/EcommerceApi",
+            "cwd": "${workspaceFolder}/backendApi/BackendApi",
             "stopAtEntry": false,
             "OS-COMMENT5": "Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser",
             "serverReadyAction": {

@@ -6,12 +6,14 @@ import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
 import { HomeComponent } from './home/home.component';
 import { FormFieldInvalidDirective } from './shared/directives/form-field-invalid.directive';
+import { MessageComponent } from './message/message.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavComponent,
     HomeComponent,
+    MessageComponent,
   ],
   imports: [
     BrowserModule,
