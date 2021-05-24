@@ -1,8 +1,12 @@
+using System;
+
 namespace BackendApi.Core.Models.Entities
 {
-    public class Localized:BaseEntity
+    public class Localized:IBaseEntity
     {
-        // public int Id { get; set; }
+        public int Id { get ; set ; }
+        public DateTimeOffset CreatedDate { get ; set ; }
+        public DateTimeOffset? ModifiedDate { get ; set ; }
         public string EntityType { get; set; }
         public string PropertyKey { get; set; }
         public string PropertyValue { get; set; }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace BackendApi.Core.Models.Entities
 {
-    public class Order : BaseEntity
+    public class Order : IBaseEntity
     {
         public Order()
         {
@@ -39,5 +39,8 @@ namespace BackendApi.Core.Models.Entities
         public IReadOnlyList<OrderItem> OrderItems { get; set; }
         public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
         public string PaymentIntentId { get; set; }
+        public int Id { get ; set ; }
+        public DateTimeOffset CreatedDate { get ; set ; }
+        public DateTimeOffset? ModifiedDate { get ; set ; }
     }
 }

@@ -18,19 +18,19 @@ namespace BackendApi.Controllers
 {
     public class ProductController : BaseApiController 
     {
-        private readonly IStoreRepository<Product> _entityRepository;
+        private readonly IStoreRepository _storeRepo;
         private readonly IProductService _productService;
         private readonly IMapper _mapper;
         private readonly IDistributedCache _db;
 
         public ProductController(
-            IStoreRepository<Product> entityRepository,
+            IStoreRepository storeRepo,
             IProductService productService,
             IMapper mapper,
             IDistributedCache db
         )
         {
-            this._entityRepository = entityRepository;
+            this._storeRepo = storeRepo;
             this._productService = productService;
             this._mapper = mapper;
             this._db = db;

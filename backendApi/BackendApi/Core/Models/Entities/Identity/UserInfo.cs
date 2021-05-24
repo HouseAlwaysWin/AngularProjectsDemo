@@ -2,8 +2,12 @@ using System;
 
 namespace BackendApi.Core.Models.Entities.Identity
 {
-    public class UserInfo:BaseEntity
+    public class UserInfo: IBaseEntity
     {
+        public int Id { get; set; }
+        public DateTimeOffset CreatedDate { get; set; }
+        public DateTimeOffset? ModifiedDate { get; set; }
+
         public DateTime DateOfBirth { get; set; }
         public string KnownAs { get; set; }
         public DateTime LastActive { get; set; }

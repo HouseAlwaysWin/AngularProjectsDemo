@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using BackendApi.Core.Data.QuerySpecs;
+using BackendApi.Core.Data.Repositories;
 using BackendApi.Core.Data.Repositories.Interfaces;
 using BackendApi.Core.Data.Services.Interfaces;
 using BackendApi.Core.Models.Dtos;
@@ -15,7 +16,7 @@ namespace BackendApi.Core.Services
     public class OrderService : IOrderService
     {
         private readonly IBasketService _basketRepo;
-        private readonly IStoreUow _unitOfWork;
+        private readonly IStoreRepository _storeRepo;
         private readonly IMapper _mapper;
         private readonly ICachedService _cachedService;
         private readonly ILocalizedService _localizedService;
@@ -27,9 +28,9 @@ namespace BackendApi.Core.Services
             ICachedService cachedService,
             IBasketService basketRepo,
             IMapper mapper,
-            IStoreUow unitOfWork)
+            IStoreRepository storeRepo)
         {
-            this._unitOfWork = unitOfWork;
+            this._storeRepo = storeRepo;
             this._basketRepo = basketRepo;
             this._mapper = mapper;
             this._cachedService = cachedService;
@@ -57,7 +58,7 @@ namespace BackendApi.Core.Services
                 items.Add(orderItem);
              }
 
-             var deliveryMethod = await _unitOfWork.EntityRepo<DeliveryMethod>().GetByIdAsync(deliveryMethodId);
+             var deliveryMethod = await _storeRepo.GetByIdAsync<DeliveryMethod>(deliveryMethodId);
              subTotal += deliveryMethod.Price;
 
             var order = new Order(
@@ -70,9 +71,9 @@ namespace BackendApi.Core.Services
                 basket.PaymentIntentId
             );
 
-            await _unitOfWork.EntityRepo<Order>().AddAsync(order);
+            await _storeRepo.AddAsync(order);
             try{
-                var result = await _unitOfWork.CompleteAsync();
+                var result = await _storeRepo.CompleteAsync();
                 if(result <=0) return null;
              
                 return order;
@@ -89,7 +90,7 @@ namespace BackendApi.Core.Services
         {
             return await _cachedService.GetAndSetAsync<List<DeliveryMethodDto>>(_deliveryMethodKey, async () =>
             {
-               var result = await _unitOfWork.EntityRepo<DeliveryMethod>().GetAllAsync();
+               var result = await _storeRepo.GetAllAsync<DeliveryMethod>();
                foreach (var item in result)
                 {
                     item.ShortName = await this._localizedService.GetLocalizedAsync(item,d => d.ShortName);
@@ -103,22 +104,21 @@ namespace BackendApi.Core.Services
         public async Task<List<Order>> GetOrderByEmailListSpec(GetOrderParam param)
         {
             // var spec = new GetOrderByEmailListSpec(param);
-            var result = await _unitOfWork.EntityRepo<Order>()
-                    .GetAllAsync(q => OrderSpec.GetOrderByEmailListSpec(q,param));
+            var result = await _storeRepo.GetAllAsync<Order>(q => OrderSpec.GetOrderByEmailListSpec(q,param));
             return result.ToList();
         }
 
         public async Task<Order> GetOrderByIdAsync(int id, string buyerEmail)
         {
             // var spec = new GetOrderWithItemsSpec(id,buyerEmail);
-            var result = await _unitOfWork.EntityRepo<Order>().GetByIdAsync(id,q => OrderSpec.GetOrderWithItemsSpec(q,buyerEmail));
+            var result = await _storeRepo.GetByIdAsync<Order>(id,q => OrderSpec.GetOrderWithItemsSpec(q,buyerEmail));
             return result;
         }
 
         public async Task<List<Order>> GetOrdersForUserAsync(string buyerEmail)
         {
             // var spec = new GetOrderWithItemsSpec(buyerEmail);
-            var result = await _unitOfWork.EntityRepo<Order>().GetAllAsync(q => OrderSpec.GetOrderWithItemsSpec(q,buyerEmail));
+            var result = await _storeRepo.GetAllAsync<Order>(q => OrderSpec.GetOrderWithItemsSpec(q,buyerEmail));
             return result.ToList();
         }
     }

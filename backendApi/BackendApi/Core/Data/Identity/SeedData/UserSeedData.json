@@ -22,6 +22,7 @@
     },
     {
         "Email": "b@a.com",
+        "UserPublicId": "Karen",
         "UserName": "Karen",
         "UserInfo": {
             "Gender": "female",
@@ -43,6 +44,7 @@
     },
     {
         "Email": "c@a.com",
+        "UserPublicId": "Margo",
         "UserName": "Margo",
         "UserInfo": {
             "Gender": "female",
@@ -64,6 +66,7 @@
     },
     {
         "Email": "d@a.com",
+        "UserPublicId": "Lois",
         "UserName": "Lois",
         "UserInfo": {
             "Gender": "female",
@@ -85,6 +88,7 @@
     },
     {
         "Email": "e@a.com",
+        "UserPublicId": "Ruthie",
         "UserName": "Ruthie",
         "UserInfo": {
             "Gender": "female",
@@ -106,6 +110,7 @@
     },
     {
         "Email": "f@a.com",
+        "UserPublicId": "Todd",
         "UserName": "Todd",
         "UserInfo": {
             "Gender": "male",
@@ -127,6 +132,7 @@
     },
     {
         "Email": "g@a.com",
+        "UserPublicId": "Porter",
         "UserName": "Porter",
         "UserInfo": {
             "Gender": "male",
@@ -148,6 +154,7 @@
     },
     {
         "Email": "h@a.com",
+        "UserPublicId": "Mayo",
         "UserName": "Mayo",
         "UserInfo": {
             "Gender": "male",
@@ -169,6 +176,7 @@
     },
     {
         "Email": "i@a.com",
+        "UserPublicId": "Skinner",
         "UserName": "Skinner",
         "UserInfo": {
             "Gender": "male",
@@ -190,6 +198,7 @@
     },
     {
         "Email": "j@a.com",
+        "UserPublicId": "Davis",
         "UserName": "Davis",
         "UserInfo": {
             "Gender": "male",

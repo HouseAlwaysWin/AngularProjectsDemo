@@ -1,31 +1,31 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using BackendApi.Core.Data.Repositories.Interfaces;
 using BackendApi.Core.Models.Entities;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.EntityFrameworkCore;
+using LinqToDB.Linq;
 using Microsoft.EntityFrameworkCore;
 
 namespace BackendApi.Core.Data.Repositories
 {
 
-    public abstract class BaseRepository<TEntity, TContext> : IBaseRepository<TEntity>  where TEntity : BaseEntity where TContext : DbContext
+    public abstract class BaseRepository<TContext> : IBaseRepository<TContext> where TContext : DbContext
     {
         private readonly TContext _context;
-        public BaseRepository()
-        {
-            LinqToDBForEFTools.Initialize();
-        }
+        
         public BaseRepository(TContext context)
         {
             this._context = context;
             LinqToDBForEFTools.Initialize();
         }
 
-        private async Task<PagedList<TEntity>> GetAllPagedNoCachedAsync(int pageIndex, int pageSize, Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null)
+        private async Task<PagedList<TEntity>> GetAllPagedNoCachedAsync<TEntity>(int pageIndex, int pageSize, Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null)
+            where TEntity:class
         {
             var query = _context.Set<TEntity>().AsQueryable();
             query = func != null ? func(query) : query;
@@ -38,7 +38,8 @@ namespace BackendApi.Core.Data.Repositories
         }
 
 
-        public virtual async Task<IList<TEntity>> GetAllAsync(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null, bool useCached = false, string key = null)
+        public virtual async Task<IList<TEntity>> GetAllAsync<TEntity>(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null)
+            where TEntity: class,IBaseEntity
         {
             var query = _context.Set<TEntity>().AsQueryable();
             query = func != null ? func(query) : query;
@@ -46,7 +47,8 @@ namespace BackendApi.Core.Data.Repositories
         }
 
 
-        public virtual async Task<PagedList<TEntity>> GetAllPagedAsync(int pageIndex, int pageSize, Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null, bool useCached = false, string key = null)
+        public virtual async Task<PagedList<TEntity>> GetAllPagedAsync<TEntity>(int pageIndex, int pageSize, Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null)
+             where TEntity: class,IBaseEntity
         {
 
             var query = _context.Set<TEntity>().AsQueryable();
@@ -61,7 +63,8 @@ namespace BackendApi.Core.Data.Repositories
         }
 
 
-        public virtual async Task<TEntity> GetByAsync(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null)
+        public virtual async Task<TEntity> GetByAsync<TEntity>(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null)
+                where TEntity: class,IBaseEntity
         {
             var query = _context.Set<TEntity>().AsQueryable();
             query = func != null ? func(query) : query;
@@ -69,7 +72,8 @@ namespace BackendApi.Core.Data.Repositories
         }
 
 
-        public virtual async Task<TEntity> GetByIdAsync(int id, Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null)
+        public virtual async Task<TEntity> GetByIdAsync<TEntity>(int id, Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null) 
+                            where TEntity: class,IBaseEntity
         {
             var query = _context.Set<TEntity>().AsQueryable();
             query = func != null ? func(query) : query;
@@ -77,7 +81,8 @@ namespace BackendApi.Core.Data.Repositories
         }
 
 
-        public virtual async Task AddAsync(TEntity entity)
+        public virtual async Task AddAsync<TEntity>(TEntity entity)
+            where TEntity:class,IBaseEntity
         {
             if (entity == null)
             {
@@ -86,7 +91,8 @@ namespace BackendApi.Core.Data.Repositories
             await _context.Set<TEntity>().AddAsync(entity);
         }
 
-        public virtual async Task BulkAddAsync(IEnumerable<TEntity> entities)
+        public virtual async Task BulkAddAsync<TEntity>(IEnumerable<TEntity> entities)
+                    where TEntity:class,IBaseEntity
         {
             if (entities == null)
             {
@@ -96,7 +102,8 @@ namespace BackendApi.Core.Data.Repositories
         }
 
 
-        public virtual void Update(TEntity entity)
+        public virtual void Update<TEntity>(TEntity entity)
+                    where TEntity:class,IBaseEntity
         {
             if (entity == null)
             {
@@ -107,14 +114,32 @@ namespace BackendApi.Core.Data.Repositories
             _context.Entry(entity).State = EntityState.Modified;
         }
 
-        public virtual async Task UpdateAsync(TEntity entity)
+       public virtual async Task UpdateAsync<TEntity>(TEntity entity, 
+                    Func<IQueryable<TEntity>,IUpdatable<TEntity>> func)
+                where TEntity : class,IBaseEntity
         {
-            await _context.Set<TEntity>().UpdateAsync(p => entity);
-            _context.Entry(entity).State = EntityState.Modified;
+            var query = _context.GetTable<TEntity>()
+                .Where(e => e.Id == entity.Id);
+            await func(query).UpdateAsync();
+        }
+
+         public virtual async Task UpdateAsync<TEntity>(TEntity entity, 
+                    Dictionary<string,object> props)
+                where TEntity : class,IBaseEntity
+        {
+            var query = _context.GetTable<TEntity>()
+                .Where(e => e.Id == entity.Id).AsUpdatable();
+
+            foreach (var item in props)
+            {
+                query =query.Set(e => Sql.Property<TEntity>(e,item.Key),item.Value);
+            }
+            await query.UpdateAsync();
         }
 
 
-        public virtual void Remove(TEntity entity)
+        public virtual void Remove<TEntity>(TEntity entity)
+                    where TEntity:class,IBaseEntity
         {
             if (entity == null)
             {
@@ -123,7 +148,8 @@ namespace BackendApi.Core.Data.Repositories
             _context.Set<TEntity>().Remove(entity);
         }
 
-        public virtual async Task RemoveAsync(TEntity entity)
+        public virtual async Task RemoveAsync<TEntity>(TEntity entity)
+                    where TEntity:class,IBaseEntity
         {
 
             if (entity == null)
@@ -134,9 +160,20 @@ namespace BackendApi.Core.Data.Repositories
             await _context.Set<TEntity>().DeleteWithOutputAsync(e => e.Id == id);
         }
 
-        public virtual async Task RemoveByIdAsync(int id)
+        public virtual async Task RemoveByIdAsync<TEntity>(int id)
+                    where TEntity:class,IBaseEntity
         {
             await _context.Set<TEntity>().DeleteWithOutputAsync(e => e.Id == id);
         }
+
+        public virtual void Dispose()
+        {
+            this._context.Dispose();
+        }
+
+       public virtual async Task<int> CompleteAsync()
+       {
+         return await _context.SaveChangesAsync();
+       }
     }
 }

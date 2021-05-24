@@ -1,10 +1,13 @@
+using System;
 using System.Collections.Generic;
 
 namespace BackendApi.Core.Models.Entities
 {
-    public class Picture:BaseEntity
+    public class Picture:IBaseEntity
     {
-        // public int Id { get; set; }
+       public int Id { get ; set ; }
+        public DateTimeOffset CreatedDate { get ; set ; }
+        public DateTimeOffset? ModifiedDate { get ; set ; }
         public string MimeType { get; set; }
         public string Name { get; set; }
         public string UrlPath { get; set; }

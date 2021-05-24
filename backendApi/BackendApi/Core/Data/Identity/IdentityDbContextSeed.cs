@@ -11,10 +11,10 @@ using Newtonsoft.Json;
 
 namespace BackendApi.Core.Data.Identity
 {
-    public class IdentityDbContextSeed
+    public class UserContextSeed
     {
        public static async Task SeedUsersAsync(
-           IdentityDbContext context,
+           UserContext context,
            UserManager<AppUser> userManager,
            RoleManager<AppRole> roleManager,
            ILoggerFactory loggerFactory

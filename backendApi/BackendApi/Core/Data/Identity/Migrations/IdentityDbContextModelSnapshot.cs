@@ -8,8 +8,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace BackendApi.Core.Data.Identity.Migrations
 {
-    [DbContext(typeof(IdentityDbContext))]
-    partial class IdentityDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(UserContext))]
+    partial class UserContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -116,6 +116,9 @@ namespace BackendApi.Core.Data.Identity.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
+                    b.Property<string>("UserPublicId")
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -126,6 +129,9 @@ namespace BackendApi.Core.Data.Identity.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.HasIndex("UserInfoId");
+
+                    b.HasIndex("UserPublicId")
+                        .IsUnique();
 
                     b.ToTable("AppUsers");
                 });

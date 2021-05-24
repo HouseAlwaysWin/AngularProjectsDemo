@@ -8,7 +8,7 @@ namespace BackendApi.Core.Services.Interfaces
     public interface ILocalizedService
     {
         Task<string> GetLocalizedAsync<TEntity, TProp>(TEntity entity, Expression<Func<TEntity, TProp>> keySelector, int? languageId =null) 
-                where TEntity : BaseEntity;
+                where TEntity : class,IBaseEntity;
         Task<Localized> GetLocalizedObjectAsync(int languageId, int tableId, string localeTable, string localeKey);
     }
 }

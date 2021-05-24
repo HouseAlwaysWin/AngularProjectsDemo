@@ -14,13 +14,13 @@ namespace BackendApi.Core.Services
 
     public class LocalizedService : ILocalizedService
     {
-        private readonly IStoreRepository<Localized> _localizedEntityRepo;
+        private readonly IStoreRepository _localizedEntityRepo;
         private readonly ILanguageService _languageService;
         private readonly ICachedService _redisCachedService;
 
         public LocalizedService(
             ICachedService redisCachedService,
-            IStoreRepository<Localized> localizedEntityRepo,
+            IStoreRepository localizedEntityRepo,
             ILanguageService languageService
         )
         {
@@ -31,7 +31,7 @@ namespace BackendApi.Core.Services
 
         public async Task<string> GetLocalizedAsync<TEntity, TProp>(TEntity entity,
             Expression<Func<TEntity, TProp>> keySelector, int? languageId =null)
-        where TEntity : BaseEntity
+        where TEntity : class,IBaseEntity
         {
             if (entity == null)
             {
@@ -74,7 +74,7 @@ namespace BackendApi.Core.Services
             var key = _redisCachedService.CreateKey<Localized>(languageId, tableId, entityType, propertyKey);
             return await _redisCachedService.GetAndSetAsync<Localized>(key, async () =>
             {
-                var source = await _localizedEntityRepo.GetAllAsync();
+                var source = await _localizedEntityRepo.GetAllAsync<Localized>();
                 if (source != null)
                 {
                     var query = source.Where(l =>

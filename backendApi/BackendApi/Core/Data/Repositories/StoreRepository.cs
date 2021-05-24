@@ -3,8 +3,11 @@ using BackendApi.Core.Models.Entities;
 
 namespace BackendApi.Core.Data.Repositories
 {
-    public class StoreRepository<TEntity> : BaseRepository<TEntity,StoreContext>,IStoreRepository<TEntity> where TEntity : BaseEntity
+    public class StoreRepository : BaseRepository<StoreContext>,IStoreRepository
     {
-
+        public StoreRepository(StoreContext context):base(context)
+        {
+            
+        }
     }
 }

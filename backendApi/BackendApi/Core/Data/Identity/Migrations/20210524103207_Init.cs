@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace BackendApi.Core.Data.Identity.Migrations
 {
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -71,6 +71,7 @@ namespace BackendApi.Core.Data.Identity.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserPublicId = table.Column<string>(type: "text", nullable: true),
                     UserInfoId = table.Column<int>(type: "integer", nullable: true),
                     CreatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     ModifiedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
@@ -306,6 +307,12 @@ namespace BackendApi.Core.Data.Identity.Migrations
                 name: "IX_AppUsers_UserInfoId",
                 table: "AppUsers",
                 column: "UserInfoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppUsers_UserPublicId",
+                table: "AppUsers",
+                column: "UserPublicId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",

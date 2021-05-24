@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BackendApi.Core.Data.QuerySpecs;
+using BackendApi.Core.Data.Repositories;
 using BackendApi.Core.Data.Repositories.Interfaces;
 using BackendApi.Core.Data.Services.Interfaces;
 using BackendApi.Core.Models.Entities;
@@ -15,18 +16,18 @@ namespace BackendApi.Core.Services
     public class PaymentService : IPaymentService
     {
         private readonly IBasketService _basketService;
-        private readonly IStoreUow _unitOfWork;
+        private readonly IStoreRepository _storeRepo;
         private readonly IConfiguration _config;
         private readonly string  _env;
 
         public PaymentService(
             IBasketService basketService,
-            IStoreUow unitOfWork,
+            IStoreRepository storeRepo,
             IConfiguration config
         )
         {
             this._basketService = basketService;
-            this._unitOfWork = unitOfWork;
+            this._storeRepo = storeRepo;
             this._config = config;
             _env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
         }
@@ -43,8 +44,7 @@ namespace BackendApi.Core.Services
             if(basket.DeliveryMethodId.HasValue){
                 // var deliveryMethod = await _unitOfWork.Repository<DeliveryMethod>()
                 //             .GetByIdAsync((int)basket.DeliveryMethodId);
-                var deliveryMethod = await _unitOfWork.EntityRepo<DeliveryMethod>()
-                            .GetByIdAsync((int)basket.DeliveryMethodId);
+                var deliveryMethod = await _storeRepo.GetByIdAsync<DeliveryMethod>((int)basket.DeliveryMethodId);
                 shippingPrice = deliveryMethod.Price;
             }
 
@@ -86,7 +86,7 @@ namespace BackendApi.Core.Services
         public async Task<Models.Entities.Order> UpdateOrderPaymentFailed(string paymentIntentId)
         {
             // var spec = new OrderByPaymentIntentIdSpec(paymentIntentId);
-            var order = await _unitOfWork.EntityRepo<Models.Entities.Order>().GetByAsync(q => {
+            var order = await _storeRepo.GetByAsync<Models.Entities.Order>(q => {
                 return q.Where(o => o.PaymentIntentId == paymentIntentId);
             });
             if(order == null) return null;
@@ -94,8 +94,8 @@ namespace BackendApi.Core.Services
             order.OrderStatus = OrderStatus.PaymentFailed;
             // _unitOfWork.Repository<Models.Entities.Order>().Update(order);
 
-            _unitOfWork.EntityRepo<Models.Entities.Order>().Update(order);
-            await _unitOfWork.CompleteAsync();
+            _storeRepo.Update(order);
+            await _storeRepo.CompleteAsync();
             return null;
         }
 
@@ -103,7 +103,7 @@ namespace BackendApi.Core.Services
         {
             //  var spec = new OrderByPaymentIntentIdSpec(paymentIntentId);
             // var order = await _unitOfWork.Repository<Models.Entities.Order>().GetEntityWithSpec(spec);
-            var order = await _unitOfWork.EntityRepo<Models.Entities.Order>().GetByAsync(q => {
+            var order = await _storeRepo.GetByAsync<Models.Entities.Order>(q => {
                 return q.Where(o => o.PaymentIntentId == paymentIntentId);
             });
 
@@ -111,7 +111,7 @@ namespace BackendApi.Core.Services
 
             order.OrderStatus = OrderStatus.PaymentReceived;
 
-            await _unitOfWork.CompleteAsync();
+            await _storeRepo.CompleteAsync();
             return order;
         }
     }

@@ -11,13 +11,13 @@ namespace BackendApi.Core.Services
 {
     public class LanguageService : ILanguageService
     {
-        private readonly IStoreRepository<Language> _languageEntityRepo;
+        private readonly IStoreRepository _languageEntityRepo;
         private readonly ICachedService _redisCachedService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         public LanguageService(
             ICachedService redisCachedService,
             IHttpContextAccessor httpContextAccessor,
-            IStoreRepository<Language> languageEntityRepo
+            IStoreRepository languageEntityRepo
             )
         {
             this._languageEntityRepo = languageEntityRepo;
@@ -33,7 +33,7 @@ namespace BackendApi.Core.Services
 
             var langList = await _redisCachedService.GetAndSetAsync<List<Language>>(key, async () =>
             {
-                var source =await _languageEntityRepo.GetAllAsync();
+                var source =await _languageEntityRepo.GetAllAsync<Language>();
                 return source.ToList();;
             });
 

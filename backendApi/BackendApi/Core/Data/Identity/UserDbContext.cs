@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BackendApi.Core.Data.Identity
 {
-    public class IdentityDbContext:
+    public class UserContext:
         IdentityDbContext<AppUser,AppRole,int,
         IdentityUserClaim<int>,AppUserRole,IdentityUserLogin<int>,
         IdentityRoleClaim<int>,IdentityUserToken<int>>
@@ -16,7 +16,7 @@ namespace BackendApi.Core.Data.Identity
         public DbSet<UserInfo> UserInfo { get; set; }
         public DbSet<UserPhoto> UserPhoto { get; set; }
         public DbSet<Message> Message { get; set; }
-        public IdentityDbContext(DbContextOptions<IdentityDbContext> options ):base(options)
+        public UserContext(DbContextOptions<UserContext> options):base(options)
         {
             
         }
@@ -38,6 +38,10 @@ namespace BackendApi.Core.Data.Identity
                  .WithOne(u => u.User)
                  .HasForeignKey(ur => ur.UserId)
                  .IsRequired();
+
+                 a.HasIndex(u => u.UserPublicId)
+                    .IsUnique();
+                    
             });
 
             builder.Entity<AppRole>(b =>

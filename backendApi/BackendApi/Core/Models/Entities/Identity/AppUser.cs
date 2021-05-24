@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace BackendApi.Core.Entities.Identity
 {
-    public class AppUser : IdentityUser<int>
+    public class AppUser : IdentityUser<int>,IBaseEntity
     {
+        public string UserPublicId { get; set; }
         public UserAddress Address { get; set; }
         public UserInfo UserInfo { get; set; }
         public DateTimeOffset CreatedDate { get; set; } = DateTimeOffset.UtcNow;

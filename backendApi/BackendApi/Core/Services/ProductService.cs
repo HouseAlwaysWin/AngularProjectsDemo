@@ -16,13 +16,7 @@ namespace BackendApi.Core.Services
 {
     public class ProductService : IProductService
     {
-        private readonly IStoreRepository<Product> _productEntityRepo;
-        private readonly IStoreRepository<ProductAttribute> _attributeEntityRepo;
-        private readonly IStoreRepository<ProductAttributeValue> _attributeValueEntityRepo;
-        private readonly IStoreRepository<Product_ProductAttribute> _attributeMapEntityRepo;
-        private readonly IStoreRepository<ProductCategory> _categoryEntityRepo;
-        private readonly IStoreRepository<Picture> _pictureEntityRepo;
-        private readonly IStoreRepository<Product_Picture> _pictureMapRepo;
+        private readonly IStoreRepository _storeRepo;
         private readonly ICachedService _cachedService;
         private readonly ILocalizedService _localizedService;
         private readonly IMapper _mapper;
@@ -38,13 +32,7 @@ namespace BackendApi.Core.Services
         private string _pictureMapKey { get { return $"{_cachedService.GetCurrentLang()}_all_pictureMap_key"; } }
 
         public ProductService(
-            IStoreRepository<Product> productEntityRepo,
-            IStoreRepository<ProductAttribute> attributeEntityRepo,
-            IStoreRepository<ProductAttributeValue> attributeValueEntityRepo,
-            IStoreRepository<Product_ProductAttribute> attributeMapEntityRepo,
-            IStoreRepository<ProductCategory> categoryEntityRepo,
-            IStoreRepository<Picture> pictureEntityRepo,
-            IStoreRepository<Product_Picture> pictureMapRepo,
+            IStoreRepository storeRepo,
             ICachedService cachedService,
             ILocalizedService localizedService,
             ILogger<ProductService> logger,
@@ -53,13 +41,7 @@ namespace BackendApi.Core.Services
             this._localizedService = localizedService;
             this._mapper = mapper;
             this._logger = logger;
-            this._productEntityRepo = productEntityRepo;
-            this._attributeEntityRepo = attributeEntityRepo;
-            this._attributeValueEntityRepo = attributeValueEntityRepo;
-            this._attributeMapEntityRepo = attributeMapEntityRepo;
-            this._categoryEntityRepo = categoryEntityRepo;
-            this._pictureEntityRepo = pictureEntityRepo;
-            this._pictureMapRepo = pictureMapRepo;
+            this._storeRepo = storeRepo;
             this._cachedService = cachedService;
         }
 
@@ -123,7 +105,7 @@ namespace BackendApi.Core.Services
         {
             return await _cachedService.GetAndSetAsync<List<ProductDto>>(_productKey, async () =>
            {
-               var data = await _productEntityRepo.GetAllAsync(null, true, _productKey);
+               var data = await _storeRepo.GetAllAsync<Product>();
                foreach (var item in data)
                {
                    item.Name = await _localizedService.GetLocalizedAsync(item, p => p.Name);
@@ -138,7 +120,7 @@ namespace BackendApi.Core.Services
         {
             return await _cachedService.GetAndSetAsync<List<ProductAttributeDto>>(_productAttrKey, async () =>
              {
-                 var data = await _attributeEntityRepo.GetAllAsync(null, true, _productAttrKey);
+                 var data = await _storeRepo.GetAllAsync<ProductAttribute>();
                  foreach (var item in data)
                  {
                      item.Name = await _localizedService.GetLocalizedAsync(item, p => p.Name);
@@ -152,7 +134,7 @@ namespace BackendApi.Core.Services
         {
             return await _cachedService.GetAndSetAsync<List<ProductAttributeValueDto>>(_productAttrValueKey, async () =>
            {
-               var data = await _attributeValueEntityRepo.GetAllAsync(null, true, _productAttrValueKey);
+               var data = await _storeRepo.GetAllAsync<ProductAttributeValue>();
                foreach (var item in data)
                {
                    item.Name = await _localizedService.GetLocalizedAsync(item, p => p.Name);
@@ -166,7 +148,7 @@ namespace BackendApi.Core.Services
         {
             return await _cachedService.GetAndSetAsync<List<Product_ProductAttributeDto>>(_productAttrMapKey, async () =>
             {
-                var data = await _attributeMapEntityRepo.GetAllAsync(null, true, _productAttrMapKey);
+                var data = await _storeRepo.GetAllAsync<Product_ProductAttribute>();
                 var dtos = _mapper.Map<List<Product_ProductAttribute>, List<Product_ProductAttributeDto>>(data.ToList());
                 return dtos;
             });
@@ -176,7 +158,7 @@ namespace BackendApi.Core.Services
         {
             return await _cachedService.GetAndSetAsync<List<ProductCategoryDto>>(_categoryKey, async () =>
             {
-                var data = await _categoryEntityRepo.GetAllAsync(null, true, _categoryKey);
+                var data = await _storeRepo.GetAllAsync<ProductCategory>();
                 foreach (var item in data)
                 {
                     item.Name = await _localizedService.GetLocalizedAsync(item, c => c.Name);
@@ -190,7 +172,7 @@ namespace BackendApi.Core.Services
         {
             return await _cachedService.GetAndSetAsync<List<PictureDto>>(_pictureKey, async () =>
             {
-                var data = await _pictureEntityRepo.GetAllAsync(null, true, _pictureKey);
+                var data = await _storeRepo.GetAllAsync<Picture>();
                 var dtos = _mapper.Map<List<Picture>, List<PictureDto>>(data.ToList());
                 return dtos;
             });
@@ -200,7 +182,7 @@ namespace BackendApi.Core.Services
         {
             return await _cachedService.GetAndSetAsync<List<Product_PictureDto>>(_pictureMapKey, async () =>
             {
-                var data = await _pictureMapRepo.GetAllAsync(null, true, _pictureMapKey);
+                var data = await _storeRepo.GetAllAsync<Product_Picture>();
                 var dtos = _mapper.Map<List<Product_Picture>, List<Product_PictureDto>>(data.ToList());
                 return dtos;
             });
@@ -284,7 +266,7 @@ namespace BackendApi.Core.Services
             }
 
             paramTemp = _mapper.Map<ProductListParam, ProductLikeParam>(param);
-            var result = await _productEntityRepo.GetAllPagedAsync(
+            var result = await _storeRepo.GetAllPagedAsync<Product>(
             param.PageIndex, param.PageSize, query => ProductSpec.GetProducts(query, paramTemp));
             await SetProductsTranslation(result.Data);
             productsDto = _mapper.Map<PagedList<Product>, PagedList<ProductDto>>(result);
@@ -303,7 +285,7 @@ namespace BackendApi.Core.Services
                 return productDtos;
             }
 
-            var products = await _productEntityRepo.GetAllAsync(query => ProductSpec.GetProductLikeQuery(query, param));
+            var products = await _storeRepo.GetAllAsync<Product>(query => ProductSpec.GetProductLikeQuery(query, param));
             foreach (var item in products)
             {
                 item.Name = await _localizedService.GetLocalizedAsync(item, p => p.Name);
@@ -327,7 +309,7 @@ namespace BackendApi.Core.Services
                 productDtos = new PagedList<ProductDto>(pagedData, total);
                 return productDtos;
             }
-            var result = await _productEntityRepo.GetAllPagedAsync(
+            var result = await _storeRepo.GetAllPagedAsync<Product>(
                 param.PageIndex, param.PageSize, query => ProductSpec.GetProductLikeQuery(query, param));
             await SetProductsTranslation(result.Data);
             productDtos = _mapper.Map<PagedList<Product>, PagedList<ProductDto>>(result);
@@ -344,14 +326,14 @@ namespace BackendApi.Core.Services
                 productDto = cachedData.FirstOrDefault(p => p.Id == id);
                 return productDto;
             }
-            var product = await _productEntityRepo.GetByIdAsync(id, q => ProductSpec.GetProductAll(q));
+            var product = await _storeRepo.GetByIdAsync<Product>(id, q => ProductSpec.GetProductAll(q));
             productDto = _mapper.Map<Product, ProductDto>(product);
             return productDto;
         }
 
         public async Task AddProductAsync(Product product){
             try{
-                await _productEntityRepo.AddAsync(product);
+                await _storeRepo.AddAsync(product);
             } catch(Exception ex) {
                 System.Console.WriteLine(ex);
             }
@@ -359,7 +341,7 @@ namespace BackendApi.Core.Services
 
         public async Task AddProductsAsync(IEnumerable<Product> products){
             try{
-            await _productEntityRepo.BulkAddAsync(products);
+            await _storeRepo.BulkAddAsync(products);
             } catch(Exception ex) {
                 System.Console.WriteLine(ex);
             }
@@ -375,9 +357,9 @@ namespace BackendApi.Core.Services
             }
             else
             {
-                var roots = await _categoryEntityRepo.GetAllAsync(query => query.Where(p => !p.ParentId.HasValue));
+                var roots = await _storeRepo.GetAllAsync<ProductCategory>(query => query.Where(p => !p.ParentId.HasValue));
 
-                var data = await _categoryEntityRepo.GetAllAsync(null, true, _categoryKey);
+                var data = await _storeRepo.GetAllAsync<ProductCategory>();
                 foreach (var item in data)
                 {
                     item.Name = await _localizedService.GetLocalizedAsync(item, c => c.Name);

@@ -48,7 +48,7 @@ namespace BackendApi
             var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             services.AddAutoMapper(typeof(AutomapperProfiles));
             services.AddControllers();
-            // services.AddDbContext<IdentityDbContext>(x =>
+            // services.AddDbContext<UserContext>(x =>
             //     // x.UseSqlServer(_config.GetConnectionString("IdentityConnection")));
             //        x.UseNpgsql(_config.GetConnectionString("IdentityConnection")));
             
@@ -56,7 +56,7 @@ namespace BackendApi
             //     // x.UseSqlServer(_config.GetConnectionString("DefaultConnection")));
             //     x.UseNpgsql(_config.GetConnectionString("DefaultConnection")));
 
-           services.AddDbContext<IdentityDbContext>(options =>
+           services.AddDbContext<UserContext>(options =>
             {
 
                 string connStr;
@@ -164,7 +164,7 @@ namespace BackendApi
                 .AddRoleManager<RoleManager<AppRole>>()
                 .AddSignInManager<SignInManager<AppUser>>()
                 .AddRoleValidator<RoleValidator<AppRole>>()
-                .AddEntityFrameworkStores<IdentityDbContext>();
+                .AddEntityFrameworkStores<UserContext>();
             
             services.Configure<IdentityOptions>(options =>{
                 options.Lockout.AllowedForNewUsers = false;
@@ -227,10 +227,11 @@ namespace BackendApi
             services.AddSingleton<IHttpContextAccessor,HttpContextAccessor>();
             services.AddScoped<ILocalizedService,LocalizedService>();
             services.AddScoped<IBasketService,BasketService>();
-            services.AddScoped(typeof(IStoreRepository<>),typeof(StoreRepository<>));
-            services.AddScoped(typeof(IIdentityRepository<>),typeof(IdentityRepository<>));
-            services.AddScoped(typeof(IStoreUow),typeof(StoreUow));
-            services.AddScoped(typeof(IIdentityUow),typeof(IdentityUow));
+
+            services.AddScoped<IStoreRepository,StoreRepository>();
+            services.AddScoped<IUserRepository,UserRepository>();
+            // services.AddScoped<IStoreUow,StoreUow>();
+            // services.AddScoped<IUserUow,UserUow>();
 
             // services.AddScoped(typeof(IEntityRepository<,>),(typeof(EntityRepository<>)));
             // services.AddScoped<IUnitOfWork,UnitOfWork>();

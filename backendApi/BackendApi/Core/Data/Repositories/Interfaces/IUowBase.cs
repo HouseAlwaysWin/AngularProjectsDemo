@@ -1,12 +1,12 @@
-using System;
-using System.Threading.Tasks;
-using BackendApi.Core.Models.Entities;
+// using System;
+// using System.Threading.Tasks;
+// using BackendApi.Core.Models.Entities;
 
-namespace BackendApi.Core.Data.Repositories.Interfaces
-{
-    public interface IUowBase:IDisposable
-    {
-        IBaseRepository<TEntity> EntityRepo<TEntity>() where TEntity : BaseEntity;
-        Task<int> CompleteAsync();  
-    }
-}
+// namespace BackendApi.Core.Data.Repositories.Interfaces
+// {
+//     public interface IUowBase<TContext>:IDisposable
+//     {
+//         IBaseRepository<TContext> EntityRepo<TEntity,TRepository>();
+//         Task<int> CompleteAsync();  
+//     }
+// }

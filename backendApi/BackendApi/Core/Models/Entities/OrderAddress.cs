@@ -1,6 +1,8 @@
+using System;
+
 namespace BackendApi.Core.Models.Entities
 {
-    public class OrderAddress:BaseEntity
+    public class OrderAddress:IBaseEntity
     {
         
         public OrderAddress()
@@ -17,6 +19,10 @@ namespace BackendApi.Core.Models.Entities
             ZipCode = zipCode;
         }
 
+
+        public int Id { get ; set ; }
+        public DateTimeOffset CreatedDate { get ; set ; }
+        public DateTimeOffset? ModifiedDate { get ; set ; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Street { get; set; }

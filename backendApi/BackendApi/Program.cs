@@ -30,9 +30,9 @@ namespace BackendApi
 
                     var userManager = services.GetRequiredService<UserManager<AppUser>>();
                     var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
-                    var identityContext = services.GetRequiredService<IdentityDbContext>();
+                    var identityContext = services.GetRequiredService<UserContext>();
                     await identityContext.Database.MigrateAsync();
-                    await IdentityDbContextSeed.SeedUsersAsync(identityContext,userManager,roleManager,loggerFactory);
+                    await UserContextSeed.SeedUsersAsync(identityContext,userManager,roleManager,loggerFactory);
 
                 }catch(Exception ex){
                     var logger = loggerFactory.CreateLogger<Program> ();

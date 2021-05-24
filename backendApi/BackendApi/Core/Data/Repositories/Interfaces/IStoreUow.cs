@@ -1,7 +1,7 @@
-namespace BackendApi.Core.Data.Repositories.Interfaces
-{
-    public interface IStoreUow:IUowBase
-    {
+// namespace BackendApi.Core.Data.Repositories.Interfaces
+// {
+//     public interface IStoreUow:IUowBase<StoreContext>
+//     {
          
-    }
-}
+//     }
+// }

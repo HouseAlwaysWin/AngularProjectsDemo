@@ -3,8 +3,11 @@ using BackendApi.Core.Entities.Identity;
 
 namespace BackendApi.Core.Models.Entities
 {
-    public class Message: BaseEntity 
+    public class Message: IBaseEntity 
     {
+          public int Id { get; set; }
+       public DateTimeOffset CreatedDate { get; set; }
+       public DateTimeOffset? ModifiedDate { get; set; }
         public int SenderId { get; set; }
         public string SenderUsername { get; set; }
         public AppUser Sender { get; set; }

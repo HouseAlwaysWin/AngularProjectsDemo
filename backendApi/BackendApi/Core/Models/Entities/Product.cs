@@ -1,10 +1,14 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 
 namespace BackendApi.Core.Models.Entities
 {
-    public class Product:BaseEntity
+    public class Product:IBaseEntity
     {
+        public int Id { get ; set ; }
+        public DateTimeOffset CreatedDate { get ; set ; }
+        public DateTimeOffset? ModifiedDate { get ; set ; }
         public string Name { get; set; }
         public decimal Price { get; set; }
         public string Description { get; set; }
