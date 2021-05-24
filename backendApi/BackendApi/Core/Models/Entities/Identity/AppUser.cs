@@ -1,0 +1,20 @@
+using System;
+using System.Collections.Generic;
+using BackendApi.Core.Models.Entities;
+using BackendApi.Core.Models.Entities.Identity;
+using Microsoft.AspNetCore.Identity;
+
+namespace BackendApi.Core.Entities.Identity
+{
+    public class AppUser : IdentityUser<int>
+    {
+        public UserAddress Address { get; set; }
+        public UserInfo UserInfo { get; set; }
+        public DateTimeOffset CreatedDate { get; set; } = DateTimeOffset.UtcNow;
+        public DateTimeOffset? ModifiedDate { get; set; }
+        public ICollection<Message> MessagesSent { get; set; }
+        public ICollection<Message> MessagesReceived { get; set; }
+        public ICollection<AppUserRole> AppUserRoles { get; set; }
+        public ICollection<UserPhoto> Photos { get; set; }
+    }
+}

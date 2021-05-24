@@ -1,0 +1,135 @@
+{
+  "Shared": {
+    "Required": "{{ name }}為必填",
+    "Confirm": "確認"
+  },
+  "Lang": {
+    "langs": "語言",
+    "en-US": "英文",
+    "zh-TW": "繁體中文"
+  },
+  "Shop": {
+    "Sort": "排序",
+    "Categories": "類別",
+    "All": "全部",
+    "Shop": "商店",
+    "Alphabetical": "字母排序",
+    "PriceLowToHight": "價格:低到高",
+    "PriceHightToLow": "價格:高到低",
+    "View": "詳細",
+    "NoProductsFound": "沒有找到產品"
+  },
+  "AccountForm": {
+    "Email": "電子信箱",
+    "Password": "密碼",
+    "Register": "註冊",
+    "Login": "登入",
+    "Logout": "登出",
+    "PasswordConfirm": "密碼再確認",
+    "EmailRequired": "電子信箱為必填",
+    "EmailFormatWrong": "電子信箱格式錯誤",
+    "PasswordRequired": "密碼為必填",
+    "PasswordConfirmRequired": "密碼再確認為必填",
+    "DisplayName": "顯示名稱",
+    "DisplayNameRequired": "顯示名稱為必填",
+    "LoginFailed": "登入失敗",
+    "RegisterFailed": "註冊失敗"
+  },
+  "Paginator": {
+    "ItemsPerPage": "每頁數",
+    "LastPage": "最後一頁",
+    "NextPage": "下一頁",
+    "PreviousPage": "上一頁",
+    "PageRange": "{{ start }}到{{ end }},總共{{ total }}個",
+    "PageRangeZero": "總共{{ total }}個"
+  },
+  "NavBar": {
+    "Home": "首頁",
+    "Shop": "商店",
+    "ShopCart": "購物車",
+    "OrdersHistory": "訂單紀錄",
+    "UserSetting": "使用者設定"
+  },
+  "Basket": {
+    "TheCartEmpty": "購物車為空",
+    "KeepShopping": "繼續購物"
+  },
+  "BasketTable": {
+    "No": "編號",
+    "Name": "名稱",
+    "Price": "價格",
+    "Quantity": "數量",
+    "Remove": "移除",
+    "img": "圖片"
+  },
+  "BasketTotal": {
+    "OrderSummary": "訂單總結",
+    "Hint": "運費會根據選擇的方式來做計算",
+    "SubTotal": "小計",
+    "ShippingPrice": "運費",
+    "TotalPrice": "總計",
+    "ProcessCheckout": "結帳"
+  },
+  "OrderTable": {
+    "No": "訂單編號",
+    "BuyerEmail": "電子郵件",
+    "BuyerName": "購買者姓名",
+    "TotalPrice": "總金額",
+    "DeliveryMethod": "配送方式",
+    "OrderStatus": "訂單狀態",
+    "OrderDate": "訂單日期",
+    "Detail": "訂單細節"
+  },
+  "OrderDetail": {
+    "No": "訂單號",
+    "ImgUrl": "圖片",
+    "Name": "名稱",
+    "Description": "說明",
+    "Price": "價格",
+    "Quantity": "數量",
+    "Return": "返回"
+  },
+  "ProductDetail": {
+    "Quantity": "數量",
+    "CurrentCartQuantity": "購物車目前數量",
+    "AddToCart": "加入購物車",
+    "GoToBasket": "前往購物車",
+    "ReturnShop": "返回商店"
+  },
+  "Checkout": {
+    "Address": "地址",
+    "DeliveryMethod": "運送方式",
+    "Review": "訂單總結",
+    "Payment": "付款",
+    "Previous": "上一步",
+    "Next": "下一步",
+    "DeliverymethodTitle": "選擇運送方式",
+    "SetAddress": "設定地址和帳戶一樣",
+    "Submit": "送出",
+    "NoOrdersfound": "無訂單",
+    "OrderSuccessTitle": "您的訂單已被確認",
+    "OrderId": "訂單編號",
+    "GoOrderDetail": "前往訂單紀錄"
+  },
+  "CheckoutAddress": {
+    "FirstName": "姓",
+    "LastName": "名稱",
+    "Street": "街道",
+    "City": "城市",
+    "State": "區域",
+    "ZipCode": "郵遞區號",
+    "ShippingAddress": "運送地址"
+  },
+  "Dialog": {
+    "Cancel": "取消",
+    "Confirm": "確定",
+    "AreYouSure": "確定嗎?",
+    "Message": "訊息"
+  },
+  "StripeErrorMsg": {
+    "invalid_number": "您的卡號無效。",
+    "invalid_expiry_year_past": "您的金融卡的到期年份是過去的年份。",
+    "invalid_expiry_year": "您的金融卡的到期年份無效。",
+    "PayFailed": "付款失敗"
+  }
+}

@@ -1,0 +1,16 @@
+[
+    {
+        "Id": 1,
+        "Name": "English",
+        "LangCulture": "en-US",
+        "Published": 1,
+        "SeqNo": 1
+    },
+    {
+        "Id": 2,
+        "Name": "Chinese",
+        "LangCulture": "zh-TW",
+        "Published": 1,
+        "SeqNo": 2
+    }
+]

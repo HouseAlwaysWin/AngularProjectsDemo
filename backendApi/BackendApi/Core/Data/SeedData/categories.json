@@ -1,0 +1,82 @@
+[
+    {
+        "Id": 1,
+        "Name": "Type1",
+        "HasChild": true,
+        "Level": 0,
+        "ParentId": 0,
+        "SeqNo": 1
+    },
+    {
+        "Id": 2,
+        "Name": "Type2",
+        "HasChild": false,
+        "Level": 1,
+        "ParentId": 1,
+        "SeqNo": 1
+    },
+    {
+        "Id": 3,
+        "Name": "Type3",
+        "HasChild": false,
+        "Level": 1,
+        "ParentId": 1,
+        "SeqNo": 2
+    },
+    {
+        "Id": 4,
+        "Name": "Type4",
+        "HasChild": true,
+        "Level": 0,
+        "ParentId": 0,
+        "SeqNo": 2
+    },
+    {
+        "Id": 5,
+        "Name": "Type5",
+        "HasChild": false,
+        "Level": 1,
+        "ParentId": 4,
+        "SeqNo": 1
+    },
+    {
+        "Id": 6,
+        "Name": "Type6",
+        "HasChild": false,
+        "Level": 1,
+        "ParentId": 4,
+        "SeqNo": 2
+    },
+    {
+        "Id": 7,
+        "Name": "Type7",
+        "HasChild": true,
+        "Level": 0,
+        "ParentId": 0,
+        "SeqNo": 3
+    },
+    {
+        "Id": 8,
+        "Name": "Type8",
+        "HasChild": false,
+        "Level": 1,
+        "ParentId": 7,
+        "SeqNo": 1
+    },
+    {
+        "Id": 9,
+        "Name": "Type9",
+        "HasChild": false,
+        "Level": 1,
+        "ParentId": 7,
+        "SeqNo": 2
+    },
+    {
+        "Id": 10,
+        "Name": "Type10",
+        "HasChild": false,
+        "Level": 1,
+        "ParentId": 7,
+        "SeqNo": 3
+    }
+]
