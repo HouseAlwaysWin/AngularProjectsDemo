@@ -8,9 +8,17 @@
 
 
   <div class="gender-title">Gender</div>
+
+  <div class="error-message"
+       *ngIf="error">
+    {{ error }}
+  </div>
+
   <div class="radio-field">
     <span class="radio-group">
       <input name="gender"
+             [formControlName]="'gender'"
+             value="male"
              id="male"
              type="radio" />
       <label for="male">
@@ -21,6 +29,7 @@
 
     <span class="radio-group">
       <input name="gender"
+             value="female"
              id="female"
              type="radio" />
       <label for="female">
@@ -36,7 +45,7 @@
           [formFieldInvalid]="registerForm"
           [fieldName]="'username'">
       <input type="text"
-             formControlName="username"
+             [formControlName]="'username'"
              name="username"
              placeholder="Enter your name">
       <label for="">Username</label>
@@ -52,7 +61,7 @@
           [formFieldInvalid]="registerForm"
           [fieldName]="'email'">
       <input type="text"
-             formControlName="email"
+             [formControlName]="'email'"
              name="email"
              placeholder="Enter your email">
       <label for="">Email</label>
@@ -72,7 +81,7 @@
           [formFieldInvalid]="registerForm"
           [fieldName]="'password'">
       <input type="password"
-             formControlName="password"
+             [formControlName]="'password'"
              name="password"
              placeholder="Password">
       <label for="">Password</label>
@@ -92,7 +101,7 @@
           [formFieldInvalid]="registerForm"
           [fieldName]="'passwordConfirm'">
       <input type="password"
-             formControlName="passwordConfirm"
+             [formControlName]="'passwordConfirm'"
              name="passwordConfirm"
              placeholder="Password Confirm">
       <label for="">Password Confirm</label>
@@ -107,8 +116,26 @@
     </span>
   </div>
 
+  <div class="date-field">
+    <p-calendar [formControlName]="'dateOfBirth'"
+                [monthNavigator]="true"
+                [yearNavigator]="true"
+                [placeholder]="'Date of Birth'"
+                [touchUI]="true"
+                class="datepicker"
+                yearRange="1900:2030"
+                inputId="navigators"></p-calendar>
+    <span class="error-message"
+          *ngIf="formService.field_error(registerForm,'dateOfBirth','required')">
+      Date of birth is required
+    </span>
+  </div>
+  <!-- <p-calendar class="datepicker"
+                [formControlName]="'dateOfBirth'"
+                [placeholder]="'Date of Birth'"></p-calendar> -->
+
+
   <button class="btn btn-primary"
-          [disabled]="!registerForm.valid"
           type="submit">Sign up</button>
 
 </form>

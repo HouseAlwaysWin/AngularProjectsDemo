@@ -24,6 +24,7 @@ using LinqToDB;
 using LinqToDB.EntityFrameworkCore;
 using LinqToDB.Linq;
 using System.Collections.Generic;
+using BackendApi.Core.Models.Entities.Identity;
 
 namespace BackendApi.Controllers
 {
@@ -57,29 +58,70 @@ namespace BackendApi.Controllers
         [HttpGet("getuser")]
         public async Task<ActionResult<ApiResponse<UserDto>>> GetUser(){
             try{
-            var email = HttpContext.User?.Claims?.FirstOrDefault(
-                x=>x.Type == ClaimTypes.Email)?.Value;
-            
-            var user = await _userManager.FindByEmailAsync(email);
+                var email = HttpContext.User?.Claims?.FirstOrDefault(
+                    x=>x.Type == ClaimTypes.Email)?.Value;
+                
+                var user = await _userManager.FindByEmailAsync(email);
 
-            var token = _tokenService.CreateToken(user);
+                var token = _tokenService.CreateToken(user);
 
-            return BaseApiOk(new UserDto{
-                    Email = user.Email,
-                    UserName = user.UserName,
-                    Token = token});
+                return BaseApiOk(new UserDto{
+                        Email = user.Email,
+                        UserName = user.UserName,
+                        Token = token});
+            }catch(Exception ex){
+                return BaseApiBadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("getuserinfo")]
+        public async Task<ActionResult> GetUserInfo(){
+            try{
+                var email = HttpContext.User?.Claims?.FirstOrDefault(
+                    x=>x.Type == ClaimTypes.Email)?.Value;
+                
+                var user = await _userManager.FindByEmailAsync(email);
+
+                var token = _tokenService.CreateToken(user);
+
+                return BaseApiOk(new UserDto{
+                        Email = user.Email,
+                        UserName = user.UserName,
+                        Token = token});
             }catch(Exception ex){
                 return BaseApiBadRequest(ex.Message);
             }
         }
 
         [HttpGet("getByPublicId")]
-        public async Task<ActionResult<ApiResponse<UserDto>>> GetUserByPublicId(string publicId){
-            var user = await _userRepo.GetByAsync<AppUser>(query =>  query.Where(u => u.UserPublicId == publicId));
+        public async Task<ActionResult> GetUserByPublicId(string publicId){
+            var user = await _userRepo.GetByAsync<AppUser>(query =>  {
+                    return query.Where(u => u.UserPublicId == publicId)
+                        .Include(u => u.Address)
+                        .Include(u => u.UserInfo);
+            });
+
+            var result = _mapper.Map<AppUser,AppUserDto>(user);
+
             if(user  == null){
                 return BaseApiOk(null);
             }
-            return BaseApiOk<AppUser>(user);
+
+            return BaseApiOk<AppUserDto>(result);
+        }
+
+        [HttpGet("checkUserDuplicated")]
+        public async Task<ActionResult> CheckUserDuplicate(string emailOrUsername){
+            var user = await _userRepo.GetByAsync<AppUser>(query =>  query.Where(u => u.Email == emailOrUsername));
+            if(user != null){
+                return BaseApiOk(false,"Email is duplicated");
+            }
+            user = await _userRepo.GetByAsync<AppUser>(query =>  query.Where(u => u.UserName == emailOrUsername));
+            if(user != null){
+                return BaseApiOk(false,"UserName is duplicated");
+            }
+            return BaseApiOk(true);
         }
 
         [Authorize]
@@ -95,8 +137,6 @@ namespace BackendApi.Controllers
               user = await _userManager.FindByEmailAsync(email);
             }
 
-            // await _userRepo.UpdateAsync(user,q => 
-            //     q.Set(e => Sql.Property<string>(e,nameof(user.UserPublicId)),publicId));
             await _userRepo.UpdateAsync(user,new Dictionary<string,object>{
                 { nameof(user.UserPublicId), publicId}
             });
@@ -154,7 +194,11 @@ namespace BackendApi.Controllers
 
                 var user = new AppUser {
                     Email = register.Email,
-                    UserName = register.UserName
+                    UserName = register.UserName,
+                    UserInfo = new UserInfo{
+                        Gender = register.Gender,
+                        DateOfBirth = register.DateOfBirth
+                    }
                 };
                 
                 var result = await _userManager.CreateAsync(user,register.Password);

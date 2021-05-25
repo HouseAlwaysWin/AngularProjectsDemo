@@ -2,26 +2,33 @@
       [formGroup]="loginForm"
       (ngSubmit)="onSubmit()">
 
-  <div class="title">Login</div>
+  <div class="title">
+    <h2>Login</h2>
+  </div>
+
+  <div class="error-message"
+       *ngIf="error">
+    {{ error }}
+  </div>
 
 
   <div class="input-field">
     <span class="m-float-input-group"
           [formFieldInvalid]="loginForm"
-          [fieldName]="'email'">
+          [fieldName]="'emailOrUserName'">
       <input type="text"
-             [formControlName]="'email'"
-             name="email"
-             placeholder="Enter your email">
-      <label for="">Email</label>
+             [formControlName]="'emailOrUserName'"
+             name="emailOrUserName"
+             placeholder="Enter your email or username">
+      <label for="">Email or UserName</label>
       <span class="error-message"
-            *ngIf="formService.field_error(loginForm,'email','required')">
-        {{ 'Email is required.' }}
+            *ngIf="formService.field_error(loginForm,'emailOrUserName','required')">
+        {{ 'Email Or UserName is required.' }}
       </span>
-      <span class="error-message"
+      <!-- <span class="error-message"
             *ngIf="formService.field_error(loginForm,'email','email')">
         {{ 'Email format incorrect.' }}
-      </span>
+      </span> -->
     </span>
   </div>
 
@@ -46,7 +53,6 @@
   </div>
 
   <button class="btn btn-primary"
-          [disabled]="!loginForm.valid"
           type="submit">Login</button>
 
 </form>

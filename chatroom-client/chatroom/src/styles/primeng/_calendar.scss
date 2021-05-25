@@ -1,0 +1,75 @@
+// .p-calendar {
+//   width: 100%;
+
+//   // & span {
+//   //   width: 100%;
+//   //   border: none;
+//   // }
+//   outline: none;
+
+//   & input {
+//     border: none;
+//     border-bottom: 1px solid $color-grey-dark;
+//     border-radius: 0;
+//     outline: none;
+//     padding: 0.3rem;
+//     background-color: transparent;
+//     transition: all 1s;
+//     box-shadow: none;
+
+//     &:focus {
+//       outline: none;
+//       border: none;
+//       box-shadow: none;
+//     }
+//   }
+// }
+.p-calendar {
+  width: 17.5rem;
+
+  // padding: 1rem;
+
+  & .p-inputtext {
+    width: 100rem;
+    border: none;
+    border-bottom: 1px solid $color-grey-dark;
+    border-radius: 0;
+    outline: none;
+    // padding: 0.3rem;
+    background-color: transparent;
+    transition: all 1s;
+
+    &::placeholder {
+      transition: all 1s;
+      color: $color-grey-light;
+    }
+
+    &:hover {
+      border-color: $color-primary;
+      &::placeholder {
+        color: $color-primary;
+      }
+    }
+
+    &:enabled:focus {
+      box-shadow: none;
+      border-color: $color-primary;
+    }
+  }
+}
+
+p-calendar.ng-dirty.ng-invalid > .p-calendar > .p-inputtext {
+  animation-name: shake;
+  animation-duration: 0.5s;
+  border-color: $color-error;
+  &::placeholder {
+    transition: all 1s;
+    color: $color-error;
+  }
+}
+
+.date-field {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0;
+}

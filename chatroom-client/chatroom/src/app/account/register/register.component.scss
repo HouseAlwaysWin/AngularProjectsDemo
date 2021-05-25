@@ -10,68 +10,74 @@
   font-size: 2rem;
   font-weight: 900;
   padding: 2rem;
+  text-shadow: 1px 1px 1px rgba($color-black, 0.2);
 }
 
 .btn {
   margin-top: 1rem;
 }
 
-.radio-field {
-  display: flex;
-  flex-direction: row;
-}
+// .radio-field {
+//   display: flex;
+//   flex-direction: row;
+// }
 
-.radio-group {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-left: 3rem;
-  width: 100%;
+// .radio-group {
+//   display: flex;
+//   flex-direction: row;
+//   align-items: center;
+//   margin-left: 3rem;
+//   width: 100%;
 
-  & label {
-    font-size: 1.6rem;
-    cursor: pointer;
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+//   & label {
+//     font-size: 1.6rem;
+//     cursor: pointer;
+//     position: relative;
+//     display: flex;
+//     flex-direction: row;
+//     align-items: center;
 
-    & span {
-      display: block;
-      height: 2.5rem;
-      width: 2.5rem;
-      border-radius: 50%;
-      position: relative;
-      margin-left: 1.5rem;
-      border: 4px solid $color-primary;
-      transition: opacity 0.2s;
+//     & span {
+//       display: block;
+//       height: 2.5rem;
+//       width: 2.5rem;
+//       border-radius: 50%;
+//       position: relative;
+//       margin-left: 1.5rem;
+//       border: 4px solid $color-primary;
+//       transition: opacity 0.2s;
 
-      &::after {
-        content: "";
-        height: 1rem;
-        width: 1rem;
-        position: relative;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        opacity: 0;
-        background-color: $color-primary;
-        border-radius: 50%;
-        display: block;
-      }
-    }
-  }
+//       &::after {
+//         content: "";
+//         height: 1rem;
+//         width: 1rem;
+//         position: relative;
+//         top: 50%;
+//         left: 50%;
+//         transform: translate(-50%, -50%);
+//         opacity: 0;
+//         background-color: $color-primary;
+//         border-radius: 50%;
+//         display: block;
+//       }
+//     }
+//   }
 
-  & input {
-    display: none;
+//   & input {
+//     display: none;
 
-    &:checked ~ label span::after {
-      opacity: 1;
-    }
-  }
-}
+//     &:checked ~ label span::after {
+//       opacity: 1;
+//     }
+//   }
+// }
 
 .gender-title {
   font-size: 2rem;
   margin-bottom: 2rem;
 }
+
+// .error-message {
+//   color: $color-error;
+//   transition: all 0.2s;
+// }

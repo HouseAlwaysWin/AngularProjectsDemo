@@ -10,6 +10,7 @@ using BackendApi.Core.Models.Entities;
 using BackendApi.Core.Services.Interfaces;
 using Microsoft.Extensions.Localization;
 using BackendApi.Helpers.MapResolvers;
+using BackendApi.Core.Models.Entities.Identity;
 
 namespace BackendApi.Helpers.Localization {
     public class AutomapperProfiles:Profile{
@@ -58,6 +59,12 @@ namespace BackendApi.Helpers.Localization {
                 .ForMember(o => o.OrderDate,od => od.MapFrom(od => od.OrderDate.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss")));
 
             CreateMap<DeliveryMethod,DeliveryMethodDto>();
+
+            CreateMap<UserInfo,UserInfoDto>().ReverseMap();
+            CreateMap<UserPhoto,UserPhotoDto>().ReverseMap();
+            CreateMap<UserAddress,AddressDto>().ReverseMap();
+            CreateMap<Message,MessageDto>().ReverseMap();
+            CreateMap<AppUser,AppUserDto>().ReverseMap();
          
 
 

@@ -5,13 +5,14 @@
     </a>
   </div>
   <ul>
-    <li>
+    <li *ngIf="!accountQuery.isAuth">
       <a routerLink="/account/login">Login</a>
     </li>
-    <li>
-      <a href="">Logout</a>
+    <li *ngIf="accountQuery.isAuth">
+      <a href=""
+         (click)="logout()">Logout</a>
     </li>
-    <li>
+    <li *ngIf="!accountQuery.isAuth">
       <a routerLink="/account/register">Register</a>
     </li>
   </ul>

@@ -1,7 +1,9 @@
 <div class="container">
+  <p-progressSpinner *ngIf="loading"></p-progressSpinner>
   <app-nav></app-nav>
   <main>
     <router-outlet></router-outlet>
+
   </main>
   <footer>
     <ul>

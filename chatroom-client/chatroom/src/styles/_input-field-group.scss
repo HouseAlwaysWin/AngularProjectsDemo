@@ -21,6 +21,13 @@
       font-size: 5px;
     }
 
+    &:hover {
+      border-color: $color-primary;
+      & + label {
+        color: $color-primary;
+      }
+    }
+
     &:focus {
       border-bottom: 1px solid $color-primary;
       & + label {
@@ -50,6 +57,8 @@
   }
 
   &.error {
+    animation-name: shake;
+    animation-duration: 0.5s;
     & label {
       color: $color-error;
     }
@@ -58,6 +67,7 @@
       border-bottom: 1px solid $color-error;
       &:focus {
         border-bottom: 1px solid $color-error;
+
         & + label {
           color: $color-error;
         }
@@ -68,11 +78,75 @@
   & .error-message {
     position: absolute;
     color: $color-error;
-    transform: translateY(150%);
-    transition: all 0.2s;
+    // transform: translateY(150%);
+    top: 150%;
+    // transition: color 1s;
+    animation-name: shake;
+    animation-duration: 0.5s;
   }
 }
 
 .input-field {
   padding: 2rem;
+}
+
+.radio-field {
+  display: flex;
+  flex-direction: row;
+}
+
+.radio-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: 3rem;
+  width: 100%;
+
+  & label {
+    font-size: 1.6rem;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    & span {
+      display: block;
+      height: 2.5rem;
+      width: 2.5rem;
+      border-radius: 50%;
+      position: relative;
+      margin-left: 1.5rem;
+      border: 4px solid $color-primary;
+      transition: opacity 0.2s;
+
+      &::after {
+        content: "";
+        height: 1rem;
+        width: 1rem;
+        position: relative;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        background-color: $color-primary;
+        border-radius: 50%;
+        display: block;
+      }
+    }
+  }
+
+  & input {
+    display: none;
+
+    &:checked ~ label span::after {
+      opacity: 1;
+    }
+  }
+}
+
+.error-message {
+  color: $color-error;
+  animation-name: shake;
+  animation-duration: 0.5s;
 }

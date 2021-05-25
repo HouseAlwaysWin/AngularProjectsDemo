@@ -5,7 +5,7 @@ namespace BackendApi.Core.Models.Entities
 {
     public class Message: IBaseEntity 
     {
-          public int Id { get; set; }
+       public int Id { get; set; }
        public DateTimeOffset CreatedDate { get; set; }
        public DateTimeOffset? ModifiedDate { get; set; }
         public int SenderId { get; set; }

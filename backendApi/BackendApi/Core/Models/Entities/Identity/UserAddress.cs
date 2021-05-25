@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using BackendApi.Core.Models.Entities;
+using Newtonsoft.Json;
 
 namespace BackendApi.Core.Entities.Identity
 {

@@ -10,8 +10,15 @@
   color: $color-primary;
   font-size: 2rem;
   font-weight: 900;
+  padding: 2rem;
+  text-shadow: 1px 1px 1px rgba($color-black, 0.2);
 }
 
 .btn {
   margin-top: 1rem;
+}
+
+.error-message {
+  color: $color-error;
+  transition: all 0.2s;
 }
