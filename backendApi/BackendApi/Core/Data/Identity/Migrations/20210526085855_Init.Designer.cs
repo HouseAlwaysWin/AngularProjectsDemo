@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackendApi.Core.Data.Identity.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20210524103207_Init")]
+    [Migration("20210526085855_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -217,8 +217,8 @@ namespace BackendApi.Core.Data.Identity.Migrations
                     b.Property<string>("KnownAs")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("LastActive")
-                        .HasColumnType("timestamp without time zone");
+                    b.Property<DateTimeOffset>("LastActive")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTimeOffset?>("ModifiedDate")
                         .HasColumnType("timestamp with time zone");

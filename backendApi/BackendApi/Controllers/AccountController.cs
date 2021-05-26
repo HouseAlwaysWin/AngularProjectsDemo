@@ -65,30 +65,36 @@ namespace BackendApi.Controllers
 
                 var token = _tokenService.CreateToken(user);
 
-                return BaseApiOk(new UserDto{
-                        Email = user.Email,
-                        UserName = user.UserName,
-                        Token = token});
+                var result = _mapper.Map<AppUser,UserDto>(user);
+                result.Token = token;
+
+                return BaseApiOk(result);
             }catch(Exception ex){
                 return BaseApiBadRequest(ex.Message);
             }
         }
 
         [Authorize]
-        [HttpGet("getuserinfo")]
+        [HttpGet("getUserInfo")]
         public async Task<ActionResult> GetUserInfo(){
             try{
                 var email = HttpContext.User?.Claims?.FirstOrDefault(
                     x=>x.Type == ClaimTypes.Email)?.Value;
-                
-                var user = await _userManager.FindByEmailAsync(email);
+
+                var user = await _userRepo.GetByAsync<AppUser>(query => {
+                    return query.Where(u => u.Email == email)
+                            .Include(u => u.Address)
+                            .Include(u => u.UserInfo)
+                            .Include(u => u.Photos);
+                });
 
                 var token = _tokenService.CreateToken(user);
 
-                return BaseApiOk(new UserDto{
-                        Email = user.Email,
-                        UserName = user.UserName,
-                        Token = token});
+                var result = _mapper.Map<AppUser,AppUserDto>(user);
+
+                result.Token = token;
+
+                return BaseApiOk(result);
             }catch(Exception ex){
                 return BaseApiBadRequest(ex.Message);
             }
@@ -99,7 +105,8 @@ namespace BackendApi.Controllers
             var user = await _userRepo.GetByAsync<AppUser>(query =>  {
                     return query.Where(u => u.UserPublicId == publicId)
                         .Include(u => u.Address)
-                        .Include(u => u.UserInfo);
+                        .Include(u => u.UserInfo)
+                        .Include(u => u.Photos);
             });
 
             var result = _mapper.Map<AppUser,AppUserDto>(user);
@@ -168,11 +175,17 @@ namespace BackendApi.Controllers
                 var result = await _signInManager.CheckPasswordSignInAsync(user,login.Password,false);
                 if(!result.Succeeded) return Unauthorized(new ApiResponse(false,""));
 
-                return BaseApiOk(new UserDto {
-                        Email = user.Email,
-                        UserName = user.UserName,
-                        Token = _tokenService.CreateToken(user)
-                });
+                 var userInfo = await _userRepo.GetByAsync<AppUser>(query =>  {
+                    return query.Where(u => u.Email == user.Email)
+                        .Include(u => u.Address)
+                        .Include(u => u.UserInfo)
+                        .Include(u => u.Photos);
+                    });
+
+                var userResult = _mapper.Map<AppUser,AppUserDto>(userInfo);
+                userResult.Token = _tokenService.CreateToken(user);
+
+                return BaseApiOk(userResult);
             }
 
             return BaseApiBadRequest(validateResult.Errors.FirstOrDefault().ErrorMessage);

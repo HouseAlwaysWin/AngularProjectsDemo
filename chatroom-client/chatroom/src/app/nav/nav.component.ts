@@ -17,7 +17,7 @@ export class NavComponent implements OnInit {
     public accountQuery: AccountQuery) { }
 
   ngOnInit(): void {
-    this.accountQuery.isAuth;
+    console.log(this.accountQuery.user);
   }
 
   logout() {

@@ -33,6 +33,7 @@ namespace BackendApi.Core.Data.Identity
                 a.HasOne(u => u.Address)
                  .WithOne(u => u.AppUser)
                  .HasForeignKey<UserAddress>(a => a.AppUserId);
+
                 
                 a.HasMany(ur => ur.AppUserRoles)
                  .WithOne(u => u.User)

@@ -8,26 +8,36 @@ import { AccountState, AccountStore } from "./account.store";
 })
 export class AccountQuery extends Query<AccountState> {
 
-  token$ = this.select('token');
-  email$ = this.select('email');
-  username$ = this.select('username');
+  user$ = this.select('user');
+  token$ = this.select(state => state.user.token);
+  email$ = this.select(state => state.user.email);
+  username$ = this.select(state => state.user.userName);
+  photos$ = this.select(state => state.user.photos);
   isAuth$ = this.select('isAuth');
   loading$ = this.select('loading');
 
   get token() {
-    return this.getValue().token;
+    return this.getValue().user.token;
   }
 
   get email() {
-    return this.getValue().email;
+    return this.getValue().user.email;
   }
 
   get username() {
-    return this.getValue().username;
+    return this.getValue().user.userName;
   }
 
   get isAuth() {
     return this.getValue().isAuth;
+  }
+
+  get user() {
+    return this.getValue().user;
+  }
+
+  get photos() {
+    return this.getValue().user.photos;
   }
 
   get loading() {

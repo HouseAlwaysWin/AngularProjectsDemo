@@ -18,7 +18,6 @@ export class AccountService {
   apiUrl = environment.apiUrl;
   constructor(
     private http: HttpClient,
-    private query: AccountQuery,
     private store: AccountStore,
     private sharedStore: SharedStore) {
   }
@@ -71,9 +70,10 @@ export class AccountService {
   }
 
   setCurrentUser(user: UserToken) {
+    console.log(user);
     localStorage.setItem('user', JSON.stringify(user));
     this.store.update({
-      ...user,
+      user: user,
       isAuth: true
     })
   }

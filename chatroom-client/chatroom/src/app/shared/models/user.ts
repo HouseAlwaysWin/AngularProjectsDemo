@@ -1,5 +1,11 @@
 export class UserToken {
   email: string = '';
-  username: string = '';
+  userName: string = '';
   token: string = '';
+  photos: UserPhoto[]
+}
+
+export class UserPhoto {
+  url: string;
+  isMain: string;
 }

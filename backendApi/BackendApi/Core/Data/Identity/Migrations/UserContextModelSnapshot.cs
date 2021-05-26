@@ -215,8 +215,8 @@ namespace BackendApi.Core.Data.Identity.Migrations
                     b.Property<string>("KnownAs")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("LastActive")
-                        .HasColumnType("timestamp without time zone");
+                    b.Property<DateTimeOffset>("LastActive")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTimeOffset?>("ModifiedDate")
                         .HasColumnType("timestamp with time zone");
