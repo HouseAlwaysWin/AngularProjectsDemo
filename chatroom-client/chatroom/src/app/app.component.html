@@ -1,5 +1,8 @@
 <div class="container">
-  <p-progressSpinner *ngIf="loading"></p-progressSpinner>
+  <div class="gLoading"
+       *ngIf="loading">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
   <app-nav></app-nav>
   <main>
     <router-outlet></router-outlet>

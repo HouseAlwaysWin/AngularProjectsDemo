@@ -25,6 +25,7 @@
         Male
         <span></span>
       </label>
+
     </span>
 
     <span class="radio-group">
@@ -44,14 +45,25 @@
     <span class="m-float-input-group"
           [formFieldInvalid]="registerForm"
           [fieldName]="'username'">
+      <div class="icons-end"
+           *ngIf="userLoading">
+        <p-progressSpinner></p-progressSpinner>
+      </div>
       <input type="text"
+             (focus)="onUserNameFocus()"
              [formControlName]="'username'"
              name="username"
              placeholder="Enter your name">
       <label for="">Username</label>
+
       <span class="error-message"
             *ngIf="formService.field_error(registerForm,'username','required')">
         Username is required.
+      </span>
+
+      <span class="error-message"
+            *ngIf="formService.field_error(registerForm,'username','userDuplicated')">
+        Username is duplicated.
       </span>
     </span>
   </div>
@@ -60,7 +72,12 @@
     <span class="m-float-input-group"
           [formFieldInvalid]="registerForm"
           [fieldName]="'email'">
+      <div class="icons-end"
+           *ngIf="emailLoading">
+        <p-progressSpinner></p-progressSpinner>
+      </div>
       <input type="text"
+             (focus)="onEmailFocus()"
              [formControlName]="'email'"
              name="email"
              placeholder="Enter your email">
@@ -99,20 +116,29 @@
   <div class="input-field">
     <span class="m-float-input-group"
           [formFieldInvalid]="registerForm"
-          [fieldName]="'passwordConfirm'">
+          [fieldName]="'confirmPassword'">
       <input type="password"
-             [formControlName]="'passwordConfirm'"
-             name="passwordConfirm"
-             placeholder="Password Confirm">
+             [formControlName]="'confirmPassword'"
+             name="confirmPassword"
+             placeholder="Confirm password ">
       <label for="">Password Confirm</label>
+
       <span class="error-message"
-            *ngIf="formService.field_error(registerForm,'passwordConfirm','required')">
+            *ngIf="formService.field_error(registerForm,'confirmPassword','required');else confirmMinlength">
         Confirm Password is required.
       </span>
-      <span class="error-message"
-            *ngIf="formService.field_error(registerForm,'passwordConfirm','minlength')">
-        Confirm Password at least 6 letters.
-      </span>
+      <ng-template #confirmMinlength>
+        <span class="error-message"
+              *ngIf="formService.field_error(registerForm,'confirmPassword','minlength');else confirmIsmatch">
+          Confirm Password at least 6 letters.
+        </span>
+      </ng-template>
+      <ng-template #confirmIsmatch>
+        <span class="error-message"
+              *ngIf="formService.field_error(registerForm,'confirmPassword','isMatching')">
+          Confirm password is not matched.
+        </span>
+      </ng-template>
     </span>
   </div>
 

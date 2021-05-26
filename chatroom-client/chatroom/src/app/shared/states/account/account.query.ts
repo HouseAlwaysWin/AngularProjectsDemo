@@ -12,6 +12,7 @@ export class AccountQuery extends Query<AccountState> {
   email$ = this.select('email');
   username$ = this.select('username');
   isAuth$ = this.select('isAuth');
+  loading$ = this.select('loading');
 
   get token() {
     return this.getValue().token;
@@ -27,6 +28,10 @@ export class AccountQuery extends Query<AccountState> {
 
   get isAuth() {
     return this.getValue().isAuth;
+  }
+
+  get loading() {
+    return this.getValue().loading;
   }
 
   constructor(protected store: AccountStore) {

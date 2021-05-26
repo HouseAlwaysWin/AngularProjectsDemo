@@ -6,6 +6,7 @@ export interface AccountState {
   token: string;
   email: string;
   username: string;
+  loading: boolean;
   isAuth: boolean;
 }
 
@@ -14,6 +15,7 @@ export function createInitialState(): AccountState {
     token: '',
     email: '',
     username: '',
+    loading: false,
     isAuth: false
   }
 }

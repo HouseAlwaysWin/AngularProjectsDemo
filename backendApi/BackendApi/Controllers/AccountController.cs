@@ -115,13 +115,13 @@ namespace BackendApi.Controllers
         public async Task<ActionResult> CheckUserDuplicate(string emailOrUsername){
             var user = await _userRepo.GetByAsync<AppUser>(query =>  query.Where(u => u.Email == emailOrUsername));
             if(user != null){
-                return BaseApiOk(false,"Email is duplicated");
+                return BaseApiOk(true,"Email is duplicated");
             }
             user = await _userRepo.GetByAsync<AppUser>(query =>  query.Where(u => u.UserName == emailOrUsername));
             if(user != null){
-                return BaseApiOk(false,"UserName is duplicated");
+                return BaseApiOk(true,"UserName is duplicated");
             }
-            return BaseApiOk(true);
+            return BaseApiOk(false);
         }
 
         [Authorize]

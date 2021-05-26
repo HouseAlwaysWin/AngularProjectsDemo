@@ -15,7 +15,6 @@ export class JwtInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     let token = this.accountQuery.token;
-    console.log(token);
     request = request.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`
