@@ -10,6 +10,8 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor } from './shared/interceptors/jwt.interceptor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SharedModule } from './shared/shared.module';
+import { AdminComponent } from './admin/admin.component';
+import { GalleriaModule } from 'primeng/galleria';
 
 
 
@@ -19,13 +21,15 @@ import { SharedModule } from './shared/shared.module';
     NavComponent,
     HomeComponent,
     MessageComponent,
+    AdminComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    SharedModule
+    SharedModule,
+    GalleriaModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }

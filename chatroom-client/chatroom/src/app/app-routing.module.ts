@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AdminComponent } from './admin/admin.component';
 import { HomeComponent } from './home/home.component';
 
 const routes: Routes = [
@@ -9,6 +10,9 @@ const routes: Routes = [
   {
     path: 'account',
     loadChildren: () => import('./account/account.module').then(m => m.AccountModule)
+  },
+  {
+    path: 'admin', component: AdminComponent
   },
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];

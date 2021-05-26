@@ -2,6 +2,7 @@ import { Injector, NgModule } from '@angular/core';
 import { FormFieldInvalidDirective } from './directives/form-field-invalid.directive';
 import { CalendarModule } from 'primeng/calendar';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { GalleriaModule } from 'primeng/galleria';
 
 
 export let InjectorInstance: Injector;
@@ -13,6 +14,7 @@ export let InjectorInstance: Injector;
     FormFieldInvalidDirective,
     CalendarModule,
     ProgressSpinnerModule,
+    GalleriaModule
   ]
 })
 export class SharedModule {

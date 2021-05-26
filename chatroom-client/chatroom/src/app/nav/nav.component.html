@@ -4,19 +4,50 @@
       ChatRoom
     </a>
   </div>
-  <ul>
-    <li *ngIf="accountQuery.isAuth">
-      <a>{{ accountQuery.username }}</a>
+  <ul class="nav-list">
+    <li *ngIf="accountQuery.isAuth"
+        class="nav-item">
+      <a (click)="toggleMenu()"
+         #menuBtn
+         class="nav-btn">{{ accountQuery.username }}</a>
+
+      <div class="menu hide"
+           #menu
+           [ngClass]="{ 'show': showMenu}">
+        <ul class="menu-list">
+          <li class="menu-item"
+              routerLink="/admin"
+              (click)="toggleMenu()">
+            <a class="menu-btn">UserInfo</a>
+          </li>
+          <li class="menu-item"
+              (click)="logout()">
+            <a class="menu-btn">Logout</a>
+          </li>
+        </ul>
+      </div>
     </li>
-    <li *ngIf="!accountQuery.isAuth">
-      <a routerLink="/account/login">Login</a>
+    <li class="nav-item"
+        *ngIf="accountQuery.isAuth">
+      <img src="{{headPhotoUrl}}"
+           class="userImg" />
     </li>
-    <li *ngIf="accountQuery.isAuth">
+
+    <li *ngIf="!accountQuery.isAuth"
+        class="nav-item">
+      <a routerLink="/account/login"
+         class="nav-btn">Login</a>
+    </li>
+    <!-- <li *ngIf="accountQuery.isAuth"
+        class="nav-item">
       <a href=""
+         class="nav-btn"
          (click)="logout()">Logout</a>
-    </li>
-    <li *ngIf="!accountQuery.isAuth">
-      <a routerLink="/account/register">Register</a>
+    </li> -->
+    <li *ngIf="!accountQuery.isAuth"
+        class="nav-item">
+      <a routerLink="/account/register"
+         class="nav-btn">Register</a>
     </li>
   </ul>
 </nav>
