@@ -10,8 +10,8 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor } from './shared/interceptors/jwt.interceptor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SharedModule } from './shared/shared.module';
-import { AdminComponent } from './admin/admin.component';
-import { GalleriaModule } from 'primeng/galleria';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { UserComponent } from './user/user.component';
 
 
 
@@ -21,7 +21,7 @@ import { GalleriaModule } from 'primeng/galleria';
     NavComponent,
     HomeComponent,
     MessageComponent,
-    AdminComponent,
+    UserComponent,
   ],
   imports: [
     BrowserModule,
@@ -29,7 +29,7 @@ import { GalleriaModule } from 'primeng/galleria';
     BrowserAnimationsModule,
     AppRoutingModule,
     SharedModule,
-    GalleriaModule
+    FontAwesomeModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }

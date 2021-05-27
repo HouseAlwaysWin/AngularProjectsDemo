@@ -171,9 +171,9 @@ namespace BackendApi.Core.Data.Repositories
             this._context.Dispose();
         }
 
-       public virtual async Task<int> CompleteAsync()
+       public virtual async Task<bool> CompleteAsync()
        {
-         return await _context.SaveChangesAsync();
+         return await _context.SaveChangesAsync() > 0;
        }
     }
 }

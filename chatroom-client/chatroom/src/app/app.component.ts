@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { UserToken } from './shared/models/user';
+import { UtilitiesService } from './shared/services/utilities.service';
 import { AccountService } from './shared/states/account/account.service';
 import { SharedQuery } from './shared/states/shared/shared.query';
 import { SharedStore } from './shared/states/shared/shared.store';
@@ -24,8 +25,14 @@ export class AppComponent implements OnInit {
   }
 
   constructor(
+    private utilitiesService: UtilitiesService,
     public sharedQuery: SharedQuery,
     private accountService: AccountService) {
+  }
+
+  @HostListener('document:click', ['$event'])
+  documentClick(event: any): void {
+    this.utilitiesService.documentClickedTarget.next(event.target)
   }
 
   title = 'chatroom';

@@ -74,7 +74,7 @@ namespace BackendApi.Core.Services
             await _storeRepo.AddAsync(order);
             try{
                 var result = await _storeRepo.CompleteAsync();
-                if(result <=0) return null;
+                if(result) return null;
              
                 return order;
 

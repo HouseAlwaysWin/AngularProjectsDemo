@@ -6,7 +6,7 @@ namespace BackendApi.Controllers
 {
     [ApiController]
     [Route ("api/[controller]")]
-    public class BaseApiController:ControllerBase
+    public abstract class BaseApiController:ControllerBase
     {
         [ApiExplorerSettings(IgnoreApi = true)]
         [NonAction]

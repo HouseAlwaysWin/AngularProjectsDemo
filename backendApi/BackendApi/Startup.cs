@@ -28,6 +28,7 @@ using Microsoft.Extensions.FileProviders;
 using System;
 using StackExchange.Redis;
 using Microsoft.OpenApi.Models;
+using BackendApi.Core.Models.Dtos;
 
 namespace BackendApi
 {
@@ -48,13 +49,6 @@ namespace BackendApi
             var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             services.AddAutoMapper(typeof(AutomapperProfiles));
             services.AddControllers();
-            // services.AddDbContext<UserContext>(x =>
-            //     // x.UseSqlServer(_config.GetConnectionString("IdentityConnection")));
-            //        x.UseNpgsql(_config.GetConnectionString("IdentityConnection")));
-            
-            // services.AddDbContext<StoreContext>(x => 
-            //     // x.UseSqlServer(_config.GetConnectionString("DefaultConnection")));
-            //     x.UseNpgsql(_config.GetConnectionString("DefaultConnection")));
 
            services.AddDbContext<UserContext>(options =>
             {
@@ -123,8 +117,6 @@ namespace BackendApi
                     connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};SSL Mode=Require;TrustServerCertificate=True";
                 }
 
-                // Whether the connection string came from the local development configuration file
-                // or from the environment variable from Heroku, use it to set up your DbContext.
                 options.UseNpgsql(connStr);
             });
 
@@ -230,11 +222,9 @@ namespace BackendApi
 
             services.AddScoped<IStoreRepository,StoreRepository>();
             services.AddScoped<IUserRepository,UserRepository>();
-            // services.AddScoped<IStoreUow,StoreUow>();
-            // services.AddScoped<IUserUow,UserUow>();
+            services.AddScoped<IPhotoService,PhotoService>();
+            services.Configure<CloudinarySettings>(_config.GetSection("CloudinarySettings"));
 
-            // services.AddScoped(typeof(IEntityRepository<,>),(typeof(EntityRepository<>)));
-            // services.AddScoped<IUnitOfWork,UnitOfWork>();
 
             
             services.AddSwaggerGen(c =>{

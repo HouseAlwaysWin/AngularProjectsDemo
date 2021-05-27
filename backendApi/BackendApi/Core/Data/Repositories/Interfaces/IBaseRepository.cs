@@ -22,6 +22,6 @@ namespace BackendApi.Core.Data.Repositories.Interfaces
         Task UpdateAsync<TEntity>(TEntity entity, 
                     Func<IQueryable<TEntity>,IUpdatable<TEntity>> func)where TEntity:class,IBaseEntity;
         Task UpdateAsync<TEntity>(TEntity entity, Dictionary<string,object> props) where TEntity:class,IBaseEntity;
-        Task<int> CompleteAsync();  
+        Task<bool> CompleteAsync();  
     }
 }

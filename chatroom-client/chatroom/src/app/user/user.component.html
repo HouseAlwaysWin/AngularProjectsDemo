@@ -1,0 +1,28 @@
+<div class="container">
+  <div class="head-photo-main">
+    <img src="{{ mainPhoto }}"
+         alt="" />
+  </div>
+  <div class="head-photo">
+    <ul class="head-photo-list">
+      <li class="head-photo-btn prev"
+          (click)="setPrevPhoto()">
+        <i class="fas fa-chevron-left"></i>
+      </li>
+      <li *ngFor="let photo of photos"
+          (click)="onSelectPhoto(photo)"
+          class="head-photo-item">
+        <img class="head-photo-img"
+             [src]="photo.url"
+             [ngClass]="{'main': photo.isMain,'select':photo?.id ===selectPhoto?.id }" />
+        <button class="head-photo-set-main">
+          Set as main
+        </button>
+      </li>
+      <li class="head-photo-btn next"
+          (click)="setNextPhoto()">
+        <i class="fas fa-chevron-right"></i>
+      </li>
+    </ul>
+  </div>
+</div>

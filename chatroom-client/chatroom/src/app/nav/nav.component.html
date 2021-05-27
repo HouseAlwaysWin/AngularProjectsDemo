@@ -5,30 +5,16 @@
     </a>
   </div>
   <ul class="nav-list">
-    <li *ngIf="accountQuery.isAuth"
-        class="nav-item">
-      <a (click)="toggleMenu()"
-         #menuBtn
-         class="nav-btn">{{ accountQuery.username }}</a>
-
-      <div class="menu hide"
-           #menu
-           [ngClass]="{ 'show': showMenu}">
-        <ul class="menu-list">
-          <li class="menu-item"
-              routerLink="/admin"
-              (click)="toggleMenu()">
-            <a class="menu-btn">UserInfo</a>
-          </li>
-          <li class="menu-item"
-              (click)="logout()">
-            <a class="menu-btn">Logout</a>
-          </li>
-        </ul>
-      </div>
+    <li class="nav-item"
+        *ngIf="accountQuery.isAuth"
+        routerLink="/message">
+      <a class="nav-btn">
+        <fa-icon [icon]="faComment"></fa-icon>
+      </a>
     </li>
     <li class="nav-item"
-        *ngIf="accountQuery.isAuth">
+        *ngIf="accountQuery.isAuth"
+        routerLink="/admin">
       <img src="{{headPhotoUrl}}"
            class="userImg" />
     </li>
@@ -38,16 +24,40 @@
       <a routerLink="/account/login"
          class="nav-btn">Login</a>
     </li>
-    <!-- <li *ngIf="accountQuery.isAuth"
-        class="nav-item">
-      <a href=""
-         class="nav-btn"
-         (click)="logout()">Logout</a>
-    </li> -->
+
     <li *ngIf="!accountQuery.isAuth"
         class="nav-item">
       <a routerLink="/account/register"
          class="nav-btn">Register</a>
     </li>
+
+    <li *ngIf="accountQuery.isAuth"
+        (click)="toggleMenu()"
+        #menu
+        class="nav-item">
+      <a class="nav-btn">{{ accountQuery.username }}
+        <i class="fas fa-chevron-circle-down"></i>
+      </a>
+
+      <ul class="menu hide"
+          [ngClass]="{ 'show': showMenu}">
+        <li class="menu-item"
+            routerLink="/user">
+          <a class="menu-btn">Profile</a>
+        </li>
+        <li class="menu-item"
+            routerLink="/message">
+          <a class="menu-btn">Messages</a>
+        </li>
+        <li class="menu-item">
+          <a class="menu-btn">Friend List</a>
+        </li>
+        <li class="menu-item"
+            (click)="logout()">
+          <a class="menu-btn">Logout</a>
+        </li>
+      </ul>
+    </li>
+
   </ul>
 </nav>

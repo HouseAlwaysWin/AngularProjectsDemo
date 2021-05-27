@@ -6,6 +6,7 @@ export class UserToken {
 }
 
 export class UserPhoto {
+  id: number;
   url: string;
   isMain: string;
 }

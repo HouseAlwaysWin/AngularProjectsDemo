@@ -1,6 +1,7 @@
 @import "../../styles.scss";
 
 nav {
+  z-index: 50;
   display: flex;
   flex-direction: row;
   background-color: rgb(8, 174, 189);
@@ -24,52 +25,55 @@ nav {
     display: flex;
     flex-direction: row;
     list-style: none;
+    background-color: rgb(8, 174, 189);
 
     & .nav-item {
       padding: 0 1rem;
       display: flex;
       align-items: center;
+      flex-wrap: wrap;
+      cursor: pointer;
+      position: relative;
+
+      &:hover {
+        background-color: $color-primary-dark;
+      }
 
       & .nav-btn {
         margin-right: 2rem;
-        cursor: pointer;
         font-size: 2.5rem;
         text-decoration: none;
-        color: white;
+        color: $color-white;
       }
     }
   }
 }
 
 .menu {
-  position: absolute;
-  border-radius: 0.2rem;
-  display: flex;
-
   &.hide {
     display: none;
   }
 
+  z-index: 50;
   &.show {
-    display: block;
-  }
-
-  &-list {
-    top: 2.3rem;
-    right: -1rem;
-
-    box-shadow: 0 0 1.5rem rgba($color-black, 0.2);
-    position: absolute;
-    border: none;
-    background-color: white;
-    border-radius: 0.2rem;
-    width: 10rem;
-    list-style: none;
     display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    font-size: 1rem;
   }
+
+  top: 7rem;
+  right: 0rem;
+  box-shadow: 0 0 1.5rem rgba($color-black, 0.4);
+  position: absolute;
+  border: none;
+  background-color: $color-white;
+  border-radius: 0.2rem;
+  width: 10rem;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  font-size: 1rem;
+  animation-name: fadeIn;
+  animation-duration: 0.2s;
 
   &-item {
     border-radius: 0.2rem;
@@ -78,20 +82,22 @@ nav {
     padding: 1rem 0.5rem;
     cursor: pointer;
 
+    &:hover {
+      background-color: $color-primary;
+      color: $color-white;
+    }
+
     &:not(:last-child) {
       border-bottom: 1px solid rgba($color-black, 0.2);
     }
 
-    &:hover {
-      background-color: $color-primary;
-      & .menu-btn {
-        color: $color-white;
-      }
-    }
-
-    & .menu-btn {
+    &-btn {
       color: $color-black;
     }
+  }
+
+  &-dropdown {
+    font-size: 1rem;
   }
 }
 
@@ -101,7 +107,15 @@ nav {
   width: 5rem;
   transition: all 0.3s;
   background-attachment: fixed;
+  border-radius: 3rem;
+  cursor: pointer;
+  object-fit: cover;
   &:hover {
     transform: scale(1.1);
   }
+}
+
+.fa-chevron-circle-down {
+  font-size: 1.4rem;
+  margin-left: 0.5rem;
 }
