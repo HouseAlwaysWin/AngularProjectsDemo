@@ -1,5 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { UserToken } from './shared/models/user';
+import { Router } from '@angular/router';
 import { UtilitiesService } from './shared/services/utilities.service';
 import { AccountService } from './shared/states/account/account.service';
 import { SharedQuery } from './shared/states/shared/shared.query';
@@ -14,17 +14,19 @@ export class AppComponent implements OnInit {
   loading: boolean = false;
 
   ngOnInit(): void {
+    this.checkLogin();
     this.globalLoading();
-    this.setCurrentUser();
   }
 
   globalLoading() {
     this.sharedQuery.gLoading$.subscribe(res => {
+      console.log('trigger loading');
       this.loading = res;
     });
   }
 
   constructor(
+    private router: Router,
     private utilitiesService: UtilitiesService,
     public sharedQuery: SharedQuery,
     private accountService: AccountService) {
@@ -37,11 +39,18 @@ export class AppComponent implements OnInit {
 
   title = 'chatroom';
 
-  setCurrentUser() {
-    const token: UserToken = JSON.parse(localStorage.getItem('user'));
+  checkLogin() {
+    const token: string = JSON.parse(localStorage.getItem('token'));
 
     if (token) {
-      this.accountService.setCurrentUser(token);
+      this.accountService.getUserDetail().subscribe(res => {
+        if (res) {
+          console.log('already login')
+        }
+        else {
+          this.router.navigate(['/account/login']);
+        }
+      });
     }
   }
 

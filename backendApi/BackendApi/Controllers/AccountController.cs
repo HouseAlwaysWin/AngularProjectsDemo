@@ -219,11 +219,17 @@ namespace BackendApi.Controllers
                     return BaseApiBadRequest(result.Errors.FirstOrDefault().Description);
                 }
 
-                 return BaseApiOk( new UserDto {
-                        Email = user.Email,
-                        UserName = user.UserName,
-                        Token = _tokenService.CreateToken(user)
+                    var userInfo = await _userRepo.GetByAsync<AppUser>(query =>  {
+                    return query.Where(u => u.Email == user.Email)
+                        .Include(u => u.Address)
+                        .Include(u => u.UserInfo)
+                        .Include(u => u.Photos);
                     });
+
+                var userResult = _mapper.Map<AppUser,AppUserDto>(userInfo);
+                userResult.Token = _tokenService.CreateToken(user);
+
+                 return BaseApiOk(userResult);
             }
 
             return BaseApiBadRequest(validateResult.Errors.FirstOrDefault().ErrorMessage);

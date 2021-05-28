@@ -1,19 +1,26 @@
 import { Injectable } from "@angular/core";
 import { Store, StoreConfig } from "@datorama/akita";
-import { UserToken } from "../../models/user";
+import { UserDetail, UserPhoto } from "../../models/user";
 
 
 
 
 export interface AccountState {
-  user: UserToken;
+  // userToken: UserToken;
+
+  user: UserDetail;
+  mainPhoto: string;
+  userPhotos: UserPhoto[];
   loading: boolean;
   isAuth: boolean;
 }
 
 export function createInitialState(): AccountState {
   return {
-    user: new UserToken(),
+    // userToken: new UserToken(),
+    user: new UserDetail(),
+    mainPhoto: '',
+    userPhotos: [],
     loading: false,
     isAuth: false
   }

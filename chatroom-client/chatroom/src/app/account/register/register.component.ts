@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { of, timer } from 'rxjs';
 import { catchError, debounceTime, map, switchMap, tap } from 'rxjs/operators';
 import { Res } from 'src/app/shared/models/response';
-import { UserToken } from 'src/app/shared/models/user';
+import { UserDetail } from 'src/app/shared/models/user';
 import { FormFieldService } from 'src/app/shared/services/form-field.service';
 import { AccountQuery } from 'src/app/shared/states/account/account.query';
 import { AccountService } from 'src/app/shared/states/account/account.service';
@@ -88,7 +88,7 @@ export class RegisterComponent implements OnInit {
 
   onSubmit() {
     if (this.registerForm.valid) {
-      this.accountService.register(this.registerForm.value).subscribe((res: Res<UserToken>) => {
+      this.accountService.register(this.registerForm.value).subscribe((res: Res<UserDetail>) => {
         if (res.isSuccessed) {
           if (this.returnUrl) {
             this.router.navigateByUrl(this.returnUrl);

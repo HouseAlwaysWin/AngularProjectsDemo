@@ -4,7 +4,7 @@ nav {
   z-index: 50;
   display: flex;
   flex-direction: row;
-  background-color: rgb(8, 174, 189);
+  background-color: $color-primary;
   height: 6rem;
   width: 100%;
   justify-content: space-between;
@@ -13,6 +13,7 @@ nav {
     display: flex;
     flex-direction: row;
     align-items: center;
+    width: 100%;
     & a {
       margin-left: 1rem;
       text-decoration: none;
@@ -23,9 +24,11 @@ nav {
 
   & .nav-list {
     display: flex;
+    width: 100%;
     flex-direction: row;
+    justify-content: flex-end;
     list-style: none;
-    background-color: rgb(8, 174, 189);
+    background-color: $color-primary;
 
     & .nav-item {
       padding: 0 1rem;

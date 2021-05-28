@@ -6,6 +6,7 @@ import { AccountService } from '../shared/states/account/account.service';
 import { AccountStore } from '../shared/states/account/account.store';
 import { faComment, faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
 import { UtilitiesService } from '../shared/services/utilities.service';
+import { UserDetail, UserPhoto } from '../shared/models/user';
 
 @Component({
   selector: 'app-nav',
@@ -21,8 +22,7 @@ export class NavComponent implements OnInit {
   headPhotoUrl: string = '';
 
   @ViewChild('menu', { static: false }) menu: ElementRef;
-  @ViewChild('menuBtn', { static: false }) menuBtn: ElementRef;
-  @ViewChild('menuBtnIcon', { static: false }) menuBtnIcon: ElementRef;
+
   constructor(
     private router: Router,
     private accountService: AccountService,
@@ -33,18 +33,23 @@ export class NavComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.readMainPhoto();
+    this.accountService.getUserDetail().subscribe(res => {
+      this.readMainPhoto();
+    })
+
     // this.closeMenuOutside()
     this.utilitiesService.documentClickedTarget
       .subscribe(target => this.documentClickListener(target))
   }
 
   readMainPhoto() {
-    this.headPhotoUrl = this.accountQuery.user.photos.filter(p => p.isMain)[0]?.url;
+    this.accountQuery.mainPhoto$.subscribe(url => {
+      this.headPhotoUrl = url;
+    })
   }
 
   documentClickListener(target: any): void {
-    if (!this.menu.nativeElement.contains(target)) {
+    if (!this.menu.nativeElement?.contains(target)) {
       this.showMenu = false;
     }
   }

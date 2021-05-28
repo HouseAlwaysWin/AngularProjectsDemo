@@ -7,8 +7,12 @@ import { AccountState, AccountStore } from "./account.store";
   providedIn: 'root'
 })
 export class AccountQuery extends Query<AccountState> {
+  all$ = this.select();
+  user$ = this.select(state => state.user);;
+  mainPhoto$ = this.select(state => state.user.photos.filter(p => p.isMain)[0]?.url);
 
-  user$ = this.select('user');
+
+  userPhotos = this.select('userPhotos');
   token$ = this.select(state => state.user.token);
   email$ = this.select(state => state.user.email);
   username$ = this.select(state => state.user.userName);

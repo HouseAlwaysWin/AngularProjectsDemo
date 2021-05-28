@@ -6,7 +6,6 @@ import { of, timer } from "rxjs";
 import { catchError, debounceTime, map, switchMap } from "rxjs/operators";
 import { environment } from "src/environments/environment";
 import { Res } from "../models/response";
-import { UserToken } from "../models/user";
 import { InjectorInstance } from "../shared.module";
 import { AccountStore } from "../states/account/account.store";
 

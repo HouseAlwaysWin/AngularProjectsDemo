@@ -6,25 +6,6 @@
   flex-direction: column;
   align-items: center;
 
-  & .head-photo-main {
-    margin-top: 5rem;
-
-    & img {
-      padding: 0.5rem;
-      border: 1px solid #ddd;
-      height: 20rem;
-      width: 20rem;
-      border-radius: 100%;
-      object-fit: cover;
-      cursor: pointer;
-      transform: scale(1.2);
-
-      &:hover {
-        box-shadow: 0 0 2px 1px rgba($color-black, 0.5);
-      }
-    }
-  }
-
   & .head-photo {
     margin-top: 4rem;
     width: 50%;
@@ -38,6 +19,25 @@
       flex-direction: row;
       align-items: center;
       justify-content: center;
+    }
+
+    &-main {
+      margin-top: 5rem;
+
+      & img {
+        padding: 0.5rem;
+        border: 1px solid $color-white;
+        height: 30rem;
+        width: 30rem;
+        border-radius: 0.3rem;
+        object-fit: cover;
+        cursor: pointer;
+        transform: scale(1.2);
+
+        &:hover {
+          box-shadow: 0 0 2px 1px rgba($color-black, 0.5);
+        }
+      }
     }
 
     &-item {
@@ -100,7 +100,7 @@
       transition: all 0.1s;
 
       &.main {
-        border: 0.5rem solid $color-primary-light;
+        border: 0.5rem solid $color-primary;
       }
 
       &.select {
@@ -126,9 +126,10 @@
       color: $color-white;
       background-color: rgba($color-primary-dark, 1);
       padding: 0.3rem;
-      border-radius: 1rem;
+      border-radius: 0.5rem;
 
       &:hover {
+        background-color: $color-primary;
         opacity: 1;
       }
 
@@ -136,17 +137,180 @@
         background-color: rgba($color-primary, 1);
       }
     }
+
+    &-delete {
+      margin: 1rem 0;
+      border: none;
+      border-radius: 2rem;
+      padding: 1rem;
+      background-color: $color-warn-btn;
+      color: $color-white;
+      cursor: pointer;
+
+      &.hide {
+        cursor: auto;
+        display: block;
+        opacity: 0;
+      }
+
+      &:hover {
+        background-color: $color-warn-btn-hover;
+      }
+
+      &:active {
+        background-color: $color-warn-btn-active;
+      }
+    }
   }
 }
 
-// .full {
-//   z-index: 999;
-//   position: fixed;
-//   display: float;
-//   border-radius: none;
-//   padding: 0;
-//   top: 50%;
-//   left: 50%;
-//   transform: translate(-50%, -50%);
-//   background-color: $color-black;
-// }
+.photo-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  &-field {
+    position: relative;
+    width: 50rem;
+    height: 20rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 0.2rem dashed rgba($color-black, 0.7);
+    border-radius: 0.5rem;
+  }
+
+  &-text {
+    display: flex;
+    line-height: 3rem;
+    flex-direction: column;
+    align-items: center;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: $color-grey-light;
+  }
+
+  &-browse {
+    position: absolute;
+    flex-direction: column;
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+    // align-items: center;
+
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+
+    &-btn {
+      border: none;
+      background-color: $color-photo-file-browse;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      color: $color-white;
+      cursor: pointer;
+      font-size: 2rem;
+
+      &:hover {
+        background-color: $color-photo-file-browse-hover;
+      }
+
+      &:active {
+        background-color: $color-photo-file-browse-active;
+      }
+    }
+  }
+
+  &-btn {
+    display: flex;
+    flex-direction: row;
+    border: none;
+    padding: 1rem;
+    background-color: $color-primary;
+    border-radius: 1rem;
+    color: $color-white;
+    margin-top: 1rem;
+    cursor: pointer;
+    &:hover {
+      background-color: $color-primary-dark;
+    }
+
+    &:active {
+      background-color: $color-primary;
+    }
+  }
+
+  &-input {
+    display: none;
+  }
+}
+
+.file-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+
+  &-info {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &-img {
+    width: 10rem;
+    height: 10rem;
+    object-fit: cover;
+  }
+
+  &-item {
+    padding: 1rem;
+    font-size: 1.6rem;
+  }
+
+  &-name {
+    padding: 1rem;
+  }
+
+  &-size {
+    padding: 1rem;
+  }
+
+  &-action {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  &-progress {
+    height: 0.7rem;
+    width: 100%;
+    border-radius: 0.5rem;
+    background-color: $color-grey-light;
+    position: relative;
+
+    &-bar {
+      width: 0%;
+      height: 100%;
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      border-radius: 4px;
+      background-color: $color-primary;
+      transition: 0.5s all;
+    }
+  }
+
+  &-remove {
+    padding: 1rem;
+    cursor: pointer;
+    & i {
+      font-size: 1rem;
+      color: $color-error;
+    }
+  }
+}

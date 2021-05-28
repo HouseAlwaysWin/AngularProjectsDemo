@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Login } from "../../models/login";
 import { environment } from "src/environments/environment";
 import { Res } from "../../models/response";
-import { UserToken } from "../../models/user";
+import { UserDetail, UserPhoto } from "../../models/user";
 import { catchError, map } from 'rxjs/operators'
 import { of } from "rxjs";
 import { AccountQuery } from "./account.query";
@@ -18,14 +18,41 @@ export class AccountService {
   apiUrl = environment.apiUrl;
   constructor(
     private http: HttpClient,
-    private store: AccountStore,
+    private accountQuery: AccountQuery,
+    private accountStore: AccountStore,
     private sharedStore: SharedStore) {
+  }
+
+  private setCurrentUser(userDetail: UserDetail) {
+    localStorage.setItem('token', JSON.stringify(userDetail.token));
+    this.accountStore.update({
+      user: userDetail,
+      userPhotos: userDetail.photos,
+      mainPhoto: userDetail.photos.filter(p => p.isMain)[0]?.url,
+      isAuth: true
+    })
+  }
+
+  getUserDetail() {
+    return this.http.get(`${this.apiUrl}account/getUserInfo`)
+      .pipe(
+        map((res: Res<UserDetail>) => {
+          if (res.isSuccessed) {
+            this.setCurrentUser(res.data);
+          }
+          return res.isSuccessed;
+        }),
+        catchError(error => {
+          console.log(error);
+          return of(error);
+        })
+      );
   }
 
   register(model: Register) {
     this.sharedStore.update({ gLoading: true });
     return this.http.post(`${this.apiUrl}account/register`, model).pipe(
-      map((res: Res<UserToken>) => {
+      map((res: Res<UserDetail>) => {
         if (res.isSuccessed) {
           this.setCurrentUser(res.data);
         }
@@ -34,7 +61,7 @@ export class AccountService {
       }),
       catchError(error => {
         this.sharedStore.update({ gLoading: false });
-        localStorage.removeItem('user');
+        localStorage.removeItem('token');
         console.log(error);
         return of(error);
       })
@@ -45,7 +72,7 @@ export class AccountService {
   login(model: Login) {
     this.sharedStore.update({ gLoading: true });
     return this.http.post(`${this.apiUrl}account/login`, model).pipe(
-      map((res: Res<UserToken>) => {
+      map((res: Res<UserDetail>) => {
         console.log(res);
         if (res.isSuccessed) {
           this.setCurrentUser(res.data);
@@ -55,7 +82,7 @@ export class AccountService {
       }),
       catchError(error => {
         this.sharedStore.update({ gLoading: false });
-        localStorage.removeItem('user');
+        localStorage.removeItem('token');
         console.log(error);
         return of(error);
       })
@@ -64,19 +91,94 @@ export class AccountService {
 
   logout() {
     this.sharedStore.update({ gLoading: true });
-    localStorage.removeItem('user');
-    this.store.update(null);
+    localStorage.removeItem('token');
+    this.accountStore.update(null);
     this.sharedStore.update({ gLoading: false });
   }
 
-  setCurrentUser(user: UserToken) {
-    console.log(user);
-    localStorage.setItem('user', JSON.stringify(user));
-    this.store.update({
-      user: user,
-      isAuth: true
-    })
+  setUserPhotoAsMain(photo: UserPhoto) {
+    this.sharedStore.update({ gLoading: true });
+    return this.http.put(`${this.apiUrl}user/set-main-photo/${photo.id}`, {})
+      .pipe(
+        map((res: Res<any>) => {
+          if (res.isSuccessed) {
+            this.accountStore.update(state => {
+              let statePhotos = state.user.photos;
+              for (let i = 0; i < statePhotos.length; i++) {
+                statePhotos[i].isMain = false;
+                if (statePhotos[i].id === photo.id) {
+                  statePhotos[i].isMain = true;
+                }
+              }
+              state.user.photos = statePhotos;
+
+              return ({
+                user: state.user
+              })
+            });
+          }
+          this.sharedStore.update({ gLoading: false });
+          return res;
+        }),
+        catchError(error => {
+          this.sharedStore.update({ gLoading: false });
+          console.log(error);
+          return of(error);
+        }));
   }
+
+
+  uploadUserPhoto(files: any) {
+    const formData: FormData = new FormData();
+    let file = files[0];
+    formData.append('file', file);
+    return this.http.post(`${this.apiUrl}user/add-photo`, formData)
+      .pipe(
+        map((res: Res<UserDetail>) => {
+          if (res.isSuccessed) {
+            this.accountStore.update({
+              user: res.data
+            });
+          }
+          return res.isSuccessed;
+        }),
+        catchError(error => {
+          this.sharedStore.update({ gLoading: false });
+          console.log(error);
+          return of(error);
+        })
+
+      );
+  }
+
+  deleteUserPhoto(photo: UserPhoto) {
+    this.sharedStore.update({ gLoading: true });
+    console.log(photo);
+    return this.http.delete(`${this.apiUrl}user/delete-photo/${photo.id}`, {})
+      .pipe(
+        map((res: Res<any>) => {
+          if (res.isSuccessed) {
+
+            this.accountStore.update(state => {
+              let index = state.user.photos.indexOf(photo);
+              if (index > -1) {
+                state.user.photos.splice(index, 1);
+              }
+            });
+          }
+          this.sharedStore.update({ gLoading: false });
+          return res;
+        }),
+        catchError(error => {
+          this.sharedStore.update({ gLoading: false });
+          console.log(error);
+          return of(error);
+        }));
+  }
+
+
+
+
 }
 
 
