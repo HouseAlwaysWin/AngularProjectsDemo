@@ -18,5 +18,6 @@ namespace BackendApi.Core.Entities.Identity
         public List<Message> MessagesReceived { get; set; }
         public ICollection<AppUserRole> AppUserRoles { get; set; }
         public ICollection<UserPhoto> Photos { get; set; }
+        public ICollection<UserRelationship> Relationships { get; set; }
     }
 }

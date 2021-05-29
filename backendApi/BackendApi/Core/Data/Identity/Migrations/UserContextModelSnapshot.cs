@@ -258,6 +258,30 @@ namespace BackendApi.Core.Data.Identity.Migrations
                     b.ToTable("UserPhoto");
                 });
 
+            modelBuilder.Entity("BackendApi.Core.Models.Entities.Identity.UserRelationship", b =>
+                {
+                    b.Property<int>("AppUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("RelationshipId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset?>("ModifiedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("AppUserId", "RelationshipId");
+
+                    b.HasIndex("RelationshipId");
+
+                    b.ToTable("UserRelationship");
+                });
+
             modelBuilder.Entity("BackendApi.Core.Models.Entities.Message", b =>
                 {
                     b.Property<int>("Id")
@@ -271,11 +295,11 @@ namespace BackendApi.Core.Data.Identity.Migrations
                     b.Property<DateTimeOffset>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime?>("DateRead")
-                        .HasColumnType("timestamp without time zone");
+                    b.Property<DateTimeOffset?>("DateRead")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("MessageSent")
-                        .HasColumnType("timestamp without time zone");
+                    b.Property<DateTimeOffset>("MessageSent")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTimeOffset?>("ModifiedDate")
                         .HasColumnType("timestamp with time zone");
@@ -443,6 +467,25 @@ namespace BackendApi.Core.Data.Identity.Migrations
                     b.Navigation("AppUser");
                 });
 
+            modelBuilder.Entity("BackendApi.Core.Models.Entities.Identity.UserRelationship", b =>
+                {
+                    b.HasOne("BackendApi.Core.Entities.Identity.AppUser", "AppUser")
+                        .WithMany("Relationships")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("BackendApi.Core.Entities.Identity.AppUser", "Relationship")
+                        .WithMany()
+                        .HasForeignKey("RelationshipId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+
+                    b.Navigation("Relationship");
+                });
+
             modelBuilder.Entity("BackendApi.Core.Models.Entities.Message", b =>
                 {
                     b.HasOne("BackendApi.Core.Entities.Identity.AppUser", "Recipient")
@@ -514,6 +557,8 @@ namespace BackendApi.Core.Data.Identity.Migrations
                     b.Navigation("MessagesSent");
 
                     b.Navigation("Photos");
+
+                    b.Navigation("Relationships");
                 });
 #pragma warning restore 612, 618
         }

@@ -144,9 +144,10 @@ namespace BackendApi.Controllers
               user = await _userManager.FindByEmailAsync(email);
             }
 
-            await _userRepo.UpdateAsync(user,new Dictionary<string,object>{
-                { nameof(user.UserPublicId), publicId}
-            });
+            await _userRepo.UpdateAsync<AppUser>(u => u.Id == user.Id,
+                    new Dictionary<string,object> { 
+                        { nameof(user.UserPublicId), publicId} 
+                    });
             await _userRepo.CompleteAsync();
 
             return BaseApiOk("Update success");

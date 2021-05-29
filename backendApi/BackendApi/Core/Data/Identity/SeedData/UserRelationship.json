@@ -1,0 +1,30 @@
+[
+    {
+        "RelationshipId": 1,
+        "AppUserId": 2
+    },
+    {
+        "RelationshipId": 1,
+        "AppUserId": 3
+    },
+    {
+        "RelationshipId": 1,
+        "AppUserId": 4
+    },
+    {
+        "RelationshipId": 1,
+        "AppUserId": 5
+    },
+    {
+        "RelationshipId": 1,
+        "AppUserId": 6
+    },
+    {
+        "RelationshipId": 1,
+        "AppUserId": 7
+    },
+    {
+        "RelationshipId": 1,
+        "AppUserId": 8
+    }
+]

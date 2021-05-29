@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BackendApi.Core.Data.Repositories.Interfaces;
 using BackendApi.Core.Entities.Identity;
 using BackendApi.Core.Models.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
@@ -17,13 +18,18 @@ namespace BackendApi.Core.Data.Identity
            UserContext context,
            UserManager<AppUser> userManager,
            RoleManager<AppRole> roleManager,
+           IUserRepository userRepository,
            ILoggerFactory loggerFactory
            ){
             try{
                 if (await userManager.Users.AnyAsync()) return;
 
                 var userData = await System.IO.File.ReadAllTextAsync("./Core/Data/Identity/SeedData/UserSeedData.json");
+                var userRelationsData = await System.IO.File.ReadAllTextAsync("./Core/Data/Identity/SeedData/UserRelationship.json");
+
                 var users = JsonConvert.DeserializeObject<List<AppUser>>(userData);
+                var userRelations = JsonConvert.DeserializeObject<List<UserRelationship>>(userRelationsData);
+
                 if (users == null) return;
 
                 var roles = new List<AppRole>
@@ -43,6 +49,8 @@ namespace BackendApi.Core.Data.Identity
                     await userManager.CreateAsync(user, "111111");
                     await userManager.AddToRoleAsync(user, "Member");
                 }
+
+                await userRepository.BulkAddAsync<UserRelationship>(userRelations);
 
                 var admin = new AppUser 
                 {

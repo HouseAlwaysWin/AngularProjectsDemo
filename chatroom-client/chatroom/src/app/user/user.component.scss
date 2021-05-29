@@ -251,12 +251,14 @@
   list-style: none;
   display: flex;
   flex-direction: column;
+  width: 100%;
 
   &-info {
     margin-bottom: 1rem;
     display: flex;
     flex-direction: row;
-    justify-content: center;
+
+    justify-content: space-between;
     align-items: center;
   }
 
@@ -303,14 +305,23 @@
       background-color: $color-primary;
       transition: 0.5s all;
     }
+
+    &-label {
+      padding: 1rem;
+    }
   }
 
-  &-remove {
+  &-upload-btn {
+    padding: 1rem;
+    font-size: 2rem;
+    cursor: pointer;
+    color: $color-photo-file-browse;
+  }
+
+  &-remove-btn {
     padding: 1rem;
     cursor: pointer;
-    & i {
-      font-size: 1rem;
-      color: $color-error;
-    }
+    font-size: 2rem;
+    color: $color-error;
   }
 }

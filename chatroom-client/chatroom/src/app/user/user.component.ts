@@ -1,8 +1,9 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpEventType, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { catchError, takeUntil } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Res } from '../shared/models/response';
 import { UserDetail, UserPhoto } from '../shared/models/user';
@@ -31,19 +32,14 @@ export class UserComponent implements OnInit, OnDestroy {
   photoNextIndex: number = 5;
 
   uploadPhotofiles: any = [];
+  uploadProgress = {};
 
   selectPhoto: UserPhoto;
 
   deleteBtnEnable: boolean = false;
 
-  // imgPreviews: ImgPreview[] = [];
-  imgPreviews = {};
-
-
-
-
-
   @ViewChild('photosList', { static: false }) photosList: ElementRef;
+  @ViewChild('photoInput', { static: false }) photoInput: ElementRef;
 
 
   constructor(
@@ -51,6 +47,7 @@ export class UserComponent implements OnInit, OnDestroy {
     private accountService: AccountService,
     private accountQuery: AccountQuery,
     private utilitiesService: UtilitiesService,
+    public sanitizer: DomSanitizer,
     private accountStore: AccountStore) {
 
   }
@@ -109,8 +106,6 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   setNextPhoto() {
-    console.log(this.photoNextIndex);
-    console.log(this.photos.length);
     if (this.photoNextIndex < this.totalPhotos.length) {
       this.photoPrevIndex = this.photoPrevIndex + 1;
       this.photoNextIndex = this.photoNextIndex + 1;
@@ -123,21 +118,25 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   deletePhotoSelect() {
+    if (this.selectPhoto.isMain) {
+      alert('you can\'t delete main photo')
+      return;
+    };
     if (this.selectPhoto) {
-      this.accountService.deleteUserPhoto(this.selectPhoto).subscribe(() => {
-        this.getMainPhoto();
-        console.log('finished delete photo');
-      });
+      this.accountService.deleteUserPhoto(this.selectPhoto)
+        .subscribe(() => {
+          this.getMainPhoto();
+          this.setPrevPhoto();
+          this.setNextPhoto();
+        });
     }
     else {
       this.deleteBtnEnable = true;
     }
   }
 
-
-
-
   browseFile(event) {
+    console.log(event.target.files);
     this.prepareFilesList(event.target.files);
   }
 
@@ -145,56 +144,57 @@ export class UserComponent implements OnInit, OnDestroy {
     this.prepareFilesList(files);
   }
 
-  uploadFile() {
-    console.log(this.uploadPhotofiles);
-    if (this.uploadPhotofiles.length > 0) {
-      this.accountService.uploadUserPhoto(this.uploadPhotofiles)
-        .subscribe(result => {
-          console.log('upload Result:' + result);
-        });
-    }
+
+  uploadFile(file: any, index: number) {
+
+    let files = [];
+    files.push(file);
+    this.accountService.uploadUserPhoto(files)
+      .subscribe((event: any) => {
+        switch (event.type) {
+          case HttpEventType.UploadProgress:
+            let progress = 0;
+            if (event['loaded']) {
+              this.uploadPhotofiles[index].progress = Math.round((event['loaded'] * 100) / event['total']);
+            }
+
+          case HttpEventType.Response:
+            console.log(event);
+            let data = event?.body?.data;
+            if (data) {
+              this.removeUploadImg(index);
+              if (data) {
+                this.accountStore.update({
+                  user: data
+                })
+              }
+            }
+        }
+      }, error => {
+        console.log(error);
+        alert(error.error)
+      });
+
   }
 
-  readFileImg(file: File, index: number) {
-    const reader = new FileReader();
-    reader.onload = (e: any) => {
-      if (e.target.result) {
-        this.imgPreviews[index] = e.target.result
-      }
-      console.log(this.imgPreviews);
-    };
-    reader.readAsDataURL(file);
-  }
 
   removeUploadImg(index) {
-    this.uploadPhotofiles.splice(index, 1);
-  }
+    if (this.photoInput && this.photoInput.nativeElement) {
+      this.photoInput.nativeElement.value = '';
+    }
 
-  uploadFilesSimulator(index: number) {
-    setTimeout(() => {
-      if (index === this.uploadPhotofiles.length) {
-        return;
-      } else {
-        const progressInterval = setInterval(() => {
-          if (this.uploadPhotofiles[index].progress === 100) {
-            clearInterval(progressInterval);
-            this.uploadFilesSimulator(index + 1);
-          } else {
-            this.uploadPhotofiles[index].progress += 5;
-          }
-        }, 200);
-      }
-    }, 1000);
+    this.uploadPhotofiles.splice(index, 1);
+    console.log(this.uploadPhotofiles);
   }
 
   prepareFilesList(files: Array<any>) {
     for (let i = 0; i < files.length; i++) {
-      // for (const item of files) {
-      files[i].progress = 0;
-      this.uploadPhotofiles.push(files[i]);
-      this.readFileImg(files[i], i);
+      let file = files[i];
+      file.progress = 0;
+      file.objectURL = this.sanitizer.bypassSecurityTrustUrl((window.URL.createObjectURL(file)));
+      this.uploadPhotofiles.push(file);
+      console.log(this.uploadPhotofiles);
     }
-    this.uploadFilesSimulator(0);
   }
 
   formatBytes(bytes, decimals) {
@@ -206,13 +206,6 @@ export class UserComponent implements OnInit, OnDestroy {
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
-  }
-
-  getImgUrl(index: number) {
-    if (this.imgPreviews[index]) {
-      return this.imgPreviews[index];
-    }
-    return '';
   }
 
 

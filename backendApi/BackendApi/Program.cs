@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BackendApi.Core.Data;
 using BackendApi.Core.Data.Identity;
+using BackendApi.Core.Data.Repositories.Interfaces;
 using BackendApi.Core.Entities.Identity;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -28,11 +29,12 @@ namespace BackendApi
                     await context.Database.MigrateAsync();
                     await StoreContextSeed.SeedAsync(context,loggerFactory);
 
+                    var userRepo = services.GetRequiredService<IUserRepository>();
                     var userManager = services.GetRequiredService<UserManager<AppUser>>();
                     var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
                     var identityContext = services.GetRequiredService<UserContext>();
                     await identityContext.Database.MigrateAsync();
-                    await UserContextSeed.SeedUsersAsync(identityContext,userManager,roleManager,loggerFactory);
+                    await UserContextSeed.SeedUsersAsync(identityContext,userManager,roleManager,userRepo,loggerFactory);
 
                 }catch(Exception ex){
                     var logger = loggerFactory.CreateLogger<Program> ();

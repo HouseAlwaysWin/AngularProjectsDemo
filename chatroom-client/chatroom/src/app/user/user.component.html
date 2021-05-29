@@ -51,30 +51,31 @@
              class="photo-upload-browse">
         <span class="photo-upload-text">
           <div>
-            Drag and drop file here
+            Drop your head photo here
           </div>
           <div>
             Or
           </div>
         </span>
         <span class="photo-upload-browse-btn">
-          Browse for file
+          Browse for head photo
         </span>
       </label>
       <input id="photo-upload-input"
              class="photo-upload-input"
              multiple="multiple"
+             accept=".png,.jpg,.gif"
              type="file"
+             #photoInput
              (change)="browseFile($event)" />
     </div>
 
     <ul class="file-list">
       <li class="file-list-item"
-          *ngFor="let file of uploadPhotofiles;let index">
-        <!-- <li *ngFor="let file of uploadPhotofiles"> -->
+          *ngFor="let file of uploadPhotofiles;let i =index">
         <div class="file-list-info">
           <img class="file-list-img"
-               [src]="getImgUrl(index)" />
+               [src]="file?.objectURL" />
           <span class="file-list-name">
 
             {{ file.name  }}
@@ -88,24 +89,25 @@
         <div class="file-list-action">
           <div class="file-list-progress">
             <div class="file-list-progress-bar"
-                 [style.width]="file?.progress + '%'">
+                 [style.width]="uploadPhotofiles[i]?.progress + '%'">
             </div>
             <div class="file-list-progress-bar">
             </div>
           </div>
-          <div class="file-list-remove"
-               (click)="removeUploadImg(index)">
-            <i class="fas fa-trash-alt"></i>
+
+          <div class="file-list-progress-label">
+            {{ uploadPhotofiles[i]?.progress + '%' }}
           </div>
+
+          <i class="fas fa-upload file-list-upload-btn"
+             (click)="uploadFile(file,i)"></i>
+          <i class="fas fa-trash-alt file-list-remove-btn"
+             (click)="removeUploadImg(i)"></i>
         </div>
 
       </li>
     </ul>
 
-    <button class="photo-upload-btn"
-            (click)="uploadFile()">Upload</button>
-    <!-- <p-fileUpload name="imgfile[]"
-                  customUpload="true"
-                  (uploadHandler)="uploader($event)"></p-fileUpload> -->
+
   </div>
 </div>

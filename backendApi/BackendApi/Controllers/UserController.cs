@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -29,40 +30,44 @@ namespace BackendApi.Controllers
             this._userRepo = userRepo;
         }
 
-        [HttpPost("add-photo")]
-        public async Task<ActionResult<UserPhotoDto>> AddPhoto(IFormFile file)
+        [HttpPost("add-photos")]
+        public async Task<ActionResult<UserPhotoDto>> AddPhotos(IFormFile[] files)
         {
-
             var user = await _userRepo.GetByAsync<AppUser>(query =>
-                query.Where(u=> u.Email == User.GetEmail())
-                        .Include(u => u.Photos)
-                );
+                                query.Where(u=> u.Email == User.GetEmail())
+                                        .Include(u => u.Photos)
+                                );
 
-            var result = await _photoService.AddPhotoAsync(file);
-
-            if (result.Error != null) return BadRequest(result.Error.Message);
-
-            var photo = new UserPhoto 
+            foreach (var file in files)
             {
-                Url = result.SecureUrl.AbsoluteUri,
-                PublicId = result.PublicId
-            };
+                
+                var result = await _photoService.AddPhotoAsync(file);
 
-            if (user.Photos.Count == 0)
-            {
-                photo.IsMain = true;
+                if (result.Error != null) return BadRequest(result.Error.Message);
+
+                var photo = new UserPhoto 
+                {
+                    Url = result.SecureUrl.AbsoluteUri,
+                    PublicId = result.PublicId
+                };
+
+                if (user.Photos.Count == 0)
+                {
+                    photo.IsMain = true;
+                }
+
+                user.Photos.Add(photo);
             }
 
-            user.Photos.Add(photo);
 
-            if (await _userRepo.CompleteAsync()){
-              user = await _userRepo.GetByAsync<AppUser>(query =>
-                query.Where(u=> u.Email == User.GetEmail())
-                        .Include(u => u.Photos));
-                var userDto = _mapper.Map<AppUser,AppUserDto>(user);
-                return BaseApiOk(userDto);
+            var uploadResult = await _userRepo.CompleteAsync();
+            if(uploadResult){
+                user = await _userRepo.GetByAsync<AppUser>(query =>
+                    query.Where(u=> u.Email == User.GetEmail())
+                            .Include(u => u.Photos));
+                    var userDto = _mapper.Map<AppUser,AppUserDto>(user);
+                    return BaseApiOk(userDto);
             }
-
 
             return BaseApiBadRequest("Problem addding photo");
         }

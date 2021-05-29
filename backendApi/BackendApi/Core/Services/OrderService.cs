@@ -58,7 +58,9 @@ namespace BackendApi.Core.Services
                 items.Add(orderItem);
              }
 
-             var deliveryMethod = await _storeRepo.GetByIdAsync<DeliveryMethod>(deliveryMethodId);
+             var deliveryMethod = await _storeRepo.GetByAsync<DeliveryMethod>(
+                 query => query.Where(dm => dm.Id == deliveryMethodId));
+
              subTotal += deliveryMethod.Price;
 
             var order = new Order(
@@ -111,7 +113,7 @@ namespace BackendApi.Core.Services
         public async Task<Order> GetOrderByIdAsync(int id, string buyerEmail)
         {
             // var spec = new GetOrderWithItemsSpec(id,buyerEmail);
-            var result = await _storeRepo.GetByIdAsync<Order>(id,q => OrderSpec.GetOrderWithItemsSpec(q,buyerEmail));
+            var result = await _storeRepo.GetByAsync<Order>(q => OrderSpec.GetOrderWithItemsSpec(q,buyerEmail));
             return result;
         }
 

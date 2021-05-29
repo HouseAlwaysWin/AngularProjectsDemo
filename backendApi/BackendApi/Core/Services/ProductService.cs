@@ -326,7 +326,7 @@ namespace BackendApi.Core.Services
                 productDto = cachedData.FirstOrDefault(p => p.Id == id);
                 return productDto;
             }
-            var product = await _storeRepo.GetByIdAsync<Product>(id, q => ProductSpec.GetProductAll(q));
+            var product = await _storeRepo.GetByAsync<Product>(q => ProductSpec.GetProductAll(q));
             productDto = _mapper.Map<Product, ProductDto>(product);
             return productDto;
         }

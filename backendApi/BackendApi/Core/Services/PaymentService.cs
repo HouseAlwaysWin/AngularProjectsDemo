@@ -44,7 +44,9 @@ namespace BackendApi.Core.Services
             if(basket.DeliveryMethodId.HasValue){
                 // var deliveryMethod = await _unitOfWork.Repository<DeliveryMethod>()
                 //             .GetByIdAsync((int)basket.DeliveryMethodId);
-                var deliveryMethod = await _storeRepo.GetByIdAsync<DeliveryMethod>((int)basket.DeliveryMethodId);
+                var deliveryMethod = await _storeRepo.GetByAsync<DeliveryMethod>(query => query.Where(q => q.Id == (int)basket.DeliveryMethodId)
+                    
+                     );
                 shippingPrice = deliveryMethod.Price;
             }
 

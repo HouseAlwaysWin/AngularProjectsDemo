@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System;
 using BackendApi.Core.Entities.Identity;
 using BackendApi.Core.Models.Entities;
@@ -15,6 +16,8 @@ namespace BackendApi.Core.Data.Identity
     {
         public DbSet<UserInfo> UserInfo { get; set; }
         public DbSet<UserPhoto> UserPhoto { get; set; }
+        public DbSet<UserRelationship> UserRelationship { get; set; }
+
         public DbSet<Message> Message { get; set; }
         public UserContext(DbContextOptions<UserContext> options):base(options)
         {
@@ -40,10 +43,25 @@ namespace BackendApi.Core.Data.Identity
                  .HasForeignKey(ur => ur.UserId)
                  .IsRequired();
 
+                
                  a.HasIndex(u => u.UserPublicId)
                     .IsUnique();
                     
             });
+
+            builder.Entity<UserRelationship>(ur =>{
+                ur.HasKey(ur => new { ur.AppUserId,ur.RelationshipId});
+                ur.HasOne(ur => ur.AppUser)
+                 .WithMany(u => u.Relationships)
+                 .HasForeignKey(ur => ur.AppUserId)
+                 .OnDelete(DeleteBehavior.NoAction);
+                
+                // ur.HasOne(ur => ur.Relationship)
+                //  .WithMany(u => u.Relationships)
+                //  .HasForeignKey(ur => ur.RelationshipId)
+                //  .OnDelete(DeleteBehavior.NoAction);
+                });
+
 
             builder.Entity<AppRole>(b =>
             {
@@ -81,6 +99,7 @@ namespace BackendApi.Core.Data.Identity
                 .HasOne(u => u.Sender)
                 .WithMany(m => m.MessagesSent)
                 .OnDelete(DeleteBehavior.Restrict);
+            
 
             
 

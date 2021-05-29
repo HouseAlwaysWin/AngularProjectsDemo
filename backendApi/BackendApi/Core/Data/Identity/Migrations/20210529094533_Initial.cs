@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace BackendApi.Core.Data.Identity.Migrations
 {
-    public partial class Init : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -199,8 +199,8 @@ namespace BackendApi.Core.Data.Identity.Migrations
                     RecipientId = table.Column<int>(type: "integer", nullable: false),
                     RecipientUsername = table.Column<string>(type: "text", nullable: true),
                     Content = table.Column<string>(type: "text", nullable: true),
-                    DateRead = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    MessageSent = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    DateRead = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
+                    MessageSent = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     SenderDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     RecipientDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
@@ -267,6 +267,32 @@ namespace BackendApi.Core.Data.Identity.Migrations
                     table.ForeignKey(
                         name: "FK_UserPhoto_AppUsers_AppUserId",
                         column: x => x.AppUserId,
+                        principalTable: "AppUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserRelationship",
+                columns: table => new
+                {
+                    AppUserId = table.Column<int>(type: "integer", nullable: false),
+                    RelationshipId = table.Column<int>(type: "integer", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    ModifiedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserRelationship", x => new { x.AppUserId, x.RelationshipId });
+                    table.ForeignKey(
+                        name: "FK_UserRelationship_AppUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AppUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_UserRelationship_AppUsers_RelationshipId",
+                        column: x => x.RelationshipId,
                         principalTable: "AppUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -340,6 +366,11 @@ namespace BackendApi.Core.Data.Identity.Migrations
                 name: "IX_UserPhoto_AppUserId",
                 table: "UserPhoto",
                 column: "AppUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRelationship_RelationshipId",
+                table: "UserRelationship",
+                column: "RelationshipId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -367,6 +398,9 @@ namespace BackendApi.Core.Data.Identity.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserPhoto");
+
+            migrationBuilder.DropTable(
+                name: "UserRelationship");
 
             migrationBuilder.DropTable(
                 name: "AppRoles");

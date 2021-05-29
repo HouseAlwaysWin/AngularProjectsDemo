@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { AccountStore } from "./account.store";
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
 import { Login } from "../../models/login";
 import { environment } from "src/environments/environment";
 import { Res } from "../../models/response";
@@ -130,25 +130,22 @@ export class AccountService {
 
   uploadUserPhoto(files: any) {
     const formData: FormData = new FormData();
-    let file = files[0];
-    formData.append('file', file);
-    return this.http.post(`${this.apiUrl}user/add-photo`, formData)
-      .pipe(
-        map((res: Res<UserDetail>) => {
-          if (res.isSuccessed) {
-            this.accountStore.update({
-              user: res.data
-            });
-          }
-          return res.isSuccessed;
-        }),
+    for (let i = 0; i < files.length; i++) {
+      formData.append('files', files[i]);
+    }
+
+    return this.http.post(`${this.apiUrl}user/add-photos`, formData,
+      {
+        reportProgress: true,
+        observe: 'events',
+      }).pipe(
         catchError(error => {
           this.sharedStore.update({ gLoading: false });
           console.log(error);
           return of(error);
         })
-
       );
+
   }
 
   deleteUserPhoto(photo: UserPhoto) {
