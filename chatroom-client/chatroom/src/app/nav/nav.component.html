@@ -20,15 +20,15 @@
     </li>
 
     <li *ngIf="!accountQuery.isAuth"
+        routerLink="/account/login"
         class="nav-item">
-      <a routerLink="/account/login"
-         class="nav-btn">Login</a>
+      <a class="nav-btn">Login</a>
     </li>
 
     <li *ngIf="!accountQuery.isAuth"
+        routerLink="/account/register"
         class="nav-item">
-      <a routerLink="/account/register"
-         class="nav-btn">Register</a>
+      <a class="nav-btn">Register</a>
     </li>
 
     <li *ngIf="accountQuery.isAuth"

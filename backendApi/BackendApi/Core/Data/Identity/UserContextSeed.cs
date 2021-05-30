@@ -1,3 +1,4 @@
+using System.Xml.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,12 +24,14 @@ namespace BackendApi.Core.Data.Identity
            ){
             try{
                 if (await userManager.Users.AnyAsync()) return;
+                if((await userRepository.GetAllAsync<UserFriend>()).Count() >0) return;
 
                 var userData = await System.IO.File.ReadAllTextAsync("./Core/Data/Identity/SeedData/UserSeedData.json");
                 var userRelationsData = await System.IO.File.ReadAllTextAsync("./Core/Data/Identity/SeedData/UserRelationship.json");
 
                 var users = JsonConvert.DeserializeObject<List<AppUser>>(userData);
-                var userRelations = JsonConvert.DeserializeObject<List<UserRelationship>>(userRelationsData);
+                var userRelations = JsonConvert.DeserializeObject<List<UserFriend>>(userRelationsData);
+
 
                 if (users == null) return;
 
@@ -50,7 +53,6 @@ namespace BackendApi.Core.Data.Identity
                     await userManager.AddToRoleAsync(user, "Member");
                 }
 
-                await userRepository.BulkAddAsync<UserRelationship>(userRelations);
 
                 var admin = new AppUser 
                 {
@@ -79,8 +81,12 @@ namespace BackendApi.Core.Data.Identity
                     }
                 };
 
+
+                await userRepository.BulkAddAsync<UserFriend>(userRelations);
+
                 await userManager.CreateAsync(admin,"123456");
                 await userManager.AddToRolesAsync(admin, new[] {"Admin", "Moderator"}); 
+                await userRepository.CompleteAsync();
 
             } catch(Exception ex){
                  var logger = loggerFactory.CreateLogger<StoreContext>();

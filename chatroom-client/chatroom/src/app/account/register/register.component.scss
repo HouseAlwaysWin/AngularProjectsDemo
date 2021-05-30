@@ -3,6 +3,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  animation-name: moveInBottom;
+  animation-duration: 0.5s;
 }
 
 .title {

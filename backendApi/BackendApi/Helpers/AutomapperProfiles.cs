@@ -64,6 +64,9 @@ namespace BackendApi.Helpers.Localization {
             CreateMap<UserPhoto,UserPhotoDto>().ReverseMap();
             CreateMap<UserAddress,AddressDto>().ReverseMap();
             CreateMap<Message,MessageDto>().ReverseMap();
+
+            CreateMap<AppUser,AppUserFriendDto>().ReverseMap();
+            CreateMap<UserFriend,UserFriendMapDto>().ReverseMap();
             CreateMap<AppUser,AppUserDto>().ReverseMap();
             CreateMap<AppUser,UserDto>();
          

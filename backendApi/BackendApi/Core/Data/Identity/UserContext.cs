@@ -16,7 +16,7 @@ namespace BackendApi.Core.Data.Identity
     {
         public DbSet<UserInfo> UserInfo { get; set; }
         public DbSet<UserPhoto> UserPhoto { get; set; }
-        public DbSet<UserRelationship> UserRelationship { get; set; }
+        public DbSet<UserFriend> UserFriends { get; set; }
 
         public DbSet<Message> Message { get; set; }
         public UserContext(DbContextOptions<UserContext> options):base(options)
@@ -32,6 +32,8 @@ namespace BackendApi.Core.Data.Identity
                 a.ToTable("AppUsers");
                 a.Property(a=>a.CreatedDate)
                     // .HasDefaultValueSql("GETDATE()")
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                    .ValueGeneratedOnAdd()
                     .IsRequired();
                 a.HasOne(u => u.Address)
                  .WithOne(u => u.AppUser)
@@ -43,23 +45,38 @@ namespace BackendApi.Core.Data.Identity
                  .HasForeignKey(ur => ur.UserId)
                  .IsRequired();
 
-                
+
+                //  a.HasMany(u => u.Friends)                
+                //     .WithMany(u => u.FriendsReverse)
+                //     .UsingEntity<UserFriend>("UserFriend",
+                //         x => x.HasOne(uf => uf.AppUser).WithMany().HasForeignKey(uf => uf.AppUserId),
+                //         x => x.HasOne(uf => uf.Friend).WithMany().HasForeignKey(uf => uf.FriendId),
+                //         x => x.ToTable("UserFriend"));
+                    
                  a.HasIndex(u => u.UserPublicId)
                     .IsUnique();
+
                     
             });
 
-            builder.Entity<UserRelationship>(ur =>{
-                ur.HasKey(ur => new { ur.AppUserId,ur.RelationshipId});
-                ur.HasOne(ur => ur.AppUser)
-                 .WithMany(u => u.Relationships)
-                 .HasForeignKey(ur => ur.AppUserId)
-                 .OnDelete(DeleteBehavior.NoAction);
-                
-                // ur.HasOne(ur => ur.Relationship)
-                //  .WithMany(u => u.Relationships)
-                //  .HasForeignKey(ur => ur.RelationshipId)
-                //  .OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<UserFriend>(ur =>{
+                ur.HasKey(ur => new {ur.FriendId,ur.AppUserId });
+                ur.Property(a=>a.CreatedDate)
+                    // .HasDefaultValueSql("GETDATE()")
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                    .ValueGeneratedOnAdd()
+                    .IsRequired();
+
+                ur.HasOne<AppUser>(ur => ur.AppUser)
+                    .WithMany(u => u.Friends)
+                    .HasForeignKey(ur => ur.AppUserId)
+                    .OnDelete(DeleteBehavior.NoAction);
+
+                ur.HasOne(ur => ur.Friend)
+                    .WithMany(u => u.FriendsReverse)
+                    .HasForeignKey(ur => ur.FriendId)
+                    .OnDelete(DeleteBehavior.NoAction);
+
                 });
 
 
@@ -73,6 +90,12 @@ namespace BackendApi.Core.Data.Identity
                  .WithOne(u => u.Role)
                  .HasForeignKey(ur => ur.RoleId)
                  .IsRequired();
+
+                b.Property(a=>a.CreatedDate)
+                    // .HasDefaultValueSql("GETDATE()")
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                    .ValueGeneratedOnAdd()
+                    .IsRequired();
             });
 
             builder.Entity<AppUserRole>(b =>
@@ -87,21 +110,26 @@ namespace BackendApi.Core.Data.Identity
                  .WithMany(u => u.AppUserRoles)
                  .HasForeignKey(ur => ur.UserId)
                  .IsRequired();
+
+              
             }); 
 
 
-            builder.Entity<Message>()
-                .HasOne(u => u.Recipient)
+            builder.Entity<Message>(m => {
+              m.HasOne(u => u.Recipient)
                 .WithMany(m => m.MessagesReceived)
                 .OnDelete(DeleteBehavior.Restrict);
-            
-            builder.Entity<Message>()
-                .HasOne(u => u.Sender)
+              m.HasOne(u => u.Sender)
                 .WithMany(m => m.MessagesSent)
                 .OnDelete(DeleteBehavior.Restrict);
-            
 
-            
+              m.Property(a=>a.CreatedDate)
+                    // .HasDefaultValueSql("GETDATE()")
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                    .ValueGeneratedOnAdd()
+                    .IsRequired();
+            });
+                         
 
            builder.Entity<IdentityUserClaim<int>>(b =>
             {

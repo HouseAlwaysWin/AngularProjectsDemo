@@ -1,6 +1,6 @@
 namespace BackendApi.Core.Data.Repositories.Interfaces
 {
-    public interface IStoreRepository:IBaseRepository<StoreContext>
+    public interface IStoreRepository:IBaseRepository
     {
          
     }

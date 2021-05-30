@@ -85,7 +85,8 @@ namespace BackendApi.Controllers
                     return query.Where(u => u.Email == email)
                             .Include(u => u.Address)
                             .Include(u => u.UserInfo)
-                            .Include(u => u.Photos);
+                            .Include(u => u.Photos)
+                            .Include(u => u.Friends).ThenInclude(ur => ur.AppUser);
                 });
 
                 var token = _tokenService.CreateToken(user);
@@ -180,7 +181,9 @@ namespace BackendApi.Controllers
                     return query.Where(u => u.Email == user.Email)
                         .Include(u => u.Address)
                         .Include(u => u.UserInfo)
-                        .Include(u => u.Photos);
+                        .Include(u => u.Photos)
+                        .Include(u => u.Friends).ThenInclude(u=> u.Friend)
+                        .Include(u => u.FriendsReverse).ThenInclude(u=>u.AppUser);
                     });
 
                 var userResult = _mapper.Map<AppUser,AppUserDto>(userInfo);

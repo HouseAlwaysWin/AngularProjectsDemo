@@ -219,6 +219,7 @@ namespace BackendApi
             services.AddSingleton<IHttpContextAccessor,HttpContextAccessor>();
             services.AddScoped<ILocalizedService,LocalizedService>();
             services.AddScoped<IBasketService,BasketService>();
+            services.AddScoped<IUserService,UserService>();
 
             services.AddScoped<IStoreRepository,StoreRepository>();
             services.AddScoped<IUserRepository,UserRepository>();

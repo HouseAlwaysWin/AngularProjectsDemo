@@ -8,7 +8,7 @@ using LinqToDB.Linq;
 
 namespace BackendApi.Core.Data.Repositories.Interfaces
 {
-    public interface IBaseRepository<TContext> : IDisposable
+    public interface IBaseRepository : IDisposable
     {
         Task AddAsync<TEntity>(TEntity entity) where TEntity : class;
         Task BulkAddAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : class;

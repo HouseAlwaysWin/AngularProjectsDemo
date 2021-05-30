@@ -14,7 +14,7 @@ using Microsoft.EntityFrameworkCore;
 namespace BackendApi.Core.Data.Repositories
 {
 
-    public abstract class BaseRepository<TContext> : IBaseRepository<TContext> where TContext : DbContext
+    public abstract class BaseRepository<TContext> : IBaseRepository where TContext : DbContext
     {
         private readonly TContext _context;
 
@@ -142,7 +142,7 @@ namespace BackendApi.Core.Data.Repositories
         public virtual async Task RemoveAsync<TEntity>(Expression<Func<TEntity, bool>> IdentityPredicate)
                     where TEntity : class
         {
-            await _context.Set<TEntity>().DeleteWithOutputAsync(IdentityPredicate);
+            await _context.Set<TEntity>().DeleteAsync(IdentityPredicate);
         }
 
 

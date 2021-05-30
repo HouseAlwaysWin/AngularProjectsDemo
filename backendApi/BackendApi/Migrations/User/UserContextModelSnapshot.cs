@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace BackendApi.Core.Data.Identity.Migrations
+namespace BackendApi.Migrations.User
 {
     [DbContext(typeof(UserContext))]
     partial class UserContextModelSnapshot : ModelSnapshot
@@ -31,7 +31,9 @@ namespace BackendApi.Core.Data.Identity.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTimeOffset>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<DateTimeOffset?>("ModifiedDate")
                         .HasColumnType("timestamp with time zone");
@@ -68,7 +70,9 @@ namespace BackendApi.Core.Data.Identity.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTimeOffset>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -193,6 +197,29 @@ namespace BackendApi.Core.Data.Identity.Migrations
                     b.ToTable("AppUserRoles");
                 });
 
+            modelBuilder.Entity("BackendApi.Core.Models.Entities.Identity.UserFriend", b =>
+                {
+                    b.Property<int>("FriendId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("AppUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<DateTimeOffset?>("ModifiedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("FriendId", "AppUserId");
+
+                    b.HasIndex("AppUserId");
+
+                    b.ToTable("UserFriends");
+                });
+
             modelBuilder.Entity("BackendApi.Core.Models.Entities.Identity.UserInfo", b =>
                 {
                     b.Property<int>("Id")
@@ -258,30 +285,6 @@ namespace BackendApi.Core.Data.Identity.Migrations
                     b.ToTable("UserPhoto");
                 });
 
-            modelBuilder.Entity("BackendApi.Core.Models.Entities.Identity.UserRelationship", b =>
-                {
-                    b.Property<int>("AppUserId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("RelationshipId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTimeOffset>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTimeOffset?>("ModifiedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("AppUserId", "RelationshipId");
-
-                    b.HasIndex("RelationshipId");
-
-                    b.ToTable("UserRelationship");
-                });
-
             modelBuilder.Entity("BackendApi.Core.Models.Entities.Message", b =>
                 {
                     b.Property<int>("Id")
@@ -293,7 +296,9 @@ namespace BackendApi.Core.Data.Identity.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTimeOffset>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<DateTimeOffset?>("DateRead")
                         .HasColumnType("timestamp with time zone");
@@ -456,6 +461,25 @@ namespace BackendApi.Core.Data.Identity.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("BackendApi.Core.Models.Entities.Identity.UserFriend", b =>
+                {
+                    b.HasOne("BackendApi.Core.Entities.Identity.AppUser", "AppUser")
+                        .WithMany("Friends")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BackendApi.Core.Entities.Identity.AppUser", "Friend")
+                        .WithMany("FriendsReverse")
+                        .HasForeignKey("FriendId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+
+                    b.Navigation("Friend");
+                });
+
             modelBuilder.Entity("BackendApi.Core.Models.Entities.Identity.UserPhoto", b =>
                 {
                     b.HasOne("BackendApi.Core.Entities.Identity.AppUser", "AppUser")
@@ -465,25 +489,6 @@ namespace BackendApi.Core.Data.Identity.Migrations
                         .IsRequired();
 
                     b.Navigation("AppUser");
-                });
-
-            modelBuilder.Entity("BackendApi.Core.Models.Entities.Identity.UserRelationship", b =>
-                {
-                    b.HasOne("BackendApi.Core.Entities.Identity.AppUser", "AppUser")
-                        .WithMany("Relationships")
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("BackendApi.Core.Entities.Identity.AppUser", "Relationship")
-                        .WithMany()
-                        .HasForeignKey("RelationshipId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AppUser");
-
-                    b.Navigation("Relationship");
                 });
 
             modelBuilder.Entity("BackendApi.Core.Models.Entities.Message", b =>
@@ -552,13 +557,15 @@ namespace BackendApi.Core.Data.Identity.Migrations
 
                     b.Navigation("AppUserRoles");
 
+                    b.Navigation("Friends");
+
+                    b.Navigation("FriendsReverse");
+
                     b.Navigation("MessagesReceived");
 
                     b.Navigation("MessagesSent");
 
                     b.Navigation("Photos");
-
-                    b.Navigation("Relationships");
                 });
 #pragma warning restore 612, 618
         }

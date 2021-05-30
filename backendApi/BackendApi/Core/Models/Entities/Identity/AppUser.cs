@@ -12,12 +12,13 @@ namespace BackendApi.Core.Entities.Identity
         public string UserPublicId { get; set; }
         public UserAddress Address { get; set; }
         public UserInfo UserInfo { get; set; }
-        public DateTimeOffset CreatedDate { get; set; } = DateTimeOffset.UtcNow;
+        public DateTimeOffset CreatedDate { get; set; } 
         public DateTimeOffset? ModifiedDate { get; set; }
         public List<Message> MessagesSent { get; set; }
         public List<Message> MessagesReceived { get; set; }
-        public ICollection<AppUserRole> AppUserRoles { get; set; }
-        public ICollection<UserPhoto> Photos { get; set; }
-        public ICollection<UserRelationship> Relationships { get; set; }
+        public virtual ICollection<AppUserRole> AppUserRoles { get; set; }
+        public virtual  ICollection<UserPhoto> Photos { get; set; }
+        public virtual ICollection<UserFriend> Friends { get; set; }
+        public virtual ICollection<UserFriend> FriendsReverse { get; set; }
     }
 }
