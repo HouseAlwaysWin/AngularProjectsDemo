@@ -6,7 +6,7 @@ import { Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Res } from '../shared/models/response';
-import { UserDetail, UserPhoto } from '../shared/models/user';
+import { UserDetail, UserPhoto, UserShortInfo } from '../shared/models/user';
 import { UtilitiesService } from '../shared/services/utilities.service';
 import { AccountQuery } from '../shared/states/account/account.query';
 import { AccountService } from '../shared/states/account/account.service';
@@ -38,9 +38,12 @@ export class UserComponent implements OnInit, OnDestroy {
 
   deleteBtnEnable: boolean = false;
 
+  currentPublicId: string;
+
   @ViewChild('photosList', { static: false }) photosList: ElementRef;
   @ViewChild('photoInput', { static: false }) photoInput: ElementRef;
 
+  userInfo: UserShortInfo;
 
   constructor(
     private http: HttpClient,
@@ -59,6 +62,15 @@ export class UserComponent implements OnInit, OnDestroy {
         this.getMainPhoto();
       })
     this.selectPhotoClickListener();
+    this.initUserInfo();
+  }
+
+  initUserInfo() {
+    this.accountQuery.user$.subscribe(user => {
+      console.log(user);
+      this.userInfo = user;
+      this.currentPublicId = user.userPublicId;
+    });
   }
 
   selectPhotoClickListener() {
@@ -206,6 +218,15 @@ export class UserComponent implements OnInit, OnDestroy {
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+  }
+
+  updatePublicId() {
+    console.log(this.userInfo.userPublicId)
+    this.accountService.updatePublicId(this.userInfo.userPublicId).subscribe((res: Res<UserShortInfo>) => {
+      console.log(res);
+      this.userInfo = res.data;
+      this.currentPublicId = res.data.userPublicId;
+    });
   }
 
 

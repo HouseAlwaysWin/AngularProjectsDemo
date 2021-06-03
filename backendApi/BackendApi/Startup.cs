@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
@@ -29,6 +30,7 @@ using System;
 using StackExchange.Redis;
 using Microsoft.OpenApi.Models;
 using BackendApi.Core.Models.Dtos;
+using BackendApi.Core.Services.SignalR;
 
 namespace BackendApi
 {
@@ -185,7 +187,24 @@ namespace BackendApi
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey)),
                         ValidIssuer = Issuer,
                         ValidateIssuer = true,
-                        ValidateAudience = false
+                        ValidateAudience = false,
+                    };
+
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+
+                            var path = context.HttpContext.Request.Path;
+                            if(!string.IsNullOrEmpty(accessToken) && 
+                                path.StartsWithSegments("/hubs"))
+                            {
+                                context.Token = accessToken;
+                            }
+
+                            return Task.CompletedTask;
+                        }
                     };
                 });
 
@@ -224,6 +243,7 @@ namespace BackendApi
             services.AddScoped<IStoreRepository,StoreRepository>();
             services.AddScoped<IUserRepository,UserRepository>();
             services.AddScoped<IPhotoService,PhotoService>();
+            services.AddSingleton<PresenceTracker>();
             services.Configure<CloudinarySettings>(_config.GetSection("CloudinarySettings"));
 
 
@@ -255,13 +275,16 @@ namespace BackendApi
                                 c.AddSecurityRequirement(securityRequirement);
                             });
 
-            services.AddCors(opt => {
-                opt.AddPolicy("CorsPolicy",policy=>{
-                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins(
-                        "http://localhost:4000",
-                        "https://localhost:4001");
-                });
-            });
+            // services.AddCors(opt => {
+            //     opt.AddPolicy("CorsPolicy",policy=>{
+            //         policy.AllowAnyHeader().AllowAnyMethod().WithOrigins(
+            //             "http://localhost:4000",
+            //             "https://localhost:4001");
+            //     });
+            // });
+            services.AddCors();
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -286,7 +309,14 @@ namespace BackendApi
                     RequestPath = "/content"
             });
 
-            app.UseCors("CorsPolicy");
+            // app.UseCors("CorsPolicy");
+            app.UseCors(opt => 
+                opt.AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials()
+                .WithOrigins(
+                   "http://localhost:4000",
+                   "https://localhost:4001"));
 
             app.UseAuthentication();
             app.UseAuthorization();
@@ -300,6 +330,7 @@ namespace BackendApi
             {
                 endpoints.MapControllers();
                 endpoints.MapFallbackToController("Index","Fallback");
+                endpoints.MapHub<PresenceHub>("hubs/presence");
             });
             }
     }

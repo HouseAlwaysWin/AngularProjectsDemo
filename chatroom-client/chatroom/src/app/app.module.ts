@@ -12,6 +12,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SharedModule } from './shared/shared.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { UserComponent } from './user/user.component';
+import { FriendsComponent } from './friends/friends.component';
+import { FriendsAddComponent } from './friends/friends-add/friends-add.component';
+import { FriendsRoutingModule } from './friends/friends-routing.module';
 
 
 

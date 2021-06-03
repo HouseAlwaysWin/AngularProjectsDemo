@@ -106,11 +106,11 @@ namespace BackendApi.Core.Data.Repositories
         }
 
         public virtual async Task UpdateAsync<TEntity>(Expression<Func<TEntity, bool>> IdentityPredicate,
-                     Func<IQueryable<TEntity>, IUpdatable<TEntity>> func)
+                     Func<TEntity, IUpdatable<TEntity>> func)
                  where TEntity : class
         {
-            var query = _context.GetTable<TEntity>()
-                .Where(IdentityPredicate);
+            var query = await _context.GetTable<TEntity>()
+                .Where(IdentityPredicate).FirstOrDefaultAsyncEF();
             await func(query).UpdateAsync();
         }
 
@@ -154,6 +154,10 @@ namespace BackendApi.Core.Data.Repositories
         public void Dispose()
         {
             _context.Dispose();
+        }
+
+        public bool HasChanges(){
+            return _context.ChangeTracker.HasChanges();
         }
     }
 }

@@ -1,0 +1,26 @@
+<div class="friend-add">
+  <form class="friend-add-form">
+    <button class="friend-add-find-btn"
+            (click)="findFriendByPublicId()">Find</button>
+    <span class="m-float-input-group">
+      <input type="text"
+             [(ngModel)]="publicId"
+             name="search"
+             class="friend-add-text"
+             placeholder="Search friends by public id">
+      <label for="">Search friends by public id</label>
+    </span>
+  </form>
+  <div class="friend-info"
+       *ngIf="friend">
+    <img src="{{ getFriendMainPhoto(friend.photos) }}" />
+    <h4>{{ friend.userName }}</h4>
+
+    <button (click)="AddNewFriend(friend.id)">Add</button>
+  </div>
+  <div *ngIf="!findUser && friend">
+    User Not Found
+  </div>
+
+
+</div>

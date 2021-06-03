@@ -7,7 +7,9 @@ namespace BackendApi.Core.Services.Interfaces
 {
     public interface IUserService
     {
-        Task<List<UserFriendMapDto>> GetUserFriendsAsync(int userId);
-        Task<AppUser> GetUserByEmail(string email);
+        Task<List<UserFriendMapDto>> GetUserFriendsByEmailAsync(string email);
+        Task<AppUserShortDto> GetUserByEmailAsync(string email);
+        Task<AppUserShortDto> GetUserByPublicIdAsync(string publicId);
+        Task<AppUserDto> GetUserDetailByEmailAsync(string email);
     }
 }

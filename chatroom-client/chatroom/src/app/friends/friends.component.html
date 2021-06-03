@@ -1,0 +1,49 @@
+<div class="friend-container">
+  <div class="friend-add">
+    <button routerLink="/friends/add">Add New Friends</button>
+  </div>
+  <div class="friend-search"
+       *ngIf="friendList?.length > 0">
+    <form class="friend-form"
+          [formGroup]="searchForm">
+      <button class="friend-search-btn">Find</button>
+      <span class="m-float-input-group"
+            [formFieldInvalid]="searchForm"
+            [fieldName]="'search'">
+        <input type="text"
+               [formControlName]="'search'"
+               name="search"
+               class="friend-add-text"
+               placeholder="Search your current friends">
+        <label for="">Search your current friends</label>
+        <span class="error-message"
+              *ngIf="formService.field_error(searchForm,'search','required')">
+          {{ 'Field is required.' }}
+        </span>
+
+      </span>
+    </form>
+  </div>
+  <div class="friend-list"
+       *ngIf="friendList?.length > 0">
+    <ul>
+      <li *ngFor="let friend of friendList"
+          class="friend-item">
+        <div class="friend-info">
+          <img src="{{ getFriendMainPhoto(friend.friend.photos) }}"
+               alt=""
+               class="friend-img">
+          <span class="friend-name">
+            {{ friend.friend.userName }}
+          </span>
+        </div>
+        <div class="friend-message">
+          friends description
+        </div>
+        <div class="friend-remove">
+          <button (click)="removeFriend(friend)">Remove</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

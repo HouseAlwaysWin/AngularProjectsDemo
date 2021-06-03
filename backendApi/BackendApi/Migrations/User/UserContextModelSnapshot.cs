@@ -197,6 +197,42 @@ namespace BackendApi.Migrations.User
                     b.ToTable("AppUserRoles");
                 });
 
+            modelBuilder.Entity("BackendApi.Core.Models.Entities.Identity.MessageConnection", b =>
+                {
+                    b.Property<string>("MessageConnectionId")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("MessageGroupId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("text");
+
+                    b.HasKey("MessageConnectionId");
+
+                    b.HasIndex("MessageGroupId");
+
+                    b.ToTable("MessageConnection");
+                });
+
+            modelBuilder.Entity("BackendApi.Core.Models.Entities.Identity.MessageGroup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .UseIdentityByDefaultColumn();
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("MessageGroup");
+                });
+
             modelBuilder.Entity("BackendApi.Core.Models.Entities.Identity.UserFriend", b =>
                 {
                     b.Property<int>("FriendId")
@@ -461,18 +497,26 @@ namespace BackendApi.Migrations.User
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("BackendApi.Core.Models.Entities.Identity.MessageConnection", b =>
+                {
+                    b.HasOne("BackendApi.Core.Models.Entities.Identity.MessageGroup", null)
+                        .WithMany("Connections")
+                        .HasForeignKey("MessageGroupId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("BackendApi.Core.Models.Entities.Identity.UserFriend", b =>
                 {
                     b.HasOne("BackendApi.Core.Entities.Identity.AppUser", "AppUser")
                         .WithMany("Friends")
                         .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("BackendApi.Core.Entities.Identity.AppUser", "Friend")
                         .WithMany("FriendsReverse")
                         .HasForeignKey("FriendId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("AppUser");
@@ -566,6 +610,11 @@ namespace BackendApi.Migrations.User
                     b.Navigation("MessagesSent");
 
                     b.Navigation("Photos");
+                });
+
+            modelBuilder.Entity("BackendApi.Core.Models.Entities.Identity.MessageGroup", b =>
+                {
+                    b.Navigation("Connections");
                 });
 #pragma warning restore 612, 618
         }

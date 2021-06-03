@@ -18,6 +18,8 @@ export class AccountQuery extends Query<AccountState> {
   username$ = this.select(state => state.user.userName);
   photos$ = this.select(state => state.user.photos);
   isAuth$ = this.select('isAuth');
+  friends$ = this.select('friendList');
+  usersOnline$ = this.select('usersOnline');
   loading$ = this.select('loading');
 
   get token() {

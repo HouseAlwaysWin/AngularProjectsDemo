@@ -19,7 +19,9 @@ namespace BackendApi.Core.Data.Repositories.Interfaces
         void Remove<TEntity>(TEntity entity) where TEntity : class;
         Task RemoveAsync<TEntity>(Expression<Func<TEntity, bool>> IdentityPredicate) where TEntity : class;
         void Update<TEntity>(TEntity entity) where TEntity : class;
-        Task UpdateAsync<TEntity>(Expression<Func<TEntity, bool>> IdentityPredicate, Func<IQueryable<TEntity>, IUpdatable<TEntity>> func) where TEntity : class;
+        Task UpdateAsync<TEntity>(Expression<Func<TEntity, bool>> IdentityPredicate, Func<TEntity, IUpdatable<TEntity>> func) where TEntity : class;
         Task UpdateAsync<TEntity>(Expression<Func<TEntity, bool>> IdentityPredicate, Dictionary<string, object> props) where TEntity : class;
+
+        bool HasChanges();
     }
 }

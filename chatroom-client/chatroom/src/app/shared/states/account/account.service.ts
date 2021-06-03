@@ -4,12 +4,13 @@ import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
 import { Login } from "../../models/login";
 import { environment } from "src/environments/environment";
 import { Res } from "../../models/response";
-import { UserDetail, UserPhoto } from "../../models/user";
+import { UserDetail, UserPhoto, UserShortInfo } from "../../models/user";
 import { catchError, map } from 'rxjs/operators'
 import { of } from "rxjs";
 import { AccountQuery } from "./account.query";
 import { Register } from "../../models/register";
 import { SharedStore } from "../shared/shared.store";
+import { Friend } from "../../models/friend";
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,7 @@ export class AccountService {
     private sharedStore: SharedStore) {
   }
 
-  private setCurrentUser(userDetail: UserDetail) {
+  private setCurrentUser(userDetail: UserShortInfo) {
     localStorage.setItem('token', JSON.stringify(userDetail.token));
     this.accountStore.update({
       user: userDetail,
@@ -36,7 +37,7 @@ export class AccountService {
   getUserDetail() {
     return this.http.get(`${this.apiUrl}account/getUserInfo`)
       .pipe(
-        map((res: Res<UserDetail>) => {
+        map((res: Res<UserShortInfo>) => {
           if (res.isSuccessed) {
             this.setCurrentUser(res.data);
           }
@@ -52,7 +53,7 @@ export class AccountService {
   register(model: Register) {
     this.sharedStore.update({ gLoading: true });
     return this.http.post(`${this.apiUrl}account/register`, model).pipe(
-      map((res: Res<UserDetail>) => {
+      map((res: Res<UserShortInfo>) => {
         if (res.isSuccessed) {
           this.setCurrentUser(res.data);
         }
@@ -72,7 +73,7 @@ export class AccountService {
   login(model: Login) {
     this.sharedStore.update({ gLoading: true });
     return this.http.post(`${this.apiUrl}account/login`, model).pipe(
-      map((res: Res<UserDetail>) => {
+      map((res: Res<UserShortInfo>) => {
         console.log(res);
         if (res.isSuccessed) {
           this.setCurrentUser(res.data);
@@ -127,7 +128,6 @@ export class AccountService {
         }));
   }
 
-
   uploadUserPhoto(files: any) {
     const formData: FormData = new FormData();
     for (let i = 0; i < files.length; i++) {
@@ -172,6 +172,57 @@ export class AccountService {
           return of(error);
         }));
   }
+
+
+  getFriends() {
+    return this.http.get(`${this.apiUrl}user/get-friends`).pipe(
+      map((res: Res<Friend[]>) => {
+        console.log(res);
+        if (res.isSuccessed) {
+          this.accountStore.update({
+            friendList: res.data
+          });
+        }
+        return res;
+      }),
+      catchError(error => {
+        console.log(error);
+        return of(error);
+      })
+    )
+  }
+
+  findFriendByPublicId(publicId: string) {
+    return this.http.get(`${this.apiUrl}user/get-by-publicId/${publicId}`);
+  }
+
+  addNewFriend(id: number) {
+    return this.http.post(`${this.apiUrl}user/add-friend/${id}`, null).pipe(
+      map((res: Res<Friend[]>) => {
+        this.accountStore.update({
+          friendList: res.data
+        })
+        return res;
+      })
+    );
+  }
+
+  removeFriend(friend: Friend) {
+    return this.http.delete(`${this.apiUrl}user/remove-friend/${friend.friendId}`).pipe(
+      map((res: Res<Friend[]>) => {
+        this.accountStore.update({
+          friendList: res.data
+        })
+        return res;
+      })
+    );
+  }
+
+  updatePublicId(publicId: string) {
+    return this.http.put(`${this.apiUrl}user/update-publicId/${publicId}`, null);
+  }
+
+
 
 
 

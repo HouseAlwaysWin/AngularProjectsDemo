@@ -17,8 +17,9 @@ namespace BackendApi.Core.Data.Identity
         public DbSet<UserInfo> UserInfo { get; set; }
         public DbSet<UserPhoto> UserPhoto { get; set; }
         public DbSet<UserFriend> UserFriends { get; set; }
-
         public DbSet<Message> Message { get; set; }
+        public DbSet<MessageGroup> MessageGroup { get; set; }
+        public DbSet<MessageConnection> MessageConnection { get; set; }
         public UserContext(DbContextOptions<UserContext> options):base(options)
         {
             
@@ -26,7 +27,6 @@ namespace BackendApi.Core.Data.Identity
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
                             
             builder.Entity<AppUser>(a => {
                 a.ToTable("AppUsers");
@@ -110,8 +110,6 @@ namespace BackendApi.Core.Data.Identity
                  .WithMany(u => u.AppUserRoles)
                  .HasForeignKey(ur => ur.UserId)
                  .IsRequired();
-
-              
             }); 
 
 
@@ -128,6 +126,13 @@ namespace BackendApi.Core.Data.Identity
                     .HasDefaultValueSql("CURRENT_TIMESTAMP")
                     .ValueGeneratedOnAdd()
                     .IsRequired();
+            });
+
+            builder.Entity<MessageGroup>(mg => {
+                mg.HasIndex(mg => mg.Name).IsUnique();
+                mg.HasMany(mg => mg.Connections)
+                  .WithOne()
+                  .OnDelete(DeleteBehavior.Cascade);
             });
                          
 

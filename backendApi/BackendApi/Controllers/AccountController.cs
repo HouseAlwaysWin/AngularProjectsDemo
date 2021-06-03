@@ -56,7 +56,7 @@ namespace BackendApi.Controllers
 
         [Authorize]
         [HttpGet("getuser")]
-        public async Task<ActionResult<ApiResponse<UserDto>>> GetUser(){
+        public async Task<ActionResult<ApiResponse<AppUserTokenDto>>> GetUser(){
             try{
                 var email = HttpContext.User?.Claims?.FirstOrDefault(
                     x=>x.Type == ClaimTypes.Email)?.Value;
@@ -65,7 +65,7 @@ namespace BackendApi.Controllers
 
                 var token = _tokenService.CreateToken(user);
 
-                var result = _mapper.Map<AppUser,UserDto>(user);
+                var result = _mapper.Map<AppUser,AppUserTokenDto>(user);
                 result.Token = token;
 
                 return BaseApiOk(result);
@@ -91,7 +91,7 @@ namespace BackendApi.Controllers
 
                 var token = _tokenService.CreateToken(user);
 
-                var result = _mapper.Map<AppUser,AppUserDto>(user);
+                var result = _mapper.Map<AppUser,AppUserShortDto>(user);
 
                 result.Token = token;
 
@@ -101,23 +101,7 @@ namespace BackendApi.Controllers
             }
         }
 
-        [HttpGet("getByPublicId")]
-        public async Task<ActionResult> GetUserByPublicId(string publicId){
-            var user = await _userRepo.GetByAsync<AppUser>(query =>  {
-                    return query.Where(u => u.UserPublicId == publicId)
-                        .Include(u => u.Address)
-                        .Include(u => u.UserInfo)
-                        .Include(u => u.Photos);
-            });
-
-            var result = _mapper.Map<AppUser,AppUserDto>(user);
-
-            if(user  == null){
-                return BaseApiOk(null);
-            }
-
-            return BaseApiOk<AppUserDto>(result);
-        }
+       
 
         [HttpGet("checkUserDuplicated")]
         public async Task<ActionResult> CheckUserDuplicate(string emailOrUsername){
@@ -157,7 +141,7 @@ namespace BackendApi.Controllers
         
 
         [HttpPost("login")]
-        public async Task<ActionResult<ApiResponse<UserDto>>> Login(LoginDto login){
+        public async Task<ActionResult<ApiResponse<AppUserTokenDto>>> Login(LoginDto login){
             var loginValidator= new LoginDtoValidator(_localizer);
             ValidationResult validateResult = await loginValidator.ValidateAsync(login);
             if(validateResult.IsValid){
@@ -186,7 +170,7 @@ namespace BackendApi.Controllers
                         .Include(u => u.FriendsReverse).ThenInclude(u=>u.AppUser);
                     });
 
-                var userResult = _mapper.Map<AppUser,AppUserDto>(userInfo);
+                var userResult = _mapper.Map<AppUser,AppUserShortDto>(userInfo);
                 userResult.Token = _tokenService.CreateToken(user);
 
                 return BaseApiOk(userResult);
@@ -201,7 +185,7 @@ namespace BackendApi.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<ApiResponse<UserDto>>> Register(RegisterDto register){
+        public async Task<ActionResult<ApiResponse<AppUserTokenDto>>> Register(RegisterDto register){
             var registerValidator = new RegisterDtoValidator(_localizer);
             ValidationResult validateResult = await registerValidator.ValidateAsync(register);
             if(validateResult.IsValid){
@@ -230,7 +214,7 @@ namespace BackendApi.Controllers
                         .Include(u => u.Photos);
                     });
 
-                var userResult = _mapper.Map<AppUser,AppUserDto>(userInfo);
+                var userResult = _mapper.Map<AppUser,AppUserShortDto>(userInfo);
                 userResult.Token = _tokenService.CreateToken(user);
 
                  return BaseApiOk(userResult);

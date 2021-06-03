@@ -4,7 +4,10 @@
 //   token: string = '';
 // }
 
+import { Message } from "./message";
+
 export class UserDetail {
+  id: number = 0;
   email: string = '';
   userName: string = '';
   token: string = '';
@@ -42,3 +45,17 @@ export class UserInfo {
   knownAs: string;
   lastActive: string;
 }
+
+
+export class UserShortInfo {
+  id: number = 0;
+  token: string = '';
+  userName: string = '';
+  email: string = ''
+  userPublicId: '';
+  userInfoDto: UserInfo = null;
+  messageSent: Message[] = [];
+  messagesReceived: Message[] = [];
+  photos: UserPhoto[] = [];
+}
+

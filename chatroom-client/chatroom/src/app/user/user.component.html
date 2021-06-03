@@ -107,7 +107,14 @@
 
       </li>
     </ul>
+  </div>
 
-
+  <div class="user-basic-info"
+       *ngIf="userInfo">
+    <label for="">
+      Public Id: {{ currentPublicId ? currentPublicId: 'Not Setting' }}
+    </label>
+    <input [(ngModel)]="userInfo.userPublicId" />
+    <button (click)="updatePublicId()">Update</button>
   </div>
 </div>

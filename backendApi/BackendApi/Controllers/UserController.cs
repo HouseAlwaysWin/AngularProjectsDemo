@@ -9,6 +9,7 @@ using BackendApi.Core.Models.Dtos;
 using BackendApi.Core.Models.Entities.Identity;
 using BackendApi.Core.Services.Interfaces;
 using BackendApi.Helpers.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -35,16 +36,59 @@ namespace BackendApi.Controllers
         }
 
 
+        [Authorize]
+        [HttpGet("get-user-detail")]
+        public async Task<ActionResult> GetUserDetail() {
+           var user = await _userService.GetUserDetailByEmailAsync(User.GetEmail());
+           return BaseApiOk(user);
+        }
 
-        [HttpGet("get-friends/{userId}")]
-        public async Task<ActionResult> GetFriends(int userId) {
-            var friends =  await this._userService.GetUserFriendsAsync(userId);
+        [Authorize]
+        [HttpPut("update-publicId/{publicId}")]
+        public async Task<ActionResult> UpdateUserPublicId(string publicId){
+            var user = await _userService.GetUserByPublicIdAsync(publicId);
+            if(user != null){
+                return BaseApiOk("Public Id is repeated");
+            }
+
+            user = await _userService.GetUserByEmailAsync(User.GetEmail()); 
+
+            await _userRepo.UpdateAsync<AppUser>(u => u.Id == user.Id,
+                    new Dictionary<string,object> { 
+                        { nameof(user.UserPublicId), publicId} 
+                    });
+
+            await _userRepo.CompleteAsync();
+            user.UserPublicId = publicId;
+
+            return BaseApiOk(user);
+        }
+
+
+
+        [HttpGet("get-by-publicId/{publicId}")]
+        public async Task<ActionResult> GetUserByPublicId(string publicId){
+            var user = await _userService.GetUserByPublicIdAsync(publicId);
+
+
+            if(user  == null){
+                return BaseApiOk(null);
+            }
+
+            return BaseApiOk<AppUserShortDto>(user);
+        }
+
+
+
+        [HttpGet("get-friends")]
+        public async Task<ActionResult> GetFriends() {
+            var friends =  await this._userService.GetUserFriendsByEmailAsync(User.GetEmail());
             return BaseApiOk(friends);
         }
 
         [HttpPost("add-friend/{friendId}")]
         public async Task<ActionResult> AddFriend(int friendId) {
-            var user = await _userService.GetUserByEmail(User.GetEmail());
+            var user = await _userService.GetUserByEmailAsync(User.GetEmail());
 
              if(friendId == user.Id) {
                 return BaseApiBadRequest("friendId can't be user");
@@ -57,16 +101,17 @@ namespace BackendApi.Controllers
             
             await _userRepo.AddAsync<UserFriend>(newFriend);
 
-            var friends =  await this._userService.GetUserFriendsAsync(user.Id); 
             await _userRepo.CompleteAsync();
+
+            var friends =  await this._userService.GetUserFriendsByEmailAsync(user.Email); 
 
             return BaseApiOk(friends);
         }
 
-        [HttpDelete("remove-friends/{friendId}")]
+        [HttpDelete("remove-friend/{friendId}")]
         public async Task<ActionResult> RemoveFriend(int friendId) {
             
-            var user = await _userService.GetUserByEmail(User.GetEmail());
+            var user = await _userService.GetUserByEmailAsync(User.GetEmail());
 
             if(friendId == user.Id) {
                 return BaseApiBadRequest("friendId can't be user");
@@ -74,8 +119,9 @@ namespace BackendApi.Controllers
 
             await _userRepo.RemoveAsync<UserFriend>(uf => (uf.FriendId == friendId && uf.AppUserId == user.Id));
             
-            var friends =  await this._userService.GetUserFriendsAsync(user.Id); 
             await _userRepo.CompleteAsync();
+
+            var friends =  await this._userService.GetUserFriendsByEmailAsync(user.Email); 
 
             return BaseApiOk(friends);
         }

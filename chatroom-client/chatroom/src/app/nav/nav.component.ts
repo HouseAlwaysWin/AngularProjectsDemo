@@ -6,7 +6,6 @@ import { AccountService } from '../shared/states/account/account.service';
 import { AccountStore } from '../shared/states/account/account.store';
 import { faComment, faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
 import { UtilitiesService } from '../shared/services/utilities.service';
-import { UserDetail, UserPhoto } from '../shared/models/user';
 
 @Component({
   selector: 'app-nav',
@@ -29,7 +28,6 @@ export class NavComponent implements OnInit {
     public accountQuery: AccountQuery,
     public accountStore: AccountStore,
     private utilitiesService: UtilitiesService,
-    private renderer: Renderer2
   ) { }
 
   ngOnInit(): void {
@@ -37,9 +35,7 @@ export class NavComponent implements OnInit {
       this.readMainPhoto();
     })
 
-    // this.closeMenuOutside()
-    this.utilitiesService.documentClickedTarget
-      .subscribe(target => this.documentClickListener(target))
+
   }
 
   readMainPhoto() {
@@ -49,19 +45,16 @@ export class NavComponent implements OnInit {
   }
 
   documentClickListener(target: any): void {
-    if (!this.menu.nativeElement?.contains(target)) {
+    if (!this.menu?.nativeElement?.contains(target)) {
       this.showMenu = false;
     }
   }
 
-  closeMenuOutside() {
-    this.renderer.listen('window', 'click', (e: Event) => {
-      if (!this.menu.nativeElement.contains(e.target)) {
-        this.showMenu = false;
-      }
-    });
-  }
 
+  ngAfterViewInit(): void {
+    this.utilitiesService.documentClickedTarget
+      .subscribe(target => this.documentClickListener(target))
+  }
 
   logout() {
     this.toggleMenu();

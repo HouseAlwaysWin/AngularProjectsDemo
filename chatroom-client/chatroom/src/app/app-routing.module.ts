@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { FriendsComponent } from './friends/friends.component';
 import { HomeComponent } from './home/home.component';
 import { MessageComponent } from './message/message.component';
 import { UserComponent } from './user/user.component';
@@ -17,6 +18,10 @@ const routes: Routes = [
   },
   {
     path: 'message', component: MessageComponent
+  },
+  {
+    path: 'friends',
+    loadChildren: () => import('./friends/friends.module').then(m => m.FriendsModule)
   },
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];

@@ -25,6 +25,8 @@
     "@fortawesome/fontawesome-free": "^5.15.3",
     "@fortawesome/fontawesome-svg-core": "^1.2.34",
     "@fortawesome/free-solid-svg-icons": "^5.15.2",
+    "@microsoft/signalr": "^5.0.6",
+    "animate.css": "^4.1.1",
     "primeicons": "^4.1.0",
     "primeng": "^11.0.0",
     "rxjs": "~6.6.0",

@@ -65,10 +65,10 @@ namespace BackendApi.Helpers.Localization {
             CreateMap<UserAddress,AddressDto>().ReverseMap();
             CreateMap<Message,MessageDto>().ReverseMap();
 
-            CreateMap<AppUser,AppUserFriendDto>().ReverseMap();
-            CreateMap<UserFriend,UserFriendMapDto>().ReverseMap();
+            CreateMap<AppUser,AppUserShortDto>().ReverseMap();
             CreateMap<AppUser,AppUserDto>().ReverseMap();
-            CreateMap<AppUser,UserDto>();
+            CreateMap<AppUser,AppUserTokenDto>();
+            CreateMap<UserFriend,UserFriendMapDto>().ReverseMap();
          
 
 

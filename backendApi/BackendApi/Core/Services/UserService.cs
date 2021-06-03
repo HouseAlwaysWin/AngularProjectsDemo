@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,20 +22,52 @@ namespace BackendApi.Core.Services
             this._mapper = mapper;
         }
 
-        public async Task<List<UserFriendMapDto>> GetUserFriendsAsync(int userId)
+        public async Task<List<UserFriendMapDto>> GetUserFriendsByEmailAsync(string email)
         {
             var friendsMap = await _userRepo.GetAllAsync<UserFriend>(query =>
-               query.Where(u => u.AppUserId == userId)
+               query.Where(u => u.AppUser.Email == email)
                    .Include(u => u.Friend)
-                   .ThenInclude(u => u.UserInfo));
+                   .ThenInclude(u => u.UserInfo)
+                   .Include(u => u.Friend)
+                   .ThenInclude(u => u.Photos)
+                );
 
             var friends = _mapper.Map<List<UserFriend>, List<UserFriendMapDto>>(friendsMap.ToList());
             return friends;
         }
 
-        public async Task<AppUser> GetUserByEmail(string email){
-            var user = await _userRepo.GetByAsync<AppUser>(query => query.Where(u=> u.Email == email));
-            return user;
+        public async Task<AppUserShortDto> GetUserByEmailAsync(string email){
+            var user = await _userRepo.GetByAsync<AppUser>(
+                query => query.Where(u=> u.Email == email)
+                              .Include(u => u.UserInfo)
+                              .Include(u => u.Photos)
+                );
+            var userInfoDto = _mapper.Map<AppUser,AppUserShortDto>(user);
+            return userInfoDto;
+        }
+
+        public async Task<AppUserDto> GetUserDetailByEmailAsync(string email){
+            var user = await _userRepo.GetByAsync<AppUser>(query => 
+                    query.Where(u=> u.Email == email)
+                          .Include(u => u.UserInfo)
+                          .Include(u => u.Address)
+                          .Include(u => u.Photos)
+                          );
+            var userInfoDto = _mapper.Map<AppUser,AppUserDto>(user);
+            return userInfoDto;
+        }
+
+
+        public async Task<AppUserShortDto> GetUserByPublicIdAsync(string publicId){
+            var user = await _userRepo.GetByAsync<AppUser>(query => query
+                          .Where(u=> u.UserPublicId == publicId)
+                          .Include(u => u.UserInfo)
+                          .Include(u => u.Address)
+                          .Include(u => u.Photos)
+            
+            );
+            var userInfoDto = _mapper.Map<AppUser,AppUserShortDto>(user);
+            return userInfoDto;
         }
 
     }

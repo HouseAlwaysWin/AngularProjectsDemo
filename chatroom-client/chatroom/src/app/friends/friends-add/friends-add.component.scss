@@ -1,0 +1,59 @@
+@import "../../../styles.scss";
+
+.friend-add {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &-form {
+    display: flex;
+    flex-direction: row;
+  }
+
+  &-find-btn {
+    border: none;
+    padding: 0.5rem;
+    background-color: $color-primary;
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+    color: $color-white;
+    cursor: pointer;
+
+    &:active {
+      background-color: $color-primary-light;
+      color: $color-grey-light;
+    }
+
+    &:hover {
+      background-color: $color-primary-dark;
+    }
+  }
+}
+
+.m-float-input-group {
+  & label {
+    padding-left: 1rem;
+  }
+  & input {
+    padding-left: 1rem;
+    font-size: 2rem;
+    &:focus {
+      border-bottom: 1px solid $color-primary;
+      & + label {
+        color: $color-primary;
+        transform: scale(0.9) translate(0%, -140%);
+      }
+
+      &::placeholder {
+        opacity: 0;
+      }
+    }
+
+    &:not(:placeholder-shown) {
+      & + label {
+        transform: scale(0.9) translate(0%, -140%);
+      }
+    }
+  }
+}
