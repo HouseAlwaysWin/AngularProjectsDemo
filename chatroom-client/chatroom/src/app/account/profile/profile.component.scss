@@ -1,0 +1,327 @@
+@import "../../../styles/variables";
+
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  & .head-photo {
+    margin-top: 4rem;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    &-list {
+      list-style: none;
+      display: flex;
+      position: relative;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &-main {
+      margin-top: 5rem;
+
+      & img {
+        padding: 0.5rem;
+        border: 1px solid $color-white;
+        height: 30rem;
+        width: 30rem;
+        border-radius: 0.3rem;
+        object-fit: cover;
+        cursor: pointer;
+        transform: scale(1.2);
+
+        &:hover {
+          box-shadow: 0 0 2px 1px rgba($color-black, 0.5);
+        }
+      }
+    }
+
+    &-item {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      height: 10rem;
+      width: 10rem;
+      margin: 0 0.3rem;
+
+      &:hover {
+        & .head-photo-set-main {
+          opacity: 1;
+          animation-name: moveInBottom;
+          animation-duration: 0.5s;
+        }
+
+        & .head-photo-img {
+          transform: scale(1.1);
+        }
+      }
+    }
+
+    &-btn {
+      height: 100%;
+      width: 100%;
+      cursor: pointer;
+      color: $color-grey-light;
+
+      &:hover {
+        color: $color-grey-dark;
+      }
+
+      &:active {
+        color: $color-black;
+      }
+
+      & i {
+        font-size: 3rem;
+      }
+
+      &.prev {
+        margin-right: 1rem;
+      }
+
+      &.next {
+        margin-left: 1rem;
+      }
+    }
+
+    &-img {
+      cursor: pointer;
+      height: 10rem;
+      width: 10rem;
+      object-fit: cover;
+      animation-name: fadeIn;
+      animation-duration: 0.5s;
+      border: 0.2rem solid $color-grey-light;
+      transition: all 0.1s;
+
+      &.main {
+        border: 0.5rem solid $color-primary;
+      }
+
+      &.select {
+        border: 0.5rem solid $color-photo-select;
+      }
+
+      &:active {
+        border: 0.2rem solid $color-primary;
+      }
+
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+
+    &-set-main {
+      cursor: pointer;
+      position: absolute;
+      z-index: 10;
+      opacity: 0;
+      bottom: 0.2rem;
+      border: none;
+      color: $color-white;
+      background-color: rgba($color-primary-dark, 1);
+      padding: 0.3rem;
+      border-radius: 0.5rem;
+
+      &:hover {
+        background-color: $color-primary;
+        opacity: 1;
+      }
+
+      &:active {
+        background-color: rgba($color-primary, 1);
+      }
+    }
+
+    &-delete {
+      margin: 1rem 0;
+      border: none;
+      border-radius: 2rem;
+      padding: 1rem;
+      background-color: $color-warn-btn;
+      color: $color-white;
+      cursor: pointer;
+
+      &.hide {
+        cursor: auto;
+        display: block;
+        opacity: 0;
+      }
+
+      &:hover {
+        background-color: $color-warn-btn-hover;
+      }
+
+      &:active {
+        background-color: $color-warn-btn-active;
+      }
+    }
+  }
+}
+
+.photo-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  &-field {
+    position: relative;
+    width: 50rem;
+    height: 20rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 0.2rem dashed rgba($color-black, 0.7);
+    border-radius: 0.5rem;
+  }
+
+  &-text {
+    display: flex;
+    line-height: 3rem;
+    flex-direction: column;
+    align-items: center;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: $color-grey-light;
+  }
+
+  &-browse {
+    position: absolute;
+    flex-direction: column;
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+    // align-items: center;
+
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+
+    &-btn {
+      border: none;
+      background-color: $color-photo-file-browse;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      color: $color-white;
+      cursor: pointer;
+      font-size: 2rem;
+
+      &:hover {
+        background-color: $color-photo-file-browse-hover;
+      }
+
+      &:active {
+        background-color: $color-photo-file-browse-active;
+      }
+    }
+  }
+
+  &-btn {
+    display: flex;
+    flex-direction: row;
+    border: none;
+    padding: 1rem;
+    background-color: $color-primary;
+    border-radius: 1rem;
+    color: $color-white;
+    margin-top: 1rem;
+    cursor: pointer;
+    &:hover {
+      background-color: $color-primary-dark;
+    }
+
+    &:active {
+      background-color: $color-primary;
+    }
+  }
+
+  &-input {
+    display: none;
+  }
+}
+
+.file-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  &-info {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: row;
+
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &-img {
+    width: 10rem;
+    height: 10rem;
+    object-fit: cover;
+  }
+
+  &-item {
+    padding: 1rem;
+    font-size: 1.6rem;
+  }
+
+  &-name {
+    padding: 1rem;
+  }
+
+  &-size {
+    padding: 1rem;
+  }
+
+  &-action {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  &-progress {
+    height: 0.7rem;
+    width: 100%;
+    border-radius: 0.5rem;
+    background-color: $color-grey-light;
+    position: relative;
+
+    &-bar {
+      width: 0%;
+      height: 100%;
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      border-radius: 4px;
+      background-color: $color-primary;
+      transition: 0.5s all;
+    }
+
+    &-label {
+      padding: 1rem;
+    }
+  }
+
+  &-upload-btn {
+    padding: 1rem;
+    font-size: 2rem;
+    cursor: pointer;
+    color: $color-photo-file-browse;
+  }
+
+  &-remove-btn {
+    padding: 1rem;
+    cursor: pointer;
+    font-size: 2rem;
+    color: $color-error;
+  }
+}

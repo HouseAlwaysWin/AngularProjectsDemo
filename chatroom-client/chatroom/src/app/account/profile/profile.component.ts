@@ -5,19 +5,19 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { Res } from '../shared/models/response';
-import { UserDetail, UserPhoto, UserShortInfo } from '../shared/models/user';
-import { UtilitiesService } from '../shared/services/utilities.service';
-import { AccountQuery } from '../shared/states/account/account.query';
-import { AccountService } from '../shared/services/account.service';
-import { AccountStore } from '../shared/states/account/account.store';
+import { UserDetail, UserPhoto, UserShortInfo } from '../../shared/models/user';
+import { UtilitiesService } from '../../shared/services/utilities.service';
+import { AccountQuery } from '../../shared/states/account/account.query';
+import { AccountService } from '../../shared/services/account.service';
+import { AccountStore } from '../../shared/states/account/account.store';
+import { Res } from 'src/app/shared/models/response';
 
 @Component({
-  selector: 'app-user',
-  templateUrl: './user.component.html',
-  styleUrls: ['./user.component.scss']
+  selector: 'app-profile',
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.scss']
 })
-export class UserComponent implements OnInit, OnDestroy {
+export class ProfileComponent implements OnInit, OnDestroy {
 
   apiUrl = environment.apiUrl;
   private _onDestroy = new Subject();
@@ -52,21 +52,8 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.accountService.getUserDetail()
-      .pipe(takeUntil(this._onDestroy))
-      .subscribe(res => {
-        this.getMainPhoto();
-      })
+    this.getMainPhoto();
     this.selectPhotoClickListener();
-    this.initUserInfo();
-  }
-
-  initUserInfo() {
-    this.accountQuery.user$.subscribe(user => {
-      console.log(user);
-      this.userInfo = user;
-      this.currentPublicId = user.userPublicId;
-    });
   }
 
   selectPhotoClickListener() {

@@ -8,7 +8,7 @@ import { Res } from 'src/app/shared/models/response';
 import { UserDetail } from 'src/app/shared/models/user';
 import { FormFieldService } from 'src/app/shared/services/form-field.service';
 import { AccountQuery } from 'src/app/shared/states/account/account.query';
-import { AccountService } from 'src/app/shared/states/account/account.service';
+import { AccountService } from 'src/app/shared/services/account.service';
 import { AccountStore } from 'src/app/shared/states/account/account.store';
 import { CustomValidators } from 'src/app/shared/validators/custom-validators';
 import { environment } from 'src/environments/environment';

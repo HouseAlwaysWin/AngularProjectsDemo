@@ -2,7 +2,7 @@ import { ElementRef, HostListener, Renderer2, ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AccountQuery } from '../shared/states/account/account.query';
-import { AccountService } from '../shared/states/account/account.service';
+import { AccountService } from '../shared/services/account.service';
 import { AccountStore } from '../shared/states/account/account.store';
 import { faComment, faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
 import { UtilitiesService } from '../shared/services/utilities.service';

@@ -1,5 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Query } from "@datorama/akita";
+import { BehaviorSubject } from "rxjs";
+import { UserShortInfo } from "../../models/user";
 import { AccountState, AccountStore } from "./account.store";
 
 
@@ -21,6 +23,7 @@ export class AccountQuery extends Query<AccountState> {
   friends$ = this.select('friendList');
   usersOnline$ = this.select('usersOnline');
   loading$ = this.select('loading');
+  messagesThread$ = this.select('messagesThread');
 
   get token() {
     return this.getValue().user.token;
@@ -37,6 +40,7 @@ export class AccountQuery extends Query<AccountState> {
   get isAuth() {
     return this.getValue().isAuth;
   }
+
 
   get user() {
     return this.getValue().user;

@@ -239,6 +239,7 @@ namespace BackendApi
             services.AddScoped<ILocalizedService,LocalizedService>();
             services.AddScoped<IBasketService,BasketService>();
             services.AddScoped<IUserService,UserService>();
+            services.AddScoped<IMessageService,MessageService>();
 
             services.AddScoped<IStoreRepository,StoreRepository>();
             services.AddScoped<IUserRepository,UserRepository>();
@@ -331,6 +332,7 @@ namespace BackendApi
                 endpoints.MapControllers();
                 endpoints.MapFallbackToController("Index","Fallback");
                 endpoints.MapHub<PresenceHub>("hubs/presence");
+                endpoints.MapHub<MessageHub>("hubs/message");
             });
             }
     }

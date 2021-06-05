@@ -1,16 +1,16 @@
 import { Injectable } from "@angular/core";
-import { AccountStore } from "./account.store";
+import { AccountStore } from "../states/account/account.store";
 import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
-import { Login } from "../../models/login";
+import { Login } from "../models/login";
 import { environment } from "src/environments/environment";
-import { Res } from "../../models/response";
-import { UserDetail, UserPhoto, UserShortInfo } from "../../models/user";
+import { Res } from "../models/response";
+import { UserDetail, UserPhoto, UserShortInfo } from "../models/user";
 import { catchError, map } from 'rxjs/operators'
-import { of } from "rxjs";
-import { AccountQuery } from "./account.query";
-import { Register } from "../../models/register";
-import { SharedStore } from "../shared/shared.store";
-import { Friend } from "../../models/friend";
+import { BehaviorSubject, of } from "rxjs";
+import { AccountQuery } from "../states/account/account.query";
+import { Register } from "../models/register";
+import { SharedStore } from "../states/shared/shared.store";
+import { Friend } from "../models/friend";
 
 @Injectable({
   providedIn: 'root'
@@ -24,12 +24,13 @@ export class AccountService {
     private sharedStore: SharedStore) {
   }
 
-  private setCurrentUser(userDetail: UserShortInfo) {
-    localStorage.setItem('token', JSON.stringify(userDetail.token));
+
+  private setCurrentUser(user: UserShortInfo) {
+    localStorage.setItem('token', JSON.stringify(user.token));
     this.accountStore.update({
-      user: userDetail,
-      userPhotos: userDetail.photos,
-      mainPhoto: userDetail.photos.filter(p => p.isMain)[0]?.url,
+      user: user,
+      userPhotos: user.photos,
+      mainPhoto: user.photos.filter(p => p.isMain)[0]?.url,
       isAuth: true
     })
   }
@@ -38,6 +39,7 @@ export class AccountService {
     return this.http.get(`${this.apiUrl}account/getUserInfo`)
       .pipe(
         map((res: Res<UserShortInfo>) => {
+          console.log(res);
           if (res.isSuccessed) {
             this.setCurrentUser(res.data);
           }
@@ -74,7 +76,6 @@ export class AccountService {
     this.sharedStore.update({ gLoading: true });
     return this.http.post(`${this.apiUrl}account/login`, model).pipe(
       map((res: Res<UserShortInfo>) => {
-        console.log(res);
         if (res.isSuccessed) {
           this.setCurrentUser(res.data);
         }
@@ -177,7 +178,6 @@ export class AccountService {
   getFriends() {
     return this.http.get(`${this.apiUrl}user/get-friends`).pipe(
       map((res: Res<Friend[]>) => {
-        console.log(res);
         if (res.isSuccessed) {
           this.accountStore.update({
             friendList: res.data

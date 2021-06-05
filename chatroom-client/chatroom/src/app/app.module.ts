@@ -15,6 +15,7 @@ import { UserComponent } from './user/user.component';
 import { FriendsComponent } from './friends/friends.component';
 import { FriendsAddComponent } from './friends/friends-add/friends-add.component';
 import { FriendsRoutingModule } from './friends/friends-routing.module';
+import { ProfileComponent } from './account/profile/profile.component';
 
 
 
@@ -24,7 +25,6 @@ import { FriendsRoutingModule } from './friends/friends-routing.module';
     NavComponent,
     HomeComponent,
     MessageComponent,
-    UserComponent,
   ],
   imports: [
     BrowserModule,

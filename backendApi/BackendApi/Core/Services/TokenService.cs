@@ -30,7 +30,8 @@ namespace BackendApi.Core.Services
         {
             var claims = new List<Claim>{
                 new Claim(JwtRegisteredClaimNames.Email,user.Email),
-                new Claim(JwtRegisteredClaimNames.GivenName,user.UserName)
+                new Claim(JwtRegisteredClaimNames.UniqueName,user.UserName),
+                new Claim("Name",user.UserName)
             };
 
             var creds = new SigningCredentials(_key,SecurityAlgorithms.HmacSha512Signature);

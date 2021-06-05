@@ -10,3 +10,13 @@ export class Message {
   dateRead?: Date;
   messageSent: Date;
 }
+
+export interface MessageGroup {
+  name: string;
+  connections: MessageConnection[]
+}
+
+export interface MessageConnection {
+  messageConnectionId: string;
+  userName: string;
+}

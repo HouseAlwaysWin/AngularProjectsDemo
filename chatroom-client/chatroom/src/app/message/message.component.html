@@ -1,10 +1,33 @@
 <div class="container">
+  <button (click)="getMessageThreads()">connect</button>
   <div class="message-friend">
 
   </div>
   <div class="message">
     <ul class="message-list">
-      <li class="message-item"></li>
+      <li class="message-item"
+          *ngFor="let message of (accountQuery.messagesThread$ | async)">
+        <div *ngIf="message.senderUsername === currentUser.userName"
+             class="message-user-current">
+          {{ message.content }}
+        </div>
+        <div *ngIf="message.senderUsername !== currentUser.userName"
+             class="message-user-others">
+          <span>{{ message.senderUsername }}:</span>
+          {{ message.content }}
+        </div>
+      </li>
     </ul>
+  </div>
+
+  <div>
+    <form (ngSubmit)="sendMessage()">
+      <div>
+        <input type="text"
+               name="messageContent"
+               [(ngModel)]="messageContent">
+        <button type="submit">Submit</button>
+      </div>
+    </form>
   </div>
 </div>

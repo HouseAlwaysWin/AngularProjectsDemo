@@ -3,6 +3,9 @@ namespace BackendApi.Core.Models.Entities.Identity
 {
     public class MessageConnection
     {
+        public MessageConnection()
+        {
+        }
 
         public MessageConnection(string connectionId,string username)
         {

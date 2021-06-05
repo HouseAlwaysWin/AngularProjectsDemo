@@ -116,27 +116,27 @@ namespace BackendApi.Controllers
             return BaseApiOk(false);
         }
 
-        [Authorize]
-        [HttpPut("updatePublicId")]
-        public async Task<ActionResult> UpdateUserPublicId([FromQuery]string publicId){
-            var user = await _userRepo.GetByAsync<AppUser>(query =>  query.Where(u => u.UserPublicId == publicId));
-            if(user != null){
-                return BaseApiOk("Public Id is repeated");
-            }
-            else{
-              var email = HttpContext.User?.Claims?.FirstOrDefault(x=>x.Type == ClaimTypes.Email)?.Value;
+        // [Authorize]
+        // [HttpPut("updatePublicId")]
+        // public async Task<ActionResult> UpdateUserPublicId([FromQuery]string publicId){
+        //     var user = await _userRepo.GetByAsync<AppUser>(query =>  query.Where(u => u.UserPublicId == publicId));
+        //     if(user != null){
+        //         return BaseApiOk("Public Id is repeated");
+        //     }
+        //     else{
+        //       var email = HttpContext.User?.Claims?.FirstOrDefault(x=>x.Type == ClaimTypes.Email)?.Value;
             
-              user = await _userManager.FindByEmailAsync(email);
-            }
+        //       user = await _userManager.FindByEmailAsync(email);
+        //     }
 
-            await _userRepo.UpdateAsync<AppUser>(u => u.Id == user.Id,
-                    new Dictionary<string,object> { 
-                        { nameof(user.UserPublicId), publicId} 
-                    });
-            await _userRepo.CompleteAsync();
+        //     await _userRepo.UpdateAsync<AppUser>(u => u.Id == user.Id,
+        //             new Dictionary<string,object> { 
+        //                 { nameof(user.UserPublicId), publicId} 
+        //             });
+        //     await _userRepo.CompleteAsync();
 
-            return BaseApiOk("Update success");
-        }
+        //     return BaseApiOk("Update success");
+        // }
 
         
 

@@ -39,19 +39,19 @@ namespace BackendApi.Controllers
         [Authorize]
         [HttpGet("get-user-detail")]
         public async Task<ActionResult> GetUserDetail() {
-           var user = await _userService.GetUserDetailByEmailAsync(User.GetEmail());
+           var user = await _userService.GetUserDetailDtoByEmailAsync(User.GetEmail());
            return BaseApiOk(user);
         }
 
         [Authorize]
         [HttpPut("update-publicId/{publicId}")]
         public async Task<ActionResult> UpdateUserPublicId(string publicId){
-            var user = await _userService.GetUserByPublicIdAsync(publicId);
+            var user = await _userService.GetUserDtoByPublicIdAsync(publicId);
             if(user != null){
                 return BaseApiOk("Public Id is repeated");
             }
 
-            user = await _userService.GetUserByEmailAsync(User.GetEmail()); 
+            user = await _userService.GetUserDtoByEmailAsync(User.GetEmail()); 
 
             await _userRepo.UpdateAsync<AppUser>(u => u.Id == user.Id,
                     new Dictionary<string,object> { 
@@ -68,7 +68,7 @@ namespace BackendApi.Controllers
 
         [HttpGet("get-by-publicId/{publicId}")]
         public async Task<ActionResult> GetUserByPublicId(string publicId){
-            var user = await _userService.GetUserByPublicIdAsync(publicId);
+            var user = await _userService.GetUserDtoByPublicIdAsync(publicId);
 
 
             if(user  == null){
@@ -82,13 +82,13 @@ namespace BackendApi.Controllers
 
         [HttpGet("get-friends")]
         public async Task<ActionResult> GetFriends() {
-            var friends =  await this._userService.GetUserFriendsByEmailAsync(User.GetEmail());
+            var friends =  await this._userService.GetUserFriendsDtoByEmailAsync(User.GetEmail());
             return BaseApiOk(friends);
         }
 
         [HttpPost("add-friend/{friendId}")]
         public async Task<ActionResult> AddFriend(int friendId) {
-            var user = await _userService.GetUserByEmailAsync(User.GetEmail());
+            var user = await _userService.GetUserDtoByEmailAsync(User.GetEmail());
 
              if(friendId == user.Id) {
                 return BaseApiBadRequest("friendId can't be user");
@@ -103,7 +103,7 @@ namespace BackendApi.Controllers
 
             await _userRepo.CompleteAsync();
 
-            var friends =  await this._userService.GetUserFriendsByEmailAsync(user.Email); 
+            var friends =  await this._userService.GetUserFriendsDtoByEmailAsync(user.Email); 
 
             return BaseApiOk(friends);
         }
@@ -111,7 +111,7 @@ namespace BackendApi.Controllers
         [HttpDelete("remove-friend/{friendId}")]
         public async Task<ActionResult> RemoveFriend(int friendId) {
             
-            var user = await _userService.GetUserByEmailAsync(User.GetEmail());
+            var user = await _userService.GetUserDtoByEmailAsync(User.GetEmail());
 
             if(friendId == user.Id) {
                 return BaseApiBadRequest("friendId can't be user");
@@ -121,7 +121,7 @@ namespace BackendApi.Controllers
             
             await _userRepo.CompleteAsync();
 
-            var friends =  await this._userService.GetUserFriendsByEmailAsync(user.Email); 
+            var friends =  await this._userService.GetUserFriendsDtoByEmailAsync(user.Email); 
 
             return BaseApiOk(friends);
         }

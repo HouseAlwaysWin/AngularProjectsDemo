@@ -1,7 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UtilitiesService } from './shared/services/utilities.service';
-import { AccountService } from './shared/states/account/account.service';
+import { AccountService } from './shared/services/account.service';
 import { SharedQuery } from './shared/states/shared/shared.query';
 import { SharedStore } from './shared/states/shared/shared.store';
 
@@ -20,7 +20,6 @@ export class AppComponent implements OnInit {
 
   globalLoading() {
     this.sharedQuery.gLoading$.subscribe(res => {
-      console.log('trigger loading');
       this.loading = res;
     });
   }
@@ -43,9 +42,10 @@ export class AppComponent implements OnInit {
     const token: string = JSON.parse(localStorage.getItem('token'));
 
     if (token) {
+      console.log('app check')
       this.accountService.getUserDetail().subscribe(res => {
+        console.log('login check');
         if (res) {
-          console.log('already login')
         }
         else {
           this.router.navigate(['/account/login']);

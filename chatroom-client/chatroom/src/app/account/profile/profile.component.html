@@ -1,0 +1,120 @@
+<div class="container">
+  <div class="head-photo-main">
+    <img src="{{ mainPhoto }}"
+         alt="" />
+  </div>
+  <div class="head-photo">
+    <ul class="head-photo-list"
+        #photosList>
+      <li class="head-photo-btn prev"
+          (click)="setPrevPhoto()">
+        <i class="fas fa-chevron-left"></i>
+      </li>
+      <li *ngFor="let photo of photos"
+          (click)="onSelectPhoto(photo)"
+          class="head-photo-item">
+        <img class="head-photo-img"
+             [src]="photo.url"
+             [ngClass]="{'main': photo.isMain,'select':photo?.id ===selectPhoto?.id }" />
+        <button class="head-photo-set-main"
+                (click)="setAsMain(photo)">
+          Set as main
+        </button>
+      </li>
+      <li class="head-photo-btn next"
+          (click)="setNextPhoto()">
+        <i class="fas fa-chevron-right"></i>
+      </li>
+    </ul>
+  </div>
+
+  <button *ngIf="deleteBtnEnable"
+          class="head-photo-delete"
+          (click)="deletePhotoSelect()">
+    Delete Selected Photo
+  </button>
+
+  <button *ngIf="!deleteBtnEnable"
+          class="head-photo-delete hide">
+    Empty for format
+  </button>
+
+
+  <div class="photo-upload">
+    <!-- <p-fileUpload name="file"
+                  (onProgress)="onUpload($event)"
+                  [url]="apiUrl+'user/add-photo'"></p-fileUpload> -->
+    <div class="photo-upload-field"
+         dragAndDrop
+         (fileDropped)="dropFile($event)">
+      <label for="photo-upload-input"
+             class="photo-upload-browse">
+        <span class="photo-upload-text">
+          <div>
+            Drop your head photo here
+          </div>
+          <div>
+            Or
+          </div>
+        </span>
+        <span class="photo-upload-browse-btn">
+          Browse for head photo
+        </span>
+      </label>
+      <input id="photo-upload-input"
+             class="photo-upload-input"
+             multiple="multiple"
+             accept=".png,.jpg,.gif"
+             type="file"
+             #photoInput
+             (change)="browseFile($event)" />
+    </div>
+
+    <ul class="file-list">
+      <li class="file-list-item"
+          *ngFor="let file of uploadPhotofiles;let i =index">
+        <div class="file-list-info">
+          <img class="file-list-img"
+               [src]="file?.objectURL" />
+          <span class="file-list-name">
+
+            {{ file.name  }}
+          </span>
+
+          <span class="file-list-size">
+            {{ formatBytes(file?.size) }}
+          </span>
+        </div>
+
+        <div class="file-list-action">
+          <div class="file-list-progress">
+            <div class="file-list-progress-bar"
+                 [style.width]="uploadPhotofiles[i]?.progress + '%'">
+            </div>
+            <div class="file-list-progress-bar">
+            </div>
+          </div>
+
+          <div class="file-list-progress-label">
+            {{ uploadPhotofiles[i]?.progress + '%' }}
+          </div>
+
+          <i class="fas fa-upload file-list-upload-btn"
+             (click)="uploadFile(file,i)"></i>
+          <i class="fas fa-trash-alt file-list-remove-btn"
+             (click)="removeUploadImg(i)"></i>
+        </div>
+
+      </li>
+    </ul>
+  </div>
+
+  <div class="user-basic-info"
+       *ngIf="userInfo">
+    <label for="">
+      Public Id: {{ currentPublicId ? currentPublicId: 'Not Setting' }}
+    </label>
+    <input [(ngModel)]="userInfo.userPublicId" />
+    <button (click)="updatePublicId()">Update</button>
+  </div>
+</div>

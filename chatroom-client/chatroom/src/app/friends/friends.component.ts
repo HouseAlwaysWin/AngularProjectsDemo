@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Friend } from '../shared/models/friend';
-import { UserPhoto } from '../shared/models/user';
+import { UserPhoto, UserShortInfo } from '../shared/models/user';
 import { FormFieldService } from '../shared/services/form-field.service';
-import { AccountService } from '../shared/states/account/account.service';
+import { AccountService } from '../shared/services/account.service';
+import { Router } from '@angular/router';
+import { AccountQuery } from '../shared/states/account/account.query';
 
 @Component({
   selector: 'app-friends',
@@ -14,9 +16,11 @@ export class FriendsComponent implements OnInit {
   friendList: Friend[];
   searchForm: FormGroup;
   constructor(
+    private router: Router,
     public formService: FormFieldService,
     private formBuilder: FormBuilder,
-    private accountService: AccountService) { }
+    private accountService: AccountService,
+    private accountQuery: AccountQuery) { }
 
   ngOnInit(): void {
     this.getAllFriends();
@@ -31,7 +35,6 @@ export class FriendsComponent implements OnInit {
 
   getAllFriends() {
     this.accountService.getFriends().subscribe(res => {
-      console.log(res);
       this.friendList = res.data;
     });
   }
@@ -45,5 +48,9 @@ export class FriendsComponent implements OnInit {
     this.accountService.removeFriend(friend).subscribe(res => {
       this.friendList = res.data;
     });
+  }
+
+  goMessage(friend: UserShortInfo) {
+    this.router.navigate([`/message/${friend.userName}`]);
   }
 }

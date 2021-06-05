@@ -6,7 +6,7 @@ namespace BackendApi.Helpers.Extensions
     public static class ClaimsPrincipleExtensions
     {
        public static string GetUserName(this ClaimsPrincipal user){
-           var name =  user.FindFirst(ClaimTypes.Name)?.Value;
+           var name = user.FindFirst(ClaimTypes.Name)?.Value;
            return name;
        } 
 

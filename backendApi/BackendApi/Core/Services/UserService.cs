@@ -22,7 +22,7 @@ namespace BackendApi.Core.Services
             this._mapper = mapper;
         }
 
-        public async Task<List<UserFriendMapDto>> GetUserFriendsByEmailAsync(string email)
+        public async Task<List<UserFriendMapDto>> GetUserFriendsDtoByEmailAsync(string email)
         {
             var friendsMap = await _userRepo.GetAllAsync<UserFriend>(query =>
                query.Where(u => u.AppUser.Email == email)
@@ -36,7 +36,7 @@ namespace BackendApi.Core.Services
             return friends;
         }
 
-        public async Task<AppUserShortDto> GetUserByEmailAsync(string email){
+        public async Task<AppUserShortDto> GetUserDtoByEmailAsync(string email){
             var user = await _userRepo.GetByAsync<AppUser>(
                 query => query.Where(u=> u.Email == email)
                               .Include(u => u.UserInfo)
@@ -46,7 +46,22 @@ namespace BackendApi.Core.Services
             return userInfoDto;
         }
 
-        public async Task<AppUserDto> GetUserDetailByEmailAsync(string email){
+         public async Task<AppUserShortDto> GetUserDtoByUserNameAsync(string username){
+            var user = await GetUserByUserNameAsync(username);
+            var userInfoDto = _mapper.Map<AppUser,AppUserShortDto>(user);
+            return userInfoDto;
+        }
+
+        public async Task<AppUser> GetUserByUserNameAsync(string userName){
+            var user = await _userRepo.GetByAsync<AppUser>(
+                query => query.Where(u=> u.UserName == userName)
+                              .Include(u => u.UserInfo)
+                              .Include(u => u.Photos)
+                );
+            return user;
+        }
+
+        public async Task<AppUserDto> GetUserDetailDtoByEmailAsync(string email){
             var user = await _userRepo.GetByAsync<AppUser>(query => 
                     query.Where(u=> u.Email == email)
                           .Include(u => u.UserInfo)
@@ -58,7 +73,7 @@ namespace BackendApi.Core.Services
         }
 
 
-        public async Task<AppUserShortDto> GetUserByPublicIdAsync(string publicId){
+        public async Task<AppUserShortDto> GetUserDtoByPublicIdAsync(string publicId){
             var user = await _userRepo.GetByAsync<AppUser>(query => query
                           .Where(u=> u.UserPublicId == publicId)
                           .Include(u => u.UserInfo)
@@ -69,6 +84,8 @@ namespace BackendApi.Core.Services
             var userInfoDto = _mapper.Map<AppUser,AppUserShortDto>(user);
             return userInfoDto;
         }
+
+        
 
     }
 }

@@ -5,7 +5,7 @@ import { Login } from 'src/app/shared/models/login';
 import { Res } from 'src/app/shared/models/response';
 import { UserDetail } from 'src/app/shared/models/user';
 import { FormFieldService } from 'src/app/shared/services/form-field.service';
-import { AccountService } from 'src/app/shared/states/account/account.service';
+import { AccountService } from 'src/app/shared/services/account.service';
 
 @Component({
   selector: 'app-login',

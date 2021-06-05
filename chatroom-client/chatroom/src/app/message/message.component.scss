@@ -4,3 +4,32 @@
   flex-direction: column;
   align-items: center;
 }
+
+.message {
+  &-list {
+    width: 50rem;
+    height: 50rem;
+    overflow: scroll;
+  }
+
+  &-item {
+    list-style: none;
+    border-bottom: 1px solid grey;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &-user {
+    &-current {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+    }
+
+    &-others {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+    }
+  }
+}

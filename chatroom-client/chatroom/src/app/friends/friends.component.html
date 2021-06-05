@@ -37,7 +37,8 @@
             {{ friend.friend.userName }}
           </span>
         </div>
-        <div class="friend-message">
+        <div class="friend-message"
+             (click)="goMessage(friend.friend)">
           friends description
         </div>
         <div class="friend-remove">

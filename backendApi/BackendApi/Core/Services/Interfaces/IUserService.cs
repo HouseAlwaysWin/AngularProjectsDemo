@@ -2,14 +2,19 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using BackendApi.Core.Entities.Identity;
 using BackendApi.Core.Models.Dtos;
+using BackendApi.Core.Models.Entities.Identity;
 
 namespace BackendApi.Core.Services.Interfaces
 {
     public interface IUserService
     {
-        Task<List<UserFriendMapDto>> GetUserFriendsByEmailAsync(string email);
-        Task<AppUserShortDto> GetUserByEmailAsync(string email);
-        Task<AppUserShortDto> GetUserByPublicIdAsync(string publicId);
-        Task<AppUserDto> GetUserDetailByEmailAsync(string email);
+        Task<List<UserFriendMapDto>> GetUserFriendsDtoByEmailAsync(string email);
+        Task<AppUserShortDto> GetUserDtoByEmailAsync(string email);
+        Task<AppUserShortDto> GetUserDtoByUserNameAsync(string userName);
+        Task<AppUser> GetUserByUserNameAsync(string userName);
+        Task<AppUserShortDto> GetUserDtoByPublicIdAsync(string publicId);
+        Task<AppUserDto> GetUserDetailDtoByEmailAsync(string email);
+
+      
     }
 }

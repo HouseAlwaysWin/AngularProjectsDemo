@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Res } from 'src/app/shared/models/response';
 import { UserPhoto, UserShortInfo } from 'src/app/shared/models/user';
 import { FormFieldService } from 'src/app/shared/services/form-field.service';
-import { AccountService } from 'src/app/shared/states/account/account.service';
+import { AccountService } from 'src/app/shared/services/account.service';
 
 @Component({
   selector: 'app-friends-add',
