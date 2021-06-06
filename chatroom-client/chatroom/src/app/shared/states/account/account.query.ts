@@ -54,6 +54,10 @@ export class AccountQuery extends Query<AccountState> {
     return this.getValue().loading;
   }
 
+  get friendList() {
+    return this.getValue().friendList;
+  }
+
   constructor(protected store: AccountStore) {
     super(store);
   }

@@ -1,3 +1,5 @@
+@import "../../styles.scss";
+
 .container {
   position: relative;
   display: flex;
@@ -14,22 +16,67 @@
 
   &-item {
     list-style: none;
-    border-bottom: 1px solid grey;
+    // border-bottom: 1px solid grey;
     display: flex;
     flex-direction: column;
   }
 
-  &-user {
-    &-current {
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-end;
+  &-current {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+
+    &-content {
+      position: relative;
+      margin-right: 1rem;
+      background-color: $color-primary-dark;
+      padding: 0.5rem 1rem;
+      border-radius: 1rem;
+      margin-top: 0.5rem;
+      word-wrap: break-word;
+      color: $color-white;
+      &::after {
+        position: absolute;
+        content: "";
+        background-color: $color-primary-dark;
+        width: 1rem;
+        height: 1rem;
+        right: -0.5rem;
+        top: 0.5rem;
+        clip-path: polygon(100% 50%, 0 0, 0 100%);
+      }
+    }
+  }
+
+  &-others {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+
+    &-username {
+      color: $color-primary-dark;
+      margin-top: 0.5rem;
     }
 
-    &-others {
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
+    &-content {
+      position: relative;
+      margin-left: 1rem;
+      background-color: $color-primary;
+      padding: 0.5rem 1rem;
+      border-radius: 1rem;
+      margin-top: 0.5rem;
+      word-wrap: break-word;
+      color: $color-white;
+      &::before {
+        position: absolute;
+        content: "";
+        background-color: $color-primary;
+        width: 1rem;
+        height: 1rem;
+        left: -0.5rem;
+        top: 0.5rem;
+        clip-path: polygon(100% 1%, 0 42%, 100% 100%);
+      }
     }
   }
 }

@@ -9,24 +9,19 @@ const routes: Routes = [
     path: '', component: HomeComponent
   },
   {
-    path: '',
-    children: [
-      {
-        path: 'account',
-        loadChildren: () => import('./account/account.module').then(m => m.AccountModule)
-      },
+    path: 'account',
+    loadChildren: () => import('./account/account.module').then(m => m.AccountModule)
+  },
 
-      {
-        // path: 'message',
-        // loadChildren: () => import('./message/message.module').then(m => m.MessageModule)
-        path: 'message/:username',
-        component: MessageComponent
-      },
-      {
-        path: 'friends',
-        loadChildren: () => import('./friends/friends.module').then(m => m.FriendsModule)
-      },
-    ]
+  {
+    path: 'message',
+    loadChildren: () => import('./message/message.module').then(m => m.MessageModule)
+    // path: 'message/:username',
+    // component: MessageComponent
+  },
+  {
+    path: 'friends',
+    loadChildren: () => import('./friends/friends.module').then(m => m.FriendsModule)
   },
 
   { path: '**', redirectTo: '', pathMatch: 'full' }

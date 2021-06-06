@@ -13,10 +13,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BackendApi.Core.Services
 {
-    public interface IMessageService1
-    {
-       
-    }
 
     public class MessageService : IMessageService
     {
@@ -55,6 +51,11 @@ namespace BackendApi.Core.Services
             string currentUsername,
             string recipientUsername)
         {
+            await _userRepo.UpdateAsync<Message>(m => m.DateRead == null && m.RecipientUsername == currentUsername,
+                    new Dictionary<string,object> { 
+                        { "DateRead",  DateTimeOffset.UtcNow} 
+                    });
+            await _userRepo.CompleteAsync();
 
             var messages = await _userRepo.GetAllAsync<Message>(query =>
                 query.Where(m =>
@@ -65,20 +66,20 @@ namespace BackendApi.Core.Services
                     m.Sender.UserName == currentUsername &&
                     m.SenderDeleted == false
                 ).OrderBy(m => m.MessageSent));
+            // var unreadMessages = messages.Where(m =>
+            //     m.DateRead == null && m.RecipientUsername == currentUsername).ToList();
+
+            // if (unreadMessages.Any())
+            // {
+            //     foreach (var message in unreadMessages)
+            //     {
+            //         message.DateRead = DateTime.UtcNow;
+            //     }
+            // }
+
+            
 
             List<MessageDto> messagesDto = _mapper.Map<List<Message>, List<MessageDto>>(messages.ToList());
-
-            var unreadMessages = messagesDto.Where(m =>
-                m.DateRead == null && m.RecipientUsername == currentUsername).ToList();
-
-            if (unreadMessages.Any())
-            {
-                foreach (var message in unreadMessages)
-                {
-                    message.DateRead = DateTime.UtcNow;
-                }
-            }
-
             return messagesDto;
         }
 

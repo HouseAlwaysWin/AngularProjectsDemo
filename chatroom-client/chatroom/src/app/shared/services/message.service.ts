@@ -24,52 +24,56 @@ export class MessageService {
   ) { }
 
   createHubConnection(user: UserShortInfo, otherUsername: string) {
-    this.hubConnection = new HubConnectionBuilder()
-      .withUrl(`${this.hubUrl}message?username=${otherUsername}`, {
-        accessTokenFactory: () => user.token
-      })
-      .withAutomaticReconnect()
-      .build();
+    if (user?.token && otherUsername) {
+      this.hubConnection = new HubConnectionBuilder()
+        .withUrl(`${this.hubUrl}message?username=${otherUsername}`, {
+          accessTokenFactory: () => user.token
+        })
+        .withAutomaticReconnect()
+        .build();
 
-    this.hubConnection.start()
-      .catch(error => console.log(error))
-      .finally(() => {
-        this.sharedStore.update({ gLoading: false });
+      this.hubConnection.start()
+        .catch(error => console.log(error))
+        .finally(() => {
+          this.sharedStore.update({ gLoading: false });
+        });
+
+      this.hubConnection.on('ReceiveMessageThread', messages => {
+        console.log('receiveMessageThread')
+        console.log(messages[messages.length - 1]);
+        this.accountStore.update({
+          messagesThread: messages
+        })
       });
 
-    this.hubConnection.on('ReceiveMessageThread', messages => {
-      console.log('receiveMessageThread')
-      this.accountStore.update({
-        messagesThread: messages
-      })
-    });
 
+      this.hubConnection.on('NewMessage', message => {
+        console.log('newMessage')
+        this.accountQuery.messagesThread$.pipe(take(1)).subscribe(messages => {
+          console.log(messages[messages.length - 1])
+          this.accountStore.update({
+            messagesThread: [...messages, message]
+          })
+        })
+      });
 
-    this.hubConnection.on('NewMessage', message => {
-      console.log('newMessage')
-      // this.accountQuery.messagesThread$.pipe(take(1)).subscribe(messages => {
-      //   this.accountStore.update({
-      //     messagesThread: [...messages, message]
-      //   })
-      // })
-    });
-
-    this.hubConnection.on('UpdatedGroup', (group: MessageGroup) => {
-      console.log('UpdatedGroup')
-      console.log(group)
-      if (group.connections.some(x => x.userName === otherUsername)) {
+      this.hubConnection.on('UpdatedGroup', (group: MessageGroup) => {
+        console.log('UpdatedGroup')
+        console.log(group)
+        // if (group.connections.some(x => x.userName === otherUsername)) {
         this.accountQuery.messagesThread$.pipe(take(1)).subscribe(messages => {
           messages.forEach(message => {
             if (!message.dateRead) {
               message.dateRead = new Date(Date.now())
             }
           })
-          // this.accountStore.update({
-          //   messagesThread: messages
-          // });
+          this.accountStore.update({
+            messagesThread: messages
+          });
         })
-      }
-    });
+        // }
+      });
+    }
   }
 
   stopHubConnection() {
@@ -79,8 +83,6 @@ export class MessageService {
   }
 
   async sendMessage(recipientUserName: string, content: string) {
-    console.log(recipientUserName);
-    console.log(content);
     return this.hubConnection.invoke('SendMessage', { recipientUserName, content })
       .catch(error => console.log(error));
   }

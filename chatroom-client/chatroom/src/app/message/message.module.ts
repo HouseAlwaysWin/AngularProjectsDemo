@@ -8,7 +8,7 @@ import { MessageRoutingModule } from './message-routing.module';
 
 @NgModule({
   declarations: [
-    // MessageComponent
+    MessageComponent
   ],
   imports: [
     MessageRoutingModule,

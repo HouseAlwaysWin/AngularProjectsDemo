@@ -51,8 +51,8 @@ namespace BackendApi.Core.Services.SignalR
 
             var groupName = GetGroupName(username, otherUser);
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
-            var group = await AddToGroup(groupName);
-            await Clients.Group(groupName).SendAsync("UpdatedGroup", group);
+            // var group = await AddToGroup(groupName);
+            // await Clients.Group(groupName).SendAsync("UpdatedGroup", group);
 
             var currentUsername = Context.User.GetUserName();
             var messages = await _messageService.GetMessageThread(currentUsername,otherUser);
@@ -67,8 +67,8 @@ namespace BackendApi.Core.Services.SignalR
 
          public override async Task OnDisconnectedAsync(Exception exception)
         {
-            var group = await RemoveFromMessageGroup();
-            await Clients.Group(group.Name).SendAsync("UpdatedGroup", group);
+            // var group = await RemoveFromMessageGroup();
+            // await Clients.Group(group.Name).SendAsync("UpdatedGroup", group);
             await base.OnDisconnectedAsync(exception);
         }
 
@@ -96,21 +96,21 @@ namespace BackendApi.Core.Services.SignalR
 
             var groupName = GetGroupName(sender.UserName, recipient.UserName);
 
-            var group = await _messageService.GetMessageGroup(groupName);
+            // var group = await _messageService.GetMessageGroup(groupName);
 
-            if (group.Connections.Any(x => x.UserName == recipient.UserName))
-            {
-                message.DateRead = DateTime.UtcNow;
-            }
-            else
-            {
+            // if (group.Connections.Any(x => x.UserName == recipient.UserName))
+            // {
+            //     message.DateRead = DateTime.UtcNow;
+            // }
+            // else
+            // {
                 var connections = await _tracker.GetConnectionsForUser(recipient.UserName);
                 if (connections != null)
                 {
                     await _presenceHub.Clients.Clients(connections).SendAsync("NewMessageReceived",
                         new { username = sender.UserName });
                 }
-            }
+            // }
 
             await _messageService.AddMessage(message);
 

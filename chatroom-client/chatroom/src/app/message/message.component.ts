@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { UserInfo } from 'os';
@@ -18,8 +18,12 @@ import { SharedStore } from '../shared/states/shared/shared.store';
 export class MessageComponent implements OnInit, OnDestroy {
   autoLoadMsg: boolean = true;
   messageContent: string;
+
   recipientUserName: string;
   currentUser: UserShortInfo;
+  otherUser: UserShortInfo;
+
+  @ViewChild('messageListContent') messageListContent: ElementRef;
   constructor(
     private activeRoute: ActivatedRoute,
     private accountService: AccountService,
@@ -36,33 +40,18 @@ export class MessageComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    this.recipientUserName = this.activeRoute.snapshot.paramMap.get('username');
-    // this.getMessageThreads();
-    console.log('init');
+    this.initProps();
+    this.getMessageThreads();
   }
 
-  ngAfterContentInit(): void {
-    //Called after ngOnInit when the component's or directive's content has been initialized.
-    //Add 'implements AfterContentInit' to the class.
-    console.log('afterContentInit');
+  ngAfterViewChecked() {
+    this.messageListContent.nativeElement.scrollTop = this.messageListContent.nativeElement.scrollHeight;
+
   }
 
-  ngAfterViewInit(): void {
-    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
-    //Add 'implements AfterViewInit' to the class.
-    console.log('afterViewInit');
-    this.getCurrentUser();
-  }
-
-
-
-  getCurrentUser() {
-    console.log(this.accountQuery.user);
-    // this.accountQuery.user$
-    //   .subscribe(user => {
-    //     console.log(user);
-    //     this.getMessageThreads();
-    //   });
+  initProps() {
+    this.recipientUserName = this.recipientUserName = this.activeRoute.snapshot.paramMap.get('username');
+    this.currentUser = this.accountQuery.user;
   }
 
   sendMessage() {
