@@ -18,7 +18,7 @@ namespace BackendApi.Helpers.Extensions
 
         public static int GetUserId(this ClaimsPrincipal user)
         {
-            return int.Parse(user.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            return int.Parse(user.Claims?.FirstOrDefault(x => x.Type == "Id")?.Value);
         }
     }
 }

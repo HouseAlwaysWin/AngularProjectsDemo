@@ -1,12 +1,16 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using BackendApi.Core.Data.Repositories.Interfaces;
+using BackendApi.Core.Entities.Identity;
 using BackendApi.Core.Models.Dtos;
 using BackendApi.Core.Models.Entities;
+using BackendApi.Core.Models.Entities.Identity;
 using BackendApi.Core.Services.Interfaces;
 using BackendApi.Helpers.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BackendApi.Controllers
 {
@@ -20,11 +24,13 @@ namespace BackendApi.Controllers
         public MessagesController(
             IMessageService messageService,
             IUserService userService,
-            IMapper mapper)
+            IMapper mapper,
+            IUserRepository userRepo)
         {
             this._userService = userService;
             this._messageService = messageService;
             this._mapper = mapper;
+            this._userRepo  = userRepo;
         }
 
 
@@ -32,42 +38,61 @@ namespace BackendApi.Controllers
         [HttpGet("get-user-messages")]
         public async Task<ActionResult> GetUserMessagesList([FromQuery]MessageParams messageParams){
             var message = await _userRepo.GetAllAsync<Message>(
-                query => query.Where(m => m.RecipientUsername == User.GetUserName()));
+                query => query.Where(m => m.SenderUsername == User.GetUserName()));
             
             return BaseApiOk(message);
         }
 
+        [HttpGet("get-messages-list")]
+        public async Task<ActionResult> GetMessageList() {
 
+            var user = await _userRepo.GetByAsync<AppUser>(query => 
+                query.Where(u => u.Email == User.GetEmail() )
+                     .Include(u => u.MessageGroups)
+                     .ThenInclude(u => u.MessageGroup));
 
-        [HttpGet]
-        public async Task<ActionResult> GetMessagesForUser([FromQuery]MessageParams messageParams){
+            var groupsDtoMaps = _mapper.Map<List<AppUser_MessageGroup>,List<AppUser_MessageGroupDto>>(user.MessageGroups.ToList());
 
-            var message = await _userRepo.GetAllPagedAsync<Message>(
-                messageParams.PageIndex,messageParams.PageSize,
-                query =>{
-                    switch(messageParams.Container){
-                        case "Inbox":
-                            return query.Where(u => u.RecipientUsername == messageParams.Username && u.RecipientDeleted == false);
-                        case "Outbox":
-                            return query.Where(u => u.SenderUsername == messageParams.Username && u.SenderDeleted == false);
-                        default:
-                            return query.Where(u => u.RecipientUsername == messageParams.Username && u.RecipientDeleted == false && u.DateRead == null);
-                    }
-                });
-            return BaseApiOk(message);
+            List<MessageGroupDto> groupsDto = new List<MessageGroupDto>();
+            foreach (var group in groupsDtoMaps)
+            {
+               groupsDto.Add(group.MessageGroup);
+            }
+
+            return BaseApiOk(groupsDto);
         }
+
+
+
+        // [HttpGet]
+        // public async Task<ActionResult> GetMessagesForUser([FromQuery]MessageParams messageParams){
+
+        //     var message = await _userRepo.GetAllPagedAsync<Message>(
+        //         messageParams.PageIndex,messageParams.PageSize,
+        //         query =>{
+        //             switch(messageParams.Container){
+        //                 case "Inbox":
+        //                     return query.Where(u => u.RecipientUsername == messageParams.Username && u.RecipientDeleted == false);
+        //                 case "Outbox":
+        //                     return query.Where(u => u.SenderUsername == messageParams.Username && u.SenderDeleted == false);
+        //                 default:
+        //                     return query.Where(u => u.RecipientUsername == messageParams.Username && u.RecipientDeleted == false && u.DateRead == null);
+        //             }
+        //         });
+        //     return BaseApiOk(message);
+        // }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteMessage(int id){
             var username = User.GetUserName();
             var message = await _userRepo.GetByAsync<Message>(query => query.Where(u => u.Id == id));
 
-             if (message.Sender.UserName != username && message.Recipient.UserName != username)
+            if (message.Sender.UserName != username)
                 return Unauthorized();
 
             if (message.Sender.UserName == username) message.SenderDeleted = true;
 
-            if (message.Recipient.UserName == username) message.RecipientDeleted = true;
+            message.RecipientDeleted = true;
 
             if (message.SenderDeleted && message.RecipientDeleted)
                 await _userRepo.RemoveAsync<Message>(m => m.Id == id);

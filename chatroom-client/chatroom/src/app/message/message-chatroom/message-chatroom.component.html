@@ -1,0 +1,37 @@
+<div class="container">
+  <div class="message-friend">
+
+  </div>
+  <div class="message">
+    <ul class="message-list"
+        #messageListContent>
+      <li class="message-item"
+          *ngFor="let message of (accountQuery.messagesThread$ | async)">
+        <div *ngIf="message.senderUsername === currentUser.userName"
+             class="message-current">
+          <span class="message-current-content">{{ message.content }}</span>
+          <span>{{ message?.dateRead }}</span>
+        </div>
+        <div *ngIf="message.senderUsername !== currentUser.userName"
+             class="message-others">
+          <span>
+            <img src="" />
+          </span>
+          <span class="message-others-username">{{ message.senderUsername }}</span>
+          <span class="message-others-content">{{ message.content }}</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div>
+    <form (ngSubmit)="sendMessage()">
+      <div>
+        <input type="text"
+               name="messageContent"
+               [(ngModel)]="messageContent">
+        <button type="submit">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>

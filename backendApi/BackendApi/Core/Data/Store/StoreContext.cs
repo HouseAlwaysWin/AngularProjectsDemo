@@ -2,7 +2,7 @@ using System.Reflection;
 using BackendApi.Core.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace BackendApi.Core.Data
+namespace BackendApi.Core.Data.Store
 {
     public class StoreContext:DbContext
     {

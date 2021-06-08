@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { UserInfo } from 'os';
 import { of, Subject, Subscription } from 'rxjs';
 import { last, map, switchMap, take, takeLast, takeUntil } from 'rxjs/operators';
+import { MessageGroup } from '../shared/models/message';
 import { UserShortInfo } from '../shared/models/user';
 import { AccountService } from '../shared/services/account.service';
 import { MessageService } from '../shared/services/message.service';
@@ -16,14 +17,7 @@ import { SharedStore } from '../shared/states/shared/shared.store';
   styleUrls: ['./message.component.scss']
 })
 export class MessageComponent implements OnInit, OnDestroy {
-  autoLoadMsg: boolean = true;
-  messageContent: string;
-
-  recipientUserName: string;
-  currentUser: UserShortInfo;
-  otherUser: UserShortInfo;
-
-  @ViewChild('messageListContent') messageListContent: ElementRef;
+  messageGroupList: MessageGroup[];
   constructor(
     private activeRoute: ActivatedRoute,
     private accountService: AccountService,
@@ -34,49 +28,19 @@ export class MessageComponent implements OnInit, OnDestroy {
 
   private _onDestroy = new Subject();
   ngOnDestroy(): void {
-    this.messageService.stopHubConnection();
     this._onDestroy.next();
   }
 
 
   ngOnInit() {
-    this.initProps();
-    this.getMessageThreads();
+    this.getMessageGroups();
   }
 
-  ngAfterViewChecked() {
-    this.messageListContent.nativeElement.scrollTop = this.messageListContent.nativeElement.scrollHeight;
-
-  }
-
-  initProps() {
-    this.recipientUserName = this.recipientUserName = this.activeRoute.snapshot.paramMap.get('username');
-    this.currentUser = this.accountQuery.user;
-  }
-
-  sendMessage() {
-    if (this.messageContent && this.recipientUserName) {
-      this.sharedStore.update({
-        gLoading: true
-      });
-      this.messageService.sendMessage(this.recipientUserName, this.messageContent).then(() => {
-        this.messageContent = '';
-      }).finally(() => {
-        this.sharedStore.update({
-          gLoading: false
-        });
-      });
-    }
-
-  }
-
-
-
-  getMessageThreads() {
-    if (this.currentUser && this.recipientUserName) {
-      console.log('messageThreads');
-      this.messageService.createHubConnection(this.currentUser, this.recipientUserName);
-    }
+  getMessageGroups() {
+    this.messageService.getMessageGroups().subscribe((groups: MessageGroup[]) => {
+      console.log(groups);
+      this.messageGroupList = groups;
+    });
   }
 
 }

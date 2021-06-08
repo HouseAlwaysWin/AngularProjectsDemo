@@ -1,4 +1,5 @@
 using BackendApi.Core.Data.Repositories.Interfaces;
+using BackendApi.Core.Data.Store;
 using BackendApi.Core.Models.Entities;
 
 namespace BackendApi.Core.Data.Repositories

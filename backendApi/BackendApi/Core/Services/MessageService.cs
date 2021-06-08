@@ -43,52 +43,67 @@ namespace BackendApi.Core.Services
             {
                 return query.Where(m => m.Id == id)
                             .Include(u => u.Sender)
-                            .Include(u => u.Recipient);
+                            .Include(u => u.RecipientUsers);
             });
         }
 
-        public async Task<IEnumerable<MessageDto>> GetMessageThread(
-            string currentUsername,
-            string recipientUsername)
-        {
-            await _userRepo.UpdateAsync<Message>(m => m.DateRead == null && m.RecipientUsername == currentUsername,
+        public async Task<IEnumerable<MessageDto>> GetMessageThread(int currentUserId,int groupId){
+
+
+            await _userRepo.UpdateAsync<MessageRecivedUser>(m => m.DateRead == null && m.AppUserId == currentUserId,
                     new Dictionary<string,object> { 
                         { "DateRead",  DateTimeOffset.UtcNow} 
                     });
+
             await _userRepo.CompleteAsync();
-
-            var messages = await _userRepo.GetAllAsync<Message>(query =>
-                query.Where(m =>
-                    m.Recipient.UserName == currentUsername &&
-                    m.RecipientDeleted == false &&
-                    m.Sender.UserName == recipientUsername ||
-                    m.Recipient.UserName == recipientUsername &&
-                    m.Sender.UserName == currentUsername &&
-                    m.SenderDeleted == false
-                ).OrderBy(m => m.MessageSent));
-            // var unreadMessages = messages.Where(m =>
-            //     m.DateRead == null && m.RecipientUsername == currentUsername).ToList();
-
-            // if (unreadMessages.Any())
-            // {
-            //     foreach (var message in unreadMessages)
-            //     {
-            //         message.DateRead = DateTime.UtcNow;
-            //     }
-            // }
-
-            
+            var messages = await _userRepo.GetAllAsync<Message>(query => 
+                query.Where(m => m.MessageGroupId == groupId).OrderBy(m => m.MessageSent)
+            );
 
             List<MessageDto> messagesDto = _mapper.Map<List<Message>, List<MessageDto>>(messages.ToList());
             return messagesDto;
         }
+
+        // public async Task<IEnumerable<MessageDto>> GetMessageThread(
+        //     string currentUsername,
+        //     string recipientUsername)
+        // {
+        //     await _userRepo.UpdateAsync<MessageRecivedUser>(m => m.DateRead == null && m.RecipientUsername == currentUsername,
+        //             new Dictionary<string,object> { 
+        //                 { "DateRead",  DateTimeOffset.UtcNow} 
+        //             });
+        //     await _userRepo.CompleteAsync();
+
+        //     var messages = await _userRepo.GetAllAsync<Message>(query =>
+        //         query.Where(m =>
+        //             m.Recipient.UserName == currentUsername &&
+        //             m.RecipientDeleted == false &&
+        //             m.Sender.UserName == recipientUsername ||
+        //             m.Recipient.UserName == recipientUsername &&
+        //             m.Sender.UserName == currentUsername &&
+        //             m.SenderDeleted == false
+        //         ).OrderBy(m => m.MessageSent));
+        //     // var unreadMessages = messages.Where(m =>
+        //     //     m.DateRead == null && m.RecipientUsername == currentUsername).ToList();
+
+        //     // if (unreadMessages.Any())
+        //     // {
+        //     //     foreach (var message in unreadMessages)
+        //     //     {
+        //     //         message.DateRead = DateTime.UtcNow;
+        //     //     }
+        //     // }
+
+        //     List<MessageDto> messagesDto = _mapper.Map<List<Message>, List<MessageDto>>(messages.ToList());
+        //     return messagesDto;
+        // }
 
 
 
         public async Task<MessageGroup> GetMessageGroup(string groupName)
         {
             return await _userRepo.GetByAsync<MessageGroup>(query =>
-                    query.Where(mg => mg.Name == groupName)
+                    query.Where(mg => mg.AlternateId == groupName)
                          .Include(mg => mg.Connections)
             );
         }

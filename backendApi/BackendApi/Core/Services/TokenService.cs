@@ -31,6 +31,7 @@ namespace BackendApi.Core.Services
             var claims = new List<Claim>{
                 new Claim(JwtRegisteredClaimNames.Email,user.Email),
                 new Claim(JwtRegisteredClaimNames.UniqueName,user.UserName),
+                new Claim("Id",user.Id.ToString()),
                 new Claim("Name",user.UserName)
             };
 

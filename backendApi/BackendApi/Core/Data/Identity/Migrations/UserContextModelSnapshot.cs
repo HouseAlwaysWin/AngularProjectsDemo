@@ -3,17 +3,15 @@ using System;
 using BackendApi.Core.Data.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace BackendApi.Migrations.User
+namespace BackendApi.Core.Data.Identity.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20210603085735_Init")]
-    partial class Init
+    partial class UserContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,6 +64,9 @@ namespace BackendApi.Migrations.User
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("integer");
+
+                    b.Property<string>("Alias")
+                        .HasColumnType("text");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -199,6 +200,21 @@ namespace BackendApi.Migrations.User
                     b.ToTable("AppUserRoles");
                 });
 
+            modelBuilder.Entity("BackendApi.Core.Models.Entities.Identity.AppUser_MessageGroup", b =>
+                {
+                    b.Property<int>("AppUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("MessageGroupId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("AppUserId", "MessageGroupId");
+
+                    b.HasIndex("MessageGroupId");
+
+                    b.ToTable("AppUser_MessageGroup");
+                });
+
             modelBuilder.Entity("BackendApi.Core.Models.Entities.Identity.MessageConnection", b =>
                 {
                     b.Property<string>("MessageConnectionId")
@@ -224,15 +240,51 @@ namespace BackendApi.Migrations.User
                         .HasColumnType("integer")
                         .UseIdentityByDefaultColumn();
 
-                    b.Property<string>("Name")
+                    b.Property<string>("AlternateId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("GroupImg")
+                        .HasColumnType("text");
+
+                    b.Property<string>("GroupName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("GroupOtherImg")
+                        .HasColumnType("text");
+
+                    b.Property<string>("GroupOtherName")
+                        .HasColumnType("text");
+
+                    b.Property<int>("GroupType")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("AlternateId");
+
+                    b.ToTable("MessageGroup");
+                });
+
+            modelBuilder.Entity("BackendApi.Core.Models.Entities.Identity.MessageRecivedUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("AppUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset?>("DateRead")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UserName")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
+                    b.HasIndex("AppUserId");
 
-                    b.ToTable("MessageGroup");
+                    b.ToTable("MessageRecivedUser");
                 });
 
             modelBuilder.Entity("BackendApi.Core.Models.Entities.Identity.UserFriend", b =>
@@ -330,6 +382,9 @@ namespace BackendApi.Migrations.User
                         .HasColumnType("integer")
                         .UseIdentityByDefaultColumn();
 
+                    b.Property<int?>("AppUserId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Content")
                         .HasColumnType("text");
 
@@ -338,8 +393,8 @@ namespace BackendApi.Migrations.User
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<DateTimeOffset?>("DateRead")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<int>("MessageGroupId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTimeOffset>("MessageSent")
                         .HasColumnType("timestamp with time zone");
@@ -349,12 +404,6 @@ namespace BackendApi.Migrations.User
 
                     b.Property<bool>("RecipientDeleted")
                         .HasColumnType("boolean");
-
-                    b.Property<int>("RecipientId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("RecipientUsername")
-                        .HasColumnType("text");
 
                     b.Property<bool>("SenderDeleted")
                         .HasColumnType("boolean");
@@ -367,7 +416,9 @@ namespace BackendApi.Migrations.User
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RecipientId");
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("MessageGroupId");
 
                     b.HasIndex("SenderId");
 
@@ -499,12 +550,50 @@ namespace BackendApi.Migrations.User
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("BackendApi.Core.Models.Entities.Identity.AppUser_MessageGroup", b =>
+                {
+                    b.HasOne("BackendApi.Core.Entities.Identity.AppUser", "AppUser")
+                        .WithMany("MessageGroups")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("BackendApi.Core.Models.Entities.Identity.MessageGroup", "MessageGroup")
+                        .WithMany("AppUsers")
+                        .HasForeignKey("MessageGroupId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+
+                    b.Navigation("MessageGroup");
+                });
+
             modelBuilder.Entity("BackendApi.Core.Models.Entities.Identity.MessageConnection", b =>
                 {
                     b.HasOne("BackendApi.Core.Models.Entities.Identity.MessageGroup", null)
                         .WithMany("Connections")
                         .HasForeignKey("MessageGroupId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("BackendApi.Core.Models.Entities.Identity.MessageRecivedUser", b =>
+                {
+                    b.HasOne("BackendApi.Core.Entities.Identity.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BackendApi.Core.Models.Entities.Message", "Message")
+                        .WithMany("RecipientUsers")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+
+                    b.Navigation("Message");
                 });
 
             modelBuilder.Entity("BackendApi.Core.Models.Entities.Identity.UserFriend", b =>
@@ -539,10 +628,14 @@ namespace BackendApi.Migrations.User
 
             modelBuilder.Entity("BackendApi.Core.Models.Entities.Message", b =>
                 {
-                    b.HasOne("BackendApi.Core.Entities.Identity.AppUser", "Recipient")
+                    b.HasOne("BackendApi.Core.Entities.Identity.AppUser", null)
                         .WithMany("MessagesReceived")
-                        .HasForeignKey("RecipientId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("AppUserId");
+
+                    b.HasOne("BackendApi.Core.Models.Entities.Identity.MessageGroup", null)
+                        .WithMany("Messages")
+                        .HasForeignKey("MessageGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BackendApi.Core.Entities.Identity.AppUser", "Sender")
@@ -550,8 +643,6 @@ namespace BackendApi.Migrations.User
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Recipient");
 
                     b.Navigation("Sender");
                 });
@@ -607,6 +698,8 @@ namespace BackendApi.Migrations.User
 
                     b.Navigation("FriendsReverse");
 
+                    b.Navigation("MessageGroups");
+
                     b.Navigation("MessagesReceived");
 
                     b.Navigation("MessagesSent");
@@ -616,7 +709,16 @@ namespace BackendApi.Migrations.User
 
             modelBuilder.Entity("BackendApi.Core.Models.Entities.Identity.MessageGroup", b =>
                 {
+                    b.Navigation("AppUsers");
+
                     b.Navigation("Connections");
+
+                    b.Navigation("Messages");
+                });
+
+            modelBuilder.Entity("BackendApi.Core.Models.Entities.Message", b =>
+                {
+                    b.Navigation("RecipientUsers");
                 });
 #pragma warning restore 612, 618
         }

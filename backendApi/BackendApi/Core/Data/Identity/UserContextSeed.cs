@@ -89,7 +89,7 @@ namespace BackendApi.Core.Data.Identity
                 await userRepository.CompleteAsync();
 
             } catch(Exception ex){
-                 var logger = loggerFactory.CreateLogger<StoreContext>();
+                 var logger = loggerFactory.CreateLogger<UserContext>();
                 logger.LogError(ex.Message); 
             }
         }

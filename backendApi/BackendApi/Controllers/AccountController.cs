@@ -196,6 +196,7 @@ namespace BackendApi.Controllers
                 var user = new AppUser {
                     Email = register.Email,
                     UserName = register.UserName,
+                    Alias = register.UserName,
                     UserInfo = new UserInfo{
                         Gender = register.Gender,
                         DateOfBirth = register.DateOfBirth

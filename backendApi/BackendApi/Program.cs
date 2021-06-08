@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BackendApi.Core.Data;
 using BackendApi.Core.Data.Identity;
 using BackendApi.Core.Data.Repositories.Interfaces;
+using BackendApi.Core.Data.Store;
 using BackendApi.Core.Entities.Identity;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;

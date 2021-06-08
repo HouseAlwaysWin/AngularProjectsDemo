@@ -20,6 +20,8 @@ namespace BackendApi.Core.Data.Identity
         public DbSet<Message> Message { get; set; }
         public DbSet<MessageGroup> MessageGroup { get; set; }
         public DbSet<MessageConnection> MessageConnection { get; set; }
+        public DbSet<MessageRecivedUser> MessageRecivedUser { get; set;}
+
         public UserContext(DbContextOptions<UserContext> options):base(options)
         {
             
@@ -112,11 +114,23 @@ namespace BackendApi.Core.Data.Identity
                  .IsRequired();
             }); 
 
+            builder.Entity<AppUser_MessageGroup>(a =>{
+                a.HasKey(am => new {am.AppUserId,am.MessageGroupId});
+                a.ToTable("AppUser_MessageGroup");
+
+                a.HasOne(a => a.AppUser)
+                 .WithMany(a => a.MessageGroups)
+                 .HasForeignKey(a => a.AppUserId)
+                 .OnDelete(DeleteBehavior.NoAction);
+                
+                a.HasOne(m => m.MessageGroup)
+                 .WithMany(m => m.AppUsers)
+                 .HasForeignKey(m => m.MessageGroupId)
+                 .OnDelete(DeleteBehavior.NoAction);
+            });
 
             builder.Entity<Message>(m => {
-              m.HasOne(u => u.Recipient)
-                .WithMany(m => m.MessagesReceived)
-                .OnDelete(DeleteBehavior.Restrict);
+
               m.HasOne(u => u.Sender)
                 .WithMany(m => m.MessagesSent)
                 .OnDelete(DeleteBehavior.Restrict);
@@ -126,13 +140,30 @@ namespace BackendApi.Core.Data.Identity
                     .HasDefaultValueSql("CURRENT_TIMESTAMP")
                     .ValueGeneratedOnAdd()
                     .IsRequired();
+
+              m.HasMany(a => a.RecipientUsers)
+                .WithOne()
+                .HasForeignKey(a => a.Id)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            });
+
+            builder.Entity<MessageRecivedUser>(m => {
+                m.HasOne(mr=> mr.Message)
+                 .WithMany(m => m.RecipientUsers)
+                 .HasForeignKey(mr => mr.Id);
             });
 
             builder.Entity<MessageGroup>(mg => {
-                mg.HasIndex(mg => mg.Name).IsUnique();
+                mg.HasAlternateKey(mg => mg.AlternateId);
                 mg.HasMany(mg => mg.Connections)
                   .WithOne()
                   .OnDelete(DeleteBehavior.Cascade);
+                
+                mg.HasMany(mg => mg.Messages)
+                  .WithOne()
+                  .OnDelete(DeleteBehavior.Cascade);
+
             });
                          
 

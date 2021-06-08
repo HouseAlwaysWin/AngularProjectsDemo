@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace BackendApi.Core.Data
+namespace BackendApi.Core.Data.Store
 {
     public class StoreContextSeed
     {

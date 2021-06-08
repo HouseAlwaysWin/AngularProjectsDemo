@@ -82,13 +82,17 @@ export class MessageService {
     }
   }
 
-  async sendMessage(recipientUserName: string, content: string) {
-    return this.hubConnection.invoke('SendMessage', { recipientUserName, content })
+  async sendMessage(recipientUserName: string, content: string, messageGroupId: string) {
+    return this.hubConnection.invoke('SendMessage', { recipientUserName, content, messageGroupId })
       .catch(error => console.log(error));
   }
 
   deleteMessage(id: number) {
     return this.http.delete(`${this.apiUrl}message/${id}`);
+  }
+
+  getMessageGroups() {
+    return this.http.get(`${this.apiUrl}messages/get-messages-list`);
   }
 
 }

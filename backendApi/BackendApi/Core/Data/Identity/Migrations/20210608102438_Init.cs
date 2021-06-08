@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace BackendApi.Migrations.User
+namespace BackendApi.Core.Data.Identity.Migrations
 {
     public partial class Init : Migration
     {
@@ -31,11 +31,17 @@ namespace BackendApi.Migrations.User
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: true)
+                    AlternateId = table.Column<string>(type: "text", nullable: false),
+                    GroupName = table.Column<string>(type: "text", nullable: true),
+                    GroupOtherName = table.Column<string>(type: "text", nullable: true),
+                    GroupImg = table.Column<string>(type: "text", nullable: true),
+                    GroupOtherImg = table.Column<string>(type: "text", nullable: true),
+                    GroupType = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MessageGroup", x => x.Id);
+                    table.UniqueConstraint("AK_MessageGroup_AlternateId", x => x.AlternateId);
                 });
 
             migrationBuilder.CreateTable(
@@ -104,6 +110,7 @@ namespace BackendApi.Migrations.User
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserPublicId = table.Column<string>(type: "text", nullable: true),
+                    Alias = table.Column<string>(type: "text", nullable: true),
                     UserInfoId = table.Column<int>(type: "integer", nullable: true),
                     CreatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
                     ModifiedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
@@ -131,6 +138,28 @@ namespace BackendApi.Migrations.User
                         principalTable: "UserInfo",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppUser_MessageGroup",
+                columns: table => new
+                {
+                    AppUserId = table.Column<int>(type: "integer", nullable: false),
+                    MessageGroupId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppUser_MessageGroup", x => new { x.AppUserId, x.MessageGroupId });
+                    table.ForeignKey(
+                        name: "FK_AppUser_MessageGroup_AppUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AppUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_AppUser_MessageGroup_MessageGroup_MessageGroupId",
+                        column: x => x.MessageGroupId,
+                        principalTable: "MessageGroup",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -228,20 +257,19 @@ namespace BackendApi.Migrations.User
                     ModifiedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                     SenderId = table.Column<int>(type: "integer", nullable: false),
                     SenderUsername = table.Column<string>(type: "text", nullable: true),
-                    RecipientId = table.Column<int>(type: "integer", nullable: false),
-                    RecipientUsername = table.Column<string>(type: "text", nullable: true),
                     Content = table.Column<string>(type: "text", nullable: true),
-                    DateRead = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                     MessageSent = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     SenderDeleted = table.Column<bool>(type: "boolean", nullable: false),
-                    RecipientDeleted = table.Column<bool>(type: "boolean", nullable: false)
+                    RecipientDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    MessageGroupId = table.Column<int>(type: "integer", nullable: false),
+                    AppUserId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Message", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Message_AppUsers_RecipientId",
-                        column: x => x.RecipientId,
+                        name: "FK_Message_AppUsers_AppUserId",
+                        column: x => x.AppUserId,
                         principalTable: "AppUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -251,6 +279,12 @@ namespace BackendApi.Migrations.User
                         principalTable: "AppUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Message_MessageGroup_MessageGroupId",
+                        column: x => x.MessageGroupId,
+                        principalTable: "MessageGroup",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -328,6 +362,32 @@ namespace BackendApi.Migrations.User
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "MessageRecivedUser",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false),
+                    AppUserId = table.Column<int>(type: "integer", nullable: false),
+                    UserName = table.Column<string>(type: "text", nullable: true),
+                    DateRead = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MessageRecivedUser", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MessageRecivedUser_AppUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AppUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MessageRecivedUser_Message_Id",
+                        column: x => x.Id,
+                        principalTable: "Message",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AppRoleClaims_RoleId",
                 table: "AppRoleClaims",
@@ -338,6 +398,11 @@ namespace BackendApi.Migrations.User
                 table: "AppRoles",
                 column: "NormalizedName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppUser_MessageGroup_MessageGroupId",
+                table: "AppUser_MessageGroup",
+                column: "MessageGroupId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AppUserClaims_UserId",
@@ -377,9 +442,14 @@ namespace BackendApi.Migrations.User
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Message_RecipientId",
+                name: "IX_Message_AppUserId",
                 table: "Message",
-                column: "RecipientId");
+                column: "AppUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Message_MessageGroupId",
+                table: "Message",
+                column: "MessageGroupId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Message_SenderId",
@@ -392,10 +462,9 @@ namespace BackendApi.Migrations.User
                 column: "MessageGroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MessageGroup_Name",
-                table: "MessageGroup",
-                column: "Name",
-                unique: true);
+                name: "IX_MessageRecivedUser_AppUserId",
+                table: "MessageRecivedUser",
+                column: "AppUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserAddress_AppUserId",
@@ -420,6 +489,9 @@ namespace BackendApi.Migrations.User
                 name: "AppRoleClaims");
 
             migrationBuilder.DropTable(
+                name: "AppUser_MessageGroup");
+
+            migrationBuilder.DropTable(
                 name: "AppUserClaims");
 
             migrationBuilder.DropTable(
@@ -432,10 +504,10 @@ namespace BackendApi.Migrations.User
                 name: "AppUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Message");
+                name: "MessageConnection");
 
             migrationBuilder.DropTable(
-                name: "MessageConnection");
+                name: "MessageRecivedUser");
 
             migrationBuilder.DropTable(
                 name: "UserAddress");
@@ -450,10 +522,13 @@ namespace BackendApi.Migrations.User
                 name: "AppRoles");
 
             migrationBuilder.DropTable(
-                name: "MessageGroup");
+                name: "Message");
 
             migrationBuilder.DropTable(
                 name: "AppUsers");
+
+            migrationBuilder.DropTable(
+                name: "MessageGroup");
 
             migrationBuilder.DropTable(
                 name: "UserInfo");

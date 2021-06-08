@@ -31,6 +31,7 @@ using StackExchange.Redis;
 using Microsoft.OpenApi.Models;
 using BackendApi.Core.Models.Dtos;
 using BackendApi.Core.Services.SignalR;
+using BackendApi.Core.Data.Store;
 
 namespace BackendApi
 {

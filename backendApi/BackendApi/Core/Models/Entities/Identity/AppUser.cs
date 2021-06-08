@@ -10,14 +10,16 @@ namespace BackendApi.Core.Entities.Identity
     public class AppUser : IdentityUser<int>,IBaseEntity
     {
         public string UserPublicId { get; set; }
+        public string Alias { get; set; }
         public UserAddress Address { get; set; }
         public UserInfo UserInfo { get; set; }
         public DateTimeOffset CreatedDate { get; set; } 
         public DateTimeOffset? ModifiedDate { get; set; }
-        public List<Message> MessagesSent { get; set; }
-        public List<Message> MessagesReceived { get; set; }
+        public ICollection<Message> MessagesSent { get; set; }
+        public ICollection<Message> MessagesReceived { get; set; }
+        public ICollection<AppUser_MessageGroup> MessageGroups { get; set; }
         public virtual ICollection<AppUserRole> AppUserRoles { get; set; }
-        public virtual  ICollection<UserPhoto> Photos { get; set; }
+        public virtual ICollection<UserPhoto> Photos { get; set; }
         public virtual ICollection<UserFriend> Friends { get; set; }
         public virtual ICollection<UserFriend> FriendsReverse { get; set; }
     }

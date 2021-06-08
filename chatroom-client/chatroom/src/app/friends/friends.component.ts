@@ -51,6 +51,6 @@ export class FriendsComponent implements OnInit {
   }
 
   goMessage(friend: UserShortInfo) {
-    this.router.navigate([`/message/${friend.userName}`]);
+    this.router.navigate([`/message/chatroom`, { username: friend.userName }]);
   }
 }
