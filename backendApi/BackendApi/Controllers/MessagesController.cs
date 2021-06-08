@@ -49,13 +49,18 @@ namespace BackendApi.Controllers
             var user = await _userRepo.GetByAsync<AppUser>(query => 
                 query.Where(u => u.Email == User.GetEmail() )
                      .Include(u => u.MessageGroups)
-                     .ThenInclude(u => u.MessageGroup));
+                     .ThenInclude(u => u.MessageGroup)
+                     .ThenInclude(u => u.Messages)
+                     .OrderBy(u => u.Id)
+                     .AsSplitQuery()
+                     );
 
             var groupsDtoMaps = _mapper.Map<List<AppUser_MessageGroup>,List<AppUser_MessageGroupDto>>(user.MessageGroups.ToList());
 
             List<MessageGroupDto> groupsDto = new List<MessageGroupDto>();
             foreach (var group in groupsDtoMaps)
             {
+               group.MessageGroup.LastMessages = group.MessageGroup.Messages.LastOrDefault().Content;
                groupsDto.Add(group.MessageGroup);
             }
 

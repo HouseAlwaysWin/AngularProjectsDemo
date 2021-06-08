@@ -48,6 +48,7 @@ export class MessageService {
 
 
       this.hubConnection.on('NewMessage', message => {
+        console.log(message);
         console.log('newMessage')
         this.accountQuery.messagesThread$.pipe(take(1)).subscribe(messages => {
           console.log(messages[messages.length - 1])

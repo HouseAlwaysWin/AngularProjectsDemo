@@ -1,7 +1,21 @@
 <div class="container">
   <div class="message-list">
     <ul>
-      <li></li>
+      <li *ngFor="let message of messageGroupList">
+        <div *ngIf="message.groupName === currentUser.userName;else anotherUser">
+          <img [src]="message.groupOtherImg" />
+          <span>{{ message.groupOtherName }}</span>
+          <span></span>
+        </div>
+        <ng-template #anotherUser>
+          <div>
+            <img [src]="message.groupImg" />
+            <span>{{ message.groupName }}</span>
+            <sapn></sapn>
+          </div>
+        </ng-template>
+
+      </li>
     </ul>
   </div>
 </div>

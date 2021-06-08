@@ -5,6 +5,7 @@ import { UserInfo } from 'os';
 import { of, Subject, Subscription } from 'rxjs';
 import { last, map, switchMap, take, takeLast, takeUntil } from 'rxjs/operators';
 import { MessageGroup } from '../shared/models/message';
+import { Res } from '../shared/models/response';
 import { UserShortInfo } from '../shared/models/user';
 import { AccountService } from '../shared/services/account.service';
 import { MessageService } from '../shared/services/message.service';
@@ -18,6 +19,7 @@ import { SharedStore } from '../shared/states/shared/shared.store';
 })
 export class MessageComponent implements OnInit, OnDestroy {
   messageGroupList: MessageGroup[];
+  currentUser: UserShortInfo;
   constructor(
     private activeRoute: ActivatedRoute,
     private accountService: AccountService,
@@ -33,13 +35,14 @@ export class MessageComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
+    this.currentUser = this.accountQuery.user;
     this.getMessageGroups();
   }
 
   getMessageGroups() {
-    this.messageService.getMessageGroups().subscribe((groups: MessageGroup[]) => {
-      console.log(groups);
-      this.messageGroupList = groups;
+    this.messageService.getMessageGroups().subscribe((res: Res<MessageGroup[]>) => {
+      console.log(res.data);
+      this.messageGroupList = res.data;
     });
   }
 

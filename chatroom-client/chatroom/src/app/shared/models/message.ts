@@ -3,9 +3,6 @@ export class Message {
   senderId: number;
   senderUsername: string;
   senderPhotoUrl: string;
-  // recipientId: number;
-  // recipientUsername: string;
-  // recipientPhotoUrl: string;
   recipientUsers: MessageRecivedUser[];
   content: string;
   dateRead?: Date;
@@ -14,8 +11,13 @@ export class Message {
 
 export interface MessageGroup {
   id: number;
-  name: string;
-  connections: MessageConnection[]
+  alternateId: string;
+  groupName: string;
+  groupOtherName: string;
+  groupImg: string;
+  groupOtherImg: string;
+  groupType: number;
+  messages: Message[];
 }
 
 export interface MessageConnection {

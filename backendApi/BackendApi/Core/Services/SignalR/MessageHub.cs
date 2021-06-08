@@ -91,6 +91,8 @@ namespace BackendApi.Core.Services.SignalR
                group =  await GenerateNewGroupAsync(userName,otherUserName); 
            }
 
+            await Groups.AddToGroupAsync(Context.ConnectionId, group.AlternateId);
+
            if (_userRepo.HasChanges()) {
                 await _userRepo.CompleteAsync();
            }
