@@ -4,6 +4,7 @@ import { UtilitiesService } from './shared/services/utilities.service';
 import { AccountService } from './shared/services/account.service';
 import { SharedQuery } from './shared/states/shared/shared.query';
 import { SharedStore } from './shared/states/shared/shared.store';
+import { PresenceService } from './shared/services/presence.service';
 
 @Component({
   selector: 'app-root',
@@ -28,7 +29,8 @@ export class AppComponent implements OnInit {
     private router: Router,
     private utilitiesService: UtilitiesService,
     public sharedQuery: SharedQuery,
-    private accountService: AccountService) {
+    private accountService: AccountService,
+    private presenceService: PresenceService) {
   }
 
   @HostListener('document:click', ['$event'])
@@ -46,6 +48,7 @@ export class AppComponent implements OnInit {
       this.accountService.getUserDetail().subscribe(res => {
         console.log('login check');
         if (res) {
+          this.presenceService.createHubConnection();
         }
         else {
           this.router.navigate(['/account/login']);

@@ -6,6 +6,51 @@
   </div>
   <ul class="nav-list">
     <li class="nav-item"
+        #notify
+        *ngIf="accountQuery.isAuth">
+      <a class="nav-btn"
+         (click)="toggleNotify()">
+        <i class="far fa-bell"
+           *ngIf="notifyCount > 0"
+           pBadge
+           severity="danger"
+           [value]="notifyCount"></i>
+        <i class="far fa-bell"
+           *ngIf="notifyCount === 0"></i>
+      </a>
+      <div class="notify hide"
+           [ngClass]="{'show': showNotify  }">
+        <ul class="notify-list"
+            *ngIf="notifies.length > 0;else noNotify">
+          <li class="notify-item"
+              *ngFor="let notify of notifies">
+            <div *ngIf="notify.notificationType === 0"
+                 class="notify-friend">
+              <img class="notify-friend-img"
+                   [src]="notify.requestUser.mainPhoto" />
+              <div class="notify-friend-content">
+                <span class="notify-friend-username">{{ notify.requestUser.userName }} </span>
+                <span class="notify-friend-question">Ask you to be friend?</span>
+                <div class="notify-friend-action">
+                  <button class="notify-friend-action-confirm"
+                          (click)="acceptRequest(notify.requestUserId)">Accept</button>
+                  <button class="notify-friend-action-cancel"
+                          (click)="cancelRequest()">Cancel</button>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+        <ng-template #noNotify>
+          <div class="notify-list">
+            <span class="notify-empty">
+              No Notification
+            </span>
+          </div>
+        </ng-template>
+      </div>
+    </li>
+    <li class="nav-item"
         *ngIf="accountQuery.isAuth"
         routerLink="/message">
       <a class="nav-btn">

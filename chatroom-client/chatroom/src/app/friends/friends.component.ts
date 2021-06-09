@@ -14,6 +14,7 @@ import { AccountQuery } from '../shared/states/account/account.query';
 })
 export class FriendsComponent implements OnInit {
   friendList: Friend[];
+  userOnline: string[];
   searchForm: FormGroup;
   constructor(
     private router: Router,
@@ -25,6 +26,10 @@ export class FriendsComponent implements OnInit {
   ngOnInit(): void {
     this.getAllFriends();
     this.initSearchForm();
+    this.accountQuery.usersOnline$.subscribe(user => {
+      console.log(user);
+      this.userOnline = user;
+    })
   }
 
   initSearchForm() {

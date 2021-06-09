@@ -16,7 +16,7 @@
     <img src="{{ getFriendMainPhoto(friend.photos) }}" />
     <h4>{{ friend.userName }}</h4>
 
-    <button (click)="AddNewFriend(friend.id)">Add</button>
+    <button (click)="SendFriendRequest(friend.id)">Add</button>
   </div>
   <div *ngIf="!findUser && friend">
     User Not Found

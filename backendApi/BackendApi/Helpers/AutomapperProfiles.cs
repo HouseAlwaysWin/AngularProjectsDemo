@@ -43,35 +43,38 @@ namespace BackendApi.Helpers.Localization {
 
            CreateMap<ProductListParam,ProductLikeParam>().ReverseMap();
         
-            CreateMap<AddressDto,UserAddress>().ReverseMap();
-            CreateMap<AddressDto,OrderAddress>().ReverseMap();
+           CreateMap<AddressDto,UserAddress>().ReverseMap();
+           CreateMap<AddressDto,OrderAddress>().ReverseMap();
 
-            CreateMap<BasketItem,OrderItem>()
+           CreateMap<BasketItem,OrderItem>()
                 .ForMember(b => b.Id,opt => opt.Ignore())
                 .IgnoreAllPropertiesWithAnInaccessibleSetter()
                 .ReverseMap();
             
-            CreateMap<OrderItem,OrderItemDto>();
+           CreateMap<OrderItem,OrderItemDto>();
 
-            CreateMap<Order,OrderDto>()
+           CreateMap<Order,OrderDto>()
                 .ForMember(od => od.OrderStatus,o => o.MapFrom<OrderStatusResolver>())
                 .ForMember(o => o.CreatedDate,od => od.MapFrom(od => od.CreatedDate.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss")))
                 .ForMember(o => o.OrderDate,od => od.MapFrom(od => od.OrderDate.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss")));
 
-            CreateMap<DeliveryMethod,DeliveryMethodDto>();
+           CreateMap<DeliveryMethod,DeliveryMethodDto>();
 
-            CreateMap<UserInfo,UserInfoDto>().ReverseMap();
-            CreateMap<UserPhoto,UserPhotoDto>().ReverseMap();
-            CreateMap<UserAddress,AddressDto>().ReverseMap();
-            CreateMap<Message,MessageDto>().ReverseMap();
-            CreateMap<MessageGroup,MessageGroupDto>();
-            CreateMap<MessageRecivedUser,MessageRecivedUserDto>();
-            CreateMap<AppUser_MessageGroup,AppUser_MessageGroupDto>();
+           CreateMap<UserInfo,UserInfoDto>().ReverseMap();
+           CreateMap<UserPhoto,UserPhotoDto>().ReverseMap();
+           CreateMap<UserAddress,AddressDto>().ReverseMap();
+           CreateMap<Message,MessageDto>().ReverseMap();
+           CreateMap<MessageGroup,MessageGroupDto>();
+           CreateMap<MessageRecivedUser,MessageRecivedUserDto>();
+           CreateMap<AppUser_MessageGroup,AppUser_MessageGroupDto>();
+           CreateMap<Notification,NotificationDto>();
 
-            CreateMap<AppUser,AppUserShortDto>().ReverseMap();
-            CreateMap<AppUser,AppUserDto>().ReverseMap();
-            CreateMap<AppUser,AppUserTokenDto>();
-            CreateMap<UserFriend,UserFriendMapDto>().ReverseMap();
+           CreateMap<AppUser,AppUserShortDto>()
+                .ForMember(u => u.MainPhoto,u => u.MapFrom(u => u.Photos.FirstOrDefault(u => u.IsMain).Url));
+
+           CreateMap<AppUser,AppUserDto>().ReverseMap();
+           CreateMap<AppUser,AppUserTokenDto>();
+           CreateMap<UserFriend,UserFriendMapDto>().ReverseMap();
          
 
 

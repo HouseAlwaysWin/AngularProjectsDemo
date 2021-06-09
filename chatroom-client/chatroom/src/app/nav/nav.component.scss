@@ -43,10 +43,101 @@ nav {
       }
 
       & .nav-btn {
-        margin-right: 2rem;
         font-size: 2.5rem;
         text-decoration: none;
         color: $color-white;
+      }
+    }
+  }
+}
+
+.notify {
+  position: relative;
+  z-index: 50;
+
+  &.hide {
+    display: none;
+  }
+
+  &.show {
+    display: block;
+  }
+
+  &-list {
+    background-color: $color-white;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    border: none;
+    padding: 1rem;
+    top: 3.5rem;
+    right: 0;
+    width: 25rem;
+    box-shadow: 0 0 1.5rem rgba($color-black, 0.4);
+  }
+
+  &-item {
+    list-style: none;
+  }
+
+  &-empty {
+    display: flex;
+    justify-content: center;
+    color: $color-primary;
+    font-size: 1.6rem;
+  }
+
+  &-friend {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    &-img {
+      padding: 0.3rem;
+      width: 5rem;
+      height: 5rem;
+      border-radius: 3rem;
+    }
+
+    &-content {
+      margin-left: 1rem;
+      display: flex;
+      flex-direction: column;
+      // line-height: 2.5rem;
+    }
+
+    &-username {
+      font-size: 1.6rem;
+      color: $color-primary;
+    }
+
+    &-question {
+      margin-top: 0.2rem;
+      font-size: 1.3rem;
+    }
+
+    &-action {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: row;
+
+      &-confirm {
+        border: none;
+        border-radius: 1rem;
+        background-color: $color-primary;
+        color: $color-white;
+        padding: 0.4rem 0.8rem;
+        cursor: pointer;
+      }
+
+      &-cancel {
+        border: none;
+        border-radius: 1rem;
+        background-color: $color-grey-light;
+        margin-left: 1rem;
+        color: $color-white;
+        padding: 0.4rem 0.8rem;
+        cursor: pointer;
       }
     }
   }

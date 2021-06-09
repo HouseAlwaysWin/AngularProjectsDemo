@@ -4,6 +4,8 @@ import { Res } from 'src/app/shared/models/response';
 import { UserPhoto, UserShortInfo } from 'src/app/shared/models/user';
 import { FormFieldService } from 'src/app/shared/services/form-field.service';
 import { AccountService } from 'src/app/shared/services/account.service';
+import { PresenceService } from 'src/app/shared/services/presence.service';
+import { SharedStore } from 'src/app/shared/states/shared/shared.store';
 
 @Component({
   selector: 'app-friends-add',
@@ -17,6 +19,7 @@ export class FriendsAddComponent implements OnInit {
   constructor(
     private accountService: AccountService,
     public formService: FormFieldService,
+    private presenceService: PresenceService,
     private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
@@ -44,17 +47,27 @@ export class FriendsAddComponent implements OnInit {
     return mainUrl == null ? '' : mainUrl;
   }
 
-  AddNewFriend(id: number) {
-    console.log(id);
-    this.accountService.addNewFriend(id).subscribe(res => {
-      console.log(res);
-      if (res.isSuccessed) {
-        alert("Add successed");
-      }
-      else {
-        alert("Add failed");
-      }
-    });
+  SendFriendRequest(friendId: number) {
+    this.presenceService.sendFriendRequest(friendId)
+      .then(() => {
+        alert('send request');
+        // this.messageContent = '';
+      }).finally(() => {
+
+      });
   }
+
+  // AddNewFriend(id: number) {
+  //   console.log(id);
+  //   this.accountService.addNewFriend(id).subscribe(res => {
+  //     console.log(res);
+  //     if (res.isSuccessed) {
+  //       alert("Add successed");
+  //     }
+  //     else {
+  //       alert("Add failed");
+  //     }
+  //   });
+  // }
 
 }

@@ -15,12 +15,13 @@ namespace BackendApi.Core.Entities.Identity
         public UserInfo UserInfo { get; set; }
         public DateTimeOffset CreatedDate { get; set; } 
         public DateTimeOffset? ModifiedDate { get; set; }
-        public ICollection<Message> MessagesSent { get; set; }
-        public ICollection<Message> MessagesReceived { get; set; }
-        public ICollection<AppUser_MessageGroup> MessageGroups { get; set; }
+        public virtual ICollection<Message> MessagesSent { get; set; }
+        public virtual ICollection<Message> MessagesReceived { get; set; }
+        public virtual ICollection<AppUser_MessageGroup> MessageGroups { get; set; }
         public virtual ICollection<AppUserRole> AppUserRoles { get; set; }
         public virtual ICollection<UserPhoto> Photos { get; set; }
         public virtual ICollection<UserFriend> Friends { get; set; }
         public virtual ICollection<UserFriend> FriendsReverse { get; set; }
+        public virtual ICollection<Notification> Notifications { get; set; }
     }
 }

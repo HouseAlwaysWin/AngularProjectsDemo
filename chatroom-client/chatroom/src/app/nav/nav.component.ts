@@ -6,6 +6,8 @@ import { AccountService } from '../shared/services/account.service';
 import { AccountStore } from '../shared/states/account/account.store';
 import { faComment, faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
 import { UtilitiesService } from '../shared/services/utilities.service';
+import { Notify } from '../shared/models/notification';
+import { Res } from '../shared/models/response';
 
 @Component({
   selector: 'app-nav',
@@ -18,9 +20,13 @@ export class NavComponent implements OnInit {
   faChevronCircleDown = faChevronCircleDown;
 
   showMenu: boolean = false;
+  showNotify: boolean = false;
   headPhotoUrl: string = '';
+  notifies: Notify[];
+  notifyCount: number = 0;
 
   @ViewChild('menu', { static: false }) menu: ElementRef;
+  @ViewChild('notify', { static: false }) notify: ElementRef;
 
   constructor(
     private router: Router,
@@ -34,8 +40,7 @@ export class NavComponent implements OnInit {
     this.accountService.getUserDetail().subscribe(res => {
       this.readMainPhoto();
     })
-
-
+    this.getNotifies();
   }
 
   readMainPhoto() {
@@ -47,6 +52,10 @@ export class NavComponent implements OnInit {
   documentClickListener(target: any): void {
     if (!this.menu?.nativeElement?.contains(target)) {
       this.showMenu = false;
+    }
+
+    if (!this.notify?.nativeElement?.contains(target)) {
+      this.showNotify = false;
     }
   }
 
@@ -68,4 +77,26 @@ export class NavComponent implements OnInit {
   toggleMenu() {
     this.showMenu = !this.showMenu;
   }
+
+  getNotifies() {
+    this.accountQuery.notifies$.subscribe(notifies => {
+      this.notifies = notifies;
+      this.notifyCount = notifies.length;
+    });
+  }
+
+  toggleNotify() {
+    this.showNotify = !this.showNotify;
+  }
+
+  acceptRequest(id: number) {
+    this.accountService.addNewFriend(id).subscribe(res => {
+      console.log(res);
+    })
+  }
+
+  cancelRequest() {
+    this.showNotify = false;
+  }
+
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -70,7 +71,6 @@ namespace BackendApi.Controllers
         public async Task<ActionResult> GetUserByPublicId(string publicId){
             var user = await _userService.GetUserDtoByPublicIdAsync(publicId);
 
-
             if(user  == null){
                 return BaseApiOk(null);
             }
@@ -125,6 +125,8 @@ namespace BackendApi.Controllers
 
             return BaseApiOk(friends);
         }
+
+
 
         [HttpPost("add-photos")]
         public async Task<ActionResult<UserPhotoDto>> AddPhotos(IFormFile[] files)
@@ -215,6 +217,31 @@ namespace BackendApi.Controllers
             if (await _userRepo.CompleteAsync()) return BaseApiOk();
 
             return BaseApiBadRequest("Failed to delete the photo");
+        }
+
+        [HttpGet("get-notifications")]
+        public async Task<ActionResult> GetNotifications(){
+            var userId = User.GetUserId();
+            var notifications = await _userRepo.GetAllAsync<Notification>(query => 
+                query.Where(u => u.AppUserId == userId )
+                     .Include(u => u.RequestUser));
+            
+            var notificationsDto = _mapper.Map<List<Notification>,List<NotificationDto>>(notifications.ToList());
+            return BaseApiOk(notifications);
+        }
+
+        [HttpPut("update-notifications")]
+        public async Task<ActionResult> UpdateNotifications(int notifyId){
+            var notifications = await _userRepo.GetAllAsync<Notification>(query => 
+                query.Where(u => u.Id == notifyId ));
+
+            await _userRepo.UpdateAsync<Notification>(u => u.IsRead,new Dictionary<string,object>{
+                 { "IsRead", true }
+            });
+
+            await _userRepo.CompleteAsync();
+
+            return BaseApiOk();
         }
 
     }

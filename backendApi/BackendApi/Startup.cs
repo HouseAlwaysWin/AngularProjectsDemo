@@ -19,7 +19,6 @@ using System.Globalization;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
 using BackendApi.Core.Data.Identity;
-using BackendApi.Core.Data;
 using BackendApi.Core.Data.Repositories;
 using BackendApi.Core.Data.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;

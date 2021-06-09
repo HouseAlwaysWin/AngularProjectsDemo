@@ -24,20 +24,6 @@ namespace BackendApi.Core.Data.Repositories
             LinqToDBForEFTools.Initialize();
         }
 
-        private async Task<PagedList<TEntity>> GetAllPagedNoCachedAsync<TEntity>(int pageIndex, int pageSize, Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null)
-            where TEntity : class
-        {
-            var query = _context.Set<TEntity>().AsQueryable();
-            query = func != null ? func(query) : query;
-
-            var total = await query.CountAsyncEF();
-
-            var data = await query.Skip(pageIndex * pageSize).Take(pageSize).ToListAsyncEF();
-
-            return new PagedList<TEntity>(data, total);
-        }
-
-
         public virtual async Task<IList<TEntity>> GetAllAsync<TEntity>(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null)
             where TEntity : class
         {
@@ -106,11 +92,11 @@ namespace BackendApi.Core.Data.Repositories
         }
 
         public virtual async Task UpdateAsync<TEntity>(Expression<Func<TEntity, bool>> IdentityPredicate,
-                     Func<TEntity, IUpdatable<TEntity>> func)
+                     Func<IEnumerable<TEntity>, IUpdatable<TEntity>> func)
                  where TEntity : class
         {
             var query = await _context.GetTable<TEntity>()
-                .Where(IdentityPredicate).FirstOrDefaultAsyncEF();
+                .Where(IdentityPredicate).ToListAsyncEF();
             await func(query).UpdateAsync();
         }
 

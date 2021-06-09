@@ -11,6 +11,7 @@ namespace BackendApi.Core.Models.Dtos
         public string Email { get; set; }
         public string UserPublicId { get; set; }
         public UserInfoDto UserInfo { get; set; }
+        public string MainPhoto { get; set; } 
         public List<UserPhotoDto> Photos { get; set; }
     }
 }

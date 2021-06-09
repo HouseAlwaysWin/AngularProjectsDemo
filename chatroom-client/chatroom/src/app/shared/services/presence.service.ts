@@ -18,21 +18,32 @@ export class PresenceService {
 
 
   createHubConnection() {
-    let token = localStorage.getItem('token');
+    // let token = localStorage.getItem('token');
+    console.log('presence create connection');
+    let user = this.accountQuery.user;
+    console.log(user);
     this.hubConnection = new HubConnectionBuilder()
       .withUrl(this.hubUrl + 'presence', {
-        accessTokenFactory: () => token
+        accessTokenFactory: () => user.token
       })
       .withAutomaticReconnect()
       .build();
 
+    this.hubConnection
+      .start()
+      .catch(error => console.log(error));
+
+
     this.hubConnection.on('GetOnlineUsers', (usernames: string[]) => {
+      console.log('getOnlineUsers')
+      console.log(usernames)
       this.accountStore.update({
         usersOnline: usernames
       })
     });
 
     this.hubConnection.on('UserIsOnline', username => {
+      console.log('UserIsOnline')
       console.log(username);
       this.accountQuery.usersOnline$.pipe(
         take(1)
@@ -45,6 +56,7 @@ export class PresenceService {
     })
 
     this.hubConnection.on('UserIsOffline', username => {
+      console.log('UserIsOffline')
       console.log(username);
       this.accountQuery.usersOnline$.pipe(
         take(1)
@@ -53,7 +65,23 @@ export class PresenceService {
           usersOnline: [...usernames.filter(x => x !== username)]
         })
       })
-
     })
+
+    this.hubConnection.on('GetNotifications', notifies => {
+      console.log(notifies);
+      this.accountStore.update({
+        notifies: notifies
+      });
+    });
+
+  }
+
+  async sendFriendRequest(friendId: number) {
+    return this.hubConnection.invoke('SendFriendRequest', friendId)
+      .catch(error => console.log(error));
+  }
+
+  stopHubConnection() {
+    this.hubConnection.stop().catch(error => console.log(error));
   }
 }

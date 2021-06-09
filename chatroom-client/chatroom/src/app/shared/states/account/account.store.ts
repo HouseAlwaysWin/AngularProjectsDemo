@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { Store, StoreConfig } from "@datorama/akita";
 import { Friend } from "../../models/friend";
 import { Message } from "../../models/message";
+import { Notify } from "../../models/notification";
 import { UserDetail, UserPhoto, UserShortInfo } from "../../models/user";
 
 
@@ -15,6 +16,7 @@ export interface AccountState {
   loading: boolean;
   friendList: Friend[];
   messagesThread: Message[];
+  notifies: Notify[]
   isAuth: boolean;
 }
 
@@ -27,6 +29,7 @@ export function createInitialState(): AccountState {
     friendList: [],
     loading: false,
     messagesThread: [],
+    notifies: [],
     isAuth: false
   }
 }

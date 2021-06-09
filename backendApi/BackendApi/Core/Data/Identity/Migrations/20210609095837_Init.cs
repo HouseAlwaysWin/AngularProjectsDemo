@@ -288,6 +288,36 @@ namespace BackendApi.Core.Data.Identity.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Notification",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    AppUserId = table.Column<int>(type: "integer", nullable: false),
+                    RequestUserId = table.Column<int>(type: "integer", nullable: false),
+                    Content = table.Column<string>(type: "text", nullable: true),
+                    IsRead = table.Column<bool>(type: "boolean", nullable: false),
+                    NotificationType = table.Column<int>(type: "integer", nullable: false),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notification", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Notification_AppUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AppUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Notification_AppUsers_RequestUserId",
+                        column: x => x.RequestUserId,
+                        principalTable: "AppUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserAddress",
                 columns: table => new
                 {
@@ -369,17 +399,12 @@ namespace BackendApi.Core.Data.Identity.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false),
                     AppUserId = table.Column<int>(type: "integer", nullable: false),
                     UserName = table.Column<string>(type: "text", nullable: true),
+                    UserMainPhoto = table.Column<string>(type: "text", nullable: true),
                     DateRead = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MessageRecivedUser", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_MessageRecivedUser_AppUsers_AppUserId",
-                        column: x => x.AppUserId,
-                        principalTable: "AppUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_MessageRecivedUser_Message_Id",
                         column: x => x.Id,
@@ -462,9 +487,14 @@ namespace BackendApi.Core.Data.Identity.Migrations
                 column: "MessageGroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MessageRecivedUser_AppUserId",
-                table: "MessageRecivedUser",
+                name: "IX_Notification_AppUserId",
+                table: "Notification",
                 column: "AppUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Notification_RequestUserId",
+                table: "Notification",
+                column: "RequestUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserAddress_AppUserId",
@@ -508,6 +538,9 @@ namespace BackendApi.Core.Data.Identity.Migrations
 
             migrationBuilder.DropTable(
                 name: "MessageRecivedUser");
+
+            migrationBuilder.DropTable(
+                name: "Notification");
 
             migrationBuilder.DropTable(
                 name: "UserAddress");

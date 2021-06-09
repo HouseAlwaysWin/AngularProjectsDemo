@@ -6,7 +6,7 @@ import { GalleriaModule } from 'primeng/galleria';
 import { FileUploadModule } from 'primeng/fileupload';
 import { DragAndDropDirective } from './directives/drag-and-drop.directive';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { BadgeModule } from 'primeng/badge';
 
 export let InjectorInstance: Injector;
 @NgModule({
@@ -22,7 +22,8 @@ export let InjectorInstance: Injector;
     ProgressSpinnerModule,
     GalleriaModule,
     FileUploadModule,
-    DragAndDropDirective
+    DragAndDropDirective,
+    BadgeModule
   ]
 })
 export class SharedModule {

@@ -12,8 +12,6 @@ export class AccountQuery extends Query<AccountState> {
   all$ = this.select();
   user$ = this.select(state => state.user);;
   mainPhoto$ = this.select(state => state.user.photos.filter(p => p.isMain)[0]?.url);
-
-
   userPhotos = this.select('userPhotos');
   token$ = this.select(state => state.user.token);
   email$ = this.select(state => state.user.email);
@@ -24,6 +22,7 @@ export class AccountQuery extends Query<AccountState> {
   usersOnline$ = this.select('usersOnline');
   loading$ = this.select('loading');
   messagesThread$ = this.select('messagesThread');
+  notifies$ = this.select('notifies');
 
   get token() {
     return this.getValue().user.token;
@@ -56,6 +55,10 @@ export class AccountQuery extends Query<AccountState> {
 
   get friendList() {
     return this.getValue().friendList;
+  }
+
+  get notified() {
+    return this.getValue().notifies;
   }
 
   constructor(protected store: AccountStore) {

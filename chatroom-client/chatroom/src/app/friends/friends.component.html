@@ -30,16 +30,21 @@
       <li *ngFor="let friend of friendList"
           class="friend-item">
         <div class="friend-info">
-          <img src="{{ getFriendMainPhoto(friend.friend.photos) }}"
-               alt=""
-               class="friend-img">
+          <span [ngClass]="{
+                  'friend-offline':!userOnline.includes(friend.friend.userName),
+                  'friend-online':userOnline.includes(friend.friend.userName)
+                }">
+          </span>
+          <img class="friend-img"
+               src="{{ getFriendMainPhoto(friend.friend.photos) }}"
+               alt="">
           <span class="friend-name">
             {{ friend.friend.userName }}
           </span>
         </div>
         <div class="friend-message"
              (click)="goMessage(friend.friend)">
-          friends description
+          <i class="far fa-comment-dots"></i>
         </div>
         <div class="friend-remove">
           <button (click)="removeFriend(friend)">Remove</button>

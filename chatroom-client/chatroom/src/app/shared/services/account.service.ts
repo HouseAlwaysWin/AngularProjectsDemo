@@ -11,6 +11,7 @@ import { AccountQuery } from "../states/account/account.query";
 import { Register } from "../models/register";
 import { SharedStore } from "../states/shared/shared.store";
 import { Friend } from "../models/friend";
+import { PresenceService } from "./presence.service";
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,9 @@ export class AccountService {
     private http: HttpClient,
     private accountQuery: AccountQuery,
     private accountStore: AccountStore,
-    private sharedStore: SharedStore) {
+    private sharedStore: SharedStore,
+    private presenceService: PresenceService
+  ) {
   }
 
 
@@ -39,7 +42,6 @@ export class AccountService {
     return this.http.get(`${this.apiUrl}account/getUserInfo`)
       .pipe(
         map((res: Res<UserShortInfo>) => {
-          console.log(res);
           if (res.isSuccessed) {
             this.setCurrentUser(res.data);
           }
@@ -80,6 +82,7 @@ export class AccountService {
           this.setCurrentUser(res.data);
         }
         this.sharedStore.update({ gLoading: false });
+        this.presenceService.createHubConnection();
         return res;
       }),
       catchError(error => {
@@ -96,6 +99,7 @@ export class AccountService {
     localStorage.removeItem('token');
     this.accountStore.update(null);
     this.sharedStore.update({ gLoading: false });
+    this.presenceService.stopHubConnection();
   }
 
   setUserPhotoAsMain(photo: UserPhoto) {
@@ -222,6 +226,10 @@ export class AccountService {
     return this.http.put(`${this.apiUrl}user/update-publicId/${publicId}`, null);
   }
 
+
+  getNotifies() {
+    return this.http.get(`${this.apiUrl}user/get-notifications`);
+  }
 
 
 

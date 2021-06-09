@@ -21,6 +21,7 @@ namespace BackendApi.Core.Data.Identity
         public DbSet<MessageGroup> MessageGroup { get; set; }
         public DbSet<MessageConnection> MessageConnection { get; set; }
         public DbSet<MessageRecivedUser> MessageRecivedUser { get; set;}
+        public DbSet<Notification> Notification { get; set; }
 
         public UserContext(DbContextOptions<UserContext> options):base(options)
         {
@@ -47,6 +48,10 @@ namespace BackendApi.Core.Data.Identity
                  .HasForeignKey(ur => ur.UserId)
                  .IsRequired();
 
+                a.HasMany(u => u.Notifications)
+                 .WithOne(n => n.AppUser)
+                 .HasForeignKey(n => n.AppUserId);
+
 
                 //  a.HasMany(u => u.Friends)                
                 //     .WithMany(u => u.FriendsReverse)
@@ -59,6 +64,13 @@ namespace BackendApi.Core.Data.Identity
                     .IsUnique();
 
                     
+            });
+
+            builder.Entity<Notification>(n => {
+                n.Property(n => n.CreatedDate)
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                    .ValueGeneratedOnAdd()
+                    .IsRequired();
             });
 
             builder.Entity<UserFriend>(ur =>{
@@ -165,7 +177,7 @@ namespace BackendApi.Core.Data.Identity
                   .OnDelete(DeleteBehavior.Cascade);
 
             });
-                         
+
 
            builder.Entity<IdentityUserClaim<int>>(b =>
             {

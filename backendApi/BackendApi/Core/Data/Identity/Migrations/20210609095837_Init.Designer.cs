@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackendApi.Core.Data.Identity.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20210608102438_Init")]
+    [Migration("20210609095837_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -279,14 +279,51 @@ namespace BackendApi.Core.Data.Identity.Migrations
                     b.Property<DateTimeOffset?>("DateRead")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("UserMainPhoto")
+                        .HasColumnType("text");
+
                     b.Property<string>("UserName")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
+                    b.ToTable("MessageRecivedUser");
+                });
+
+            modelBuilder.Entity("BackendApi.Core.Models.Entities.Identity.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .UseIdentityByDefaultColumn();
+
+                    b.Property<int>("AppUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("NotificationType")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("RequestUserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
                     b.HasIndex("AppUserId");
 
-                    b.ToTable("MessageRecivedUser");
+                    b.HasIndex("RequestUserId");
+
+                    b.ToTable("Notification");
                 });
 
             modelBuilder.Entity("BackendApi.Core.Models.Entities.Identity.UserFriend", b =>
@@ -581,21 +618,32 @@ namespace BackendApi.Core.Data.Identity.Migrations
 
             modelBuilder.Entity("BackendApi.Core.Models.Entities.Identity.MessageRecivedUser", b =>
                 {
-                    b.HasOne("BackendApi.Core.Entities.Identity.AppUser", "AppUser")
-                        .WithMany()
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("BackendApi.Core.Models.Entities.Message", "Message")
                         .WithMany("RecipientUsers")
                         .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Message");
+                });
+
+            modelBuilder.Entity("BackendApi.Core.Models.Entities.Identity.Notification", b =>
+                {
+                    b.HasOne("BackendApi.Core.Entities.Identity.AppUser", "AppUser")
+                        .WithMany("Notifications")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BackendApi.Core.Entities.Identity.AppUser", "RequestUser")
+                        .WithMany()
+                        .HasForeignKey("RequestUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("AppUser");
 
-                    b.Navigation("Message");
+                    b.Navigation("RequestUser");
                 });
 
             modelBuilder.Entity("BackendApi.Core.Models.Entities.Identity.UserFriend", b =>
@@ -705,6 +753,8 @@ namespace BackendApi.Core.Data.Identity.Migrations
                     b.Navigation("MessagesReceived");
 
                     b.Navigation("MessagesSent");
+
+                    b.Navigation("Notifications");
 
                     b.Navigation("Photos");
                 });

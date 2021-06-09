@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System;
 using System.Collections.Generic;
@@ -85,7 +86,11 @@ namespace BackendApi.Core.Services.SignalR
              var alternateKey = GetGroupAlternateKey(userName, otherUserName);
              group = await _userRepo.GetByAsync<MessageGroup>(query =>
                 query.Where(mg => mg.AlternateId == alternateKey));
-           }
+            await _userRepo.UpdateAsync<MessageRecivedUser>(mu => mu.DateRead == null && mu.UserName == otherUserName,
+                new Dictionary<string,object> { 
+                        { "DateRead",  DateTimeOffset.UtcNow} 
+                    });
+            }
 
            if(group == null){
                group =  await GenerateNewGroupAsync(userName,otherUserName); 
@@ -169,30 +174,6 @@ namespace BackendApi.Core.Services.SignalR
                 await Clients.Group(group.AlternateId).SendAsync("NewMessage", _mapper.Map<Message,MessageDto>(message));
             }
         }
-
-        
-
-        // private async Task<MessageGroup> AddToGroup(string groupName)
-        // {
-        //     var group = await _userRepo.GetByAsync<MessageGroup>(
-        //         query => query.Where(mg => mg.GroupName == groupName)
-        //                        .Include(mg => mg.Connections));
-        //     var connection = new MessageConnection(Context.ConnectionId, Context.User.GetUserName());
-
-        //     if (group == null)
-        //     {
-        //         group = new MessageGroup(groupName);
-        //         await _userRepo.AddAsync<MessageGroup>(group);
-        //     }
-
-        //     group.Connections.Add(connection);
-
-        //     var result = await _userRepo.CompleteAsync();
-
-        //     if (result) return group;
-
-        //     throw new HubException("Failed to join group");
-        // }
 
         private async Task<MessageGroup> RemoveFromMessageGroup()
         {
