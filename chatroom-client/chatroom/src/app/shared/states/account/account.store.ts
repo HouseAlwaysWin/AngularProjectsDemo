@@ -16,7 +16,8 @@ export interface AccountState {
   loading: boolean;
   friendList: Friend[];
   messagesThread: Message[];
-  notifies: Notify[]
+  notifies: Notify[],
+  notifyNotReadCount: number,
   isAuth: boolean;
 }
 
@@ -30,6 +31,7 @@ export function createInitialState(): AccountState {
     loading: false,
     messagesThread: [],
     notifies: [],
+    notifyNotReadCount: 0,
     isAuth: false
   }
 }

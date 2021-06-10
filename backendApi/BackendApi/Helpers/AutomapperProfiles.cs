@@ -75,6 +75,7 @@ namespace BackendApi.Helpers.Localization {
            CreateMap<AppUser,AppUserDto>().ReverseMap();
            CreateMap<AppUser,AppUserTokenDto>();
            CreateMap<UserFriend,UserFriendMapDto>().ReverseMap();
+           CreateMap<PagedList<Notification>,PagedList<NotificationDto>>();
          
 
 

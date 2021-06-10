@@ -86,27 +86,72 @@ namespace BackendApi.Controllers
             return BaseApiOk(friends);
         }
 
-        [HttpPost("add-friend/{friendId}")]
-        public async Task<ActionResult> AddFriend(int friendId) {
+
+        [HttpPost("accept-friend/{friendId}/{notifyId}")]
+        public async Task<ActionResult> AcceptFriend(int friendId,int notifyId) {
             var user = await _userService.GetUserDtoByEmailAsync(User.GetEmail());
 
-             if(friendId == user.Id) {
+
+            await _userRepo.RemoveAsync<Notification>(u => u.Id == notifyId);
+
+            if(friendId == user.Id) {
                 return BaseApiBadRequest("friendId can't be user");
             }
 
-            var newFriend = new UserFriend(){
-                AppUserId = user.Id,
-                FriendId = friendId 
+            await _userRepo.RemoveAsync<UserFriend>(uf => 
+                (uf.FriendId == friendId && uf.AppUserId == user.Id) || 
+                (uf.FriendId == user.Id && uf.AppUserId == friendId));
+
+            var newFriend = new List<UserFriend>(){
+                new UserFriend {
+                   AppUserId = user.Id,
+                   FriendId = friendId 
+                },
+                new UserFriend {
+                   AppUserId = friendId,
+                   FriendId = user.Id 
+                }
             };
             
-            await _userRepo.AddAsync<UserFriend>(newFriend);
+            await _userRepo.BulkAddAsync<UserFriend>(newFriend);
 
             await _userRepo.CompleteAsync();
 
-            var friends =  await this._userService.GetUserFriendsDtoByEmailAsync(user.Email); 
+            var friends =  await _userService.GetUserFriendsDtoByEmailAsync(user.Email); 
 
-            return BaseApiOk(friends);
+            var notificationsDto = await _userService.GetNotificationDtoAsync(1,10,user.Id);
+            var notReadCount = await _userRepo.GetTotalCountAsync<Notification>(query => query.Where(n => n.ReadDate == null));
+            var notificationsListDto = new NotificationListDto{
+                Notifications = notificationsDto,
+                NotReadTotalCount = notReadCount
+            };
+
+
+            var acceptFriendDto = new AcceptFriendDto{
+                Friends = friends,
+                Notifications = notificationsListDto
+            };
+
+            return Ok(acceptFriendDto);
         }
+
+        [HttpPost("reject-friend/{notifyId}")]
+        public async Task<ActionResult> RejectFriend(int notifyId) {
+            await _userRepo.RemoveAsync<Notification>(u => u.Id == notifyId);
+            await _userRepo.CompleteAsync();
+
+            var userId = User.GetUserId();
+            var notificationsDto = await _userService.GetNotificationDtoAsync(1,10,userId);
+            var notReadCount = await _userRepo.GetTotalCountAsync<Notification>(query => query.Where(n => n.ReadDate == null));
+            var resultDto = new NotificationListDto{
+                Notifications = notificationsDto,
+                NotReadTotalCount = notReadCount
+            };
+
+            return Ok(resultDto);
+        }
+
+
 
         [HttpDelete("remove-friend/{friendId}")]
         public async Task<ActionResult> RemoveFriend(int friendId) {
@@ -138,7 +183,6 @@ namespace BackendApi.Controllers
 
             foreach (var file in files)
             {
-                
                 var result = await _photoService.AddPhotoAsync(file);
 
                 if (result.Error != null) return BadRequest(result.Error.Message);
@@ -230,18 +274,27 @@ namespace BackendApi.Controllers
             return BaseApiOk(notifications);
         }
 
-        [HttpPut("update-notifications")]
-        public async Task<ActionResult> UpdateNotifications(int notifyId){
+        [HttpPut("update-readall-notifications")]
+        public async Task<ActionResult> UpdateReadAllNotifications(){
+            var userId  = User.GetUserId();
             var notifications = await _userRepo.GetAllAsync<Notification>(query => 
-                query.Where(u => u.Id == notifyId ));
+                query.Where(u => u.AppUserId == userId ));
 
-            await _userRepo.UpdateAsync<Notification>(u => u.IsRead,new Dictionary<string,object>{
-                 { "IsRead", true }
+            await _userRepo.UpdateAsync<Notification>(
+                u => u.AppUserId == userId,new Dictionary<string,object>{
+                 { "ReadDate", DateTimeOffset.UtcNow }
             });
 
             await _userRepo.CompleteAsync();
 
-            return BaseApiOk();
+            var notificationsDto = await _userService.GetNotificationDtoAsync(1,10,userId);
+            var notReadCount = await _userRepo.GetTotalCountAsync<Notification>(query => query.Where(n => n.ReadDate == null));
+            var resultDto = new NotificationListDto{
+                Notifications = notificationsDto,
+                NotReadTotalCount = notReadCount
+            };
+
+            return Ok(resultDto);
         }
 
     }

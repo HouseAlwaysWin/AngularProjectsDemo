@@ -6,7 +6,9 @@ using AutoMapper;
 using BackendApi.Core.Data.Repositories.Interfaces;
 using BackendApi.Core.Entities.Identity;
 using BackendApi.Core.Models.Dtos;
+using BackendApi.Core.Models.Entities;
 using BackendApi.Core.Models.Entities.Identity;
+using BackendApi.Core.Services.Interfaces;
 using BackendApi.Helpers.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
@@ -21,13 +23,17 @@ namespace BackendApi.Core.Services.SignalR
        private readonly PresenceTracker _tracker;
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepo;
-       public PresenceHub(
+        private readonly IUserService _userService;
+
+        public PresenceHub(
             IMapper mapper,
             IUserRepository userRepo,
+            IUserService userService,
             PresenceTracker tracker)
        {
             this._mapper = mapper;
             this._userRepo = userRepo;
+            this._userService = userService;
             _tracker = tracker;
        }
 
@@ -38,7 +44,7 @@ namespace BackendApi.Core.Services.SignalR
 
             var notification = new Notification {
                 AppUserId = friendId,
-                IsRead = false,
+                ReadDate = null,
                 Content="Ask to be friends",
                 RequestUserId = userId,
                 NotificationType = NotificationType.FriendRequest,
@@ -46,19 +52,17 @@ namespace BackendApi.Core.Services.SignalR
 
             await _userRepo.AddAsync<Notification>(notification);
             await _userRepo.CompleteAsync();
-
-            var notifications = await _userRepo.GetAllAsync<Notification>(query => 
-                query.Where(n=> n.AppUserId == friendId)
-                    .Include(n => n.AppUser)
-                    .Include(n => n.RequestUser)
-                    .AsSplitQuery()
-                );
-            var notificationsDto = _mapper.Map<List<Notification>,List<NotificationDto>>(notifications.ToList());
-
+            
             var connections = await _tracker.GetConnectionsForUser(requestFriend.UserName);
 
             if(connections!= null){
-                await Clients.Clients(connections).SendAsync("GetNotifications", notificationsDto);
+                var notificationsDto = await _userService.GetNotificationDtoAsync(1,10,userId);
+                var notReadCount = await _userRepo.GetTotalCountAsync<Notification>(query => query.Where(n => n.ReadDate == null));
+                var notificationsListDto = new NotificationListDto{
+                    Notifications = notificationsDto,
+                    NotReadTotalCount = notReadCount
+                };
+                await Clients.Clients(connections).SendAsync("GetNotifications", notificationsListDto);
             }
         }
 

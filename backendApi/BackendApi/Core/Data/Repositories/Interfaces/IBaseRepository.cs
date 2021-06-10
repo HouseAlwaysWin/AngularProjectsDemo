@@ -13,6 +13,7 @@ namespace BackendApi.Core.Data.Repositories.Interfaces
         Task AddAsync<TEntity>(TEntity entity) where TEntity : class;
         Task BulkAddAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : class;
         Task<bool> CompleteAsync();
+        Task<int> GetTotalCountAsync<TEntity>(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null) where TEntity : class;
         Task<IList<TEntity>> GetAllAsync<TEntity>(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null) where TEntity : class;
         Task<PagedList<TEntity>> GetAllPagedAsync<TEntity>(int pageIndex, int pageSize, Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null) where TEntity : class;
         Task<TEntity> GetByAsync<TEntity>(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null) where TEntity : class;

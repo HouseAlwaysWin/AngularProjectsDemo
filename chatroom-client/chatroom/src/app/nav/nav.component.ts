@@ -79,24 +79,34 @@ export class NavComponent implements OnInit {
   }
 
   getNotifies() {
-    this.accountQuery.notifies$.subscribe(notifies => {
+    this.accountQuery.notifies$.subscribe((notifies) => {
       this.notifies = notifies;
-      this.notifyCount = notifies.length;
+    });
+    this.accountQuery.notifyNotReadCount$.subscribe(count => {
+      console.log(count);
+      this.notifyCount = count;
     });
   }
 
   toggleNotify() {
     this.showNotify = !this.showNotify;
+    if (this.showNotify) {
+      this.accountService.updateNotify().subscribe();
+    }
   }
 
-  acceptRequest(id: number) {
-    this.accountService.addNewFriend(id).subscribe(res => {
+
+  acceptRequest(id: number, notifyId: number) {
+    console.log(id);
+    this.accountService.acceptFriend(id, notifyId).subscribe(res => {
       console.log(res);
-    })
+      alert("Add successed");
+    });
   }
 
-  cancelRequest() {
+  cancelRequest(notifyId: number) {
     this.showNotify = false;
+    this.accountService.rejectFriend(notifyId).subscribe();
   }
 
 }

@@ -44,9 +44,7 @@ export class AppComponent implements OnInit {
     const token: string = JSON.parse(localStorage.getItem('token'));
 
     if (token) {
-      console.log('app check')
       this.accountService.getUserDetail().subscribe(res => {
-        console.log('login check');
         if (res) {
           this.presenceService.createHubConnection();
         }

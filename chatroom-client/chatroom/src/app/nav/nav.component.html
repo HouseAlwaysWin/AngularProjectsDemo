@@ -24,6 +24,7 @@
             *ngIf="notifies.length > 0;else noNotify">
           <li class="notify-item"
               *ngFor="let notify of notifies">
+            {{ notify.id }}
             <div *ngIf="notify.notificationType === 0"
                  class="notify-friend">
               <img class="notify-friend-img"
@@ -33,9 +34,9 @@
                 <span class="notify-friend-question">Ask you to be friend?</span>
                 <div class="notify-friend-action">
                   <button class="notify-friend-action-confirm"
-                          (click)="acceptRequest(notify.requestUserId)">Accept</button>
+                          (click)="acceptRequest(notify.requestUserId,notify.id)">Accept</button>
                   <button class="notify-friend-action-cancel"
-                          (click)="cancelRequest()">Cancel</button>
+                          (click)="cancelRequest(notify.id)">Cancel</button>
                 </div>
               </div>
             </div>
@@ -55,6 +56,13 @@
         routerLink="/message">
       <a class="nav-btn">
         <fa-icon [icon]="faComment"></fa-icon>
+      </a>
+    </li>
+    <li class="nav-item"
+        *ngIf="accountQuery.isAuth"
+        routerLink="/friends/add">
+      <a class="nav-btn">
+        <i class="fas fa-user-plus"></i>
       </a>
     </li>
     <li class="nav-item"

@@ -12,7 +12,7 @@ namespace BackendApi.Core.Models.Dtos
         public int RequestUserId { get; set; }
         public AppUserShortDto RequestUser { get; set; }
         public string Content { get; set; }
-        public bool IsRead { get; set; }
+        public DateTimeOffset? ReadDate { get; set; }
         public NotificationType NotificationType { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
     }

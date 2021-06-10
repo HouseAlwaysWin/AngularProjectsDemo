@@ -6,6 +6,7 @@ using AutoMapper;
 using BackendApi.Core.Data.Repositories.Interfaces;
 using BackendApi.Core.Entities.Identity;
 using BackendApi.Core.Models.Dtos;
+using BackendApi.Core.Models.Entities;
 using BackendApi.Core.Models.Entities.Identity;
 using BackendApi.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +31,7 @@ namespace BackendApi.Core.Services
                    .ThenInclude(u => u.UserInfo)
                    .Include(u => u.Friend)
                    .ThenInclude(u => u.Photos)
+                   .AsSplitQuery()
                 );
 
             var friends = _mapper.Map<List<UserFriend>, List<UserFriendMapDto>>(friendsMap.ToList());
@@ -41,6 +43,7 @@ namespace BackendApi.Core.Services
                 query => query.Where(u=> u.Email == email)
                               .Include(u => u.UserInfo)
                               .Include(u => u.Photos)
+                              .AsSplitQuery()
                 );
             var userInfoDto = _mapper.Map<AppUser,AppUserShortDto>(user);
             return userInfoDto;
@@ -57,6 +60,7 @@ namespace BackendApi.Core.Services
                 query => query.Where(u=> u.UserName == userName)
                               .Include(u => u.UserInfo)
                               .Include(u => u.Photos)
+                              .AsSplitQuery()
                 );
             return user;
         }
@@ -67,6 +71,7 @@ namespace BackendApi.Core.Services
                           .Include(u => u.UserInfo)
                           .Include(u => u.Address)
                           .Include(u => u.Photos)
+                          .AsSplitQuery()
                           );
             var userInfoDto = _mapper.Map<AppUser,AppUserDto>(user);
             return userInfoDto;
@@ -79,10 +84,21 @@ namespace BackendApi.Core.Services
                           .Include(u => u.UserInfo)
                           .Include(u => u.Address)
                           .Include(u => u.Photos)
-            
+                          .AsSplitQuery()
             );
             var userInfoDto = _mapper.Map<AppUser,AppUserShortDto>(user);
             return userInfoDto;
+        }
+
+        public async Task<PagedList<NotificationDto>> GetNotificationDtoAsync(int pageIndex,int pageSize,int userId){
+            var notifications = await _userRepo.GetAllPagedAsync<Notification>(pageIndex,pageSize,
+                query => query.Where(u => u.AppUserId == userId)
+                               .Include(u => u.RequestUser)
+                               .ThenInclude(u=> u.Photos));
+            
+            var notificationsDto = _mapper.Map<PagedList<Notification>,PagedList<NotificationDto>>(notifications);
+
+            return notificationsDto;
         }
 
         

@@ -306,11 +306,11 @@ namespace BackendApi.Core.Data.Identity.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("boolean");
-
                     b.Property<int>("NotificationType")
                         .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset?>("ReadDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("RequestUserId")
                         .HasColumnType("integer");

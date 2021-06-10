@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { take } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { NotifyList } from '../models/notification';
 import { AccountQuery } from '../states/account/account.query';
 import { AccountStore } from '../states/account/account.store';
 
@@ -18,10 +19,7 @@ export class PresenceService {
 
 
   createHubConnection() {
-    // let token = localStorage.getItem('token');
-    console.log('presence create connection');
     let user = this.accountQuery.user;
-    console.log(user);
     this.hubConnection = new HubConnectionBuilder()
       .withUrl(this.hubUrl + 'presence', {
         accessTokenFactory: () => user.token
@@ -35,16 +33,12 @@ export class PresenceService {
 
 
     this.hubConnection.on('GetOnlineUsers', (usernames: string[]) => {
-      console.log('getOnlineUsers')
-      console.log(usernames)
       this.accountStore.update({
         usersOnline: usernames
       })
     });
 
     this.hubConnection.on('UserIsOnline', username => {
-      console.log('UserIsOnline')
-      console.log(username);
       this.accountQuery.usersOnline$.pipe(
         take(1)
       ).subscribe(usernames => {
@@ -56,8 +50,6 @@ export class PresenceService {
     })
 
     this.hubConnection.on('UserIsOffline', username => {
-      console.log('UserIsOffline')
-      console.log(username);
       this.accountQuery.usersOnline$.pipe(
         take(1)
       ).subscribe(usernames => {
@@ -67,10 +59,10 @@ export class PresenceService {
       })
     })
 
-    this.hubConnection.on('GetNotifications', notifies => {
-      console.log(notifies);
+    this.hubConnection.on('GetNotifications', (notifies: NotifyList) => {
       this.accountStore.update({
-        notifies: notifies
+        notifies: notifies.notifications.data,
+        notifyNotReadCount: notifies.notReadTotalCount
       });
     });
 

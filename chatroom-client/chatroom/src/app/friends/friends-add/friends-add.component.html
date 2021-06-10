@@ -8,7 +8,7 @@
              name="search"
              class="friend-add-text"
              placeholder="Search friends by public id">
-      <label for="">Search friends by public id</label>
+      <label for="">Search by publicId </label>
     </span>
   </form>
   <div class="friend-info"
@@ -16,7 +16,15 @@
     <img src="{{ getFriendMainPhoto(friend.photos) }}" />
     <h4>{{ friend.userName }}</h4>
 
-    <button (click)="SendFriendRequest(friend.id)">Add</button>
+    <div *ngIf="!checkIsFriend(friend.id);else isFriend">
+      <button (click)="SendFriendRequest(friend.id)">Add</button>
+    </div>
+    <ng-template #isFriend>
+      <div>
+        Friend
+      </div>
+    </ng-template>
+
   </div>
   <div *ngIf="!findUser && friend">
     User Not Found

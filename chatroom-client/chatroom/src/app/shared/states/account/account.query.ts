@@ -18,11 +18,12 @@ export class AccountQuery extends Query<AccountState> {
   username$ = this.select(state => state.user.userName);
   photos$ = this.select(state => state.user.photos);
   isAuth$ = this.select('isAuth');
-  friends$ = this.select('friendList');
+  friendList$ = this.select('friendList');
   usersOnline$ = this.select('usersOnline');
   loading$ = this.select('loading');
   messagesThread$ = this.select('messagesThread');
   notifies$ = this.select('notifies');
+  notifyNotReadCount$ = this.select('notifyNotReadCount');
 
   get token() {
     return this.getValue().user.token;
@@ -59,6 +60,10 @@ export class AccountQuery extends Query<AccountState> {
 
   get notified() {
     return this.getValue().notifies;
+  }
+
+  get notifyNotReadCount() {
+    return this.getValue().notifyNotReadCount;
   }
 
   constructor(protected store: AccountStore) {

@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackendApi.Core.Data.Identity.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20210609095837_Init")]
+    [Migration("20210610092810_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -308,11 +308,11 @@ namespace BackendApi.Core.Data.Identity.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("boolean");
-
                     b.Property<int>("NotificationType")
                         .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset?>("ReadDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("RequestUserId")
                         .HasColumnType("integer");

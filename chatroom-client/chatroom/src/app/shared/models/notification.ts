@@ -1,3 +1,4 @@
+import { ResPaging } from "./response";
 import { UserShortInfo } from "./user";
 
 export interface Notify {
@@ -8,7 +9,13 @@ export interface Notify {
   requestUser: UserShortInfo,
   mainPhoto: string,
   content: string,
-  isRead: boolean,
+  isAnswerQuestion: boolean,
+  readDate: Date,
   notificationType: number,
   createdDate: Date
+}
+
+export interface NotifyList {
+  notifications: ResPaging<Notify>;
+  notReadTotalCount: number;
 }

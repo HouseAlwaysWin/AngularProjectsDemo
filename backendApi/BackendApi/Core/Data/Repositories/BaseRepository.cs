@@ -24,6 +24,16 @@ namespace BackendApi.Core.Data.Repositories
             LinqToDBForEFTools.Initialize();
         }
 
+
+        public virtual async Task<int> GetTotalCountAsync<TEntity>(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null)
+            where TEntity : class
+        {
+            var query = _context.Set<TEntity>().AsQueryable();
+            query = func != null ? func(query) : query;
+            return await query.CountAsyncEF();
+        }
+
+
         public virtual async Task<IList<TEntity>> GetAllAsync<TEntity>(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null)
             where TEntity : class
         {
@@ -42,6 +52,7 @@ namespace BackendApi.Core.Data.Repositories
 
             var total = await query.CountAsyncEF();
 
+            pageIndex = (pageIndex - 1) >= 0 ? pageIndex-1 : 0 ;
             var data = await query.Skip(pageIndex * pageSize).Take(pageSize).ToListAsyncEF();
 
             return new PagedList<TEntity>(data, total);

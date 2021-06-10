@@ -3,15 +3,16 @@ import { AccountStore } from "../states/account/account.store";
 import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
 import { Login } from "../models/login";
 import { environment } from "src/environments/environment";
-import { Res } from "../models/response";
+import { Res, ResPaging } from "../models/response";
 import { UserDetail, UserPhoto, UserShortInfo } from "../models/user";
 import { catchError, map } from 'rxjs/operators'
 import { BehaviorSubject, of } from "rxjs";
 import { AccountQuery } from "../states/account/account.query";
 import { Register } from "../models/register";
 import { SharedStore } from "../states/shared/shared.store";
-import { Friend } from "../models/friend";
+import { AcceptFriend, Friend } from "../models/friend";
 import { PresenceService } from "./presence.service";
+import { Notify, NotifyList } from "../models/notification";
 
 @Injectable({
   providedIn: 'root'
@@ -200,11 +201,42 @@ export class AccountService {
     return this.http.get(`${this.apiUrl}user/get-by-publicId/${publicId}`);
   }
 
-  addNewFriend(id: number) {
-    return this.http.post(`${this.apiUrl}user/add-friend/${id}`, null).pipe(
-      map((res: Res<Friend[]>) => {
+  acceptFriend(id: number, notifyId: number) {
+    return this.http.post(`${this.apiUrl}user/accept-friend/${id}/${notifyId}`, null).pipe(
+      map((res: AcceptFriend) => {
+        console.log(res);
         this.accountStore.update({
-          friendList: res.data
+          friendList: res.friends,
+          notifies: res.notifications.notifications.data,
+          notifyNotReadCount: res.notifications.notReadTotalCount
+        })
+        return res;
+      })
+    );
+  }
+
+  rejectFriend(notifyId: number) {
+    console.log(notifyId)
+    return this.http.post(`${this.apiUrl}user/reject-friend/${notifyId}`, null).pipe(
+      map((res: NotifyList) => {
+        console.log(res);
+        this.accountStore.update({
+          notifies: res.notifications.data,
+          notifyNotReadCount: res.notReadTotalCount
+        })
+        return res;
+      })
+    );
+  }
+
+  updateNotify() {
+    console.log('update');
+    return this.http.put(`${this.apiUrl}user/update-readall-notifications`, null).pipe(
+      map((res: NotifyList) => {
+        console.log(res);
+        this.accountStore.update({
+          notifies: res.notifications.data,
+          notifyNotReadCount: res.notReadTotalCount
         })
         return res;
       })

@@ -296,7 +296,7 @@ namespace BackendApi.Core.Data.Identity.Migrations
                     AppUserId = table.Column<int>(type: "integer", nullable: false),
                     RequestUserId = table.Column<int>(type: "integer", nullable: false),
                     Content = table.Column<string>(type: "text", nullable: true),
-                    IsRead = table.Column<bool>(type: "boolean", nullable: false),
+                    ReadDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                     NotificationType = table.Column<int>(type: "integer", nullable: false),
                     CreatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")
                 },
