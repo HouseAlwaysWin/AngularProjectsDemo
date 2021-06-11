@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { UserShortInfo } from 'src/app/shared/models/user';
@@ -17,8 +17,9 @@ export class MessageChatroomComponent implements OnInit {
   autoLoadMsg: boolean = true;
   messageContent: string;
 
-  recipientUserName: string;
-  messageGroupId: string;
+  @Input() recipientUserName: string;
+  @Input() messageGroupId: string;
+
   currentUser: UserShortInfo;
   otherUser: UserShortInfo;
 
@@ -33,24 +34,31 @@ export class MessageChatroomComponent implements OnInit {
 
   private _onDestroy = new Subject();
   ngOnDestroy(): void {
-    this.messageService.stopHubConnection();
     this._onDestroy.next();
   }
 
 
   ngOnInit() {
     this.initProps();
-    this.getMessageThreads();
   }
 
-  ngAfterViewChecked() {
+  // ngAfterViewChecked() {
+  //   this.messageListContent.nativeElement.scrollTop = this.messageListContent.nativeElement.scrollHeight;
+  // }
+
+  goDown() {
     this.messageListContent.nativeElement.scrollTop = this.messageListContent.nativeElement.scrollHeight;
-
   }
+
+  goTop() {
+    this.messageListContent.nativeElement.scrollTop = 0;
+  }
+
+
 
   initProps() {
-    this.recipientUserName = this.activeRoute.snapshot.paramMap.get('username');
-    this.messageGroupId = this.activeRoute.snapshot.paramMap.get('messageGroupId');
+    // this.recipientUserName = this.activeRoute.snapshot.paramMap.get('username');
+    // this.messageGroupId = this.activeRoute.snapshot.paramMap.get('messageGroupId');
     this.currentUser = this.accountQuery.user;
   }
 
@@ -59,9 +67,12 @@ export class MessageChatroomComponent implements OnInit {
       this.sharedStore.update({
         gLoading: true
       });
-      this.messageService.sendMessage(this.recipientUserName, this.messageContent, this.messageGroupId).then(() => {
+      this.messageService.sendMessage(this.recipientUserName, this.messageGroupId, this.messageContent).then(() => {
         this.messageContent = '';
       }).finally(() => {
+        setTimeout(() => {
+          this.messageListContent.nativeElement.scrollTop = this.messageListContent.nativeElement.scrollHeight;
+        }, 100);
         this.sharedStore.update({
           gLoading: false
         });
@@ -72,9 +83,13 @@ export class MessageChatroomComponent implements OnInit {
 
 
 
-  getMessageThreads() {
-    console.log('messageThreads');
-    this.messageService.createHubConnection(this.currentUser, this.recipientUserName);
-  }
+  // getMessageThreads() {
+  //   console.log('chatRoom-getMessageThreads');
+  //   this.messageService.createHubConnection(this.currentUser, this.recipientUserName);
+  // }
+
+  // stopConnection() {
+  //   this.messageService.stopHubConnection();
+  // }
 
 }

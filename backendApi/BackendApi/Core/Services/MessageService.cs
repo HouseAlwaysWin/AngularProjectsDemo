@@ -57,7 +57,12 @@ namespace BackendApi.Core.Services
 
             await _userRepo.CompleteAsync();
             var messages = await _userRepo.GetAllAsync<Message>(query => 
-                query.Where(m => m.MessageGroupId == groupId).OrderBy(m => m.MessageSent)
+                query.Where(m => m.MessageGroupId == groupId)
+                     .Include(m => m.Sender)
+                     .ThenInclude(m => m.Photos)
+                     .Include(m => m.RecipientUsers)
+                     .OrderBy(m => m.MessageSent)
+                     .AsSplitQuery()
             );
 
             List<MessageDto> messagesDto = _mapper.Map<List<Message>, List<MessageDto>>(messages.ToList());

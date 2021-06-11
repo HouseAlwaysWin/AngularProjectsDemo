@@ -67,25 +67,28 @@ namespace BackendApi.Controllers
             return BaseApiOk(groupsDto);
         }
 
+        [HttpGet("get-messages-friends-list")]
+        public async Task<ActionResult> GetMessageFirendsList() {
+            var userId = User.GetUserId();
 
+             var user = await _userRepo.GetByAsync<AppUser>(query => 
+                query.Where(u => u.Id == userId )
+                     .Include(u => u.MessageGroups)
+                     .ThenInclude(u => u.MessageGroup)
+                     .ThenInclude(u => u.Messages)
+                     .OrderBy(u => u.MessagesSent.OrderByDescending(m=>m.CreatedDate).FirstOrDefault().CreatedDate)
+                     .AsSplitQuery()
+                     );
 
-        // [HttpGet]
-        // public async Task<ActionResult> GetMessagesForUser([FromQuery]MessageParams messageParams){
+            List<MessageFriendsGroupDto> groupsDto = new List<MessageFriendsGroupDto>();
+            foreach (var group in user.MessageGroups.ToList())
+            {
+                var gm = _mapper.Map<MessageGroup,MessageFriendsGroupDto>(group.MessageGroup);
+                groupsDto.Add(gm);
+            }
+            return BaseApiOk(groupsDto);
+        }
 
-        //     var message = await _userRepo.GetAllPagedAsync<Message>(
-        //         messageParams.PageIndex,messageParams.PageSize,
-        //         query =>{
-        //             switch(messageParams.Container){
-        //                 case "Inbox":
-        //                     return query.Where(u => u.RecipientUsername == messageParams.Username && u.RecipientDeleted == false);
-        //                 case "Outbox":
-        //                     return query.Where(u => u.SenderUsername == messageParams.Username && u.SenderDeleted == false);
-        //                 default:
-        //                     return query.Where(u => u.RecipientUsername == messageParams.Username && u.RecipientDeleted == false && u.DateRead == null);
-        //             }
-        //         });
-        //     return BaseApiOk(message);
-        // }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteMessage(int id){

@@ -6,7 +6,7 @@ import { MessageChatroomComponent } from './message-chatroom/message-chatroom.co
 
 const routes: Routes = [
   { path: 'list', component: MessageComponent },
-  { path: 'chatroom', component: MessageChatroomComponent },
+  // { path: 'chatroom', component: MessageChatroomComponent },
 ];
 
 

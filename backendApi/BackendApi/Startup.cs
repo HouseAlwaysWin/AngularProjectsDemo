@@ -245,6 +245,7 @@ namespace BackendApi
             services.AddScoped<IUserRepository,UserRepository>();
             services.AddScoped<IPhotoService,PhotoService>();
             services.AddSingleton<PresenceTracker>();
+            services.AddHttpContextAccessor();
             services.Configure<CloudinarySettings>(_config.GetSection("CloudinarySettings"));
 
 

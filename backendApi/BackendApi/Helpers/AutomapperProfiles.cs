@@ -60,11 +60,21 @@ namespace BackendApi.Helpers.Localization {
 
            CreateMap<DeliveryMethod,DeliveryMethodDto>();
 
-           CreateMap<UserInfo,UserInfoDto>().ReverseMap();
-           CreateMap<UserPhoto,UserPhotoDto>().ReverseMap();
-           CreateMap<UserAddress,AddressDto>().ReverseMap();
-           CreateMap<Message,MessageDto>().ReverseMap();
-           CreateMap<MessageGroup,MessageGroupDto>();
+           CreateMap<UserInfo,UserInfoDto>();
+           CreateMap<UserPhoto,UserPhotoDto>();
+           CreateMap<UserAddress,AddressDto>();
+
+           CreateMap<Message,MessageDto>()
+                .ForMember(m => m.MainPhoto,m => m.MapFrom(m => m.Sender.Photos.FirstOrDefault(p => p.IsMain).Url));
+
+           CreateMap<MessageGroup,MessageGroupDto>()
+               .ForMember(m => m.LastMessages,m => m.MapFrom(m => m.Messages.OrderByDescending(m => m.CreatedDate).FirstOrDefault().Content));
+
+           CreateMap<MessageGroup,MessageFriendsGroupDto>()
+               .ForMember(mg => mg.GroupName,mg => mg.MapFrom<MessageGroupNameResolver>())
+               .ForMember(mg => mg.GroupImg,mg => mg.MapFrom<MessageGroupImgResolver>())
+               .ForMember(m => m.LastMessages,m => m.MapFrom(m => m.Messages.OrderByDescending(m => m.CreatedDate).FirstOrDefault().Content));
+               
            CreateMap<MessageRecivedUser,MessageRecivedUserDto>();
            CreateMap<AppUser_MessageGroup,AppUser_MessageGroupDto>();
            CreateMap<Notification,NotificationDto>();

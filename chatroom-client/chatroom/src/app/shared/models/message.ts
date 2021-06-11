@@ -2,7 +2,7 @@ export class Message {
   id: number;
   senderId: number;
   senderUsername: string;
-  senderPhotoUrl: string;
+  mainPhoto: string;
   recipientUsers: MessageRecivedUser[];
   content: string;
   dateRead?: Date;

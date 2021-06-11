@@ -1,0 +1,88 @@
+@import "../../styles.scss";
+.message {
+  display: flex;
+  width: 90rem;
+  flex-direction: row;
+  justify-content: center;
+
+  &-nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-right: 1px solid $color-grey-light;
+    border-left: 1px solid $color-grey-light;
+  }
+
+  &-list {
+    list-style: none;
+    border: none;
+    width: 100%;
+  }
+
+  &-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &-item {
+    border: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border: none;
+    gap: 3rem;
+    padding: 1rem;
+    cursor: pointer;
+    &:not(:last-child) {
+      margin-bottom: 1rem;
+      border-bottom: 1px solid $color-grey-light;
+    }
+  }
+
+  &-img {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 5rem;
+  }
+
+  &-groupName {
+    font-size: 1.6rem;
+    color: $color-primary;
+  }
+
+  &-lastMessages {
+    font-size: 1.6rem;
+    color: $color-primary;
+    max-width: 10rem;
+    border-radius: 1rem;
+    padding: 1rem;
+    overflow-wrap: break-word;
+  }
+
+  &-content {
+    flex: 3;
+    width: 100%;
+    & div {
+      width: 100%;
+    }
+  }
+
+  &-notselect {
+    display: flex;
+    justify-content: center;
+    margin-top: 20%;
+
+    & span {
+      cursor: pointer;
+      background-color: rgba($color-primary, 0.8);
+      color: $color-white;
+      padding: 1rem;
+      border-radius: 1rem;
+
+      &:hover {
+        background-color: rgba($color-primary-dark, 0.8);
+      }
+    }
+  }
+}

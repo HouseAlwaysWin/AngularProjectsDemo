@@ -1,8 +1,8 @@
 <div class="container">
-  <div class="message-friend">
-
-  </div>
   <div class="message">
+
+    <button (click)="goDown()">go down</button>
+    <button (click)="goTop()">go Top</button>
     <ul class="message-list"
         #messageListContent>
       <li class="message-item"
@@ -14,24 +14,23 @@
         </div>
         <div *ngIf="message.senderUsername !== currentUser.userName"
              class="message-others">
-          <span>
-            <img src="" />
-          </span>
-          <span class="message-others-username">{{ message.senderUsername }}</span>
+          <img class="message-others-mainPhoto"
+               src="{{message.mainPhoto}}" />
           <span class="message-others-content">{{ message.content }}</span>
         </div>
       </li>
     </ul>
   </div>
 
-  <div>
-    <form (ngSubmit)="sendMessage()">
-      <div>
-        <input type="text"
-               name="messageContent"
-               [(ngModel)]="messageContent">
-        <button type="submit">Submit</button>
-      </div>
-    </form>
-  </div>
+  <form (ngSubmit)="sendMessage()"
+        class="message-send">
+    <textarea type="textarea"
+              class="message-textarea"
+              name="message-textarea"
+              [(ngModel)]="messageContent">
+        </textarea>
+    <button type="submit"
+            class="message-submitBtn">Submit</button>
+
+  </form>
 </div>

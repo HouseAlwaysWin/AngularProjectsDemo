@@ -83,7 +83,6 @@ export class NavComponent implements OnInit {
       this.notifies = notifies;
     });
     this.accountQuery.notifyNotReadCount$.subscribe(count => {
-      console.log(count);
       this.notifyCount = count;
     });
   }
@@ -99,7 +98,6 @@ export class NavComponent implements OnInit {
   acceptRequest(id: number, notifyId: number) {
     console.log(id);
     this.accountService.acceptFriend(id, notifyId).subscribe(res => {
-      console.log(res);
       alert("Add successed");
     });
   }

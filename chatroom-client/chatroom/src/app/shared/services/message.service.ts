@@ -23,10 +23,12 @@ export class MessageService {
     private sharedStore: SharedStore
   ) { }
 
-  createHubConnection(user: UserShortInfo, otherUsername: string) {
+  createHubConnection(otherUsername: string, groupId: string) {
+    let user = this.accountQuery.user;
+    if (!groupId) groupId = '';
     if (user?.token && otherUsername) {
       this.hubConnection = new HubConnectionBuilder()
-        .withUrl(`${this.hubUrl}message?username=${otherUsername}`, {
+        .withUrl(`${this.hubUrl}message?username=${otherUsername}&groupId=${groupId}`, {
           accessTokenFactory: () => user.token
         })
         .withAutomaticReconnect()
@@ -40,7 +42,7 @@ export class MessageService {
 
       this.hubConnection.on('ReceiveMessageThread', messages => {
         console.log('receiveMessageThread')
-        console.log(messages[messages.length - 1]);
+        console.log(messages);
         this.accountStore.update({
           messagesThread: messages
         })
@@ -83,7 +85,8 @@ export class MessageService {
     }
   }
 
-  async sendMessage(recipientUserName: string, content: string, messageGroupId: string) {
+  async sendMessage(recipientUserName: string, messageGroupId: string, content: string) {
+    console.log('SendmessageService')
     return this.hubConnection.invoke('SendMessage', { recipientUserName, content, messageGroupId })
       .catch(error => console.log(error));
   }
@@ -92,8 +95,8 @@ export class MessageService {
     return this.http.delete(`${this.apiUrl}message/${id}`);
   }
 
-  getMessageGroups() {
-    return this.http.get(`${this.apiUrl}messages/get-messages-list`);
+  getMessageFriendsGroups() {
+    return this.http.get(`${this.apiUrl}messages/get-messages-friends-list`);
   }
 
 }

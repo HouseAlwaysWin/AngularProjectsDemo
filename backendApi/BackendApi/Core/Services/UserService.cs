@@ -100,7 +100,6 @@ namespace BackendApi.Core.Services
 
             return notificationsDto;
         }
-
         
 
     }

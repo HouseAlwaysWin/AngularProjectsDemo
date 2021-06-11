@@ -77,6 +77,7 @@ namespace BackendApi.Core.Services.SignalR
            var otherUserName = httpContext.Request.Query["username"].ToString();
            var userId =  Context.User.GetUserId();
            MessageGroup group = null;
+
            if(!string.IsNullOrEmpty(groupId)){
              group = await _userRepo.GetByAsync<MessageGroup>(query =>
                 query.Where(mg => mg.Id == int.Parse(groupId)));
@@ -86,10 +87,6 @@ namespace BackendApi.Core.Services.SignalR
              var alternateKey = GetGroupAlternateKey(userName, otherUserName);
              group = await _userRepo.GetByAsync<MessageGroup>(query =>
                 query.Where(mg => mg.AlternateId == alternateKey));
-            await _userRepo.UpdateAsync<MessageRecivedUser>(mu => mu.DateRead == null && mu.UserName == otherUserName,
-                new Dictionary<string,object> { 
-                        { "DateRead",  DateTimeOffset.UtcNow} 
-                    });
             }
 
            if(group == null){
@@ -104,8 +101,6 @@ namespace BackendApi.Core.Services.SignalR
 
             var currentUsername = Context.User.GetUserName();
             var messages = await _messageService.GetMessageThread(userId,group.Id);
-
-            
 
             await Clients.Caller.SendAsync("ReceiveMessageThread", messages);
         }
@@ -127,28 +122,11 @@ namespace BackendApi.Core.Services.SignalR
             var message = new Message();
 
             var sender = await _userService.GetUserByUserNameAsync(username);
-
+            var  recipient = await _userService.GetUserByUserNameAsync(createMessageDto.RecipientUsername);
 
             if(groupId == null){
                 var alternateId = GetGroupAlternateKey(username, createMessageDto.RecipientUsername);
                 group = await _userRepo.GetByAsync<MessageGroup>(query => query.Where(u => u.AlternateId == alternateId));
-                groupId = group.Id;
-
-                var  recipient = await _userService.GetUserByUserNameAsync(createMessageDto.RecipientUsername);
-
-                if (username == createMessageDto.RecipientUsername.ToLower())
-                    throw new HubException("You cannot send messages to yourself");
-
-             
-                if (recipient == null) throw new HubException("Not found user");
-
-                message = new Message
-                {
-                    Sender = sender,
-                    SenderUsername = sender.UserName,
-                    Content = createMessageDto.Content,
-                    MessageGroupId = groupId.Value
-                };
 
                 var connections = await _tracker.GetConnectionsForUser(recipient.UserName);
                 if (connections != null)
@@ -158,14 +136,35 @@ namespace BackendApi.Core.Services.SignalR
                 }
             }
             else{
-                group = await _userRepo.GetByAsync<MessageGroup>(query => query.Where(u => u.Id == groupId)); 
-                message = new Message{
-                    Sender = sender,
-                    SenderUsername = sender.UserName,
-                    Content = createMessageDto.Content,
-                    MessageGroupId = groupId.Value
-                };
+                group = await _userRepo.GetByAsync<MessageGroup>(query => 
+                    query.Where(u => u.Id == groupId)
+                          .Include(u => u.AppUsers)
+                          .ThenInclude(u => u.AppUser)
+                    ); 
             }
+
+            groupId = group.Id;
+
+            if (username == createMessageDto.RecipientUsername.ToLower())
+                throw new HubException("You cannot send messages to yourself");
+
+            
+            if (recipient == null) throw new HubException("Not found user");
+
+            var recipientUsers = new List<MessageRecivedUser>();
+            recipientUsers.Add(new MessageRecivedUser{
+                AppUserId = recipient.Id,
+                UserName = recipient.UserName,
+                UserMainPhoto = recipient.Photos.FirstOrDefault(r => r.IsMain).Url
+            });
+
+            message = new Message
+            {
+                Sender = sender,
+                SenderUsername = sender.UserName,
+                Content = createMessageDto.Content,
+                MessageGroupId = groupId.Value,
+            };
 
             await _messageService.AddMessage(message);
 
