@@ -138,7 +138,7 @@ namespace BackendApi.Core.Data.Identity
                 a.HasOne(m => m.MessageGroup)
                  .WithMany(m => m.AppUsers)
                  .HasForeignKey(m => m.MessageGroupId)
-                 .OnDelete(DeleteBehavior.NoAction);
+                 .OnDelete(DeleteBehavior.Cascade);
             });
 
             builder.Entity<Message>(m => {

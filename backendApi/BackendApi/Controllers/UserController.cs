@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -55,9 +56,13 @@ namespace BackendApi.Controllers
             user = await _userService.GetUserDtoByEmailAsync(User.GetEmail()); 
 
             await _userRepo.UpdateAsync<AppUser>(u => u.Id == user.Id,
-                    new Dictionary<string,object> { 
-                        { nameof(user.UserPublicId), publicId} 
-                    });
+                    new Dictionary<Expression<Func<AppUser, object>>, object>{
+                        { user => user.UserPublicId, publicId   }
+                    }
+                    // new Dictionary<string,object> { 
+                    //     { nameof(user.UserPublicId), publicId} 
+                    // }
+                    );
 
             await _userRepo.CompleteAsync();
             user.UserPublicId = publicId;
@@ -281,9 +286,15 @@ namespace BackendApi.Controllers
                 query.Where(u => u.AppUserId == userId ));
 
             await _userRepo.UpdateAsync<Notification>(
-                u => u.AppUserId == userId,new Dictionary<string,object>{
-                 { "ReadDate", DateTimeOffset.UtcNow }
-            });
+                u => u.AppUserId == userId,
+                new Dictionary<Expression<Func<Notification, object>>, object>{
+                     { n => n.ReadDate, DateTimeOffset.UtcNow}
+                }
+            //  new Dictionary<string,object>{
+            //      { "ReadDate", DateTimeOffset.UtcNow }
+            //  }
+            
+            );
 
             await _userRepo.CompleteAsync();
 

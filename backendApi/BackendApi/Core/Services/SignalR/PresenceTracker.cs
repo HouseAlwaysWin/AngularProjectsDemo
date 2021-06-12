@@ -28,18 +28,23 @@ namespace BackendApi.Core.Services.SignalR
             return Task.FromResult(isOnline);
         }
 
-        public Task<bool> UserDisconnected(string username, string connectionId)
+        public Task<bool> UserDisconnected(string username, List<string> connections)
         {
             bool isOffline = false;
             lock (OnlineUsers)
             {
                 if (!OnlineUsers.ContainsKey(username)) return Task.FromResult(isOffline);
 
-                OnlineUsers[username].Remove(connectionId);
-                if (OnlineUsers[username].Count == 0)
+                foreach (var connection in connections)
                 {
-                    OnlineUsers.Remove(username);
-                    isOffline = true;
+                    
+                    OnlineUsers[username].Remove(connection);
+                    if (OnlineUsers[username].Count == 0)
+                    {
+                        OnlineUsers.Remove(username);
+                        isOffline = true;
+                    }
+
                 }
             }
 

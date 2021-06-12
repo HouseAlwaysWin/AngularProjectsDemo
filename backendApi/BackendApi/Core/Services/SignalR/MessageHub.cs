@@ -22,25 +22,29 @@ namespace BackendApi.Core.Services.SignalR
     {
         private readonly IHubContext<PresenceHub> _presenceHub;
         private readonly IMapper _mapper;
-        private readonly IUserRepository _userRepo;
+		private readonly ICachedService _cachedService;
+		private readonly IUserRepository _userRepo;
         private readonly IUserService _userService;
         private readonly IMessageService _messageService;
-        private readonly PresenceTracker _tracker;
+        // private readonly PresenceTracker _tracker;
 
         public MessageHub(
             IHubContext<PresenceHub> presenceHub,
             IMapper mapper,
+            ICachedService cachedService,
             IUserRepository userRepo,
             IUserService  userService,
-            IMessageService messageService,
-            PresenceTracker tracker)
+            IMessageService messageService
+            // PresenceTracker tracker
+            )
         {
             this._presenceHub = presenceHub;
             this._mapper = mapper;
-            this._userRepo = userRepo;
+			this._cachedService = cachedService;
+			this._userRepo = userRepo;
             this._userService = userService;
             this._messageService = messageService;
-            this._tracker = tracker;
+            // this._tracker = tracker;
         }
 
         private async Task<MessageGroup> GenerateNewGroupAsync(string username,string otherUserName){
@@ -76,6 +80,7 @@ namespace BackendApi.Core.Services.SignalR
            var userName = Context.User.GetUserName();
            var otherUserName = httpContext.Request.Query["username"].ToString();
            var userId =  Context.User.GetUserId();
+
            MessageGroup group = null;
 
            if(!string.IsNullOrEmpty(groupId)){
@@ -93,6 +98,8 @@ namespace BackendApi.Core.Services.SignalR
                group =  await GenerateNewGroupAsync(userName,otherUserName); 
            }
 
+            var chatroomKey = $"chatroom_{userName}";
+            await _cachedService.SetAsync<string>(chatroomKey,Context.ConnectionId);
             await Groups.AddToGroupAsync(Context.ConnectionId, group.AlternateId);
 
            if (_userRepo.HasChanges()) {
@@ -101,13 +108,20 @@ namespace BackendApi.Core.Services.SignalR
 
             var currentUsername = Context.User.GetUserName();
             var messages = await _messageService.GetMessageThread(userId,group.Id);
-
-            await Clients.Caller.SendAsync("ReceiveMessageThread", messages);
+            await Clients.Groups(group.AlternateId).SendAsync("ReceiveMessageThread", messages);
         }
 
 
          public override async Task OnDisconnectedAsync(Exception exception)
         {
+            var userName =  Context.User.GetUserName();
+            var chatroomKey = $"chatroom_{userName}";
+            await _cachedService.DeleteAsync(chatroomKey);
+            // var connections = await _tracker.GetConnectionsForUser(username);
+            //     if (connections != null)
+            //     {
+            //         await _tracker.UserDisconnected(username,connections);
+            //     }
             await base.OnDisconnectedAsync(exception);
         }
 
@@ -125,15 +139,9 @@ namespace BackendApi.Core.Services.SignalR
             var  recipient = await _userService.GetUserByUserNameAsync(createMessageDto.RecipientUsername);
 
             if(groupId == null){
+      
                 var alternateId = GetGroupAlternateKey(username, createMessageDto.RecipientUsername);
                 group = await _userRepo.GetByAsync<MessageGroup>(query => query.Where(u => u.AlternateId == alternateId));
-
-                var connections = await _tracker.GetConnectionsForUser(recipient.UserName);
-                if (connections != null)
-                {
-                    await _presenceHub.Clients.Clients(connections).SendAsync("NewMessageReceived",
-                        new { username = sender.UserName });
-                }
             }
             else{
                 group = await _userRepo.GetByAsync<MessageGroup>(query => 
@@ -151,12 +159,31 @@ namespace BackendApi.Core.Services.SignalR
             
             if (recipient == null) throw new HubException("Not found user");
 
+
+            DateTimeOffset? dateRead = null;
+            if(group.GroupType == GroupType.OneOnOne){
+                // var connections = await _tracker.GetConnectionsForUser(recipient.UserName);
+                // if (connections != null)
+                // {
+                //     dateRead = DateTimeOffset.UtcNow;
+                // }
+                var chatroomKey = $"chatroom_{recipient.UserName}";
+                var connection = await _cachedService.GetAsync<string>(chatroomKey);
+                if (!string.IsNullOrEmpty(connection))
+                {
+                    dateRead = DateTimeOffset.UtcNow;
+                }
+            }
+
             var recipientUsers = new List<MessageRecivedUser>();
             recipientUsers.Add(new MessageRecivedUser{
                 AppUserId = recipient.Id,
                 UserName = recipient.UserName,
-                UserMainPhoto = recipient.Photos.FirstOrDefault(r => r.IsMain).Url
+                UserMainPhoto = recipient.Photos.FirstOrDefault(r => r.IsMain).Url,
+                DateRead = dateRead
             });
+
+            // await _userRepo.BulkAddAsync<MessageRecivedUser>(recipientUsers);
 
             message = new Message
             {
@@ -164,14 +191,33 @@ namespace BackendApi.Core.Services.SignalR
                 SenderUsername = sender.UserName,
                 Content = createMessageDto.Content,
                 MessageGroupId = groupId.Value,
+                RecipientUsers = recipientUsers
             };
 
             await _messageService.AddMessage(message);
+            await _userRepo.CompleteAsync();
 
-            if (await _userRepo.CompleteAsync())
-            {
+            // if(group.GroupType == GroupType.OneOnOne){
+            //     var connections = await _tracker.GetConnectionsForUser(recipient.UserName);
+            //     if (connections != null)
+            //     {
+            //         await _userRepo.UpdateAsync<MessageRecivedUser>(m => m.DateRead == null && m.AppUserId == recipient.Id,
+            //             new Dictionary<string,object> { 
+            //                 { "DateRead",  DateTimeOffset.UtcNow} 
+            //             });
+
+            //         // await _presenceHub.Clients.Clients(connections).SendAsync("UpdateIsRead",
+            //         //     new { username = sender.UserName });
+                      
+            //     }
+            //     // await _userRepo.CompleteAsync();
+            // }
+            // if(_userRepo.HasChanges()){
+                // await _userRepo.CompleteAsync();
+                var newMessage = await _userRepo.GetByAsync<Message>(query => 
+                    query.Where(u => u.Id == message.Id).Include(m => m.RecipientUsers));
                 await Clients.Group(group.AlternateId).SendAsync("NewMessage", _mapper.Map<Message,MessageDto>(message));
-            }
+            // }   
         }
 
         private async Task<MessageGroup> RemoveFromMessageGroup()

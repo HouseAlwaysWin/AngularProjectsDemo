@@ -44,7 +44,7 @@ export class MessageService {
         console.log('receiveMessageThread')
         console.log(messages);
         this.accountStore.update({
-          messagesThread: messages
+          messagesThread: messages,
         })
       });
 
@@ -59,6 +59,7 @@ export class MessageService {
           })
         })
       });
+
 
       this.hubConnection.on('UpdatedGroup', (group: MessageGroup) => {
         console.log('UpdatedGroup')

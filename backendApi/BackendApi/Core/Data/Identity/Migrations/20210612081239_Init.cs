@@ -159,7 +159,8 @@ namespace BackendApi.Core.Data.Identity.Migrations
                         name: "FK_AppUser_MessageGroup_MessageGroup_MessageGroupId",
                         column: x => x.MessageGroupId,
                         principalTable: "MessageGroup",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(

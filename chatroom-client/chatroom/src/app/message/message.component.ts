@@ -39,6 +39,7 @@ export class MessageComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this._onDestroy.next();
     this.messageService.stopHubConnection();
+    console.log('stop hub');
   }
 
 

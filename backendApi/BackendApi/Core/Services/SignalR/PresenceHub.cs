@@ -20,26 +20,33 @@ namespace BackendApi.Core.Services.SignalR
     [Authorize]
     public class PresenceHub : Hub
     {
-       private readonly PresenceTracker _tracker;
+    //    private readonly PresenceTracker _tracker;
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepo;
         private readonly IUserService _userService;
+		private readonly ICachedService _cachedService;
 
-        public PresenceHub(
+        private  const string onlineUserKey = "onlineUserKey";
+
+		public PresenceHub(
             IMapper mapper,
             IUserRepository userRepo,
             IUserService userService,
-            PresenceTracker tracker)
+            ICachedService cachedService
+            // PresenceTracker tracker
+            )
        {
             this._mapper = mapper;
             this._userRepo = userRepo;
             this._userService = userService;
-            _tracker = tracker;
+			this._cachedService = cachedService;
+			// this._tracker = tracker;
        }
 
         public async Task SendFriendRequest(int friendId){
 
             var userId = Context.User.GetUserId();
+            var userName = Context.User.GetUserName();
             var requestFriend = await _userRepo.GetByAsync<AppUser>(query => query.Where(u => u.Id == friendId));
 
             var notification = new Notification {
@@ -53,9 +60,11 @@ namespace BackendApi.Core.Services.SignalR
             await _userRepo.AddAsync<Notification>(notification);
             await _userRepo.CompleteAsync();
             
-            var connections = await _tracker.GetConnectionsForUser(requestFriend.UserName);
+            // var connections = await _tracker.GetConnectionsForUser(requestFriend.UserName);
+            var connections = await _cachedService.GetAsync<List<string>>(onlineUserKey);
 
-            if(connections!= null){
+            // if(connections!= null){
+            if(connections.Contains(userName)){
                 var notificationsDto = await _userService.GetNotificationDtoAsync(1,10,userId);
                 var notReadCount = await _userRepo.GetTotalCountAsync<Notification>(query => query.Where(n => n.ReadDate == null));
                 var notificationsListDto = new NotificationListDto{
@@ -68,12 +77,18 @@ namespace BackendApi.Core.Services.SignalR
 
         public override async Task OnConnectedAsync()
         {
-            var isOnline = await _tracker.UserConnected(Context.User.GetUserName(), Context.ConnectionId);
-            if (isOnline)
-                await Clients.Others.SendAsync("UserIsOnline", Context.User.GetUserName());
+            // var isOnline = await _tracker.UserConnected(Context.User.GetUserName(), Context.ConnectionId);
+            var username = Context.User.GetUserName();
+            var onlineUsers = await _cachedService.GetAndSetAsync<List<string>>(onlineUserKey,new List<string>{ username });
 
-            var currentUsers = await _tracker.GetOnlineUsers();
-            await Clients.Caller.SendAsync("GetOnlineUsers", currentUsers);
+            if (!onlineUsers.Contains(username)){
+                onlineUsers.Add(username);
+                await _cachedService.SetAsync<List<string>>(onlineUserKey,onlineUsers);
+            }
+            await Clients.Others.SendAsync("UserIsOnline", Context.User.GetUserName());
+
+            // var currentUsers = await _tracker.GetOnlineUsers();
+            await Clients.Caller.SendAsync("GetOnlineUsers", onlineUsers);
 
             var userId = Context.User.GetUserId();
             var notifications = await _userRepo.GetAllAsync<Notification>(query => 
@@ -87,10 +102,17 @@ namespace BackendApi.Core.Services.SignalR
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            var isOffline = await _tracker.UserDisconnected(Context.User.GetUserName(), Context.ConnectionId);
+            var username = Context.User.GetUserName();
+            // var connections = await _tracker.GetConnectionsForUser(username);
+            // var isOffline = await _tracker.UserDisconnected(Context.User.GetUserName(), connections);
+            var usersOnline = await _cachedService.GetAsync<List<string>>(onlineUserKey);
+            if(usersOnline != null && usersOnline.Contains(username)){
+                usersOnline.Remove(username);
+                await _cachedService.SetAsync<List<string>>(onlineUserKey,usersOnline);
+                await Clients.Others.SendAsync("UserIsOffline", username);
+            }
             
-            if (isOffline)
-                await Clients.Others.SendAsync("UserIsOffline", Context.User.GetUserName());
+            // if (isOffline)
 
             await base.OnDisconnectedAsync(exception);
         }

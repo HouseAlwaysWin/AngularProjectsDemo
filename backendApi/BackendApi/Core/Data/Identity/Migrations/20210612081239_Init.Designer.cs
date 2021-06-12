@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackendApi.Core.Data.Identity.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20210610092810_Init")]
+    [Migration("20210612081239_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -600,7 +600,7 @@ namespace BackendApi.Core.Data.Identity.Migrations
                     b.HasOne("BackendApi.Core.Models.Entities.Identity.MessageGroup", "MessageGroup")
                         .WithMany("AppUsers")
                         .HasForeignKey("MessageGroupId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("AppUser");

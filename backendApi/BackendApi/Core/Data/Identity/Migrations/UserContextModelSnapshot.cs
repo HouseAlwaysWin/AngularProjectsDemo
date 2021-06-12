@@ -598,7 +598,7 @@ namespace BackendApi.Core.Data.Identity.Migrations
                     b.HasOne("BackendApi.Core.Models.Entities.Identity.MessageGroup", "MessageGroup")
                         .WithMany("AppUsers")
                         .HasForeignKey("MessageGroupId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("AppUser");

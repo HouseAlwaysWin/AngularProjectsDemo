@@ -9,8 +9,12 @@
           *ngFor="let message of (accountQuery.messagesThread$ | async)">
         <div *ngIf="message.senderUsername === currentUser.userName"
              class="message-current">
+          <div class="message-current-read"
+               *ngIf="message?.recipientUsers[0]?.dateRead">
+            <span class="message-current-readTime"> {{ message.recipientUsers[0].dateRead | date:'shortTime'}}</span>
+            <span class="message-current-readText">Read</span>
+          </div>
           <span class="message-current-content">{{ message.content }}</span>
-          <span>{{ message?.dateRead }}</span>
         </div>
         <div *ngIf="message.senderUsername !== currentUser.userName"
              class="message-others">
@@ -24,11 +28,10 @@
 
   <form (ngSubmit)="sendMessage()"
         class="message-send">
-    <textarea type="textarea"
-              class="message-textarea"
-              name="message-textarea"
-              [(ngModel)]="messageContent">
-        </textarea>
+    <input type="text"
+           class="message-textarea"
+           name="message-textarea"
+           [(ngModel)]="messageContent" />
     <button type="submit"
             class="message-submitBtn">Submit</button>
 
