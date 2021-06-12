@@ -220,17 +220,17 @@ namespace BackendApi.Core.Services.SignalR
             // }   
         }
 
-        private async Task<MessageGroup> RemoveFromMessageGroup()
-        {
-            var group = await _userRepo.GetByAsync<MessageGroup>(query => query.Where(
-                mc => mc.Connections.Any(g => g.MessageConnectionId == Context.ConnectionId))
-                .Include(mc => mc.Connections));
+        // private async Task<MessageGroup> RemoveFromMessageGroup()
+        // {
+        //     var group = await _userRepo.GetByAsync<MessageGroup>(query => query.Where(
+        //         mc => mc.Connections.Any(g => g.MessageConnectionId == Context.ConnectionId))
+        //         .Include(mc => mc.Connections));
             
-            await _userRepo.RemoveAsync<MessageConnection>(m => m.MessageConnectionId == Context.ConnectionId);
-            if (await _userRepo.CompleteAsync()) return group;
+        //     await _userRepo.RemoveAsync<MessageConnection>(m => m.MessageConnectionId == Context.ConnectionId);
+        //     if (await _userRepo.CompleteAsync()) return group;
 
-            throw new HubException("Failed to remove from group");
-        }
+        //     throw new HubException("Failed to remove from group");
+        // }
         
 
         private string GetGroupAlternateKey(string caller, string other)

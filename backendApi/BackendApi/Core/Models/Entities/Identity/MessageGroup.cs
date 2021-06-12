@@ -25,8 +25,8 @@ namespace BackendApi.Core.Models.Entities.Identity
        public string GroupImg { get; set; }
        public string GroupOtherImg { get; set; }
        public GroupType GroupType { get; set;}
-       public ICollection<MessageConnection> Connections { get; set; } = new List<MessageConnection>();
+    //    public ICollection<MessageConnection> Connections { get; set; } = new List<MessageConnection>();
        public ICollection<Message> Messages {get; set;} = new List<Message>();
-       public ICollection<AppUser_MessageGroup> AppUsers { get; set; }
+       public ICollection<AppUser_MessageGroup> AppUsers { get; set; } = new List<AppUser_MessageGroup>();
     }
 }

@@ -168,9 +168,9 @@ namespace BackendApi.Core.Data.Identity
 
             builder.Entity<MessageGroup>(mg => {
                 mg.HasAlternateKey(mg => mg.AlternateId);
-                mg.HasMany(mg => mg.Connections)
-                  .WithOne()
-                  .OnDelete(DeleteBehavior.Cascade);
+                // mg.HasMany(mg => mg.Connections)
+                //   .WithOne()
+                //   .OnDelete(DeleteBehavior.Cascade);
                 
                 mg.HasMany(mg => mg.Messages)
                   .WithOne()

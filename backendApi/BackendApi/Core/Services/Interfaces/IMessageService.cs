@@ -11,7 +11,7 @@ namespace BackendApi.Core.Services.Interfaces
         Task AddMessage(Message message);
         Task DeleteMessage(Message message);
         Task<Message> GetMessage(int id);
-        Task<MessageGroup> GetMessageGroup(string groupName);
+        // Task<MessageGroup> GetMessageGroup(string groupName);
         // Task<IEnumerable<MessageDto>> GetMessageThread(string currentUsername, string recipientUsername);
         Task<IEnumerable<MessageDto>> GetMessageThread(int currentUserId,int groupId);
     }

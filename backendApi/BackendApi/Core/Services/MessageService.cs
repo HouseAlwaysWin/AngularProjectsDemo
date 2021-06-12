@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
 using BackendApi.Core.Data.Repositories.Interfaces;
+using BackendApi.Core.Entities.Identity;
 using BackendApi.Core.Models.Dtos;
 using BackendApi.Core.Models.Entities;
 using BackendApi.Core.Models.Entities.Identity;
@@ -26,6 +27,35 @@ namespace BackendApi.Core.Services
         {
             this._mapper = mapper;
             this._userRepo = userRepo;
+        }
+
+
+
+        public async Task AddNewMessageGroup(string groupName,List<AppUser> users){
+            var appusers = new List<AppUser_MessageGroup>();
+            foreach (var user in users)
+            {
+                appusers.Add(new AppUser_MessageGroup{
+                    AppUserId = user.Id,
+                    AppUser = user
+                });
+            }
+
+            var newGroup = new MessageGroup{
+                AlternateId = Guid.NewGuid().ToString(),
+                GroupName = groupName,
+                GroupType = GroupType.OneOnMany,
+                AppUsers = appusers
+            };
+
+            await _userRepo.AddAsync<MessageGroup>(newGroup);
+
+            await _userRepo.CompleteAsync();
+        }
+
+        public async Task RemoveMessageThread(int groupId){
+            await _userRepo.RemoveAsync<MessageGroup>(query => query.Id == groupId);
+            await _userRepo.CompleteAsync();
         }
 
         public async Task EditMessage(Message message){
@@ -77,18 +107,15 @@ namespace BackendApi.Core.Services
             return messagesDto;
         }
 
-        public async Task RemoveMessageThread(int groupId){
-            await _userRepo.RemoveAsync<MessageGroup>(query => query.Id == groupId);
-            await _userRepo.CompleteAsync();
-        }
+  
 
-        public async Task<MessageGroup> GetMessageGroup(string groupName)
-        {
-            return await _userRepo.GetByAsync<MessageGroup>(query =>
-                    query.Where(mg => mg.AlternateId == groupName)
-                         .Include(mg => mg.Connections)
-            );
-        }
+        // public async Task<MessageGroup> GetMessageGroup(string groupName)
+        // {
+        //     return await _userRepo.GetByAsync<MessageGroup>(query =>
+        //             query.Where(mg => mg.AlternateId == groupName)
+        //                  .Include(mg => mg.Connections)
+        //     );
+        // }
 
     }
 }
