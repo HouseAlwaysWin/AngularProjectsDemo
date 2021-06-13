@@ -7,7 +7,7 @@ import { catchError, debounceTime, map, switchMap } from "rxjs/operators";
 import { environment } from "src/environments/environment";
 import { Res } from "../models/response";
 import { InjectorInstance } from "../shared.module";
-import { AccountStore } from "../states/account/account.store";
+import { DataStore } from "../states/data.store";
 
 
 
@@ -39,22 +39,22 @@ export class CustomValidators {
     };
   }
   private static checkUserDuplicate(emailOrUserName: string) {
-    const accountStore = InjectorInstance.get(AccountStore);
+    const dataStore = InjectorInstance.get(DataStore);
     const http = InjectorInstance.get(HttpClient);
-    accountStore.update({
+    dataStore.update({
       loading: true
     });
     return http.get(`${this.apiUrl}account/checkUserDuplicated?emailOrUsername=${emailOrUserName}`)
       .pipe(
         debounceTime(200),
         map((res: Res<boolean>) => {
-          accountStore.update({
+          dataStore.update({
             loading: false
           });
           return res.data ? { userDuplicated: true } : null;
         }),
         catchError(error => {
-          accountStore.update({
+          dataStore.update({
             loading: false
           });
           console.log(error);

@@ -107,6 +107,26 @@ namespace BackendApi.Core.Services
             return messagesDto;
         }
 
+         public async Task<List<MessageFriendsGroupDto>> GetMessageGroupList(int userId) {
+
+             var user = await _userRepo.GetByAsync<AppUser>(query => 
+                query.Where(u => u.Id == userId )
+                     .Include(u => u.MessageGroups)
+                     .ThenInclude(u => u.MessageGroup)
+                     .ThenInclude(u => u.Messages)
+                     .OrderBy(u => u.MessagesSent.OrderByDescending(m=>m.CreatedDate).FirstOrDefault().CreatedDate)
+                     .AsSplitQuery()
+                     );
+
+            List<MessageFriendsGroupDto> groupsDto = new List<MessageFriendsGroupDto>();
+            foreach (var group in user.MessageGroups.ToList())
+            {
+                var gm = _mapper.Map<MessageGroup,MessageFriendsGroupDto>(group.MessageGroup);
+                groupsDto.Add(gm);
+            }
+            return groupsDto;
+        }
+
   
 
         // public async Task<MessageGroup> GetMessageGroup(string groupName)

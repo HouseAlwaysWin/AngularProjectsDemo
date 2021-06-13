@@ -5,7 +5,7 @@ import { UserPhoto, UserShortInfo } from '../shared/models/user';
 import { FormFieldService } from '../shared/services/form-field.service';
 import { AccountService } from '../shared/services/account.service';
 import { Router } from '@angular/router';
-import { AccountQuery } from '../shared/states/account/account.query';
+import { DataService } from '../shared/states/data.service';
 
 @Component({
   selector: 'app-friends',
@@ -21,12 +21,13 @@ export class FriendsComponent implements OnInit {
     public formService: FormFieldService,
     private formBuilder: FormBuilder,
     private accountService: AccountService,
-    private accountQuery: AccountQuery) { }
+    private state: DataService
+  ) { }
 
   ngOnInit(): void {
     this.getAllFriends();
     this.initSearchForm();
-    this.accountQuery.usersOnline$.subscribe(user => {
+    this.state.query.usersOnline$.subscribe(user => {
       console.log(user);
       this.userOnline = user;
     })

@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { AccountStore } from "../states/account/account.store";
 import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
 import { Login } from "../models/login";
 import { environment } from "src/environments/environment";
@@ -7,12 +6,11 @@ import { Res, ResPaging } from "../models/response";
 import { UserDetail, UserPhoto, UserShortInfo } from "../models/user";
 import { catchError, map } from 'rxjs/operators'
 import { BehaviorSubject, of } from "rxjs";
-import { AccountQuery } from "../states/account/account.query";
 import { Register } from "../models/register";
-import { SharedStore } from "../states/shared/shared.store";
 import { AcceptFriend, Friend } from "../models/friend";
 import { PresenceService } from "./presence.service";
 import { Notify, NotifyList } from "../models/notification";
+import { DataService } from "../states/data.service";
 
 @Injectable({
   providedIn: 'root'
@@ -21,9 +19,7 @@ export class AccountService {
   apiUrl = environment.apiUrl;
   constructor(
     private http: HttpClient,
-    private accountQuery: AccountQuery,
-    private accountStore: AccountStore,
-    private sharedStore: SharedStore,
+    private state: DataService,
     private presenceService: PresenceService
   ) {
   }
@@ -31,12 +27,13 @@ export class AccountService {
 
   private setCurrentUser(user: UserShortInfo) {
     localStorage.setItem('token', JSON.stringify(user.token));
-    this.accountStore.update({
+    this.state.store.update({
       user: user,
       userPhotos: user.photos,
       mainPhoto: user.photos.filter(p => p.isMain)[0]?.url,
       isAuth: true
     })
+
   }
 
   getUserDetail() {
@@ -56,17 +53,17 @@ export class AccountService {
   }
 
   register(model: Register) {
-    this.sharedStore.update({ gLoading: true });
+    this.state.store.update({ gLoading: true });
     return this.http.post(`${this.apiUrl}account/register`, model).pipe(
       map((res: Res<UserShortInfo>) => {
         if (res.isSuccessed) {
           this.setCurrentUser(res.data);
         }
-        this.sharedStore.update({ gLoading: false });
+        this.state.store.update({ gLoading: false });
         return res;
       }),
       catchError(error => {
-        this.sharedStore.update({ gLoading: false });
+        this.state.store.update({ gLoading: false });
         localStorage.removeItem('token');
         console.log(error);
         return of(error);
@@ -76,18 +73,18 @@ export class AccountService {
 
 
   login(model: Login) {
-    this.sharedStore.update({ gLoading: true });
+    this.state.store.update({ gLoading: true });
     return this.http.post(`${this.apiUrl}account/login`, model).pipe(
       map((res: Res<UserShortInfo>) => {
         if (res.isSuccessed) {
           this.setCurrentUser(res.data);
         }
-        this.sharedStore.update({ gLoading: false });
+        this.state.store.update({ gLoading: false });
         this.presenceService.createHubConnection();
         return res;
       }),
       catchError(error => {
-        this.sharedStore.update({ gLoading: false });
+        this.state.store.update({ gLoading: false });
         localStorage.removeItem('token');
         console.log(error);
         return of(error);
@@ -96,20 +93,20 @@ export class AccountService {
   }
 
   logout() {
-    this.sharedStore.update({ gLoading: true });
+    this.state.store.update({ gLoading: true });
     localStorage.removeItem('token');
-    this.accountStore.update(null);
-    this.sharedStore.update({ gLoading: false });
+    this.state.store.update(null);
+    this.state.store.update({ gLoading: false });
     this.presenceService.stopHubConnection();
   }
 
   setUserPhotoAsMain(photo: UserPhoto) {
-    this.sharedStore.update({ gLoading: true });
+    this.state.store.update({ gLoading: true });
     return this.http.put(`${this.apiUrl}user/set-main-photo/${photo.id}`, {})
       .pipe(
         map((res: Res<any>) => {
           if (res.isSuccessed) {
-            this.accountStore.update(state => {
+            this.state.store.update(state => {
               let statePhotos = state.user.photos;
               for (let i = 0; i < statePhotos.length; i++) {
                 statePhotos[i].isMain = false;
@@ -124,11 +121,11 @@ export class AccountService {
               })
             });
           }
-          this.sharedStore.update({ gLoading: false });
+          this.state.store.update({ gLoading: false });
           return res;
         }),
         catchError(error => {
-          this.sharedStore.update({ gLoading: false });
+          this.state.store.update({ gLoading: false });
           console.log(error);
           return of(error);
         }));
@@ -146,7 +143,7 @@ export class AccountService {
         observe: 'events',
       }).pipe(
         catchError(error => {
-          this.sharedStore.update({ gLoading: false });
+          this.state.store.update({ gLoading: false });
           console.log(error);
           return of(error);
         })
@@ -155,25 +152,25 @@ export class AccountService {
   }
 
   deleteUserPhoto(photo: UserPhoto) {
-    this.sharedStore.update({ gLoading: true });
+    this.state.store.update({ gLoading: true });
     console.log(photo);
     return this.http.delete(`${this.apiUrl}user/delete-photo/${photo.id}`, {})
       .pipe(
         map((res: Res<any>) => {
           if (res.isSuccessed) {
 
-            this.accountStore.update(state => {
+            this.state.store.update(state => {
               let index = state.user.photos.indexOf(photo);
               if (index > -1) {
                 state.user.photos.splice(index, 1);
               }
             });
           }
-          this.sharedStore.update({ gLoading: false });
+          this.state.store.update({ gLoading: false });
           return res;
         }),
         catchError(error => {
-          this.sharedStore.update({ gLoading: false });
+          this.state.store.update({ gLoading: false });
           console.log(error);
           return of(error);
         }));
@@ -184,7 +181,7 @@ export class AccountService {
     return this.http.get(`${this.apiUrl}user/get-friends`).pipe(
       map((res: Res<Friend[]>) => {
         if (res.isSuccessed) {
-          this.accountStore.update({
+          this.state.store.update({
             friendList: res.data
           });
         }
@@ -205,7 +202,7 @@ export class AccountService {
     return this.http.post(`${this.apiUrl}user/accept-friend/${id}/${notifyId}`, null).pipe(
       map((res: AcceptFriend) => {
         console.log(res);
-        this.accountStore.update({
+        this.state.store.update({
           friendList: res.friends,
           notifies: res.notifications.notifications.data,
           notifyNotReadCount: res.notifications.notReadTotalCount
@@ -220,7 +217,7 @@ export class AccountService {
     return this.http.post(`${this.apiUrl}user/reject-friend/${notifyId}`, null).pipe(
       map((res: NotifyList) => {
         console.log(res);
-        this.accountStore.update({
+        this.state.store.update({
           notifies: res.notifications.data,
           notifyNotReadCount: res.notReadTotalCount
         })
@@ -234,7 +231,7 @@ export class AccountService {
     return this.http.put(`${this.apiUrl}user/update-readall-notifications`, null).pipe(
       map((res: NotifyList) => {
         console.log(res);
-        this.accountStore.update({
+        this.state.store.update({
           notifies: res.notifications.data,
           notifyNotReadCount: res.notReadTotalCount
         })
@@ -246,7 +243,7 @@ export class AccountService {
   removeFriend(friend: Friend) {
     return this.http.delete(`${this.apiUrl}user/remove-friend/${friend.friendId}`).pipe(
       map((res: Res<Friend[]>) => {
-        this.accountStore.update({
+        this.state.store.update({
           friendList: res.data
         })
         return res;

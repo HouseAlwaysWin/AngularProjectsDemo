@@ -7,11 +7,10 @@ import { catchError, debounceTime, map, switchMap, tap } from 'rxjs/operators';
 import { Res } from 'src/app/shared/models/response';
 import { UserDetail } from 'src/app/shared/models/user';
 import { FormFieldService } from 'src/app/shared/services/form-field.service';
-import { AccountQuery } from 'src/app/shared/states/account/account.query';
 import { AccountService } from 'src/app/shared/services/account.service';
-import { AccountStore } from 'src/app/shared/states/account/account.store';
 import { CustomValidators } from 'src/app/shared/validators/custom-validators';
 import { environment } from 'src/environments/environment';
+import { DataService } from 'src/app/shared/states/data.service';
 
 @Component({
   selector: 'app-register',
@@ -29,14 +28,12 @@ export class RegisterComponent implements OnInit {
   userNameFocus: boolean = false;
 
   constructor(
-    private http: HttpClient,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     public formService: FormFieldService,
     private accountService: AccountService,
-    private accountQuery: AccountQuery,
     private formBuilder: FormBuilder,
-    private cdRef: ChangeDetectorRef
+    private state: DataService
   ) { }
 
   ngOnInit(): void {
@@ -54,7 +51,7 @@ export class RegisterComponent implements OnInit {
   }
 
   loading() {
-    this.accountQuery.loading$.subscribe(res => {
+    this.state.query.loading$.subscribe(res => {
       if (this.emailFocus) {
         this.emailLoading = res;
         if (!res) {

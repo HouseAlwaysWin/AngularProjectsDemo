@@ -1,14 +1,14 @@
 import { Injectable } from "@angular/core";
 import { Store, StoreConfig } from "@datorama/akita";
-import { Friend } from "../../models/friend";
-import { Message } from "../../models/message";
-import { Notify } from "../../models/notification";
-import { UserDetail, UserPhoto, UserShortInfo } from "../../models/user";
+import { Friend } from "../models/friend";
+import { Message, MessageGroup } from "../models/message";
+import { Notify } from "../models/notification";
+import { UserPhoto, UserShortInfo } from "../models/user";
 
 
 
 
-export interface AccountState {
+export interface DataState {
   user: UserShortInfo;
   mainPhoto: string;
   userPhotos: UserPhoto[];
@@ -16,12 +16,14 @@ export interface AccountState {
   loading: boolean;
   friendList: Friend[];
   messagesThread: Message[];
+  messagesGroups: MessageGroup[];
   notifies: Notify[],
   notifyNotReadCount: number,
   isAuth: boolean;
+  gLoading: boolean;
 }
 
-export function createInitialState(): AccountState {
+export function createInitialState(): DataState {
   return {
     user: new UserShortInfo(),
     mainPhoto: '',
@@ -30,9 +32,11 @@ export function createInitialState(): AccountState {
     friendList: [],
     loading: false,
     messagesThread: [],
+    messagesGroups: [],
     notifies: [],
     notifyNotReadCount: 0,
-    isAuth: false
+    isAuth: false,
+    gLoading: false
   }
 }
 
@@ -40,7 +44,7 @@ export function createInitialState(): AccountState {
   providedIn: 'root'
 })
 @StoreConfig({ name: 'account' })
-export class AccountStore extends Store<AccountState>{
+export class DataStore extends Store<DataState>{
   constructor() {
     super(createInitialState());
   }

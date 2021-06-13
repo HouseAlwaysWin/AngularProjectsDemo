@@ -1,7 +1,7 @@
 <div class="container">
 
   <div class="title">
-    <h1 *ngIf="!accountQuery.isAuth;else loginTitle">Welcome to Random Chatroom</h1>
+    <h1 *ngIf="!state.query.isAuth;else loginTitle">Welcome to Random Chatroom</h1>
     <ng-template #loginTitle>
       <h1>Welcome Back !!!</h1>
     </ng-template>
@@ -9,7 +9,7 @@
   </div>
 
   <div class="content"
-       *ngIf="!accountQuery.isAuth;else loginContent">
+       *ngIf="!state.query.isAuth;else loginContent">
     <p>Please,Login to chat</p>
     <button routerLink="/account/login"
             class="btn btn-primary">

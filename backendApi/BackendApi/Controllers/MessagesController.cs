@@ -70,22 +70,7 @@ namespace BackendApi.Controllers
         [HttpGet("get-messages-friends-list")]
         public async Task<ActionResult> GetMessageFirendsList() {
             var userId = User.GetUserId();
-
-             var user = await _userRepo.GetByAsync<AppUser>(query => 
-                query.Where(u => u.Id == userId )
-                     .Include(u => u.MessageGroups)
-                     .ThenInclude(u => u.MessageGroup)
-                     .ThenInclude(u => u.Messages)
-                     .OrderBy(u => u.MessagesSent.OrderByDescending(m=>m.CreatedDate).FirstOrDefault().CreatedDate)
-                     .AsSplitQuery()
-                     );
-
-            List<MessageFriendsGroupDto> groupsDto = new List<MessageFriendsGroupDto>();
-            foreach (var group in user.MessageGroups.ToList())
-            {
-                var gm = _mapper.Map<MessageGroup,MessageFriendsGroupDto>(group.MessageGroup);
-                groupsDto.Add(gm);
-            }
+            var groupsDto = await _messageService.GetMessageGroupList(userId);
             return BaseApiOk(groupsDto);
         }
 

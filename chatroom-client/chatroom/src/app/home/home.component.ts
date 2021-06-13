@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AccountQuery } from '../shared/states/account/account.query';
+import { DataService } from '../shared/states/data.service';
 
 @Component({
   selector: 'app-home',
@@ -8,7 +8,7 @@ import { AccountQuery } from '../shared/states/account/account.query';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(public accountQuery: AccountQuery) { }
+  constructor(public state: DataService) { }
 
   ngOnInit(): void {
   }

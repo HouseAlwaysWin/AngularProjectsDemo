@@ -4,10 +4,7 @@ import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { take } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { MessageGroup } from '../models/message';
-import { UserShortInfo } from '../models/user';
-import { AccountQuery } from '../states/account/account.query';
-import { AccountStore } from '../states/account/account.store';
-import { SharedStore } from '../states/shared/shared.store';
+import { DataService } from '../states/data.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,13 +15,13 @@ export class MessageService {
   private hubConnection: HubConnection;
 
   constructor(private http: HttpClient,
-    private accountQuery: AccountQuery,
-    private accountStore: AccountStore,
-    private sharedStore: SharedStore
+    // private accountQuery: AccountQuery,
+    // private accountStore: AccountStore,
+    private state: DataService,
   ) { }
 
   createHubConnection(otherUsername: string, groupId: string) {
-    let user = this.accountQuery.user;
+    let user = this.state.query.user;
     if (!groupId) groupId = '';
     if (user?.token && otherUsername) {
       this.hubConnection = new HubConnectionBuilder()
@@ -37,24 +34,22 @@ export class MessageService {
       this.hubConnection.start()
         .catch(error => console.log(error))
         .finally(() => {
-          this.sharedStore.update({ gLoading: false });
         });
 
-      this.hubConnection.on('ReceiveMessageThread', messages => {
+      this.hubConnection.on('ReceiveMessageThread', res => {
         console.log('receiveMessageThread')
-        console.log(messages);
-        this.accountStore.update({
-          messagesThread: messages,
+        console.log(res);
+        this.state.store.update({
+          messagesThread: res.messages,
+          messagesGroups: res.groups
         })
       });
 
 
       this.hubConnection.on('NewMessage', message => {
-        console.log(message);
         console.log('newMessage')
-        this.accountQuery.messagesThread$.pipe(take(1)).subscribe(messages => {
-          console.log(messages[messages.length - 1])
-          this.accountStore.update({
+        this.state.query.messagesThread$.pipe(take(1)).subscribe(messages => {
+          this.state.store.update({
             messagesThread: [...messages, message]
           })
         })
@@ -63,19 +58,16 @@ export class MessageService {
 
       this.hubConnection.on('UpdatedGroup', (group: MessageGroup) => {
         console.log('UpdatedGroup')
-        console.log(group)
-        // if (group.connections.some(x => x.userName === otherUsername)) {
-        this.accountQuery.messagesThread$.pipe(take(1)).subscribe(messages => {
+        this.state.query.messagesThread$.pipe(take(1)).subscribe(messages => {
           messages.forEach(message => {
             if (!message.dateRead) {
               message.dateRead = new Date(Date.now())
             }
           })
-          this.accountStore.update({
+          this.state.store.update({
             messagesThread: messages
           });
         })
-        // }
       });
     }
   }

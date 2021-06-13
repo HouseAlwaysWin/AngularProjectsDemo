@@ -7,7 +7,7 @@
   <ul class="nav-list">
     <li class="nav-item"
         #notify
-        *ngIf="accountQuery.isAuth">
+        *ngIf="state.query.isAuth">
       <a class="nav-btn"
          (click)="toggleNotify()">
         <i class="far fa-bell"
@@ -52,43 +52,43 @@
       </div>
     </li>
     <li class="nav-item"
-        *ngIf="accountQuery.isAuth"
+        *ngIf="state.query.isAuth"
         routerLink="/message/list">
       <a class="nav-btn">
         <fa-icon [icon]="faComment"></fa-icon>
       </a>
     </li>
     <li class="nav-item"
-        *ngIf="accountQuery.isAuth"
+        *ngIf="state.query.isAuth"
         routerLink="/friends/add">
       <a class="nav-btn">
         <i class="fas fa-user-plus"></i>
       </a>
     </li>
     <li class="nav-item"
-        *ngIf="accountQuery.isAuth"
+        *ngIf="state.query.isAuth"
         routerLink="/admin">
       <img src="{{headPhotoUrl}}"
            class="userImg" />
     </li>
 
-    <li *ngIf="!accountQuery.isAuth"
+    <li *ngIf="!state.query.isAuth"
         routerLink="/account/login"
         class="nav-item">
       <a class="nav-btn">Login</a>
     </li>
 
-    <li *ngIf="!accountQuery.isAuth"
+    <li *ngIf="!state.query.isAuth"
         routerLink="/account/register"
         class="nav-item">
       <a class="nav-btn">Register</a>
     </li>
 
-    <li *ngIf="accountQuery.isAuth"
+    <li *ngIf="state.query.isAuth"
         (click)="toggleMenu()"
         #menu
         class="nav-item">
-      <a class="nav-btn">{{ accountQuery.username }}
+      <a class="nav-btn">{{ state.query.username }}
         <i class="fas fa-chevron-circle-down"></i>
       </a>
 

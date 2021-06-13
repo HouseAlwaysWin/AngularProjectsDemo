@@ -108,7 +108,11 @@ namespace BackendApi.Core.Services.SignalR
 
             var currentUsername = Context.User.GetUserName();
             var messages = await _messageService.GetMessageThread(userId,group.Id);
-            await Clients.Groups(group.AlternateId).SendAsync("ReceiveMessageThread", messages);
+            var groups = await _messageService.GetMessageGroupList(userId);
+            await Clients.Groups(group.AlternateId).SendAsync("ReceiveMessageThread", new {
+                messages,
+                groups
+            });
         }
 
 

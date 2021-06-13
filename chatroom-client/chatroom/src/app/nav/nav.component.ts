@@ -1,13 +1,12 @@
 import { ElementRef, HostListener, Renderer2, ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AccountQuery } from '../shared/states/account/account.query';
 import { AccountService } from '../shared/services/account.service';
-import { AccountStore } from '../shared/states/account/account.store';
 import { faComment, faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
 import { UtilitiesService } from '../shared/services/utilities.service';
 import { Notify } from '../shared/models/notification';
 import { Res } from '../shared/models/response';
+import { DataService } from '../shared/states/data.service';
 
 @Component({
   selector: 'app-nav',
@@ -31,8 +30,7 @@ export class NavComponent implements OnInit {
   constructor(
     private router: Router,
     private accountService: AccountService,
-    public accountQuery: AccountQuery,
-    public accountStore: AccountStore,
+    public state: DataService,
     private utilitiesService: UtilitiesService,
   ) { }
 
@@ -44,7 +42,7 @@ export class NavComponent implements OnInit {
   }
 
   readMainPhoto() {
-    this.accountQuery.mainPhoto$.subscribe(url => {
+    this.state.query.mainPhoto$.subscribe(url => {
       this.headPhotoUrl = url;
     })
   }
@@ -68,7 +66,7 @@ export class NavComponent implements OnInit {
   logout() {
     this.toggleMenu();
     this.accountService.logout();
-    this.accountStore.update({
+    this.state.store.update({
       isAuth: false
     });
     this.router.navigateByUrl('/');
@@ -79,10 +77,10 @@ export class NavComponent implements OnInit {
   }
 
   getNotifies() {
-    this.accountQuery.notifies$.subscribe((notifies) => {
+    this.state.query.notifies$.subscribe((notifies) => {
       this.notifies = notifies;
     });
-    this.accountQuery.notifyNotReadCount$.subscribe(count => {
+    this.state.query.notifyNotReadCount$.subscribe(count => {
       this.notifyCount = count;
     });
   }

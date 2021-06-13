@@ -2,9 +2,8 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UtilitiesService } from './shared/services/utilities.service';
 import { AccountService } from './shared/services/account.service';
-import { SharedQuery } from './shared/states/shared/shared.query';
-import { SharedStore } from './shared/states/shared/shared.store';
 import { PresenceService } from './shared/services/presence.service';
+import { DataService } from './shared/states/data.service';
 
 @Component({
   selector: 'app-root',
@@ -20,15 +19,15 @@ export class AppComponent implements OnInit {
   }
 
   globalLoading() {
-    this.sharedQuery.gLoading$.subscribe(res => {
+    this.state.query.gLoading$.subscribe(res => {
       this.loading = res;
     });
   }
 
   constructor(
     private router: Router,
+    private state: DataService,
     private utilitiesService: UtilitiesService,
-    public sharedQuery: SharedQuery,
     private accountService: AccountService,
     private presenceService: PresenceService) {
   }
@@ -42,11 +41,10 @@ export class AppComponent implements OnInit {
 
   checkLogin() {
     const token: string = JSON.parse(localStorage.getItem('token'));
-
     if (token) {
       this.accountService.getUserDetail().subscribe(res => {
         if (res) {
-          this.presenceService.createHubConnection();
+          // this.presenceService.createHubConnection();
         }
         else {
           this.router.navigate(['/account/login']);

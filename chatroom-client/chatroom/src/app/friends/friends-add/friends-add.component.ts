@@ -5,8 +5,6 @@ import { UserPhoto, UserShortInfo } from 'src/app/shared/models/user';
 import { FormFieldService } from 'src/app/shared/services/form-field.service';
 import { AccountService } from 'src/app/shared/services/account.service';
 import { PresenceService } from 'src/app/shared/services/presence.service';
-import { SharedStore } from 'src/app/shared/states/shared/shared.store';
-import { AccountQuery } from 'src/app/shared/states/account/account.query';
 import { Friend } from 'src/app/shared/models/friend';
 
 @Component({
@@ -21,10 +19,8 @@ export class FriendsAddComponent implements OnInit {
   publicId: string;
   constructor(
     private accountService: AccountService,
-    private accountQery: AccountQuery,
     public formService: FormFieldService,
-    private presenceService: PresenceService,
-    private formBuilder: FormBuilder) { }
+    private presenceService: PresenceService) { }
 
   ngOnInit(): void {
     this.accountService.getFriends().subscribe((res: Res<Friend[]>) => {

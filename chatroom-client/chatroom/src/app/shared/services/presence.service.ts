@@ -3,8 +3,7 @@ import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { take } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { NotifyList } from '../models/notification';
-import { AccountQuery } from '../states/account/account.query';
-import { AccountStore } from '../states/account/account.store';
+import { DataService } from '../states/data.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,12 +13,12 @@ export class PresenceService {
   hubUrl = environment.hubUrl;
   private hubConnection: HubConnection;
   constructor(
-    private accountStore: AccountStore,
-    private accountQuery: AccountQuery) { }
+    private state: DataService
+  ) { }
 
 
   createHubConnection() {
-    let user = this.accountQuery.user;
+    let user = this.state.query.user;
     this.hubConnection = new HubConnectionBuilder()
       .withUrl(this.hubUrl + 'presence', {
         accessTokenFactory: () => user.token
@@ -33,16 +32,16 @@ export class PresenceService {
 
 
     this.hubConnection.on('GetOnlineUsers', (usernames: string[]) => {
-      this.accountStore.update({
+      this.state.store.update({
         usersOnline: usernames
       })
     });
 
     this.hubConnection.on('UserIsOnline', username => {
-      this.accountQuery.usersOnline$.pipe(
+      this.state.query.usersOnline$.pipe(
         take(1)
       ).subscribe(usernames => {
-        this.accountStore.update({
+        this.state.store.update({
           usersOnline: [...usernames, username]
         })
       })
@@ -50,17 +49,17 @@ export class PresenceService {
     })
 
     this.hubConnection.on('UserIsOffline', username => {
-      this.accountQuery.usersOnline$.pipe(
+      this.state.query.usersOnline$.pipe(
         take(1)
       ).subscribe(usernames => {
-        this.accountStore.update({
+        this.state.store.update({
           usersOnline: [...usernames.filter(x => x !== username)]
         })
       })
     })
 
     this.hubConnection.on('GetNotifications', (notifies: NotifyList) => {
-      this.accountStore.update({
+      this.state.store.update({
         notifies: notifies.notifications.data,
         notifyNotReadCount: notifies.notReadTotalCount
       });

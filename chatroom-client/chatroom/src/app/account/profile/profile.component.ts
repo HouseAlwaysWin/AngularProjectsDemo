@@ -7,10 +7,9 @@ import { catchError, takeUntil } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { UserDetail, UserPhoto, UserShortInfo } from '../../shared/models/user';
 import { UtilitiesService } from '../../shared/services/utilities.service';
-import { AccountQuery } from '../../shared/states/account/account.query';
 import { AccountService } from '../../shared/services/account.service';
-import { AccountStore } from '../../shared/states/account/account.store';
 import { Res } from 'src/app/shared/models/response';
+import { DataService } from 'src/app/shared/states/data.service';
 
 @Component({
   selector: 'app-profile',
@@ -44,10 +43,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
   constructor(
     private http: HttpClient,
     private accountService: AccountService,
-    private accountQuery: AccountQuery,
     private utilitiesService: UtilitiesService,
     public sanitizer: DomSanitizer,
-    private accountStore: AccountStore) {
+    private state: DataService
+  ) {
 
   }
 
@@ -77,7 +76,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   getMainPhoto() {
-    this.accountQuery.photos$.subscribe((user: UserPhoto[]) => {
+    this.state.query.photos$.subscribe((user: UserPhoto[]) => {
       this.mainPhoto = user.filter(u => u.isMain)[0]?.url;
       this.totalPhotos = user;
       this.photos = user.slice(this.photoPrevIndex, this.photoNextIndex);
@@ -159,7 +158,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
             if (data) {
               this.removeUploadImg(index);
               if (data) {
-                this.accountStore.update({
+                this.state.store.update({
                   user: data
                 })
               }

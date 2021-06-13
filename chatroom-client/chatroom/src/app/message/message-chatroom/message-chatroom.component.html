@@ -6,7 +6,7 @@
     <ul class="message-list"
         #messageListContent>
       <li class="message-item"
-          *ngFor="let message of (accountQuery.messagesThread$ | async)">
+          *ngFor="let message of (state.query.messagesThread$ | async)">
         <div *ngIf="message.senderUsername === currentUser.userName"
              class="message-current">
           <div class="message-current-read"

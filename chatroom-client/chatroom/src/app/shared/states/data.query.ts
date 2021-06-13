@@ -1,14 +1,12 @@
 import { Injectable } from "@angular/core";
 import { Query } from "@datorama/akita";
-import { BehaviorSubject } from "rxjs";
-import { UserShortInfo } from "../../models/user";
-import { AccountState, AccountStore } from "./account.store";
+import { DataState, DataStore } from "./data.store";
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class AccountQuery extends Query<AccountState> {
+export class DataQuery extends Query<DataState> {
   all$ = this.select();
   user$ = this.select(state => state.user);;
   mainPhoto$ = this.select(state => state.user.photos.filter(p => p.isMain)[0]?.url);
@@ -22,8 +20,10 @@ export class AccountQuery extends Query<AccountState> {
   usersOnline$ = this.select('usersOnline');
   loading$ = this.select('loading');
   messagesThread$ = this.select('messagesThread');
+  messageGrouops$ = this.select('messagesGroups');
   notifies$ = this.select('notifies');
   notifyNotReadCount$ = this.select('notifyNotReadCount');
+  gLoading$ = this.select('gLoading');
 
   get token() {
     return this.getValue().user.token;
@@ -66,7 +66,15 @@ export class AccountQuery extends Query<AccountState> {
     return this.getValue().notifyNotReadCount;
   }
 
-  constructor(protected store: AccountStore) {
+  get gLoading() {
+    return this.getValue().gLoading;
+  }
+
+  get messageGroup() {
+    return this.getValue().messagesGroups;
+  }
+
+  constructor(protected store: DataStore) {
     super(store);
   }
 
