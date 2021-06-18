@@ -44,7 +44,7 @@ export class AppComponent implements OnInit {
     if (token) {
       this.accountService.getUserDetail().subscribe(res => {
         if (res) {
-          // this.presenceService.createHubConnection();
+          this.presenceService.createHubConnection();
         }
         else {
           this.router.navigate(['/account/login']);

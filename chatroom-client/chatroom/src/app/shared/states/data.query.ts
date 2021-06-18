@@ -20,10 +20,11 @@ export class DataQuery extends Query<DataState> {
   usersOnline$ = this.select('usersOnline');
   loading$ = this.select('loading');
   messagesThread$ = this.select('messagesThread');
-  messageGrouops$ = this.select('messagesGroups');
+  messageGroups$ = this.select('messagesGroups');
   notifies$ = this.select('notifies');
   notifyNotReadCount$ = this.select('notifyNotReadCount');
   gLoading$ = this.select('gLoading');
+  friendRedirectParam$ = this.select('friendRedirectParam');
 
   get token() {
     return this.getValue().user.token;
@@ -70,8 +71,12 @@ export class DataQuery extends Query<DataState> {
     return this.getValue().gLoading;
   }
 
-  get messageGroup() {
+  get messageGroups() {
     return this.getValue().messagesGroups;
+  }
+
+  get friendRedirectParam() {
+    return this.getValue().friendRedirectParam;
   }
 
   constructor(protected store: DataStore) {

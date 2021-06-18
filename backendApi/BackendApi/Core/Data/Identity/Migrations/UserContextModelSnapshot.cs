@@ -220,15 +220,10 @@ namespace BackendApi.Core.Data.Identity.Migrations
                     b.Property<string>("MessageConnectionId")
                         .HasColumnType("text");
 
-                    b.Property<int?>("MessageGroupId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("UserName")
                         .HasColumnType("text");
 
                     b.HasKey("MessageConnectionId");
-
-                    b.HasIndex("MessageGroupId");
 
                     b.ToTable("MessageConnection");
                 });
@@ -307,6 +302,9 @@ namespace BackendApi.Core.Data.Identity.Migrations
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<int>("NotificationType")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("QAStatus")
                         .HasColumnType("integer");
 
                     b.Property<DateTimeOffset?>("ReadDate")
@@ -606,14 +604,6 @@ namespace BackendApi.Core.Data.Identity.Migrations
                     b.Navigation("MessageGroup");
                 });
 
-            modelBuilder.Entity("BackendApi.Core.Models.Entities.Identity.MessageConnection", b =>
-                {
-                    b.HasOne("BackendApi.Core.Models.Entities.Identity.MessageGroup", null)
-                        .WithMany("Connections")
-                        .HasForeignKey("MessageGroupId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("BackendApi.Core.Models.Entities.Identity.MessageRecivedUser", b =>
                 {
                     b.HasOne("BackendApi.Core.Models.Entities.Message", "Message")
@@ -760,8 +750,6 @@ namespace BackendApi.Core.Data.Identity.Migrations
             modelBuilder.Entity("BackendApi.Core.Models.Entities.Identity.MessageGroup", b =>
                 {
                     b.Navigation("AppUsers");
-
-                    b.Navigation("Connections");
 
                     b.Navigation("Messages");
                 });

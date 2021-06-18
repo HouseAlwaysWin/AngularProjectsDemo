@@ -21,6 +21,7 @@ export interface DataState {
   notifyNotReadCount: number,
   isAuth: boolean;
   gLoading: boolean;
+  friendRedirectParam: string;
 }
 
 export function createInitialState(): DataState {
@@ -36,7 +37,8 @@ export function createInitialState(): DataState {
     notifies: [],
     notifyNotReadCount: 0,
     isAuth: false,
-    gLoading: false
+    gLoading: false,
+    friendRedirectParam: ''
   }
 }
 

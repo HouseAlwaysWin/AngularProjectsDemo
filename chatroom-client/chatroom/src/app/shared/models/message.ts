@@ -18,6 +18,7 @@ export interface MessageGroup {
   groupOtherImg: string;
   groupType: number;
   messages: Message[];
+  lastMessages: string;
 }
 
 export interface MessageConnection {

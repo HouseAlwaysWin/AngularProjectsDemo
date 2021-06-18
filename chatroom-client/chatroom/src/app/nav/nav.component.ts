@@ -7,6 +7,7 @@ import { UtilitiesService } from '../shared/services/utilities.service';
 import { Notify } from '../shared/models/notification';
 import { Res } from '../shared/models/response';
 import { DataService } from '../shared/states/data.service';
+import { QAStatus } from '../shared/models/notification';
 
 @Component({
   selector: 'app-nav',
@@ -33,6 +34,10 @@ export class NavComponent implements OnInit {
     public state: DataService,
     private utilitiesService: UtilitiesService,
   ) { }
+
+  public get QAStatus(): typeof QAStatus {
+    return QAStatus;
+  }
 
   ngOnInit(): void {
     this.accountService.getUserDetail().subscribe(res => {
@@ -78,9 +83,11 @@ export class NavComponent implements OnInit {
 
   getNotifies() {
     this.state.query.notifies$.subscribe((notifies) => {
+      console.log(notifies);
       this.notifies = notifies;
     });
     this.state.query.notifyNotReadCount$.subscribe(count => {
+      console.log(count);
       this.notifyCount = count;
     });
   }
@@ -94,14 +101,15 @@ export class NavComponent implements OnInit {
 
 
   acceptRequest(id: number, notifyId: number) {
-    console.log(id);
     this.accountService.acceptFriend(id, notifyId).subscribe(res => {
-      alert("Add successed");
+      console.log('AcceptRequest');
+      console.log(res.notifications.notifications.data);
+      console.log(res);
+      this.notifies = res.notifications.notifications.data;
     });
   }
 
   cancelRequest(notifyId: number) {
-    this.showNotify = false;
     this.accountService.rejectFriend(notifyId).subscribe();
   }
 

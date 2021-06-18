@@ -244,7 +244,6 @@ namespace BackendApi
             services.AddScoped<IStoreRepository,StoreRepository>();
             services.AddScoped<IUserRepository,UserRepository>();
             services.AddScoped<IPhotoService,PhotoService>();
-            services.AddSingleton<PresenceTracker>();
             services.AddHttpContextAccessor();
             services.Configure<CloudinarySettings>(_config.GetSection("CloudinarySettings"));
 
@@ -286,7 +285,9 @@ namespace BackendApi
             // });
             services.AddCors();
 
-            services.AddSignalR();
+            services.AddSignalR(options => {
+                options.EnableDetailedErrors = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

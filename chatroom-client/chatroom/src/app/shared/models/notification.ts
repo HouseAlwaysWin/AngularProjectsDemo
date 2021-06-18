@@ -1,6 +1,12 @@
 import { ResPaging } from "./response";
 import { UserShortInfo } from "./user";
 
+export enum QAStatus {
+  NoResponse,
+  Accept,
+  Reject
+}
+
 export interface Notify {
   id: number;
   appUserId: number;
@@ -12,6 +18,7 @@ export interface Notify {
   isAnswerQuestion: boolean,
   readDate: Date,
   notificationType: number,
+  qAStatus: QAStatus,
   createdDate: Date
 }
 

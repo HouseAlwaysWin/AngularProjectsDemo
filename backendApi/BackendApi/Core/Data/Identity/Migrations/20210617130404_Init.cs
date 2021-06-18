@@ -26,6 +26,18 @@ namespace BackendApi.Core.Data.Identity.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MessageConnection",
+                columns: table => new
+                {
+                    MessageConnectionId = table.Column<string>(type: "text", nullable: false),
+                    UserName = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MessageConnection", x => x.MessageConnectionId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MessageGroup",
                 columns: table => new
                 {
@@ -80,25 +92,6 @@ namespace BackendApi.Core.Data.Identity.Migrations
                         name: "FK_AppRoleClaims_AppRoles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "AppRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "MessageConnection",
-                columns: table => new
-                {
-                    MessageConnectionId = table.Column<string>(type: "text", nullable: false),
-                    UserName = table.Column<string>(type: "text", nullable: true),
-                    MessageGroupId = table.Column<int>(type: "integer", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MessageConnection", x => x.MessageConnectionId);
-                    table.ForeignKey(
-                        name: "FK_MessageConnection_MessageGroup_MessageGroupId",
-                        column: x => x.MessageGroupId,
-                        principalTable: "MessageGroup",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -297,6 +290,7 @@ namespace BackendApi.Core.Data.Identity.Migrations
                     AppUserId = table.Column<int>(type: "integer", nullable: false),
                     RequestUserId = table.Column<int>(type: "integer", nullable: false),
                     Content = table.Column<string>(type: "text", nullable: true),
+                    QAStatus = table.Column<int>(type: "integer", nullable: false),
                     ReadDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                     NotificationType = table.Column<int>(type: "integer", nullable: false),
                     CreatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")
@@ -481,11 +475,6 @@ namespace BackendApi.Core.Data.Identity.Migrations
                 name: "IX_Message_SenderId",
                 table: "Message",
                 column: "SenderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MessageConnection_MessageGroupId",
-                table: "MessageConnection",
-                column: "MessageGroupId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Notification_AppUserId",

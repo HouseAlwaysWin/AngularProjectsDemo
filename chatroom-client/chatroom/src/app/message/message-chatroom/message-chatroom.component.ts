@@ -20,14 +20,14 @@ export class MessageChatroomComponent implements OnInit {
   @Input() recipientUserName: string;
   @Input() messageGroupId: string;
 
+  // @Output() sendMessages: EventEmitter<{ content: string, recipientUser: string }>;
+
   currentUser: UserShortInfo;
   otherUser: UserShortInfo;
 
   @ViewChild('messageListContent') messageListContent: ElementRef;
   constructor(
     public state: DataService,
-    private activeRoute: ActivatedRoute,
-    private accountService: AccountService,
     private messageService: MessageService,
   ) {
   }
@@ -37,16 +37,11 @@ export class MessageChatroomComponent implements OnInit {
     this._onDestroy.next();
   }
 
-
   ngOnInit() {
     this.initProps();
   }
 
-  // ngAfterViewChecked() {
-  //   this.messageListContent.nativeElement.scrollTop = this.messageListContent.nativeElement.scrollHeight;
-  // }
-
-  public goDown() {
+  goDown() {
     this.messageListContent.nativeElement.scrollTop = this.messageListContent.nativeElement.scrollHeight;
   }
 
@@ -57,20 +52,18 @@ export class MessageChatroomComponent implements OnInit {
 
 
   initProps() {
-    // this.recipientUserName = this.activeRoute.snapshot.paramMap.get('username');
-    // this.messageGroupId = this.activeRoute.snapshot.paramMap.get('messageGroupId');
     this.currentUser = this.state.query.user;
   }
 
   sendMessage() {
     if (this.messageContent && this.recipientUserName) {
-      this.messageService.sendMessage(this.recipientUserName, this.messageGroupId, this.messageContent).then(() => {
+      let groupId = parseInt(this.messageGroupId);
+      this.messageService.sendMessage(this.recipientUserName, groupId, this.messageContent).then(() => {
         this.messageContent = '';
       }).finally(() => {
         this.autoGoMessageDown();
       });
     }
-
   }
 
   autoGoMessageDown() {
@@ -79,15 +72,5 @@ export class MessageChatroomComponent implements OnInit {
     }, 100);
   }
 
-
-
-  // getMessageThreads() {
-  //   console.log('chatRoom-getMessageThreads');
-  //   this.messageService.createHubConnection(this.currentUser, this.recipientUserName);
-  // }
-
-  // stopConnection() {
-  //   this.messageService.stopHubConnection();
-  // }
 
 }

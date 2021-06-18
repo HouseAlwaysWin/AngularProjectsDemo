@@ -15,5 +15,7 @@ namespace BackendApi.Core.Services.Interfaces
         // Task<IEnumerable<MessageDto>> GetMessageThread(string currentUsername, string recipientUsername);
         Task<IEnumerable<MessageDto>> GetMessageThread(int currentUserId,int groupId);
         Task<List<MessageFriendsGroupDto>> GetMessageGroupList(int userId);
+        Task<List<MessageFriendsGroupDto>> GetMessageGroupList(string username);
+        Task<MessageGroupDto> GetMessageGroup(int groupId);
     }
 }

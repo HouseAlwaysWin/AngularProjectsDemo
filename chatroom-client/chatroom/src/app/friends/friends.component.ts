@@ -57,6 +57,9 @@ export class FriendsComponent implements OnInit {
   }
 
   goMessage(friend: UserShortInfo) {
-    this.router.navigate([`/message/list`, { username: friend.userName }]);
+    this.state.store.update({
+      friendRedirectParam: friend.userName
+    });
+    this.router.navigate([`/message/list`]);
   }
 }

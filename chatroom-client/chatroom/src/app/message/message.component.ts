@@ -45,17 +45,20 @@ export class MessageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.currentUser = this.state.query.user;
-    this.currentChatroomUser = this.activeRoute.snapshot.paramMap.get('username');
-    this.currentChatroomGroupId = this.activeRoute.snapshot.paramMap.get('messageGroupId');
-    if (this.currentChatroomUser || this.currentChatroomGroupId) {
-      this.getMessageThread(this.currentChatroomUser, this.currentChatroomGroupId);
+    this.currentChatroomUser = this.state.query.friendRedirectParam;;
+    if (this.currentChatroomUser) {
+      this.messageService.stopHubConnection();
+      this.messageService.createHubConnection(this.currentChatroomUser, this.currentChatroomGroupId);
     }
+
     this.getMessageGroups();
     this.autoGoDown();
   }
 
+
   autoGoDown() {
     this.state.query.messagesThread$.subscribe(m => {
+      this.messageThread = m;
       if (this.chatroom) {
         setTimeout(() => {
           this.chatroom.goDown();
@@ -66,21 +69,26 @@ export class MessageComponent implements OnInit, OnDestroy {
 
 
   getMessageGroups() {
-    this.state.query.messageGrouops$.subscribe(res => {
-      this.messageGroupList = res;
+    this.state.query.messageGroups$.subscribe(groups => {
+      this.messageGroupList = groups;
     })
     this.messageService.getMessageFriendsGroups().subscribe((res: Res<MessageGroup[]>) => {
+      console.log('getMessageFriendsGroups');
       console.log(res);
       this.messageGroupList = res.data;
+      this.state.store.update({
+        messagesGroups: res.data
+      });
     });
   }
 
 
-  getMessageThread(username: string, groupId: string) {
-    this.messageService.stopHubConnection();
+  getMessageThread(group: MessageGroup) {
 
-    this.currentChatroomUser = username;
-    this.currentChatroomGroupId = groupId;
-    this.messageService.createHubConnection(username, groupId);
+    this.messageService.stopHubConnection();
+    this.currentChatroomUser = (this.currentUser.userName === group.groupName) ? group.groupOtherName : group.groupName;
+    this.currentChatroomGroupId = group.id.toString();
+    this.messageService.createHubConnection(this.currentChatroomUser, this.currentChatroomGroupId);
   }
+
 }

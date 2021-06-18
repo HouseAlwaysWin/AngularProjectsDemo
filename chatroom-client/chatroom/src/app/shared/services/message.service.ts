@@ -4,6 +4,7 @@ import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { take } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { MessageGroup } from '../models/message';
+import { Res } from '../models/response';
 import { DataService } from '../states/data.service';
 
 @Injectable({
@@ -14,9 +15,8 @@ export class MessageService {
   hubUrl = environment.hubUrl;
   private hubConnection: HubConnection;
 
-  constructor(private http: HttpClient,
-    // private accountQuery: AccountQuery,
-    // private accountStore: AccountStore,
+  constructor(
+    private http: HttpClient,
     private state: DataService,
   ) { }
 
@@ -38,48 +38,87 @@ export class MessageService {
 
       this.hubConnection.on('ReceiveMessageThread', res => {
         console.log('receiveMessageThread')
-        console.log(res);
+        let currentGroup = this.state.query.messageGroups;
+        let targetGroup = currentGroup.filter(g => g.id === res.group.id)[0];
+        /// check group is exist.
+        if (targetGroup) {
+          targetGroup.lastMessages = res.group.lastMessages;
+          console.log(currentGroup);
+          this.state.store.update({
+            messagesGroups: currentGroup
+          });
+        }
+        else {
+          this.state.query.messageGroups$.pipe(take(1)).subscribe(group => {
+            console.log(group);
+            this.state.store.update({
+              messagesGroups: [...group, res.group]
+            });
+          });
+        }
+
         this.state.store.update({
           messagesThread: res.messages,
-          messagesGroups: res.groups
         })
+
       });
 
 
-      this.hubConnection.on('NewMessage', message => {
+      this.hubConnection.on('NewMessage', res => {
         console.log('newMessage')
-        this.state.query.messagesThread$.pipe(take(1)).subscribe(messages => {
+        console.log(res);
+        let currentGroup = this.state.query.messageGroups;
+        let targetGroup = currentGroup.filter(g => g.id === res.group.id)[0];
+        /// check group is exist.
+        if (targetGroup) {
+          targetGroup.lastMessages = res.group.lastMessages;
+          console.log(currentGroup);
           this.state.store.update({
-            messagesThread: [...messages, message]
-          })
-        })
-      });
-
-
-      this.hubConnection.on('UpdatedGroup', (group: MessageGroup) => {
-        console.log('UpdatedGroup')
-        this.state.query.messagesThread$.pipe(take(1)).subscribe(messages => {
-          messages.forEach(message => {
-            if (!message.dateRead) {
-              message.dateRead = new Date(Date.now())
-            }
-          })
-          this.state.store.update({
-            messagesThread: messages
+            messagesGroups: currentGroup
           });
+        }
+        else {
+          this.state.query.messageGroups$.pipe(take(1)).subscribe(group => {
+            console.log(group);
+            this.state.store.update({
+              messagesGroups: [...group, res.group]
+            });
+          });
+        }
+
+        this.state.query.messagesThread$.pipe(take(1)).subscribe(messages => {
+          console.log(messages);
+          this.state.store.update({
+            messagesThread: [...messages, res.message],
+          })
         })
       });
+
+
+      // this.hubConnection.on('UpdatedGroup', (group: MessageGroup) => {
+      //   console.log('UpdatedGroup')
+      //   this.state.query.messagesThread$.pipe(take(1)).subscribe(messages => {
+      //     messages.forEach(message => {
+      //       if (!message.dateRead) {
+      //         message.dateRead = new Date(Date.now())
+      //       }
+      //     })
+      //     this.state.store.update({
+      //       messagesThread: messages
+      //     });
+      //   })
+      // });
     }
   }
 
   stopHubConnection() {
     if (this.hubConnection) {
+      console.log('stop');
       this.hubConnection.stop();
     }
   }
 
-  async sendMessage(recipientUserName: string, messageGroupId: string, content: string) {
-    console.log('SendmessageService')
+  async sendMessage(recipientUserName: string, messageGroupId: number, content: string) {
     return this.hubConnection.invoke('SendMessage', { recipientUserName, content, messageGroupId })
       .catch(error => console.log(error));
   }

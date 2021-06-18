@@ -71,8 +71,8 @@ namespace BackendApi.Helpers.Localization {
                .ForMember(m => m.LastMessages,m => m.MapFrom(m => m.Messages.OrderByDescending(m => m.CreatedDate).FirstOrDefault().Content));
 
            CreateMap<MessageGroup,MessageFriendsGroupDto>()
-               .ForMember(mg => mg.GroupName,mg => mg.MapFrom<MessageGroupNameResolver>())
-               .ForMember(mg => mg.GroupImg,mg => mg.MapFrom<MessageGroupImgResolver>())
+            //    .ForMember(mg => mg.GroupName,mg => mg.MapFrom<MessageGroupNameResolver>())
+            //    .ForMember(mg => mg.GroupImg,mg => mg.MapFrom<MessageGroupImgResolver>())
                .ForMember(m => m.LastMessages,m => m.MapFrom(m => m.Messages.OrderByDescending(m => m.CreatedDate).FirstOrDefault().Content));
                
            CreateMap<MessageRecivedUser,MessageRecivedUserDto>();

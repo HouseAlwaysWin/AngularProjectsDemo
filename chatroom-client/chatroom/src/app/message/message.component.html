@@ -3,15 +3,32 @@
   <div class="message-nav">
     <ul class="message-list">
       <li *ngFor="let message of messageGroupList"
-          (click)="getMessageThread(message.groupName,message.alternativeId)"
+          (click)="getMessageThread(message)"
           class="message-item">
-        <img [src]="message.groupImg"
-             class="message-img" />
-        <div class="message-info">
-          <span class="message-groupName">{{ message.groupName }}</span>
-          <span class="message-lastMessages">{{ message.lastMessages }}</span>
+
+
+        <div *ngIf="message.groupName === currentUser.userName;else otherUser">
+          <img [src]="message.groupOtherImg"
+               class="message-img" />
+          <div class="message-info">
+            <span class="message-groupName">{{ message.groupOtherName }}</span>
+            <span class="message-lastMessages">{{ message.lastMessages }}</span>
+          </div>
+
         </div>
+        <ng-template #otherUser>
+
+          <img [src]="message.groupImg"
+               class="message-img" />
+          <div class="message-info">
+            <span class="message-groupName">{{ message.groupName }}</span>
+            <span class="message-lastMessages">{{ message.lastMessages }}</span>
+          </div>
+
+        </ng-template>
+
       </li>
+
     </ul>
   </div>
   <div class="message-content">

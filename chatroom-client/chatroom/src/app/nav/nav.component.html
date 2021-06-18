@@ -8,8 +8,8 @@
     <li class="nav-item"
         #notify
         *ngIf="state.query.isAuth">
-      <a class="nav-btn"
-         (click)="toggleNotify()">
+      <a (click)="toggleNotify()"
+         class="nav-btn">
         <i class="far fa-bell"
            *ngIf="notifyCount > 0"
            pBadge
@@ -24,21 +24,30 @@
             *ngIf="notifies.length > 0;else noNotify">
           <li class="notify-item"
               *ngFor="let notify of notifies">
-            {{ notify.id }}
             <div *ngIf="notify.notificationType === 0"
                  class="notify-friend">
-              <img class="notify-friend-img"
-                   [src]="notify.requestUser.mainPhoto" />
-              <div class="notify-friend-content">
-                <span class="notify-friend-username">{{ notify.requestUser.userName }} </span>
-                <span class="notify-friend-question">Ask you to be friend?</span>
-                <div class="notify-friend-action">
-                  <button class="notify-friend-action-confirm"
-                          (click)="acceptRequest(notify.requestUserId,notify.id)">Accept</button>
-                  <button class="notify-friend-action-cancel"
-                          (click)="cancelRequest(notify.id)">Cancel</button>
+              <div *ngIf="notify.qaStatus === QAStatus.NoResponse">
+                <img class="notify-friend-img"
+                     [src]="notify.requestUser.mainPhoto" />
+                <div class="notify-friend-content">
+                  <span class="notify-friend-username">{{ notify.requestUser.userName }} </span>
+                  <span class="notify-friend-question">Ask you to be friend?</span>
+                  <div class="notify-friend-action">
+                    <button class="notify-friend-action-confirm"
+                            (click)="acceptRequest(notify.requestUserId,notify.id)">Accept</button>
+                    <button class="notify-friend-action-cancel"
+                            (click)="cancelRequest(notify.id)">Cancel</button>
+                  </div>
                 </div>
               </div>
+              <div *ngIf="notify.qaStatus === QAStatus.Accept">
+                You and {{ notify.requestUser.userName }} are friends now.
+              </div>
+              <div *ngIf="notify.qaStatus === QAStatus.Reject">
+                Reject to be a friend.
+              </div>
+
+
             </div>
           </li>
         </ul>

@@ -96,8 +96,11 @@ namespace BackendApi.Controllers
         public async Task<ActionResult> AcceptFriend(int friendId,int notifyId) {
             var user = await _userService.GetUserDtoByEmailAsync(User.GetEmail());
 
-
-            await _userRepo.RemoveAsync<Notification>(u => u.Id == notifyId);
+            // await _userRepo.RemoveAsync<Notification>(u => u.Id == notifyId);
+            await _userRepo.UpdateAsync<Notification>(u => u.Id == notifyId,
+            new Dictionary<Expression<Func<Notification, object>>, object>{
+                { n => n.QAStatus, QAStatus.Accept}
+            });
 
             if(friendId == user.Id) {
                 return BaseApiBadRequest("friendId can't be user");
@@ -119,7 +122,6 @@ namespace BackendApi.Controllers
             };
             
             await _userRepo.BulkAddAsync<UserFriend>(newFriend);
-
             await _userRepo.CompleteAsync();
 
             var friends =  await _userService.GetUserFriendsDtoByEmailAsync(user.Email); 
@@ -142,7 +144,12 @@ namespace BackendApi.Controllers
 
         [HttpPost("reject-friend/{notifyId}")]
         public async Task<ActionResult> RejectFriend(int notifyId) {
-            await _userRepo.RemoveAsync<Notification>(u => u.Id == notifyId);
+            // await _userRepo.RemoveAsync<Notification>(u => u.Id == notifyId);
+            await _userRepo.UpdateAsync<Notification>(u => u.Id == notifyId,
+            new Dictionary<Expression<Func<Notification, object>>, object>{
+                { n => n.QAStatus, QAStatus.Reject }
+            });
+
             await _userRepo.CompleteAsync();
 
             var userId = User.GetUserId();
@@ -290,10 +297,6 @@ namespace BackendApi.Controllers
                 new Dictionary<Expression<Func<Notification, object>>, object>{
                      { n => n.ReadDate, DateTimeOffset.UtcNow}
                 }
-            //  new Dictionary<string,object>{
-            //      { "ReadDate", DateTimeOffset.UtcNow }
-            //  }
-            
             );
 
             await _userRepo.CompleteAsync();
