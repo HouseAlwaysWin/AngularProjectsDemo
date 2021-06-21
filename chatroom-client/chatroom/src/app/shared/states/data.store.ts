@@ -17,6 +17,7 @@ export interface DataState {
   friendList: Friend[];
   messagesThread: Message[];
   messagesGroups: MessageGroup[];
+  messageUnreadCount: number;
   notifies: Notify[],
   notifyNotReadCount: number,
   isAuth: boolean;
@@ -34,6 +35,7 @@ export function createInitialState(): DataState {
     loading: false,
     messagesThread: [],
     messagesGroups: [],
+    messageUnreadCount: 0,
     notifies: [],
     notifyNotReadCount: 0,
     isAuth: false,

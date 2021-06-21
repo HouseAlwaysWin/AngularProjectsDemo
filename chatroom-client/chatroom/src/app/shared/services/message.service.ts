@@ -38,24 +38,24 @@ export class MessageService {
 
       this.hubConnection.on('ReceiveMessageThread', res => {
         console.log('receiveMessageThread')
-        let currentGroup = this.state.query.messageGroups;
-        let targetGroup = currentGroup.filter(g => g.id === res.group.id)[0];
-        /// check group is exist.
-        if (targetGroup) {
-          targetGroup.lastMessages = res.group.lastMessages;
-          console.log(currentGroup);
-          this.state.store.update({
-            messagesGroups: currentGroup
-          });
-        }
-        else {
-          this.state.query.messageGroups$.pipe(take(1)).subscribe(group => {
-            console.log(group);
-            this.state.store.update({
-              messagesGroups: [...group, res.group]
-            });
-          });
-        }
+        // let currentGroup = this.state.query.messageGroups;
+        // let targetGroup = currentGroup.filter(g => g.id === res.group.id)[0];
+        // /// check group is exist.
+        // if (targetGroup) {
+        //   targetGroup.lastMessages = res.group.lastMessages;
+        //   console.log(currentGroup);
+        //   this.state.store.update({
+        //     messagesGroups: currentGroup
+        //   });
+        // }
+        // else {
+        //   this.state.query.messageGroups$.pipe(take(1)).subscribe(group => {
+        //     console.log(group);
+        //     this.state.store.update({
+        //       messagesGroups: [...group, res.group]
+        //     });
+        //   });
+        // }
 
         this.state.store.update({
           messagesThread: res.messages,
@@ -65,26 +65,26 @@ export class MessageService {
 
 
       this.hubConnection.on('NewMessage', res => {
-        console.log('newMessage')
-        console.log(res);
-        let currentGroup = this.state.query.messageGroups;
-        let targetGroup = currentGroup.filter(g => g.id === res.group.id)[0];
-        /// check group is exist.
-        if (targetGroup) {
-          targetGroup.lastMessages = res.group.lastMessages;
-          console.log(currentGroup);
-          this.state.store.update({
-            messagesGroups: currentGroup
-          });
-        }
-        else {
-          this.state.query.messageGroups$.pipe(take(1)).subscribe(group => {
-            console.log(group);
-            this.state.store.update({
-              messagesGroups: [...group, res.group]
-            });
-          });
-        }
+        // console.log('newMessage')
+        // console.log(res);
+        // let currentGroup = this.state.query.messageGroups;
+        // let targetGroup = currentGroup.filter(g => g.id === res.group.id)[0];
+        // /// check group is exist.
+        // if (targetGroup) {
+        //   targetGroup.lastMessages = res.group.lastMessages;
+        //   console.log(currentGroup);
+        //   this.state.store.update({
+        //     messagesGroups: currentGroup
+        //   });
+        // }
+        // else {
+        //   this.state.query.messageGroups$.pipe(take(1)).subscribe(group => {
+        //     console.log(group);
+        //     this.state.store.update({
+        //       messagesGroups: [...group, res.group]
+        //     });
+        //   });
+        // }
 
         this.state.query.messagesThread$.pipe(take(1)).subscribe(messages => {
           console.log(messages);
@@ -119,7 +119,7 @@ export class MessageService {
   }
 
   async sendMessage(recipientUserName: string, messageGroupId: number, content: string) {
-    return this.hubConnection.invoke('SendMessage', { recipientUserName, content, messageGroupId })
+    return this.hubConnection.invoke('SendMessageAsync', { recipientUserName, content, messageGroupId })
       .catch(error => console.log(error));
   }
 
@@ -127,8 +127,8 @@ export class MessageService {
     return this.http.delete(`${this.apiUrl}message/${id}`);
   }
 
-  getMessageFriendsGroups() {
-    return this.http.get(`${this.apiUrl}messages/get-messages-friends-list`);
+  getMessageGroups() {
+    return this.http.get(`${this.apiUrl}messages/get-messages-groups-list`);
   }
 
 }

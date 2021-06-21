@@ -55,7 +55,7 @@ namespace BackendApi.Controllers
                      .AsSplitQuery()
                      );
 
-            var groupsDtoMaps = _mapper.Map<List<AppUser_MessageGroup>,List<AppUser_MessageGroupDto>>(user.MessageGroups.ToList());
+            var groupsDtoMaps = _mapper.Map<List<AppUser_MessageGroup>,List<AppUserToMessageGroupsDto>>(user.MessageGroups.ToList());
 
             List<MessageGroupDto> groupsDto = new List<MessageGroupDto>();
             foreach (var group in groupsDtoMaps)
@@ -67,10 +67,10 @@ namespace BackendApi.Controllers
             return BaseApiOk(groupsDto);
         }
 
-        [HttpGet("get-messages-friends-list")]
-        public async Task<ActionResult> GetMessageFirendsList() {
+        [HttpGet("get-messages-groups-list")]
+        public async Task<ActionResult> GetMessageGroupsList() {
             var userId = User.GetUserId();
-            var groupsDto = await _messageService.GetMessageGroupList(userId);
+            var groupsDto = await _messageService.GetMessageGroupListAsync(userId);
             return BaseApiOk(groupsDto);
         }
 

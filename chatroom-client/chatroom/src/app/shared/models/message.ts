@@ -19,6 +19,7 @@ export interface MessageGroup {
   groupType: number;
   messages: Message[];
   lastMessages: string;
+  unreadCount: number;
 }
 
 export interface MessageConnection {

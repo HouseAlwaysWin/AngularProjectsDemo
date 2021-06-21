@@ -8,14 +8,12 @@ namespace BackendApi.Core.Services.Interfaces
 {
     public interface IMessageService
     {
-        Task AddMessage(Message message);
-        Task DeleteMessage(Message message);
-        Task<Message> GetMessage(int id);
-        // Task<MessageGroup> GetMessageGroup(string groupName);
-        // Task<IEnumerable<MessageDto>> GetMessageThread(string currentUsername, string recipientUsername);
-        Task<IEnumerable<MessageDto>> GetMessageThread(int currentUserId,int groupId);
-        Task<List<MessageFriendsGroupDto>> GetMessageGroupList(int userId);
-        Task<List<MessageFriendsGroupDto>> GetMessageGroupList(string username);
-        Task<MessageGroupDto> GetMessageGroup(int groupId);
+        Task AddMessageAsync(Message message);
+        Task DeleteMessageAsync(Message message);
+        Task<Message> GetMessageAsync(int id);
+        Task<IEnumerable<MessageDto>> GetMessageThreadAsync(int currentUserId,int groupId);
+        Task<List<MessageGroupListDto>> GetMessageGroupListAsync(int userId);
+        Task<List<MessageGroupListDto>> GetMessageGroupListAsync(string username);
+        Task<MessageGroupDto> GetMessageGroupAsync(int groupId,string username);
     }
 }

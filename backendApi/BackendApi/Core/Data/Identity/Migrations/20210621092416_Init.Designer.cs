@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackendApi.Core.Data.Identity.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20210617130404_Init")]
+    [Migration("20210621092416_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -273,6 +273,9 @@ namespace BackendApi.Core.Data.Identity.Migrations
 
                     b.Property<DateTimeOffset?>("DateRead")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("MessageGroupId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("UserMainPhoto")
                         .HasColumnType("text");

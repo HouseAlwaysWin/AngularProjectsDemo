@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace BackendApi.Helpers.MapResolvers
 {
-	public class MessageGroupNameResolver : IValueResolver<MessageGroup, MessageFriendsGroupDto, string>
+	public class MessageGroupNameResolver : IValueResolver<MessageGroup, MessageGroupListDto, string>
 	{
 		private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -18,7 +18,7 @@ namespace BackendApi.Helpers.MapResolvers
 
 
 
-		public string Resolve(MessageGroup source, MessageFriendsGroupDto destination, string destMember, ResolutionContext context)
+		public string Resolve(MessageGroup source, MessageGroupListDto destination, string destMember, ResolutionContext context)
 		{
 		   var username = _httpContextAccessor.HttpContext.User.GetUserName();
 		   if(source.GroupName == username){

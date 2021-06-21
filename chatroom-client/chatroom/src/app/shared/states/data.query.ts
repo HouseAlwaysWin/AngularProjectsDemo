@@ -21,6 +21,7 @@ export class DataQuery extends Query<DataState> {
   loading$ = this.select('loading');
   messagesThread$ = this.select('messagesThread');
   messageGroups$ = this.select('messagesGroups');
+  messageUnreadCount$ = this.select('messageUnreadCount');
   notifies$ = this.select('notifies');
   notifyNotReadCount$ = this.select('notifyNotReadCount');
   gLoading$ = this.select('gLoading');
@@ -77,6 +78,10 @@ export class DataQuery extends Query<DataState> {
 
   get friendRedirectParam() {
     return this.getValue().friendRedirectParam;
+  }
+
+  get messageUnreadCount() {
+    return this.getValue().messageUnreadCount;
   }
 
   constructor(protected store: DataStore) {

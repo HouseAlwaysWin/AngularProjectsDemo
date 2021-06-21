@@ -31,7 +31,7 @@ namespace BackendApi.Core.Services
 
 
 
-        public async Task AddNewMessageGroup(string groupName,List<AppUser> users){
+        public async Task AddNewMessageGroupAsync(string groupName,List<AppUser> users){
             var appusers = new List<AppUser_MessageGroup>();
             foreach (var user in users)
             {
@@ -53,12 +53,12 @@ namespace BackendApi.Core.Services
             await _userRepo.CompleteAsync();
         }
 
-        public async Task RemoveMessageThread(int groupId){
+        public async Task RemoveMessageThreadAsync(int groupId){
             await _userRepo.RemoveAsync<MessageGroup>(query => query.Id == groupId);
             await _userRepo.CompleteAsync();
         }
 
-        public async Task EditMessage(Message message){
+        public async Task EditMessageAsync(Message message){
             await _userRepo.UpdateAsync<Message>(m => m.Id == message.Id,
                 new Dictionary<Expression<Func<Message, object>>, object>{
                     { e => e.Content, message.Content }
@@ -66,17 +66,17 @@ namespace BackendApi.Core.Services
             );
         }
 
-        public async Task AddMessage(Message message)
+        public async Task AddMessageAsync(Message message)
         {
             await _userRepo.AddAsync(message);
         }
 
-        public async Task DeleteMessage(Message message)
+        public async Task DeleteMessageAsync(Message message)
         {
             await _userRepo.RemoveAsync<Message>(m => m.Id == message.Id);
         }
 
-        public async Task<Message> GetMessage(int id)
+        public async Task<Message> GetMessageAsync(int id)
         {
             return await _userRepo.GetByAsync<Message>(query =>
             {
@@ -84,6 +84,14 @@ namespace BackendApi.Core.Services
                             .Include(u => u.Sender)
                             .Include(u => u.RecipientUsers);
             });
+        }
+
+        public async Task<MessageDto> GetMessageDtoAsync(int id){
+            var newMessage = await _userRepo.GetByAsync<Message>(query => 
+                query.Where(u => u.Id == id).Include(m => m.RecipientUsers));
+
+            var newMessageDto = _mapper.Map<Message,MessageDto>(newMessage);
+            return newMessageDto;
         }
 
 
@@ -108,9 +116,12 @@ namespace BackendApi.Core.Services
             return messagesDto;
         }
 
-        public async Task<IEnumerable<MessageDto>> GetMessageThread(int currentUserId,int groupId){
+        public async Task<IEnumerable<MessageDto>> GetMessageThreadAsync(int currentUserId,int groupId){
 
-            await _userRepo.UpdateAsync<MessageRecivedUser>(m => m.DateRead == null && m.AppUserId == currentUserId,
+            await _userRepo.UpdateAsync<MessageRecivedUser>(m => 
+                            m.DateRead == null && 
+                            m.AppUserId == currentUserId &&
+                            m.MessageGroupId == groupId,
                     new Dictionary<Expression<Func<MessageRecivedUser, object>>, object>{
                         { mr => mr.DateRead, DateTimeOffset.UtcNow}
                     });
@@ -129,48 +140,50 @@ namespace BackendApi.Core.Services
             return messagesDto;
         }
 
-         public async Task<List<MessageFriendsGroupDto>> GetMessageGroupList(int userId) {
+         public async Task<List<MessageGroupListDto>> GetMessageGroupListAsync(int userId) {
 
-             var user = await _userRepo.GetByAsync<AppUser>(query => 
-                query.Where(u => u.Id == userId )
-                     .Include(u => u.MessageGroups)
-                     .ThenInclude(u => u.MessageGroup)
+            var groups = await _userRepo.GetAllAsync<AppUser_MessageGroup>(query => 
+                query.Where(g => g.AppUserId == userId)
+                     .Include(u => u.MessageGroup)
                      .ThenInclude(u => u.Messages)
-                     .OrderBy(u => u.MessagesSent.OrderByDescending(m=>m.CreatedDate).FirstOrDefault().CreatedDate)
                      .AsSplitQuery()
-                     );
+            );
 
-            List<MessageFriendsGroupDto> groupsDto = new List<MessageFriendsGroupDto>();
-            foreach (var group in user.MessageGroups.ToList())
+            List<MessageGroupListDto> groupsDto = new List<MessageGroupListDto>();
+            foreach (var group in groups)
             {
-                var gm = _mapper.Map<MessageGroup,MessageFriendsGroupDto>(group.MessageGroup);
+                // var unreadCount = await _userRepo.GetTotalCountAsync<MessageRecivedUser>(query => 
+                //     query.Where(u => u.MessageGroupId == group.MessageGroupId && u.AppUserId != userId && u.DateRead == null));
+                var gm = _mapper.Map<MessageGroup,MessageGroupListDto>(group.MessageGroup);
+                gm.UnreadCount = await _userRepo.GetTotalCountAsync<MessageRecivedUser>(query => 
+                    query.Where(u => u.MessageGroupId == group.MessageGroupId && u.AppUserId == userId && u.DateRead == null));
                 groupsDto.Add(gm);
             }
             return groupsDto;
         }
 
 
-         public async Task<List<MessageFriendsGroupDto>> GetMessageGroupList(string username) {
+         public async Task<List<MessageGroupListDto>> GetMessageGroupListAsync(string username) {
 
-             var user = await _userRepo.GetByAsync<AppUser>(query => 
-                query.Where(u => u.UserName== username )
-                     .Include(u => u.MessageGroups)
-                     .ThenInclude(u => u.MessageGroup)
+            var groups = await _userRepo.GetAllAsync<AppUser_MessageGroup>(query => 
+                query.Where(g => g.AppUser.UserName == username)
+                     .Include(u => u.MessageGroup)
                      .ThenInclude(u => u.Messages)
-                     .OrderBy(u => u.MessagesSent.OrderByDescending(m=>m.CreatedDate).FirstOrDefault().CreatedDate)
                      .AsSplitQuery()
-                     );
+            );
 
-            List<MessageFriendsGroupDto> groupsDto = new List<MessageFriendsGroupDto>();
-            foreach (var group in user.MessageGroups.ToList())
+            List<MessageGroupListDto> groupsDto = new List<MessageGroupListDto>();
+            foreach (var group in groups)
             {
-                var gm = _mapper.Map<MessageGroup,MessageFriendsGroupDto>(group.MessageGroup);
+                var gm = _mapper.Map<MessageGroup,MessageGroupListDto>(group.MessageGroup);
+                gm.UnreadCount = await _userRepo.GetTotalCountAsync<MessageRecivedUser>(query => 
+                    query.Where(u => u.MessageGroupId == group.MessageGroupId && u.UserName != username && u.DateRead == null));
                 groupsDto.Add(gm);
             }
             return groupsDto;
         }
 
-        public async Task<MessageGroupDto> GetMessageGroup(int groupId) {
+        public async Task<MessageGroupDto> GetMessageGroupAsync(int groupId,string username) {
 
              var group = await _userRepo.GetByAsync<MessageGroup>(query => 
                 query.Where(m => m.Id == groupId)
@@ -178,22 +191,11 @@ namespace BackendApi.Core.Services
                      .AsSplitQuery()
                      );
             var groupDto = _mapper.Map<MessageGroup,MessageGroupDto>(group); 
-
+            // groupDto.UnreadCount =await _userRepo.GetTotalCountAsync<MessageRecivedUser>(query => 
+            //         query.Where(u => u.MessageGroupId == group.Id && u.UserName != username && u.DateRead == null));
             
             return groupDto;
         }
-
-
-
   
-
-        // public async Task<MessageGroup> GetMessageGroup(string groupName)
-        // {
-        //     return await _userRepo.GetByAsync<MessageGroup>(query =>
-        //             query.Where(mg => mg.AlternateId == groupName)
-        //                  .Include(mg => mg.Connections)
-        //     );
-        // }
-
     }
 }

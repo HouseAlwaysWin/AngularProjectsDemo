@@ -24,6 +24,7 @@ export class NavComponent implements OnInit {
   headPhotoUrl: string = '';
   notifies: Notify[];
   notifyCount: number = 0;
+  newMessageCount: number = 0;
 
   @ViewChild('menu', { static: false }) menu: ElementRef;
   @ViewChild('notify', { static: false }) notify: ElementRef;
@@ -90,6 +91,10 @@ export class NavComponent implements OnInit {
       console.log(count);
       this.notifyCount = count;
     });
+
+    this.state.query.messageUnreadCount$.subscribe(count => {
+      this.newMessageCount = count;
+    })
   }
 
   toggleNotify() {

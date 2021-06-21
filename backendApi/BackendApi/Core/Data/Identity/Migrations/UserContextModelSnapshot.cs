@@ -272,6 +272,9 @@ namespace BackendApi.Core.Data.Identity.Migrations
                     b.Property<DateTimeOffset?>("DateRead")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("MessageGroupId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("UserMainPhoto")
                         .HasColumnType("text");
 

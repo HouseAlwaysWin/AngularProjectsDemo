@@ -64,7 +64,13 @@
         *ngIf="state.query.isAuth"
         routerLink="/message/list">
       <a class="nav-btn">
-        <fa-icon [icon]="faComment"></fa-icon>
+        <i class="far fa-comment"
+           *ngIf="newMessageCount > 0"
+           pBadge
+           severity="danger"
+           [value]="newMessageCount"></i>
+        <i class="far fa-comment"
+           *ngIf="newMessageCount === 0"></i>
       </a>
     </li>
     <li class="nav-item"

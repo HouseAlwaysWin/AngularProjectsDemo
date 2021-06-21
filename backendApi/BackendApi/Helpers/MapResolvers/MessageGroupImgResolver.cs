@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace BackendApi.Helpers.MapResolvers
 {
-	public class MessageGroupImgResolver : IValueResolver<MessageGroup, MessageFriendsGroupDto, string>
+	public class MessageGroupImgResolver : IValueResolver<MessageGroup, MessageGroupListDto, string>
 	{
 
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -15,7 +15,7 @@ namespace BackendApi.Helpers.MapResolvers
         	{
 			this._httpContextAccessor = httpContextAccessor;
 		}
-		public string Resolve(MessageGroup source, MessageFriendsGroupDto destination, string destMember, ResolutionContext context)
+		public string Resolve(MessageGroup source, MessageGroupListDto destination, string destMember, ResolutionContext context)
 		{
 			  var username = _httpContextAccessor.HttpContext.User.GetUserName();
 		   if(source.GroupName == username){

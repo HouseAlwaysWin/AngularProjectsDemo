@@ -392,6 +392,7 @@ namespace BackendApi.Core.Data.Identity.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false),
+                    MessageGroupId = table.Column<int>(type: "integer", nullable: false),
                     AppUserId = table.Column<int>(type: "integer", nullable: false),
                     UserName = table.Column<string>(type: "text", nullable: true),
                     UserMainPhoto = table.Column<string>(type: "text", nullable: true),

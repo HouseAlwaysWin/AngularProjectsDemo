@@ -72,7 +72,7 @@ export class MessageComponent implements OnInit, OnDestroy {
     this.state.query.messageGroups$.subscribe(groups => {
       this.messageGroupList = groups;
     })
-    this.messageService.getMessageFriendsGroups().subscribe((res: Res<MessageGroup[]>) => {
+    this.messageService.getMessageGroups().subscribe((res: Res<MessageGroup[]>) => {
       console.log('getMessageFriendsGroups');
       console.log(res);
       this.messageGroupList = res.data;
