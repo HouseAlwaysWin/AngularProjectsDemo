@@ -12,8 +12,10 @@ namespace BackendApi.Core.Services.Interfaces
         Task DeleteMessageAsync(Message message);
         Task<Message> GetMessageAsync(int id);
         Task<IEnumerable<MessageDto>> GetMessageThreadAsync(int currentUserId,int groupId);
+        Task<PagedList<MessageDto>> GetMessageThreadPagedAsync(int pageIndex,int pageSize, int currentUserId,int groupId);
         Task<List<MessageGroupListDto>> GetMessageGroupListAsync(int userId);
         Task<List<MessageGroupListDto>> GetMessageGroupListAsync(string username);
         Task<MessageGroupDto> GetMessageGroupAsync(int groupId,string username);
+        Task AddNewMessageGroupAsync(string groupName,List<int> userIds);
     }
 }

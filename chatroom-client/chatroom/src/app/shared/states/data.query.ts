@@ -20,6 +20,7 @@ export class DataQuery extends Query<DataState> {
   usersOnline$ = this.select('usersOnline');
   loading$ = this.select('loading');
   messagesThread$ = this.select('messagesThread');
+  messagesPageIndex$ = this.select('messagesPageIndex');
   messageGroups$ = this.select('messagesGroups');
   messageUnreadCount$ = this.select('messageUnreadCount');
   notifies$ = this.select('notifies');
@@ -82,6 +83,10 @@ export class DataQuery extends Query<DataState> {
 
   get messageUnreadCount() {
     return this.getValue().messageUnreadCount;
+  }
+
+  get messagesPageIndex() {
+    return this.getValue().messagesPageIndex;
   }
 
   constructor(protected store: DataStore) {

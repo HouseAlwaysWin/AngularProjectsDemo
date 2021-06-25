@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Store, StoreConfig } from "@datorama/akita";
 import { Friend } from "../models/friend";
-import { Message, MessageGroup } from "../models/message";
+import { Message, MessageGroup, MessageWithPageIndex } from "../models/message";
 import { Notify } from "../models/notification";
 import { UserPhoto, UserShortInfo } from "../models/user";
 
@@ -16,6 +16,7 @@ export interface DataState {
   loading: boolean;
   friendList: Friend[];
   messagesThread: Message[];
+  messagesPageIndex: number;
   messagesGroups: MessageGroup[];
   messageUnreadCount: number;
   notifies: Notify[],
@@ -33,7 +34,8 @@ export function createInitialState(): DataState {
     usersOnline: [],
     friendList: [],
     loading: false,
-    messagesThread: [],
+    messagesThread: null,
+    messagesPageIndex: 0,
     messagesGroups: [],
     messageUnreadCount: 0,
     notifies: [],

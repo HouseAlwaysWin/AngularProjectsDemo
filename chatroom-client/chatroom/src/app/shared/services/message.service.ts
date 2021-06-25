@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { take } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { MessageGroup } from '../models/message';
+import { MessageGroup, MessageWithPageIndex } from '../models/message';
 import { Res } from '../models/response';
 import { DataService } from '../states/data.service';
 
@@ -31,60 +31,23 @@ export class MessageService {
         .withAutomaticReconnect()
         .build();
 
-      this.hubConnection.start()
-        .catch(error => console.log(error))
-        .finally(() => {
-        });
 
-      this.hubConnection.on('ReceiveMessageThread', res => {
+      // .finally(() => {
+      // });
+
+      this.hubConnection.on('ReceiveMessageThread', (res: MessageWithPageIndex) => {
         console.log('receiveMessageThread')
-        // let currentGroup = this.state.query.messageGroups;
-        // let targetGroup = currentGroup.filter(g => g.id === res.group.id)[0];
-        // /// check group is exist.
-        // if (targetGroup) {
-        //   targetGroup.lastMessages = res.group.lastMessages;
-        //   console.log(currentGroup);
-        //   this.state.store.update({
-        //     messagesGroups: currentGroup
-        //   });
-        // }
-        // else {
-        //   this.state.query.messageGroups$.pipe(take(1)).subscribe(group => {
-        //     console.log(group);
-        //     this.state.store.update({
-        //       messagesGroups: [...group, res.group]
-        //     });
-        //   });
-        // }
+        console.log(res);
 
         this.state.store.update({
-          messagesThread: res.messages,
+          messagesThread: res.messages.data,
+          messagesPageIndex: res.pageIndex,
         })
 
       });
 
 
       this.hubConnection.on('NewMessage', res => {
-        // console.log('newMessage')
-        // console.log(res);
-        // let currentGroup = this.state.query.messageGroups;
-        // let targetGroup = currentGroup.filter(g => g.id === res.group.id)[0];
-        // /// check group is exist.
-        // if (targetGroup) {
-        //   targetGroup.lastMessages = res.group.lastMessages;
-        //   console.log(currentGroup);
-        //   this.state.store.update({
-        //     messagesGroups: currentGroup
-        //   });
-        // }
-        // else {
-        //   this.state.query.messageGroups$.pipe(take(1)).subscribe(group => {
-        //     console.log(group);
-        //     this.state.store.update({
-        //       messagesGroups: [...group, res.group]
-        //     });
-        //   });
-        // }
 
         this.state.query.messagesThread$.pipe(take(1)).subscribe(messages => {
           console.log(messages);
@@ -94,20 +57,9 @@ export class MessageService {
         })
       });
 
+      return this.hubConnection.start()
+        .catch(error => console.log(error));
 
-      // this.hubConnection.on('UpdatedGroup', (group: MessageGroup) => {
-      //   console.log('UpdatedGroup')
-      //   this.state.query.messagesThread$.pipe(take(1)).subscribe(messages => {
-      //     messages.forEach(message => {
-      //       if (!message.dateRead) {
-      //         message.dateRead = new Date(Date.now())
-      //       }
-      //     })
-      //     this.state.store.update({
-      //       messagesThread: messages
-      //     });
-      //   })
-      // });
     }
   }
 
@@ -129,6 +81,10 @@ export class MessageService {
 
   getMessageGroups() {
     return this.http.get(`${this.apiUrl}messages/get-messages-groups-list`);
+  }
+
+  getMessagesListPaged(pageIndex: number, pageSize: number, groupId: number) {
+    return this.http.get(`${this.apiUrl}messages/get-user-messages-paged?pageIndex=${pageIndex}&pageSize=${pageSize}&groupId=${groupId}`)
   }
 
 }

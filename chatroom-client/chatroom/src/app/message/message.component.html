@@ -7,27 +7,32 @@
           class="message-item">
 
 
-        <div *ngIf="message.groupName === currentUser.userName;else otherUser">
+        <div *ngIf="message.groupName === currentUser.userName"
+             class="message-item-content">
           <img [src]="message.groupOtherImg"
                class="message-img" />
           <div class="message-info">
             <span class="message-groupName">{{ message.groupOtherName }}</span>
-            <span class="message-lastMessages">{{ message.lastMessages }}</span>
-            <span class="message-unread"> {{ message.unreadCount }}</span>
+            <div class="message-detail">
+              <span class="message-lastMessage">{{ message.lastMessages }}</span>
+              <span class="message-unread"> {{ message.unreadCount }}</span>
+            </div>
           </div>
-
         </div>
-        <ng-template #otherUser>
+        <div *ngIf="message.groupName !== currentUser.userName"
+             class="message-item-content">
 
           <img [src]="message.groupImg"
                class="message-img" />
           <div class="message-info">
             <span class="message-groupName">{{ message.groupName }}</span>
-            <span class="message-lastMessages">{{ message.lastMessages }}</span>
-            <span class="message-unread"> {{ message.unreadCount }}</span>
+            <div class="message-detail">
+              <span class="message-lastMessages">{{ message.lastMessages }}</span>
+              <span class="message-unread"> {{ message.unreadCount }}</span>
+            </div>
           </div>
 
-        </ng-template>
+        </div>
 
       </li>
 

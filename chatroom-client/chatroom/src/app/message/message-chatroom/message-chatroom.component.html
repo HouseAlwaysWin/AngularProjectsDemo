@@ -4,6 +4,7 @@
     <button (click)="goDown()">go down</button>
     <button (click)="goTop()">go Top</button>
     <ul class="message-list"
+        (scroll)="checkScroll()"
         #messageListContent>
       <li class="message-item"
           *ngFor="let message of (state.query.messagesThread$ | async)">
@@ -33,7 +34,9 @@
            name="message-textarea"
            [(ngModel)]="messageContent" />
     <button type="submit"
-            class="message-submitBtn">Submit</button>
+            class="message-submitBtn">
+      <i class="far fa-paper-plane message-submit-icon"></i>
+    </button>
 
   </form>
 </div>

@@ -31,13 +31,12 @@ namespace BackendApi.Core.Services
 
 
 
-        public async Task AddNewMessageGroupAsync(string groupName,List<AppUser> users){
+        public async Task AddNewMessageGroupAsync(string groupName,List<int> userIds){
             var appusers = new List<AppUser_MessageGroup>();
-            foreach (var user in users)
+            foreach (var id in userIds)
             {
                 appusers.Add(new AppUser_MessageGroup{
-                    AppUserId = user.Id,
-                    AppUser = user
+                    AppUserId = id,
                 });
             }
 
@@ -95,8 +94,7 @@ namespace BackendApi.Core.Services
         }
 
 
-        public async Task<PagedList<MessageDto>> GetMessageThreadPaged(int pageIndex,int pageSize, int currentUserId,int groupId){
-
+        public async Task<PagedList<MessageDto>> GetMessageThreadPagedAsync(int pageIndex,int pageSize, int currentUserId,int groupId){
             await _userRepo.UpdateAsync<MessageRecivedUser>(m => m.DateRead == null && m.AppUserId == currentUserId,
                     new Dictionary<Expression<Func<MessageRecivedUser, object>>, object>{
                         { mr => mr.DateRead, DateTimeOffset.UtcNow}
@@ -162,7 +160,7 @@ namespace BackendApi.Core.Services
             return groupsDto;
         }
 
-
+   
          public async Task<List<MessageGroupListDto>> GetMessageGroupListAsync(string username) {
 
             var groups = await _userRepo.GetAllAsync<AppUser_MessageGroup>(query => 

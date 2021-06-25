@@ -77,10 +77,11 @@ namespace BackendApi.Core.Services.SignalR
 
         public override async Task OnConnectedAsync()
         {
-            var httpContext = Context.GetHttpContext();
+           var httpContext = Context.GetHttpContext();
            var groupId = httpContext.Request.Query["groupId"].ToString();
            var userName = Context.User.GetUserName();
            var otherUserName = httpContext.Request.Query["username"].ToString();
+           var currentPage = httpContext.Request.Query["pageIndex"].ToString();
            var userId =  Context.User.GetUserId();
 
            MessageGroup group = null;
@@ -110,7 +111,11 @@ namespace BackendApi.Core.Services.SignalR
            }
 
             var currentUsername = Context.User.GetUserName();
-            var messages = await _messageService.GetMessageThreadAsync(userId,group.Id);
+            // var messages = await _messageService.GetMessageThreadAsync(userId,group.Id);
+            var totalCount = await _userRepo.GetTotalCountAsync<Message>(query => 
+                query.Where(m => m.MessageGroupId == group.Id));
+            var pageIndex = (totalCount/20)+1;
+            var messages = await _messageService.GetMessageThreadPagedAsync(pageIndex,20,userId,group.Id);
             // var userGroups = await _messageService.GetMessageGroupListAsync(userName);
             // var otherUserGroups = await _messageService.GetMessageGroupListAsync(otherUserName);
 
@@ -130,7 +135,11 @@ namespace BackendApi.Core.Services.SignalR
             }
             
 
-            await Clients.Groups(group.AlternateId).SendAsync("ReceiveMessageThread", new { messages });
+            await Clients.Groups(group.AlternateId).SendAsync("ReceiveMessageThread", 
+                new { 
+                    messages,
+                    pageIndex
+                });
         }
 
 
@@ -235,6 +244,7 @@ namespace BackendApi.Core.Services.SignalR
             // }
 
             var newMessageDto = _mapper.Map<Message,MessageDto>(message);
+            // newMessageDto.currentPageIndex = 
             await Clients.Group(group.AlternateId).SendAsync("NewMessage",new {
                 Message = newMessageDto,
                 // Group = groupDto
@@ -243,25 +253,22 @@ namespace BackendApi.Core.Services.SignalR
 
         private async Task SendMessageNotificationAsync(string username,List<MessageGroupToAppUsersDto> currentUsers,MessageGroupDto newGroupDto){
             var connections = await _cachedService.GetAsync<Dictionary<string, string>>(CachedKeyHelper.UserOnline);
-            if(connections.ContainsKey(username)){
-                foreach (var appuser in currentUsers)
-                {
-                    if(appuser.AppUser.UserName != username){
-                         var totalUnreadCount = await _userRepo.GetTotalCountAsync<MessageRecivedUser>(query =>
-                            query.Where(u => u.UserName == appuser.AppUser.UserName && u.DateRead == null));
-
-                        await _presenceHubContext.Clients.Client(connections[appuser.AppUser.UserName]).SendAsync("GetMessagesUnreadTotalCount",totalUnreadCount);
-                        var newGroupWithUnreadCount = await _userRepo.GetTotalCountAsync<MessageRecivedUser>(query => 
-                            query.Where(u => u.MessageGroupId == newGroupDto.Id && u.UserName != username && u.DateRead == null));
-                        var cloneGroup = CommonHelpers.CloneObject<MessageGroupDto>(newGroupDto);
-                        cloneGroup.UnreadCount = newGroupWithUnreadCount;
-                        await _presenceHubContext.Clients.Client(connections[appuser.AppUser.UserName]).SendAsync("UpdateGroup", cloneGroup);
-                    }
-                    else{
-                        await _presenceHubContext.Clients.Client(connections[appuser.AppUser.UserName]).SendAsync("UpdateGroup", newGroupDto);
-                    }
+            foreach (var appuser in currentUsers)
+            {
+                if(appuser.AppUser.UserName != username && connections.ContainsKey(appuser.AppUser.UserName) ){
+                        var totalUnreadCount = await _userRepo.GetTotalCountAsync<MessageRecivedUser>(query =>
+                        query.Where(u => u.UserName == appuser.AppUser.UserName && u.DateRead == null));
+                    
+                    await _presenceHubContext.Clients.Client(connections[appuser.AppUser.UserName]).SendAsync("GetMessagesUnreadTotalCount",totalUnreadCount);
+                    var newGroupWithUnreadCount = await _userRepo.GetTotalCountAsync<MessageRecivedUser>(query => 
+                        query.Where(u => u.MessageGroupId == newGroupDto.Id && u.UserName != username && u.DateRead == null));
+                    var cloneGroup = CommonHelpers.CloneObject<MessageGroupDto>(newGroupDto);
+                    cloneGroup.UnreadCount = newGroupWithUnreadCount;
+                    await _presenceHubContext.Clients.Client(connections[appuser.AppUser.UserName]).SendAsync("UpdateGroup", cloneGroup);
                 }
             }
+
+            await _presenceHubContext.Clients.Client(connections[username]).SendAsync("UpdateGroup", newGroupDto);
         }
 
 

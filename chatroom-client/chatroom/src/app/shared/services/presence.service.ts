@@ -33,21 +33,18 @@ export class PresenceService {
 
     this.hubConnection.on('UpdateGroup', (newGroup) => {
       console.log('updateGroup');
-      console.log(newGroup);
       let currentGroup = this.state.query.messageGroups;
       let targetGroup = currentGroup.filter(g => g.id === newGroup.id)[0];
       /// check group is exist.
       if (targetGroup) {
         targetGroup.lastMessages = newGroup.lastMessages;
         targetGroup.unreadCount = newGroup.unreadCount;
-        console.log(currentGroup);
         this.state.store.update({
           messagesGroups: currentGroup
         });
       }
       else {
         this.state.query.messageGroups$.pipe(take(1)).subscribe(group => {
-          console.log(group);
           this.state.store.update({
             messagesGroups: [...group, newGroup]
           });
@@ -57,7 +54,6 @@ export class PresenceService {
 
 
     this.hubConnection.on('GetMessagesUnreadTotalCount', totalCount => {
-      console.log(totalCount);
       this.state.store.update({
         messageUnreadCount: totalCount
       });
@@ -74,8 +70,6 @@ export class PresenceService {
       this.state.query.usersOnline$.pipe(
         take(1)
       ).subscribe(usernames => {
-        console.log('userIsOnline');
-        console.log(usernames);
         this.state.store.update({
           usersOnline: [...usernames, username]
         })
@@ -94,10 +88,6 @@ export class PresenceService {
     })
 
     this.hubConnection.on('GetNotifications', (notifies) => {
-      console.log('GetNotifications')
-      console.log(notifies);
-      console.log(notifies.notifications.data);
-      console.log(notifies.notReadTotalCount);
       this.state.store.update({
         notifies: notifies.notifications.data,
         notifyNotReadCount: notifies.notReadTotalCount

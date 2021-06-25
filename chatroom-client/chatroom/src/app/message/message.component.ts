@@ -48,23 +48,22 @@ export class MessageComponent implements OnInit, OnDestroy {
     this.currentChatroomUser = this.state.query.friendRedirectParam;;
     if (this.currentChatroomUser) {
       this.messageService.stopHubConnection();
-      this.messageService.createHubConnection(this.currentChatroomUser, this.currentChatroomGroupId);
+      this.messageService.createHubConnection(this.currentChatroomUser, this.currentChatroomGroupId)
+        .finally(() => {
+          this.autoGoDown();
+        });
     }
 
     this.getMessageGroups();
-    this.autoGoDown();
   }
 
 
   autoGoDown() {
-    this.state.query.messagesThread$.subscribe(m => {
-      this.messageThread = m;
-      if (this.chatroom) {
-        setTimeout(() => {
-          this.chatroom.goDown();
-        });
-      }
-    });
+    if (this.chatroom) {
+      setTimeout(() => {
+        this.chatroom.goDown();
+      }, 100);
+    }
   }
 
 
@@ -74,7 +73,6 @@ export class MessageComponent implements OnInit, OnDestroy {
     })
     this.messageService.getMessageGroups().subscribe((res: Res<MessageGroup[]>) => {
       console.log('getMessageFriendsGroups');
-      console.log(res);
       this.messageGroupList = res.data;
       this.state.store.update({
         messagesGroups: res.data
@@ -88,7 +86,10 @@ export class MessageComponent implements OnInit, OnDestroy {
     this.messageService.stopHubConnection();
     this.currentChatroomUser = (this.currentUser.userName === group.groupName) ? group.groupOtherName : group.groupName;
     this.currentChatroomGroupId = group.id.toString();
-    this.messageService.createHubConnection(this.currentChatroomUser, this.currentChatroomGroupId);
+    this.messageService.createHubConnection(this.currentChatroomUser, this.currentChatroomGroupId)
+      .finally(() => {
+        this.autoGoDown();
+      });;
   }
 
 }

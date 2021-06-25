@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -34,13 +35,28 @@ namespace BackendApi.Controllers
         }
 
 
-
         [HttpGet("get-user-messages")]
         public async Task<ActionResult> GetUserMessagesList([FromQuery]MessageParams messageParams){
             var message = await _userRepo.GetAllAsync<Message>(
                 query => query.Where(m => m.SenderUsername == User.GetUserName()));
             
             return BaseApiOk(message);
+        }
+
+        [HttpGet("get-user-messages-paged")]
+        public async Task<ActionResult> GetUserMessagesListPaged([FromQuery]MessageParams messageParams){
+            var message = await _userRepo.GetAllPagedAsync<Message>(messageParams.PageIndex,messageParams.PageSize,
+            query => query.Where(m => m.MessageGroupId == messageParams.GroupId)
+                     .Include(m => m.Sender)
+                     .ThenInclude(m => m.Photos)
+                     .Include(m => m.RecipientUsers)
+                     .OrderBy(m => m.MessageSent)
+                     .AsSplitQuery()
+                );
+
+            var messageDto = _mapper.Map<PagedList<Message>,PagedList<MessageDto>>(message);
+            
+            return BaseApiOk(messageDto);
         }
 
         [HttpGet("get-messages-list")]

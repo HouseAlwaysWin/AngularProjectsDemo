@@ -5,7 +5,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100%;
+  height: 100rem;
+  width: 50rem;
 }
 
 .message {
@@ -38,22 +39,39 @@
 
   &-submitBtn {
     border: none;
-    background-color: $color-primary;
-    border-top-right-radius: 1rem;
-    border-bottom-right-radius: 1rem;
-    color: $color-white;
-    padding: 0 1rem;
+    background-color: rgba($color-white, 0);
+    border-radius: 1rem;
+    padding: 0.4rem 1rem;
+
+    &:hover {
+      color: $color-primary;
+      cursor: pointer;
+      & i {
+        color: $color-primary;
+      }
+    }
+
+    &:active {
+      // background-color: $color-primary;
+      & i {
+        color: $color-primary-dark;
+      }
+    }
+  }
+
+  &-submit-icon {
+    color: $color-black;
   }
 
   &-textarea {
-    // overflow: auto;
-    // height: 2rem;
-    padding-left: 1rem;
-    width: 100%;
+    width: 60rem;
     outline: none;
-    border-top-left-radius: 1rem;
-    border-bottom-left-radius: 1rem;
-    // border-color: $color-primary;
+    border: none;
+    border-bottom: 0.1rem solid $color-black;
+
+    &:focus {
+      border-bottom: 0.1rem solid $color-primary;
+    }
 
     // resize: none;
     // &::-webkit-scrollbar {
