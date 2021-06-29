@@ -95,8 +95,10 @@ export class MessageChatroomComponent implements OnInit {
       let groupId = parseInt(this.messageGroupId);
       this.messageService.sendMessage(this.recipientUserName, groupId, this.messageContent).then(() => {
         this.messageContent = '';
+        console.log(this.messageContent);
       }).finally(() => {
         this.autoGoMessageDown();
+        this.messageContent = '';
       });
     }
   }

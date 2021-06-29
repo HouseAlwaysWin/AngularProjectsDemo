@@ -22,7 +22,10 @@ export class MessageService {
 
   createHubConnection(otherUsername: string, groupId: string) {
     let user = this.state.query.user;
-    if (!groupId) groupId = '';
+    if (!groupId) {
+      this.stopHubConnection(groupId);
+      groupId = ''
+    };
     if (user?.token && otherUsername) {
       this.hubConnection = new HubConnectionBuilder()
         .withUrl(`${this.hubUrl}message?username=${otherUsername}&groupId=${groupId}`, {
@@ -30,10 +33,6 @@ export class MessageService {
         })
         .withAutomaticReconnect()
         .build();
-
-
-      // .finally(() => {
-      // });
 
       this.hubConnection.on('ReceiveMessageThread', (res: MessageWithPageIndex) => {
         console.log('receiveMessageThread')
@@ -63,10 +62,14 @@ export class MessageService {
     }
   }
 
-  stopHubConnection() {
+  stopHubConnection(messageGroupId: string) {
     if (this.hubConnection) {
       console.log('stop');
-      this.hubConnection.stop();
+      this.hubConnection.invoke('OnDisconnectChatRoom', { groupId: messageGroupId })
+        .then(() => {
+          this.hubConnection.stop();
+        })
+        .catch(error => console.log(error));
     }
   }
 

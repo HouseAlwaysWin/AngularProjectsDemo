@@ -39,7 +39,7 @@ export class MessageComponent implements OnInit, OnDestroy {
   private _onDestroy = new Subject();
   ngOnDestroy(): void {
     this._onDestroy.next();
-    this.messageService.stopHubConnection();
+    this.messageService.stopHubConnection(this.currentChatroomGroupId);
   }
 
 
@@ -47,7 +47,7 @@ export class MessageComponent implements OnInit, OnDestroy {
     this.currentUser = this.state.query.user;
     this.currentChatroomUser = this.state.query.friendRedirectParam;;
     if (this.currentChatroomUser) {
-      this.messageService.stopHubConnection();
+      this.messageService.stopHubConnection(this.currentChatroomGroupId);
       this.messageService.createHubConnection(this.currentChatroomUser, this.currentChatroomGroupId)
         .finally(() => {
           this.autoGoDown();
@@ -68,11 +68,12 @@ export class MessageComponent implements OnInit, OnDestroy {
 
 
   getMessageGroups() {
-    this.state.query.messageGroups$.subscribe(groups => {
-      this.messageGroupList = groups;
-    })
+    // this.state.query.messageGroups$.subscribe(groups => {
+    //   this.messageGroupList = groups;
+    // })
     this.messageService.getMessageGroups().subscribe((res: Res<MessageGroup[]>) => {
-      console.log('getMessageFriendsGroups');
+      console.log('getMessageGroups');
+      console.log(res);
       this.messageGroupList = res.data;
       this.state.store.update({
         messagesGroups: res.data
@@ -83,7 +84,7 @@ export class MessageComponent implements OnInit, OnDestroy {
 
   getMessageThread(group: MessageGroup) {
 
-    this.messageService.stopHubConnection();
+    // this.messageService.stopHubConnection(group.alternateId);
     this.currentChatroomUser = (this.currentUser.userName === group.groupName) ? group.groupOtherName : group.groupName;
     this.currentChatroomGroupId = group.id.toString();
     this.messageService.createHubConnection(this.currentChatroomUser, this.currentChatroomGroupId)

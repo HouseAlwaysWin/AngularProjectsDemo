@@ -127,6 +127,7 @@
       margin-top: 0.5rem;
       word-wrap: break-word;
       color: $color-white;
+      max-width: 20rem;
       &::after {
         position: absolute;
         content: "";
@@ -159,6 +160,7 @@
     &-content {
       position: relative;
       margin-left: 1rem;
+      max-width: 20rem;
       background-color: $color-primary;
       padding: 0.5rem 1rem;
       border-radius: 1rem;

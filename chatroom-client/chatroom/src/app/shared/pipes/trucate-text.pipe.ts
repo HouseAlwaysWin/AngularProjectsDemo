@@ -5,13 +5,12 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class TrucateTextPipe implements PipeTransform {
 
-  transform(value: string, maxLength: number = 50, sliceLength: number = 100): string {
-    console.log(value);
-    if (value.length > maxLength) {
+  transform(value: string, maxLength: number = 50, sliceLength: number = 100): unknown {
+    if (value?.length > maxLength) {
 
       return `${value.slice(0, sliceLength)} ......`;
     }
-    return value;
+    return value
   }
 
 }

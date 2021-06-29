@@ -95,12 +95,6 @@ namespace BackendApi.Core.Services
 
 
         public async Task<PagedList<MessageDto>> GetMessageThreadPagedAsync(int pageIndex,int pageSize, int currentUserId,int groupId){
-            await _userRepo.UpdateAsync<MessageRecivedUser>(m => m.DateRead == null && m.AppUserId == currentUserId,
-                    new Dictionary<Expression<Func<MessageRecivedUser, object>>, object>{
-                        { mr => mr.DateRead, DateTimeOffset.UtcNow}
-                    });
-
-            await _userRepo.CompleteAsync();
             var messages = await _userRepo.GetAllPagedAsync<Message>(pageIndex,pageSize,query => 
                 query.Where(m => m.MessageGroupId == groupId)
                      .Include(m => m.Sender)

@@ -244,7 +244,7 @@ namespace BackendApi
             services.AddScoped<IStoreRepository,StoreRepository>();
             services.AddScoped<IUserRepository,UserRepository>();
             services.AddScoped<IPhotoService,PhotoService>();
-            services.AddScoped<IPresenceHub,PresenceHub>();
+            // services.AddScoped<IPresenceHub,PresenceHub>();
             services.AddHttpContextAccessor();
             services.Configure<CloudinarySettings>(_config.GetSection("CloudinarySettings"));
 

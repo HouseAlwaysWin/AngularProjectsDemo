@@ -20,7 +20,7 @@ namespace BackendApi.Core.Services.SignalR
 
 
 	[Authorize]
-	public class PresenceHub : Hub, IPresenceHub
+	public class PresenceHub : Hub
 	{
 		//    private readonly PresenceTracker _tracker;
 		private readonly IMapper _mapper;
@@ -82,18 +82,18 @@ namespace BackendApi.Core.Services.SignalR
 			}
 		}
 
-		public async Task SendMessagesNotReadTotalCountAsync(string username){
-		var totalUnreadCount =await _userRepo.GetTotalCountAsync<MessageRecivedUser>(query =>
-			query.Where(u => u.UserName == username && u.DateRead == null));
-		var connections = await _cachedService.GetAsync<Dictionary<string, string>>(CachedKeyHelper.UserOnline);
-		if(connections.ContainsKey(username)){
-			try{
-			await Clients.Client(connections[username]).SendAsync("GetMessagesUnreadTotalCount");
-			}catch(Exception ex){
-			System.Console.WriteLine(ex);
-			}
-		}
-		}
+		// public async Task SendMessagesNotReadTotalCountAsync(string username){
+		// var totalUnreadCount =await _userRepo.GetTotalCountAsync<MessageRecivedUser>(query =>
+		// 	query.Where(u => u.UserName == username && u.DateRead == null));
+		// var connections = await _cachedService.GetAsync<Dictionary<string, string>>(CachedKeyHelper.UserOnline);
+		// if(connections.ContainsKey(username)){
+		// 	try{
+		// 	await Clients.Client(connections[username]).SendAsync("GetMessagesUnreadTotalCount");
+		// 	}catch(Exception ex){
+		// 	System.Console.WriteLine(ex);
+		// 	}
+		// }
+		// }
 		
 		// public async Task SendToClientMethodAsync(string username,string methodName,object data){
 		//     var connections = await _cachedService.GetAsync<Dictionary<string, string>>(CachedKeyHelper.UserOnline);
@@ -105,38 +105,38 @@ namespace BackendApi.Core.Services.SignalR
 		
 
 
-		public async Task SendNewMessageNotificationAsync(AppUser sender,AppUser recipient,string content=""){
+		// public async Task SendNewMessageNotificationAsync(AppUser sender,AppUser recipient,string content=""){
 
-		var notification = new Notification
-				{
-					AppUserId = sender.Id,
-					ReadDate = null,
-					Content = content,
-					RequestUserId = recipient.Id,
-					NotificationType = NotificationType.CommanMessage,
-				};
-		await _userRepo.AddAsync<Notification>(notification);
-				await _userRepo.CompleteAsync();
+		// var notification = new Notification
+		// 		{
+		// 			AppUserId = sender.Id,
+		// 			ReadDate = null,
+		// 			Content = content,
+		// 			RequestUserId = recipient.Id,
+		// 			NotificationType = NotificationType.CommanMessage,
+		// 		};
+		// await _userRepo.AddAsync<Notification>(notification);
+		// 		await _userRepo.CompleteAsync();
 
-		var connections = await _cachedService.GetAsync<Dictionary<string, string>>(CachedKeyHelper.UserOnline);
+		// var connections = await _cachedService.GetAsync<Dictionary<string, string>>(CachedKeyHelper.UserOnline);
 
-		if (connections.ContainsKey(recipient.UserName))
-				{
-					var notificationsDto = await _userService.GetNotificationDtoAsync(1, 10, recipient.Id);
-					var notReadCount = await _userRepo.GetTotalCountAsync<Notification>(query => 
-			query.Where(n => n.ReadDate == null && 
-					n.AppUserId == recipient.Id && 
-					n.NotificationType == NotificationType.CommanMessage));
+		// if (connections.ContainsKey(recipient.UserName))
+		// 		{
+		// 			var notificationsDto = await _userService.GetNotificationDtoAsync(1, 10, recipient.Id);
+		// 			var notReadCount = await _userRepo.GetTotalCountAsync<Notification>(query => 
+		// 	query.Where(n => n.ReadDate == null && 
+		// 			n.AppUserId == recipient.Id && 
+		// 			n.NotificationType == NotificationType.CommanMessage));
 
-					var notificationsListDto = new NotificationListDto
-					{
-						Notifications = notificationsDto,
-						NotReadTotalCount = notReadCount
-					};
-					await Clients.Client(connections[recipient.UserName]).SendAsync("GetMessageNotifications", notificationsListDto);
-				}
+		// 			var notificationsListDto = new NotificationListDto
+		// 			{
+		// 				Notifications = notificationsDto,
+		// 				NotReadTotalCount = notReadCount
+		// 			};
+		// 			await Clients.Client(connections[recipient.UserName]).SendAsync("GetMessageNotifications", notificationsListDto);
+		// 		}
 
-		}
+		// }
 
 
 		public override async Task OnConnectedAsync()

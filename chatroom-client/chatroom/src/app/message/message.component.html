@@ -14,8 +14,9 @@
           <div class="message-info">
             <span class="message-groupName">{{ message.groupOtherName }}</span>
             <div class="message-detail">
-              <span class="message-lastMessage">{{ message.lastMessages }}</span>
-              <span class="message-unread"> {{ message.unreadCount }}</span>
+              <span class="message-lastMessage">{{ message.lastMessages  }}</span>
+              <span class="message-unread"
+                    *ngIf="message.unreadCount"> {{ message.unreadCount }}</span>
             </div>
           </div>
         </div>
@@ -27,8 +28,9 @@
           <div class="message-info">
             <span class="message-groupName">{{ message.groupName }}</span>
             <div class="message-detail">
-              <span class="message-lastMessages">{{ message.lastMessages }}</span>
-              <span class="message-unread"> {{ message.unreadCount }}</span>
+              <span class="message-lastMessage">{{ message.lastMessages }}</span>
+              <span class="message-unread"
+                    *ngIf="message.unreadCount"> {{ message.unreadCount }}</span>
             </div>
           </div>
 

@@ -7,12 +7,14 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { DragAndDropDirective } from './directives/drag-and-drop.directive';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BadgeModule } from 'primeng/badge';
+import { TrucateTextPipe } from './pipes/trucate-text.pipe';
 
 export let InjectorInstance: Injector;
 @NgModule({
   declarations: [
     FormFieldInvalidDirective,
     DragAndDropDirective,
+    TrucateTextPipe
   ],
   exports: [
     ReactiveFormsModule,
@@ -23,7 +25,8 @@ export let InjectorInstance: Injector;
     GalleriaModule,
     FileUploadModule,
     DragAndDropDirective,
-    BadgeModule
+    BadgeModule,
+    TrucateTextPipe
   ]
 })
 export class SharedModule {
