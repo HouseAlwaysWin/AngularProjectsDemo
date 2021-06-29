@@ -13,7 +13,7 @@ import { DataService } from '../states/data.service';
 export class MessageService {
   apiUrl = environment.apiUrl;
   hubUrl = environment.hubUrl;
-  private hubConnection: HubConnection;
+  public hubConnection: HubConnection;
 
   constructor(
     private http: HttpClient,
@@ -22,10 +22,11 @@ export class MessageService {
 
   createHubConnection(otherUsername: string, groupId: string) {
     let user = this.state.query.user;
+
     if (!groupId) {
-      this.stopHubConnection(groupId);
       groupId = ''
-    };
+    }
+
     if (user?.token && otherUsername) {
       this.hubConnection = new HubConnectionBuilder()
         .withUrl(`${this.hubUrl}message?username=${otherUsername}&groupId=${groupId}`, {
@@ -65,11 +66,11 @@ export class MessageService {
   stopHubConnection(messageGroupId: string) {
     if (this.hubConnection) {
       console.log('stop');
-      this.hubConnection.invoke('OnDisconnectChatRoom', { groupId: messageGroupId })
+      return this.hubConnection.invoke('OnDisconnectChatRoom', { groupId: messageGroupId })
         .then(() => {
           this.hubConnection.stop();
-        })
-        .catch(error => console.log(error));
+        });
+      // .catch(error => console.log(error));
     }
   }
 

@@ -84,13 +84,26 @@ export class MessageComponent implements OnInit, OnDestroy {
 
   getMessageThread(group: MessageGroup) {
 
-    // this.messageService.stopHubConnection(group.alternateId);
-    this.currentChatroomUser = (this.currentUser.userName === group.groupName) ? group.groupOtherName : group.groupName;
-    this.currentChatroomGroupId = group.id.toString();
-    this.messageService.createHubConnection(this.currentChatroomUser, this.currentChatroomGroupId)
-      .finally(() => {
-        this.autoGoDown();
-      });;
+    if (this.messageService.hubConnection) {
+      this.messageService.stopHubConnection(this.currentChatroomGroupId).then(() => {
+        this.currentChatroomUser = (this.currentUser.userName === group.groupName) ? group.groupOtherName : group.groupName;
+        this.currentChatroomGroupId = group.alternateId;
+        this.messageService.createHubConnection(this.currentChatroomUser, this.currentChatroomGroupId)
+          .finally(() => {
+            this.autoGoDown();
+          });
+      });
+    }
+    else {
+      this.currentChatroomUser = (this.currentUser.userName === group.groupName) ? group.groupOtherName : group.groupName;
+      this.currentChatroomGroupId = group.alternateId;
+      this.messageService.createHubConnection(this.currentChatroomUser, this.currentChatroomGroupId)
+        .finally(() => {
+          this.autoGoDown();
+        });;
+
+    }
+
   }
 
 }
