@@ -54,6 +54,7 @@ export class PresenceService {
 
 
     this.hubConnection.on('GetMessagesUnreadTotalCount', totalCount => {
+      console.log(totalCount);
       this.state.store.update({
         messageUnreadCount: totalCount
       });

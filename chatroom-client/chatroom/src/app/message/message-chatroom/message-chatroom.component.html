@@ -1,8 +1,12 @@
 <div class="container">
   <div class="message">
 
-    <button (click)="goDown()">go down</button>
-    <button (click)="goTop()">go Top</button>
+    <span class="message-goBottom"
+          [ngClass]="{'show':showGoBottomBtn,'hide':hideGoBottomBtn}"
+          (click)="goBottom()">
+      <i class="far fa-arrow-alt-circle-down"></i>
+    </span>
+    <!-- <button (click)="goTop()">go Top</button> -->
     <ul class="message-list"
         (scroll)="checkScroll()"
         #messageListContent>
@@ -12,7 +16,8 @@
              class="message-current">
           <div class="message-current-read"
                *ngIf="message?.recipientUsers[0]?.dateRead">
-            <span class="message-current-readTime"> {{ message.recipientUsers[0].dateRead | date:'shortTime'}}</span>
+            <span class="message-current-readTime">
+              {{ message.recipientUsers[0].dateRead | date:'LLLL d h:mm a'}}</span>
             <span class="message-current-readText">Read</span>
           </div>
           <span class="message-current-content">{{ message.content }}</span>
@@ -35,7 +40,7 @@
            [(ngModel)]="messageContent" />
     <button type="submit"
             class="message-submitBtn">
-      <i class="far fa-paper-plane message-submit-icon"></i>
+      <i class="fas fa-play message-submit-icon"></i>
     </button>
 
   </form>

@@ -16,6 +16,7 @@ export interface DataState {
   loading: boolean;
   friendList: Friend[];
   messagesThread: Message[];
+  messageGoBottom: boolean;
   messagesPageIndex: number;
   messagesGroups: MessageGroup[];
   messageUnreadCount: number;
@@ -23,7 +24,7 @@ export interface DataState {
   notifyNotReadCount: number,
   isAuth: boolean;
   gLoading: boolean;
-  friendRedirectParam: string;
+  friendRedirectParam: Friend;
 }
 
 export function createInitialState(): DataState {
@@ -35,6 +36,7 @@ export function createInitialState(): DataState {
     friendList: [],
     loading: false,
     messagesThread: null,
+    messageGoBottom: false,
     messagesPageIndex: 0,
     messagesGroups: [],
     messageUnreadCount: 0,
@@ -42,7 +44,7 @@ export function createInitialState(): DataState {
     notifyNotReadCount: 0,
     isAuth: false,
     gLoading: false,
-    friendRedirectParam: ''
+    friendRedirectParam: new Friend()
   }
 }
 

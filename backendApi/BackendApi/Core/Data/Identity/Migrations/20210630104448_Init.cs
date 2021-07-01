@@ -43,7 +43,6 @@ namespace BackendApi.Core.Data.Identity.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    AlternateId = table.Column<string>(type: "text", nullable: false),
                     GroupName = table.Column<string>(type: "text", nullable: true),
                     GroupOtherName = table.Column<string>(type: "text", nullable: true),
                     GroupImg = table.Column<string>(type: "text", nullable: true),
@@ -53,7 +52,6 @@ namespace BackendApi.Core.Data.Identity.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MessageGroup", x => x.Id);
-                    table.UniqueConstraint("AK_MessageGroup_AlternateId", x => x.AlternateId);
                 });
 
             migrationBuilder.CreateTable(
@@ -345,6 +343,7 @@ namespace BackendApi.Core.Data.Identity.Migrations
                 {
                     AppUserId = table.Column<int>(type: "integer", nullable: false),
                     FriendId = table.Column<int>(type: "integer", nullable: false),
+                    MessageGroupId = table.Column<int>(type: "integer", nullable: false),
                     CreatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
                     ModifiedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
                 },

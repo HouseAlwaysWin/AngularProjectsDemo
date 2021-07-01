@@ -27,10 +27,10 @@ namespace BackendApi.Core.Data.Identity
                 if((await userRepository.GetAllAsync<UserFriend>()).Count() >0) return;
 
                 var userData = await System.IO.File.ReadAllTextAsync("./Core/Data/Identity/SeedData/UserSeedData.json");
-                var userRelationsData = await System.IO.File.ReadAllTextAsync("./Core/Data/Identity/SeedData/UserRelationship.json");
+                // var userRelationsData = await System.IO.File.ReadAllTextAsync("./Core/Data/Identity/SeedData/UserRelationship.json");
 
                 var users = JsonConvert.DeserializeObject<List<AppUser>>(userData);
-                var userRelations = JsonConvert.DeserializeObject<List<UserFriend>>(userRelationsData);
+                // var userRelations = JsonConvert.DeserializeObject<List<UserFriend>>(userRelationsData);
 
 
                 if (users == null) return;
@@ -82,7 +82,7 @@ namespace BackendApi.Core.Data.Identity
                 };
 
 
-                await userRepository.BulkAddAsync<UserFriend>(userRelations);
+                // await userRepository.BulkAddAsync<UserFriend>(userRelations);
 
                 await userManager.CreateAsync(admin,"123456");
                 await userManager.AddToRolesAsync(admin, new[] {"Admin", "Moderator"}); 

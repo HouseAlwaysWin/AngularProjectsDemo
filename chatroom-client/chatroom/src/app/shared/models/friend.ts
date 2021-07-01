@@ -6,6 +6,7 @@ import { UserShortInfo } from "./user";
 export class Friend {
   friendId: number;
   friend: UserShortInfo;
+  messageGroupId: number;
   createdDate: string;
 }
 

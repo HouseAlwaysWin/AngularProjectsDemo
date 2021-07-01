@@ -51,16 +51,8 @@ namespace BackendApi.Core.Data.Identity
                 a.HasMany(u => u.Notifications)
                  .WithOne(n => n.AppUser)
                  .HasForeignKey(n => n.AppUserId);
-
-
-                //  a.HasMany(u => u.Friends)                
-                //     .WithMany(u => u.FriendsReverse)
-                //     .UsingEntity<UserFriend>("UserFriend",
-                //         x => x.HasOne(uf => uf.AppUser).WithMany().HasForeignKey(uf => uf.AppUserId),
-                //         x => x.HasOne(uf => uf.Friend).WithMany().HasForeignKey(uf => uf.FriendId),
-                //         x => x.ToTable("UserFriend"));
-                    
-                 a.HasIndex(u => u.UserPublicId)
+                
+                a.HasIndex(u => u.UserPublicId)
                     .IsUnique();
 
                     
@@ -141,6 +133,7 @@ namespace BackendApi.Core.Data.Identity
                  .OnDelete(DeleteBehavior.Cascade);
             });
 
+
             builder.Entity<Message>(m => {
 
               m.HasOne(u => u.Sender)
@@ -167,7 +160,7 @@ namespace BackendApi.Core.Data.Identity
             });
 
             builder.Entity<MessageGroup>(mg => {
-                mg.HasAlternateKey(mg => mg.AlternateId);
+                // mg.HasAlternateKey(mg => mg.GroupGuid);
                 // mg.HasMany(mg => mg.Connections)
                 //   .WithOne()
                 //   .OnDelete(DeleteBehavior.Cascade);

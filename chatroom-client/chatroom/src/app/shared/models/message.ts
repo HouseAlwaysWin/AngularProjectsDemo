@@ -19,7 +19,7 @@ export class MessageWithPageIndex {
 
 export interface MessageGroup {
   id: number;
-  alternateId: string;
+  // alternateId: string;
   groupName: string;
   groupOtherName: string;
   groupImg: string;

@@ -23,6 +23,10 @@ namespace BackendApi.Core.Services
             this._mapper = mapper;
         }
 
+
+
+
+
         public async Task<List<UserFriendMapDto>> GetUserFriendsDtoByEmailAsync(string email)
         {
             var friendsMap = await _userRepo.GetAllAsync<UserFriend>(query =>
@@ -41,6 +45,18 @@ namespace BackendApi.Core.Services
         public async Task<AppUserShortDto> GetUserDtoByEmailAsync(string email){
             var user = await _userRepo.GetByAsync<AppUser>(
                 query => query.Where(u=> u.Email == email)
+                              .Include(u => u.UserInfo)
+                              .Include(u => u.Photos)
+                              .AsSplitQuery()
+                );
+            var userInfoDto = _mapper.Map<AppUser,AppUserShortDto>(user);
+            return userInfoDto;
+        }
+
+
+        public async Task<AppUserShortDto> GetUserDtoByIdAsync(int id){
+            var user = await _userRepo.GetByAsync<AppUser>(
+                query => query.Where(u=> u.Id == id)
                               .Include(u => u.UserInfo)
                               .Include(u => u.Photos)
                               .AsSplitQuery()

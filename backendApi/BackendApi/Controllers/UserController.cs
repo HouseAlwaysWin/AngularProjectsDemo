@@ -58,11 +58,7 @@ namespace BackendApi.Controllers
             await _userRepo.UpdateAsync<AppUser>(u => u.Id == user.Id,
                     new Dictionary<Expression<Func<AppUser, object>>, object>{
                         { user => user.UserPublicId, publicId   }
-                    }
-                    // new Dictionary<string,object> { 
-                    //     { nameof(user.UserPublicId), publicId} 
-                    // }
-                    );
+                    });
 
             await _userRepo.CompleteAsync();
             user.UserPublicId = publicId;
@@ -92,11 +88,35 @@ namespace BackendApi.Controllers
         }
 
 
+        private async Task<MessageGroup> GenerateNewGroupAsync(int otherUserId){
+            var currentUser = await _userService.GetUserByUserNameAsync(User.GetUserName());
+            var otherUser = await _userService.GetUserDtoByIdAsync(otherUserId);
+
+            var newGroup = new MessageGroup{
+                GroupName = currentUser.UserName,
+                GroupOtherName =otherUser.UserName,
+                GroupImg = currentUser.Photos.FirstOrDefault(p => p.IsMain).Url,
+                GroupOtherImg = otherUser.Photos.FirstOrDefault(p => p.IsMain).Url,
+                GroupType = GroupType.OneOnOne,
+                AppUsers = new List<AppUser_MessageGroup>(){
+                    new AppUser_MessageGroup{ 
+                        AppUserId = currentUser.Id
+                    },
+                    new AppUser_MessageGroup{ 
+                        AppUserId = otherUser.Id
+                    }
+                }
+            };
+            await _userRepo.AddAsync<MessageGroup>(newGroup);
+            await _userRepo.CompleteAsync();
+            return newGroup;
+        }
+
+
         [HttpPost("accept-friend/{friendId}/{notifyId}")]
         public async Task<ActionResult> AcceptFriend(int friendId,int notifyId) {
             var user = await _userService.GetUserDtoByEmailAsync(User.GetEmail());
 
-            // await _userRepo.RemoveAsync<Notification>(u => u.Id == notifyId);
             await _userRepo.UpdateAsync<Notification>(u => u.Id == notifyId,
             new Dictionary<Expression<Func<Notification, object>>, object>{
                 { n => n.QAStatus, QAStatus.Accept}
@@ -110,21 +130,26 @@ namespace BackendApi.Controllers
                 (uf.FriendId == friendId && uf.AppUserId == user.Id) || 
                 (uf.FriendId == user.Id && uf.AppUserId == friendId));
 
+            var messageGruop = await GenerateNewGroupAsync(friendId);
+
             var newFriend = new List<UserFriend>(){
                 new UserFriend {
                    AppUserId = user.Id,
-                   FriendId = friendId 
+                   FriendId = friendId,
+                   MessageGroupId = messageGruop.Id
                 },
                 new UserFriend {
                    AppUserId = friendId,
-                   FriendId = user.Id 
+                   FriendId = user.Id,
+                   MessageGroupId = messageGruop.Id
                 }
             };
             
             await _userRepo.BulkAddAsync<UserFriend>(newFriend);
             await _userRepo.CompleteAsync();
-
             var friends =  await _userService.GetUserFriendsDtoByEmailAsync(user.Email); 
+
+            await _userRepo.CompleteAsync();
 
             var notificationsDto = await _userService.GetNotificationDtoAsync(1,10,user.Id);
             var notReadCount = await _userRepo.GetTotalCountAsync<Notification>(query => query.Where(n => n.ReadDate == null));
@@ -144,7 +169,6 @@ namespace BackendApi.Controllers
 
         [HttpPost("reject-friend/{notifyId}")]
         public async Task<ActionResult> RejectFriend(int notifyId) {
-            // await _userRepo.RemoveAsync<Notification>(u => u.Id == notifyId);
             await _userRepo.UpdateAsync<Notification>(u => u.Id == notifyId,
             new Dictionary<Expression<Func<Notification, object>>, object>{
                 { n => n.QAStatus, QAStatus.Reject }
@@ -153,6 +177,7 @@ namespace BackendApi.Controllers
             await _userRepo.CompleteAsync();
 
             var userId = User.GetUserId();
+
             var notificationsDto = await _userService.GetNotificationDtoAsync(1,10,userId);
             var notReadCount = await _userRepo.GetTotalCountAsync<Notification>(query => query.Where(n => n.ReadDate == null));
             var resultDto = new NotificationListDto{
@@ -165,8 +190,8 @@ namespace BackendApi.Controllers
 
 
 
-        [HttpDelete("remove-friend/{friendId}")]
-        public async Task<ActionResult> RemoveFriend(int friendId) {
+        [HttpDelete("remove-friend/{friendId}/{groupId}")]
+        public async Task<ActionResult> RemoveFriend(int friendId,int groupId) {
             
             var user = await _userService.GetUserDtoByEmailAsync(User.GetEmail());
 
@@ -174,8 +199,12 @@ namespace BackendApi.Controllers
                 return BaseApiBadRequest("friendId can't be user");
             }
 
-            await _userRepo.RemoveAsync<UserFriend>(uf => (uf.FriendId == friendId && uf.AppUserId == user.Id));
-            
+            await _userRepo.RemoveAsync<MessageGroup>(mg => mg.Id == groupId);
+            await _userRepo.RemoveAsync<UserFriend>(uf => 
+                (uf.FriendId == friendId && uf.AppUserId == user.Id) ||
+                (uf.FriendId == user.Id && uf.AppUserId == friendId)
+                );
+
             await _userRepo.CompleteAsync();
 
             var friends =  await this._userService.GetUserFriendsDtoByEmailAsync(user.Email); 
@@ -289,9 +318,12 @@ namespace BackendApi.Controllers
         [HttpPut("update-readall-notifications")]
         public async Task<ActionResult> UpdateReadAllNotifications(){
             var userId  = User.GetUserId();
-            var notifications = await _userRepo.GetAllAsync<Notification>(query => 
-                query.Where(u => u.AppUserId == userId ));
+            await _userRepo.RemoveAsync<Notification>(n => 
+               (n.QAStatus == QAStatus.Accept || 
+                n.QAStatus == QAStatus.Reject) && 
+                n.AppUserId == userId);
 
+            
             await _userRepo.UpdateAsync<Notification>(
                 u => u.AppUserId == userId,
                 new Dictionary<Expression<Func<Notification, object>>, object>{
@@ -302,7 +334,7 @@ namespace BackendApi.Controllers
             await _userRepo.CompleteAsync();
 
             var notificationsDto = await _userService.GetNotificationDtoAsync(1,10,userId);
-            var notReadCount = await _userRepo.GetTotalCountAsync<Notification>(query => query.Where(n => n.ReadDate == null));
+            var notReadCount = await _userRepo.GetTotalCountAsync<Notification>(query => query.Where(n => n.ReadDate == null && n.AppUserId == userId));
             var resultDto = new NotificationListDto{
                 Notifications = notificationsDto,
                 NotReadTotalCount = notReadCount

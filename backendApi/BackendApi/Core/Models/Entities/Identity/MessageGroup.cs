@@ -14,12 +14,7 @@ namespace BackendApi.Core.Models.Entities.Identity
         {
             
         }
-        public MessageGroup(string alternateId,string groupName,string groupImg)
-        {
-           this.AlternateId = alternateId; 
-        }
        public int Id { get; set; }
-       public string AlternateId { get; set; } 
        public string GroupName { get; set; }
        public string GroupOtherName { get; set; }
        public string GroupImg { get; set; }

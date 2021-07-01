@@ -235,10 +235,6 @@ namespace BackendApi.Core.Data.Identity.Migrations
                         .HasColumnType("integer")
                         .UseIdentityByDefaultColumn();
 
-                    b.Property<string>("AlternateId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("GroupImg")
                         .HasColumnType("text");
 
@@ -255,8 +251,6 @@ namespace BackendApi.Core.Data.Identity.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasAlternateKey("AlternateId");
 
                     b.ToTable("MessageGroup");
                 });
@@ -337,6 +331,9 @@ namespace BackendApi.Core.Data.Identity.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<int>("MessageGroupId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTimeOffset?>("ModifiedDate")
                         .HasColumnType("timestamp with time zone");

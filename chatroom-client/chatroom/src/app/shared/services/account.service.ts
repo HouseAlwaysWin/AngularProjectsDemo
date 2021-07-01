@@ -241,7 +241,7 @@ export class AccountService {
   }
 
   removeFriend(friend: Friend) {
-    return this.http.delete(`${this.apiUrl}user/remove-friend/${friend.friendId}`).pipe(
+    return this.http.delete(`${this.apiUrl}user/remove-friend/${friend.friendId}/${friend.messageGroupId}`).pipe(
       map((res: Res<Friend[]>) => {
         this.state.store.update({
           friendList: res.data

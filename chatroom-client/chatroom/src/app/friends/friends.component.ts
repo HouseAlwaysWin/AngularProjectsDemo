@@ -41,6 +41,7 @@ export class FriendsComponent implements OnInit {
 
   getAllFriends() {
     this.accountService.getFriends().subscribe(res => {
+      console.log(res.data);
       this.friendList = res.data;
     });
   }
@@ -56,9 +57,10 @@ export class FriendsComponent implements OnInit {
     });
   }
 
-  goMessage(friend: UserShortInfo) {
+  goMessage(friend: Friend) {
+    console.log(friend);
     this.state.store.update({
-      friendRedirectParam: friend.userName
+      friendRedirectParam: friend
     });
     this.router.navigate([`/message/list`]);
   }

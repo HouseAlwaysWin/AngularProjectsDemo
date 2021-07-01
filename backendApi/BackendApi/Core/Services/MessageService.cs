@@ -41,7 +41,6 @@ namespace BackendApi.Core.Services
             }
 
             var newGroup = new MessageGroup{
-                AlternateId = Guid.NewGuid().ToString(),
                 GroupName = groupName,
                 GroupType = GroupType.OneOnMany,
                 AppUsers = appusers
@@ -144,8 +143,6 @@ namespace BackendApi.Core.Services
             List<MessageGroupListDto> groupsDto = new List<MessageGroupListDto>();
             foreach (var group in groups)
             {
-                // var unreadCount = await _userRepo.GetTotalCountAsync<MessageRecivedUser>(query => 
-                //     query.Where(u => u.MessageGroupId == group.MessageGroupId && u.AppUserId != userId && u.DateRead == null));
                 var gm = _mapper.Map<MessageGroup,MessageGroupListDto>(group.MessageGroup);
                 gm.UnreadCount = await _userRepo.GetTotalCountAsync<MessageRecivedUser>(query => 
                     query.Where(u => u.MessageGroupId == group.MessageGroupId && u.AppUserId == userId && u.DateRead == null));
@@ -179,12 +176,11 @@ namespace BackendApi.Core.Services
 
              var group = await _userRepo.GetByAsync<MessageGroup>(query => 
                 query.Where(m => m.Id == groupId)
+                     .Include(m => m.AppUsers)
                      .Include(m => m.Messages)
                      .AsSplitQuery()
                      );
             var groupDto = _mapper.Map<MessageGroup,MessageGroupDto>(group); 
-            // groupDto.UnreadCount =await _userRepo.GetTotalCountAsync<MessageRecivedUser>(query => 
-            //         query.Where(u => u.MessageGroupId == group.Id && u.UserName != username && u.DateRead == null));
             
             return groupDto;
         }

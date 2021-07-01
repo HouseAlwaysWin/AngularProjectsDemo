@@ -10,6 +10,7 @@ namespace BackendApi.Core.Services.Interfaces
     public interface IUserService
     {
         Task<List<UserFriendMapDto>> GetUserFriendsDtoByEmailAsync(string email);
+        Task<AppUserShortDto> GetUserDtoByIdAsync(int id);
         Task<AppUserShortDto> GetUserDtoByEmailAsync(string email);
         Task<AppUserShortDto> GetUserDtoByUserNameAsync(string userName);
         Task<AppUser> GetUserByUserNameAsync(string userName);

@@ -7,6 +7,7 @@ namespace BackendApi.Core.Models.Dtos
     {
         public int FriendId { get; set; }
         public AppUserShortDto Friend { get; set; }
+        public string MessageGroupId { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public DateTimeOffset? ModifiedDate { get; set; }
     }

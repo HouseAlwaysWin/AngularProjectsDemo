@@ -20,12 +20,8 @@ export class MessageService {
     private state: DataService,
   ) { }
 
-  createHubConnection(otherUsername: string, groupId: string) {
+  createHubConnection(otherUsername: string, groupId: number) {
     let user = this.state.query.user;
-
-    if (!groupId) {
-      groupId = ''
-    }
 
     if (user?.token && otherUsername) {
       this.hubConnection = new HubConnectionBuilder()
@@ -37,8 +33,6 @@ export class MessageService {
 
       this.hubConnection.on('ReceiveMessageThread', (res: MessageWithPageIndex) => {
         console.log('receiveMessageThread')
-        console.log(res);
-
         this.state.store.update({
           messagesThread: res.messages.data,
           messagesPageIndex: res.pageIndex,
@@ -46,11 +40,17 @@ export class MessageService {
 
       });
 
+      this.hubConnection.on('MessageGoDown', res => {
+        console.log('messageGoBottom')
+        console.log(res);
+        this.state.store.update({
+          messageGoBottom: res
+        });
+      })
+
 
       this.hubConnection.on('NewMessage', res => {
-
         this.state.query.messagesThread$.pipe(take(1)).subscribe(messages => {
-          console.log(messages);
           this.state.store.update({
             messagesThread: [...messages, res.message],
           })
@@ -63,9 +63,8 @@ export class MessageService {
     }
   }
 
-  stopHubConnection(messageGroupId: string) {
+  stopHubConnection(messageGroupId: number) {
     if (this.hubConnection) {
-      console.log('stop');
       return this.hubConnection.invoke('OnDisconnectChatRoom', { groupId: messageGroupId })
         .then(() => {
           this.hubConnection.stop();
@@ -74,8 +73,8 @@ export class MessageService {
     }
   }
 
-  async sendMessage(recipientUserName: string, messageGroupId: number, content: string) {
-    return this.hubConnection.invoke('SendMessageAsync', { recipientUserName, content, messageGroupId })
+  async sendMessage(recipientUsername: string, messageGroupId: number, content: string) {
+    return this.hubConnection.invoke('SendMessageAsync', { recipientUsername, content, messageGroupId: messageGroupId.toString() })
       .catch(error => console.log(error));
   }
 

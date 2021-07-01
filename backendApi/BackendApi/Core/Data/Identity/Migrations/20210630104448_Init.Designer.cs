@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackendApi.Core.Data.Identity.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20210621092416_Init")]
+    [Migration("20210630104448_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -237,10 +237,6 @@ namespace BackendApi.Core.Data.Identity.Migrations
                         .HasColumnType("integer")
                         .UseIdentityByDefaultColumn();
 
-                    b.Property<string>("AlternateId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("GroupImg")
                         .HasColumnType("text");
 
@@ -257,8 +253,6 @@ namespace BackendApi.Core.Data.Identity.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasAlternateKey("AlternateId");
 
                     b.ToTable("MessageGroup");
                 });
@@ -339,6 +333,9 @@ namespace BackendApi.Core.Data.Identity.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<int>("MessageGroupId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTimeOffset?>("ModifiedDate")
                         .HasColumnType("timestamp with time zone");

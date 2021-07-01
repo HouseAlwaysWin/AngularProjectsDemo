@@ -78,6 +78,9 @@ namespace BackendApi.Helpers.Localization {
            CreateMap<MessageRecivedUser,MessageRecivedUserDto>();
            CreateMap<AppUser_MessageGroup,MessageGroupToAppUsersDto>();
            CreateMap<AppUser_MessageGroup,AppUserToMessageGroupsDto>();
+
+
+
            CreateMap<Notification,NotificationDto>();
 
            CreateMap<AppUser,AppUserShortDto>()

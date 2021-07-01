@@ -48,36 +48,10 @@ namespace BackendApi.Core.Services.SignalR
             this._messageService = messageService;
         }
 
-        private async Task<MessageGroup> GenerateNewGroupAsync(string username,string otherUserName){
-            var currentUser = await _userService.GetUserByUserNameAsync(username);
-            var otherUser = await _userService.GetUserByUserNameAsync(otherUserName);
-            var alternateKey = GetGroupAlternateKey(currentUser.UserName, otherUser.UserName);
-
-            var newGroup = new MessageGroup{
-                AlternateId = alternateKey,
-                GroupName = currentUser.UserName,
-                GroupOtherName =otherUser.UserName,
-                GroupImg = currentUser.Photos.FirstOrDefault(p => p.IsMain).Url,
-                GroupOtherImg = otherUser.Photos.FirstOrDefault(p => p.IsMain).Url,
-                GroupType = GroupType.OneOnOne,
-                AppUsers = new List<AppUser_MessageGroup>(){
-                    new AppUser_MessageGroup{ 
-                        AppUserId = currentUser.Id
-                    },
-                    new AppUser_MessageGroup{ 
-                        AppUserId = otherUser.Id
-                    }
-                }
-            };
-            await _userRepo.AddAsync<MessageGroup>(newGroup);
-
-            return newGroup;
-        }
-
         public override async Task OnConnectedAsync()
         {
            var httpContext = Context.GetHttpContext();
-           var groupId = httpContext.Request.Query["groupId"].ToString();
+           int groupId = int.Parse(httpContext.Request.Query["groupId"].ToString());
            var userName = Context.User.GetUserName();
            var otherUserName = httpContext.Request.Query["username"].ToString();
            var currentPage = httpContext.Request.Query["pageIndex"].ToString();
@@ -85,35 +59,31 @@ namespace BackendApi.Core.Services.SignalR
 
            MessageGroup group = null;
 
-           if(!string.IsNullOrEmpty(groupId)){
+           if(groupId != 0){
              group = await _userRepo.GetByAsync<MessageGroup>(query =>
-                query.Where(mg => mg.AlternateId == groupId));
+                query .Where(mg => mg.Id == groupId)
+                    .Include(m => m.AppUsers)
+                    .ThenInclude(m => m.AppUser)
+                    .AsSplitQuery());
            }
-           else 
-           {
-             var alternateKey = GetGroupAlternateKey(userName, otherUserName);
-             group = await _userRepo.GetByAsync<MessageGroup>(query =>
-                query.Where(mg => mg.AlternateId == alternateKey));
-            }
-
-           if(group == null){
-               group =  await GenerateNewGroupAsync(userName,otherUserName); 
-           }
-
+      
             // Set chatroom cathed
-            var chatroomKey = $"{CachedKeyHelper.ChatRoomUser}_{group.AlternateId}";
+            var chatroomKey = $"{CachedKeyHelper.ChatRoomUser}_{group.Id}";
             var chatRoomConnections = await _cachedService.GetAsync<Dictionary<string,string>>(chatroomKey);
             if(chatRoomConnections == null){
                 await _cachedService.SetAsync<Dictionary<string,string>>(chatroomKey,
                     new Dictionary<string, string>{
                         { userName,Context.ConnectionId}
                     });
-            }else if(!chatRoomConnections.ContainsKey(userName)){
-                chatRoomConnections.Add(userName,Context.ConnectionId);
-                await _cachedService.GetAndSetAsync<Dictionary<string,string>>(chatroomKey, chatRoomConnections);
+            }
+            else {
+                if(!chatRoomConnections.ContainsKey(userName)){
+                    chatRoomConnections.Add(userName,Context.ConnectionId);
+                    await _cachedService.SetAsync<Dictionary<string,string>>(chatroomKey, chatRoomConnections);
+                }
             }
 
-            await Groups.AddToGroupAsync(Context.ConnectionId, group.AlternateId);
+            await Groups.AddToGroupAsync(Context.ConnectionId, group.Id.ToString());
 
            if (_userRepo.HasChanges()) {
                 await _userRepo.CompleteAsync();
@@ -141,13 +111,9 @@ namespace BackendApi.Core.Services.SignalR
 
             var groupDto = _mapper.Map<MessageGroup,MessageGroupDto>(group); 
 
-           
-            var totalUnreadCount =await _userRepo.GetTotalCountAsync<MessageRecivedUser>(query =>
-                            query.Where(u => u.UserName == userName && u.DateRead == null));
-
             await SendMessageNotificationAsync(userName,groupDto.AppUsers,groupDto);
 
-            await Clients.Groups(group.AlternateId).SendAsync("ReceiveMessageThread", 
+            await Clients.Groups(group.Id.ToString()).SendAsync("ReceiveMessageThread", 
                 new { 
                     messages,
                     pageIndex
@@ -161,7 +127,7 @@ namespace BackendApi.Core.Services.SignalR
         }
 
         public class DisconnectParam {
-            public string GroupId { get; set; }
+            public int GroupId { get; set; }
         }
 
         public async Task OnDisconnectChatRoom(DisconnectParam group){
@@ -187,30 +153,16 @@ namespace BackendApi.Core.Services.SignalR
 
             var username =  Context.User.GetUserName();
 
-            var groupId = createMessageDto.MessageGroupId;
+            var groupId = int.Parse(createMessageDto.MessageGroupId);
             var group = new MessageGroup();
             var message = new Message();
 
             var sender = await _userService.GetUserByUserNameAsync(username);
-            var  recipient = await _userService.GetUserByUserNameAsync(createMessageDto.RecipientUsername);
+            var recipient = await _userService.GetUserByUserNameAsync(createMessageDto.RecipientUsername);
 
-            if(groupId == null){
-      
-                var alternateId = GetGroupAlternateKey(username, createMessageDto.RecipientUsername);
-                group = await _userRepo.GetByAsync<MessageGroup>(query => query.Where(u => u.AlternateId == alternateId));
-            }
-            else{
-                group = await _userRepo.GetByAsync<MessageGroup>(query => 
-                    query.Where(u => u.Id == groupId)
-                          .Include(u => u.AppUsers)
-                          .ThenInclude(u => u.AppUser)
-                    ); 
-            }
+            group = await _userRepo.GetByAsync<MessageGroup>(query => query.Where(u => u.Id == groupId));
 
             groupId = group.Id;
-
-
-          
 
             if (username == createMessageDto.RecipientUsername.ToLower())
                 throw new HubException("You cannot send messages to yourself");
@@ -222,10 +174,12 @@ namespace BackendApi.Core.Services.SignalR
             DateTimeOffset? dateRead = null;
             if(group.GroupType == GroupType.OneOnOne){
 
-                var chatroomKey = $"{CachedKeyHelper.ChatRoomUser}_{group.AlternateId}";
+                var chatroomKey = $"{CachedKeyHelper.ChatRoomUser}_{group.Id}";
                 var connection = await _cachedService.GetAsync<Dictionary<string,string>>(chatroomKey);
                 if(connection != null && connection.ContainsKey(recipient.UserName)){
+                    {
                         dateRead = DateTimeOffset.UtcNow;
+                    }
                 }
             }
 
@@ -243,29 +197,38 @@ namespace BackendApi.Core.Services.SignalR
                 Sender = sender,
                 SenderUsername = sender.UserName,
                 Content = createMessageDto.Content,
-                MessageGroupId = groupId.Value,
+                MessageGroupId = groupId,
                 RecipientUsers = recipientUsers
             };
 
             await _messageService.AddMessageAsync(message);
             await _userRepo.CompleteAsync();
 
-            var groupDto = await _messageService.GetMessageGroupAsync(groupId.Value,username);
+            var groupDto = await _messageService.GetMessageGroupAsync(groupId,username);
 
-            var connections = await _cachedService.GetAsync<Dictionary<string, string>>(CachedKeyHelper.UserOnline);
-
+            // var connections = await _cachedService.GetAsync<Dictionary<string, string>>(CachedKeyHelper.UserOnline);
 
             await SendMessageNotificationAsync(username,groupDto.AppUsers,groupDto);
            
+          //  var key = $"{CachedKeyHelper.ChatRoomUser}_{groupId}";
+          //  var userOnlineConnections = await _cachedService.GetAsync<Dictionary<string,string>>(key);
+          //  foreach (var conn in userOnlineConnections)
+          //  {
+              // if(conn.Key != username) {
+                  await Clients.OthersInGroup(group.Id.ToString()).SendAsync("MessageGoDown",true);
+              // }
+          //  }
+
             var newMessageDto = _mapper.Map<Message,MessageDto>(message);
-            await Clients.Group(group.AlternateId).SendAsync("NewMessage",new {
+
+            await Clients.Group(group.Id.ToString()).SendAsync("NewMessage",new {
                 Message = newMessageDto
             } );
         }
 
         private async Task SendMessageNotificationAsync(string username,List<MessageGroupToAppUsersDto> currentUsers,MessageGroupDto newGroupDto){
             var connections = await _cachedService.GetAsync<Dictionary<string, string>>(CachedKeyHelper.UserOnline);
-            var key = $"{CachedKeyHelper.ChatRoomUser}_{newGroupDto.AlternateId}";
+            var key = $"{CachedKeyHelper.ChatRoomUser}_{newGroupDto.Id}";
             var userOnlineConnections = await _cachedService.GetAsync<Dictionary<string,string>>(key);
 
             // notify other user
@@ -289,20 +252,15 @@ namespace BackendApi.Core.Services.SignalR
                     }
                     // user is in chatroom
                     else{
+                        var totalUnreadCount = await _userRepo.GetTotalCountAsync<MessageRecivedUser>(query =>
+                            query.Where(u => u.UserName == appuser.AppUser.UserName && u.DateRead == null));
+                    
+                        await _presenceHubContext.Clients.Client(connections[appuser.AppUser.UserName]).SendAsync("GetMessagesUnreadTotalCount",totalUnreadCount);
                         await _presenceHubContext.Clients.Client(connections[appuser.AppUser.UserName]).SendAsync("UpdateGroup", newGroupDto);
                     }
                 }
             }
 
-            // refresh current user.
-            // if(connections.ContainsKey(username)
-            // ){
-            //     var totalUnreadCount = await _userRepo.GetTotalCountAsync<MessageRecivedUser>(query =>
-            //             query.Where(u => u.UserName == username && u.DateRead == null));
-                    
-            //     await _presenceHubContext.Clients.Client(connections[username]).SendAsync("GetMessagesUnreadTotalCount",totalUnreadCount);
-            //     await _presenceHubContext.Clients.Client(connections[username]).SendAsync("UpdateGroup", newGroupDto);
-            // }
         }
 
 

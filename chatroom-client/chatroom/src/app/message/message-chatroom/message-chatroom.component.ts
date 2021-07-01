@@ -1,14 +1,12 @@
-import { Parser } from '@angular/compiler/src/ml_parser/parser';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { Message, MessageWithPageIndex } from 'src/app/shared/models/message';
 import { UserShortInfo } from 'src/app/shared/models/user';
-import { AccountService } from 'src/app/shared/services/account.service';
 import { MessageService } from 'src/app/shared/services/message.service';
 import { DataService } from 'src/app/shared/states/data.service';
 
+@UntilDestroy({ checkProperties: true })
 @Component({
   selector: 'app-message-chatroom',
   templateUrl: './message-chatroom.component.html',
@@ -21,7 +19,7 @@ export class MessageChatroomComponent implements OnInit {
   messageContent: string;
 
   @Input() recipientUserName: string;
-  @Input() messageGroupId: string;
+  @Input() messageGroupId: number;
 
   // @Output() sendMessages: EventEmitter<{ content: string, recipientUser: string }>;
 
@@ -29,6 +27,9 @@ export class MessageChatroomComponent implements OnInit {
   otherUser: UserShortInfo;
   pageIndex: number;
   pageSize: number;
+  showGoBottomBtn: boolean = false;
+  hideGoBottomBtn: boolean = false;
+  initHide: boolean = false;
 
   @ViewChild('messageListContent') messageListContent: ElementRef;
 
@@ -45,20 +46,56 @@ export class MessageChatroomComponent implements OnInit {
 
   ngOnInit() {
     this.initProps();
+    this.autoGoDown();
   }
 
-  goDown() {
-    this.messageListContent.nativeElement.scrollTop = this.messageListContent.nativeElement.scrollHeight;
+
+  ngAfterViewInit() {
+    this.autoGoDown();
   }
 
-  goTop() {
-    this.messageListContent.nativeElement.scrollTop = 0;
+  autoGoDown() {
+    this.state.query.messageGoBottom$.subscribe(res => {
+      console.log('autoGoDown');
+      console.log(res);
+      if (res) {
+        this.autoGoMessageDown();
+        this.state.store.update({
+          messageGoBottom: false
+        });
+      }
+    })
+  }
+
+
+  goBottom() {
+    this.messageListContent.nativeElement.scrollTop =
+      this.messageListContent.nativeElement.scrollHeight - this.messageListContent.nativeElement.offsetHeight;
+  }
+
+  checkGoBottomBtn() {
+    var sh = Math.trunc(this.messageListContent.nativeElement.scrollHeight);
+    var st = Math.trunc(this.messageListContent.nativeElement.scrollTop);
+    var ht = Math.trunc(this.messageListContent.nativeElement.offsetHeight);
+    if ((st !== sh - ht)) {
+      this.showGoBottomBtn = true;
+      // after first time init then add hide class.
+      if (this.initHide) {
+        console.log(this.initHide);
+        this.hideGoBottomBtn = false;
+      }
+    }
+    else {
+      this.showGoBottomBtn = false;
+      if (this.initHide) {
+        this.hideGoBottomBtn = true;
+      }
+    }
   }
 
   checkScroll() {
-    console.log(this.messageListContent.nativeElement.scrollTop);
+    this.checkGoBottomBtn();
     if (this.messageListContent.nativeElement.scrollTop === 0) {
-      console.log('call message');
       if (this.state.query.messagesPageIndex > 0) {
         this.pageIndex = this.state.query.messagesPageIndex - 1;
       }
@@ -67,9 +104,8 @@ export class MessageChatroomComponent implements OnInit {
       });
       this.pageSize = 10;
       if (this.pageIndex > 0) {
-        this.messageService.getMessagesListPaged(this.pageIndex, this.pageSize, parseInt(this.messageGroupId))
+        this.messageService.getMessagesListPaged(this.pageIndex, this.pageSize, this.messageGroupId)
           .subscribe((res: any) => {
-            console.log(res);
             this.messageListContent.nativeElement.scrollTop = 1;
             this.state.query.messagesThread$.pipe(take(1)).subscribe(msg => {
               this.state.store.update({
@@ -83,31 +119,32 @@ export class MessageChatroomComponent implements OnInit {
   }
 
 
+
+
   initProps() {
     this.currentUser = this.state.query.user;
-    setTimeout(() => {
-      this.goDown();
-    }, 100);
+    this.autoGoMessageDown();
   }
 
   sendMessage() {
     if (this.messageContent && this.recipientUserName) {
-      let groupId = parseInt(this.messageGroupId);
-      this.messageService.sendMessage(this.recipientUserName, groupId, this.messageContent).then(() => {
+      this.messageService.sendMessage(this.recipientUserName, this.messageGroupId, this.messageContent).then(() => {
         this.messageContent = '';
-        console.log(this.messageContent);
       }).finally(() => {
-        this.autoGoMessageDown();
         this.messageContent = '';
+        this.autoGoMessageDown();
       });
     }
   }
 
   autoGoMessageDown() {
     setTimeout(() => {
-      this.messageListContent.nativeElement.scrollTop = this.messageListContent.nativeElement.scrollHeight;
+      this.goBottom();
     }, 100);
+
+    this.initHide = false;
+    setTimeout(() => {
+      this.initHide = true;
+    }, 1000);
   }
-
-
 }

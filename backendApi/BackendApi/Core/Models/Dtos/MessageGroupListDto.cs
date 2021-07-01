@@ -6,7 +6,7 @@ namespace BackendApi.Core.Models.Dtos
     public class MessageGroupListDto
     {
        public int Id { get; set; }
-       public string AlternateId { get; set; } 
+    //    public string AlternateId { get; set; } 
        public string GroupName { get; set; }
        public string GroupOtherName { get; set; }
        public string GroupImg { get; set; }
