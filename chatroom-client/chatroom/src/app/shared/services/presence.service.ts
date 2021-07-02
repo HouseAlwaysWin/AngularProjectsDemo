@@ -78,7 +78,7 @@ export class PresenceService {
 
     })
 
-    this.hubConnection.on('UserIsOfflineAsync', username => {
+    this.hubConnection.on('UserIsOffline', username => {
       this.state.query.usersOnline$.pipe(
         take(1)
       ).subscribe(usernames => {

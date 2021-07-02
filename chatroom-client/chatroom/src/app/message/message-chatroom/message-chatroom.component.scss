@@ -38,7 +38,7 @@
       font-size: 2rem;
 
       &:hover {
-        color: rgba($color-black, 1);
+        color: rgba($color-grey-dark, 1);
       }
     }
   }
@@ -185,6 +185,14 @@
       border-radius: 2rem;
       width: 3rem;
       height: 3rem;
+    }
+
+    &-readTime {
+      margin-left: 1rem;
+      font-size: 1px;
+      color: $color-primary;
+      display: flex;
+      align-items: flex-end;
     }
 
     &-content {

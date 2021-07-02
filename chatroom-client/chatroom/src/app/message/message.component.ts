@@ -24,6 +24,7 @@ export class MessageComponent implements OnInit, OnDestroy {
   currentChatroomUser: string;
   currentChatroomGroupId: number;
 
+  userOnline: string[];
 
   @ViewChild('chatroom') chatroom: MessageChatroomComponent;
 
@@ -54,6 +55,10 @@ export class MessageComponent implements OnInit, OnDestroy {
           this.autoGoDown();
         });
     }
+
+    this.state.query.usersOnline$.subscribe(user => {
+      this.userOnline = user;
+    })
 
     this.getMessageGroups();
   }

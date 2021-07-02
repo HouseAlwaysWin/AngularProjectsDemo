@@ -319,7 +319,7 @@ namespace BackendApi
                 .AllowAnyMethod()
                 .AllowCredentials()
                 .WithOrigins(
-                   "http://localhost:4000",
+                   "https://localhost:4000",
                    "https://localhost:4001"));
 
             app.UseAuthentication();

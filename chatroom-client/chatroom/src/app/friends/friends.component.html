@@ -2,25 +2,6 @@
 
   <div class="friend-search"
        *ngIf="friendList?.length > 0">
-    <!-- <form class="friend-form"
-          [formGroup]="searchForm">
-      <button class="friend-search-btn">Find</button>
-      <span class="m-float-input-group"
-            [formFieldInvalid]="searchForm"
-            [fieldName]="'search'">
-        <input type="text"
-               [formControlName]="'search'"
-               name="search"
-               class="friend-add-text"
-               placeholder="Search your current friends">
-        <label for="">Search your current friends</label>
-        <span class="error-message"
-              *ngIf="formService.field_error(searchForm,'search','required')">
-          {{ 'Field is required.' }}
-        </span>
-
-      </span>
-    </form> -->
   </div>
   <div class="friend-list"
        *ngIf="friendList?.length > 0">

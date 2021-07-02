@@ -167,7 +167,7 @@ namespace BackendApi.Controllers
                         .Include(u => u.UserInfo)
                         .Include(u => u.Photos)
                         .Include(u => u.Friends).ThenInclude(u=> u.Friend)
-                        .Include(u => u.FriendsReverse).ThenInclude(u=>u.AppUser);
+                        .AsSplitQuery();
                     });
 
                 var userResult = _mapper.Map<AppUser,AppUserShortDto>(userInfo);

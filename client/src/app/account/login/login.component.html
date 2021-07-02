@@ -1,13 +1,13 @@
 <section class="loginForm">
   <form fxLayout="column"
-    fxLayoutAlign="center center"
-    [formGroup]="loginForm"
-    (ngSubmit)="onSubmit()">
+        fxLayoutAlign="center center"
+        [formGroup]="loginForm"
+        (ngSubmit)="onSubmit()">
 
 
     <div fxLayout="row">
       <mat-icon class="login-icon"
-        [inline]="true">person</mat-icon>
+                [inline]="true">person</mat-icon>
       <h2 class="login-title">
         {{ 'AccountForm.Login' | translate}}
       </h2>
@@ -21,14 +21,14 @@
 
     <mat-form-field class="emailInput">
       <input matInput
-        type="email"
-        formControlName="email"
-        placeholder="{{ 'AccountForm.Email'  | translate }} *"
-        name="email" />
+             type="email"
+             formControlName="emailOrUserName"
+             placeholder="{{ 'AccountForm.Email'  | translate }} *"
+             name="emailOrUserName" />
       <mat-icon matSuffix
-        class="input-warn"
-        *ngIf="email.invalid && (email.dirty || email.touched)"
-        inline="true">error_outline</mat-icon>
+                class="input-warn"
+                *ngIf="email.invalid && (email.dirty || email.touched)"
+                inline="true">error_outline</mat-icon>
 
       <mat-error>
         <div *ngIf="email.errors?.required">
@@ -41,14 +41,14 @@
     </mat-form-field>
     <mat-form-field class="passwordInput">
       <input matInput
-        type="password"
-        formControlName="password"
-        placeholder="{{ 'AccountForm.Password' | translate }} *"
-        name="password" />
+             type="password"
+             formControlName="password"
+             placeholder="{{ 'AccountForm.Password' | translate }} *"
+             name="password" />
       <mat-icon matSuffix
-        class="input-warn"
-        *ngIf="email.invalid && (email.dirty || email.touched)"
-        inline="true">error_outline</mat-icon>
+                class="input-warn"
+                *ngIf="email.invalid && (email.dirty || email.touched)"
+                inline="true">error_outline</mat-icon>
 
       <mat-error>
         <div *ngIf="password.errors?.required">
@@ -59,10 +59,10 @@
 
     <br />
     <button type="submit"
-      class="loginBtn"
-      mat-raised-button
-      [disabled]="!loginForm.valid"
-      color="primary">
+            class="loginBtn"
+            mat-raised-button
+            [disabled]="!loginForm.valid"
+            color="primary">
       {{ 'AccountForm.Login' | translate }}
     </button>
   </form>

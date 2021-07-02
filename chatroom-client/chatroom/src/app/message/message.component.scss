@@ -5,6 +5,22 @@
   flex-direction: row;
   justify-content: center;
 
+  &-online {
+    margin-left: 1rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 1rem;
+    background-color: green;
+  }
+
+  &-offline {
+    margin-left: 1rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 1rem;
+    background-color: gray;
+  }
+
   &-nav {
     display: flex;
     flex-direction: column;

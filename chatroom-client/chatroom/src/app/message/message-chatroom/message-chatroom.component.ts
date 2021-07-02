@@ -77,19 +77,21 @@ export class MessageChatroomComponent implements OnInit {
     var sh = Math.trunc(this.messageListContent.nativeElement.scrollHeight);
     var st = Math.trunc(this.messageListContent.nativeElement.scrollTop);
     var ht = Math.trunc(this.messageListContent.nativeElement.offsetHeight);
-    if ((st !== sh - ht)) {
+    if ((st <= (sh - ht) - 10)) {
       this.showGoBottomBtn = true;
       // after first time init then add hide class.
       if (this.initHide) {
         console.log(this.initHide);
         this.hideGoBottomBtn = false;
       }
+      console.log('show')
     }
     else {
       this.showGoBottomBtn = false;
       if (this.initHide) {
         this.hideGoBottomBtn = true;
       }
+      console.log('hide');
     }
   }
 
@@ -123,6 +125,7 @@ export class MessageChatroomComponent implements OnInit {
 
   initProps() {
     this.currentUser = this.state.query.user;
+
     this.autoGoMessageDown();
   }
 

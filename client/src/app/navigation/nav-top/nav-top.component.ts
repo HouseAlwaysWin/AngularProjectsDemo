@@ -58,12 +58,12 @@ export class NavTopComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.showBar = false;
     this.accountService.currrentUser.subscribe(user => {
+      console.log(user);
       this.userInfo = user;
       this.isAuth = user ? true : false;
       this.showBar = true;
     });
     this.getBasket();
-    // window.addEventListener('scroll', this.scrollEvent, true);
   }
 
   onLogout() {
@@ -73,7 +73,6 @@ export class NavTopComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.accountService.currrentUser.unsubscribe();
     this.basketSub.unsubscribe();
-    // window.removeEventListener('scroll', this.scrollEvent, true);
   }
 
   changeLang(lang: string) {
@@ -81,8 +80,6 @@ export class NavTopComponent implements OnInit, OnDestroy {
     this.store.dispatch(ShopActions.GetCategories());
     this.store.dispatch(ShopActions.GetProductList(new ShopParams()));
     this.store.dispatch(CheckoutActions.GetDeliveryMethod());
-    // this.shopService.getCategories().subscribe();
-    // this.shopService.getProducts(new ShopParams()).subscribe();
   }
 
 

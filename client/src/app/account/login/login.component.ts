@@ -44,7 +44,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   get email() {
-    return this.loginForm.get('email');
+    return this.loginForm.get('emailOrUserName');
   }
 
   get password() {
@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   validateLoginForm() {
 
     this.loginForm = this.formBuilder.group({
-      email: [null, [Validators.required, Validators.email]
+      emailOrUserName: [null, [Validators.required, Validators.email]
       ],
       password: [null, [Validators.required]]
     });

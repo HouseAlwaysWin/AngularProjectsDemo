@@ -1,27 +1,25 @@
 .order-summary {
   width: 100%;
-}
 
-.order-summary-title {
-  // background-color: gray;
-  border-radius: 0.1em;
-  color: rgb(79, 101, 161);
-  text-align: center;
-  font-weight: bold;
-  padding: 1.2em;
-  font-size: 2em;
-  // box-shadow: 2px 2px 2px rgba(110, 110, 110, 1);
-}
+  &-title {
+    border-radius: 0.1em;
+    color: rgb(79, 101, 161);
+    text-align: center;
+    font-weight: bold;
+    padding: 1.2em;
+    font-size: 2em;
+  }
 
-.order-summary-hint {
-  margin: 1em;
-  color: rgb(231, 85, 85);
-  font-weight: 900;
-}
+  &-hint {
+    margin: 1em;
+    color: rgb(231, 85, 85);
+    font-weight: 900;
+  }
 
-.order-summary-list {
-  list-style: none;
-  margin: 2em;
+  &-list {
+    list-style: none;
+    margin: 2em;
+  }
 }
 
 .order-list {

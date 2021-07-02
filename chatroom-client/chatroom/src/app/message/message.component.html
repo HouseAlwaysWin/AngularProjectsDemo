@@ -9,6 +9,11 @@
 
         <div *ngIf="message.groupName === currentUser.userName"
              class="message-item-content">
+          <span [ngClass]="{
+                              'message-offline':!userOnline.includes(message.groupOtherName),
+                              'message-online':userOnline.includes(message.groupOtherName)
+                            }">
+          </span>
           <img [src]="message.groupOtherImg"
                class="message-img" />
           <div class="message-info">
@@ -22,7 +27,11 @@
         </div>
         <div *ngIf="message.groupName !== currentUser.userName"
              class="message-item-content">
-
+          <span [ngClass]="{
+                              'message-offline':!userOnline.includes(message.groupName),
+                              'message-online':userOnline.includes(message.groupName)
+                            }">
+          </span>
           <img [src]="message.groupImg"
                class="message-img" />
           <div class="message-info">

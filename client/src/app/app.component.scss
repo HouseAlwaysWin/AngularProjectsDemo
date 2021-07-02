@@ -1,3 +1,5 @@
+@import "../styles/main.scss";
+
 mat-sidenav-container,
 mat-sidenav-content,
 mat-sidenav {
@@ -11,4 +13,26 @@ mat-sidenav {
 main {
   padding: 10px;
   margin-top: 5em;
+  display: flex;
+  justify-content: center;
+}
+
+footer {
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  background-color: $color-grey-dark;
+  padding: 2rem;
+
+  & ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    list-style: none;
+    & li {
+      padding: 0 1rem;
+      color: $color-white;
+      font-size: 2rem;
+    }
+  }
 }
