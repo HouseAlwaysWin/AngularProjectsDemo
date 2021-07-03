@@ -57,7 +57,6 @@ namespace BackendApi.Helpers.Localization
         internal static void AddJsonLocalizationServices(IServiceCollection services)
         {
             services.TryAddSingleton<IStringLocalizerFactory, JsonStringLocalizerFactory>();
-            // services.TryAddTransient(typeof(IStringLocalizer<>), typeof(StringLocalizer<>));
             services.TryAddTransient<IStringLocalizer,JsonStringLocalizer>();
 
         }

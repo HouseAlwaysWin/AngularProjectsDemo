@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
@@ -15,6 +15,9 @@ import * as appReducer from './store/app.reducer';
 })
 export class AppComponent implements OnInit, OnDestroy {
   private _onDestroy = new Subject();
+
+  @ViewChild('mainContent') mainContent: ElementRef;
+
   constructor(
     public translate: TranslateService,
     private store: Store<appReducer.AppState>,
@@ -48,6 +51,12 @@ export class AppComponent implements OnInit, OnDestroy {
 
   loadBasket() {
     this.store.dispatch(BasketActions.GetBasket());
+  }
+
+  watchScroll() {
+    var sh = Math.trunc(this.mainContent.nativeElement.scrollHeight);
+    var st = Math.trunc(this.mainContent.nativeElement.scrollTop);
+    var ht = Math.trunc(this.mainContent.nativeElement.offsetHeight);
   }
 
 

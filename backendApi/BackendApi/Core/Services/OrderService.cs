@@ -47,14 +47,8 @@ namespace BackendApi.Core.Services
              decimal subTotal = 0m;
              foreach (var item in basket.BasketItems)
              {
-                // var productSpec = new ProductIncludeAllSpec(item.Id);
-                 // var productItem = await _unitOfWork.Repository<Product>().GetEntityWithSpec(productSpec);
-                // subTotal += (productItem.Price * item.Quantity);
-
                 subTotal += (item.Price * item.Quantity);
-
                 var orderItem =  _mapper.Map<BasketItem,OrderItem>(item);
-                // orderItem.ProductCategory = productItem.ProductCategory.Name;
                 items.Add(orderItem);
              }
 
@@ -76,7 +70,6 @@ namespace BackendApi.Core.Services
             await _storeRepo.AddAsync(order);
             try{
                 var result = await _storeRepo.CompleteAsync();
-                if(result) return null;
              
                 return order;
 
@@ -105,21 +98,18 @@ namespace BackendApi.Core.Services
 
         public async Task<List<Order>> GetOrderByEmailListSpec(GetOrderParam param)
         {
-            // var spec = new GetOrderByEmailListSpec(param);
             var result = await _storeRepo.GetAllAsync<Order>(q => OrderSpec.GetOrderByEmailListSpec(q,param));
             return result.ToList();
         }
 
         public async Task<Order> GetOrderByIdAsync(int id, string buyerEmail)
         {
-            // var spec = new GetOrderWithItemsSpec(id,buyerEmail);
             var result = await _storeRepo.GetByAsync<Order>(q => OrderSpec.GetOrderWithItemsSpec(q,buyerEmail));
             return result;
         }
 
         public async Task<List<Order>> GetOrdersForUserAsync(string buyerEmail)
         {
-            // var spec = new GetOrderWithItemsSpec(buyerEmail);
             var result = await _storeRepo.GetAllAsync<Order>(q => OrderSpec.GetOrderWithItemsSpec(q,buyerEmail));
             return result.ToList();
         }

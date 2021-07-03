@@ -1,22 +1,26 @@
-<mat-sidenav-container>
-  <mat-sidenav #navside
-               mode="over"
-               role="navigation">
-    <app-nav-side (navSideClose)="navside.close()"></app-nav-side>
-  </mat-sidenav>
+<div class="main-content"
+     (scroll)="watchScroll()"
+     #mainContent>
+  <mat-sidenav-container>
+    <mat-sidenav #navside
+                 mode="over"
+                 role="navigation">
+      <app-nav-side (navSideClose)="navside.close()"></app-nav-side>
+    </mat-sidenav>
 
-  <mat-sidenav-content>
-    <app-nav-top (navSideToggle)="navside.toggle()"></app-nav-top>
-    <main>
-      <router-outlet></router-outlet>
-    </main>
+    <mat-sidenav-content>
+      <app-nav-top (navSideToggle)="navside.toggle()"></app-nav-top>
+      <main>
+        <router-outlet></router-outlet>
+      </main>
 
 
-  </mat-sidenav-content>
+    </mat-sidenav-content>
 
-</mat-sidenav-container>
-<footer>
-  <ul>
-    <li>Copyright &copy; by Martin Wang</li>
-  </ul>
-</footer>
+  </mat-sidenav-container>
+  <footer>
+    <ul>
+      <li>Copyright &copy; by Martin Wang</li>
+    </ul>
+  </footer>
+</div>

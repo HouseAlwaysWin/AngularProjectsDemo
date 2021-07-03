@@ -88,27 +88,58 @@
     font-weight: bold;
     margin: 0.5em;
   }
+
+  &-remove {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.5em;
+    margin: 0.5em;
+    cursor: pointer;
+    @include unselect();
+  }
 }
 
-.basket-remove {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 1.5em;
-  font-weight: bold;
-  margin: 0.5em;
-}
+.mat-icon {
+  &-add {
+    @include mat-icon-size(20px);
+    @include unselect();
+    cursor: pointer;
+    color: rgb(0, 136, 0);
 
-.removewButton {
-  cursor: pointer;
-}
+    &:hover {
+      color: rgb(1, 105, 1);
+    }
 
-.add-mat-icon {
-  @include mat-icon-size(20px);
-  cursor: pointer;
-  color: rgb(0, 107, 0);
-}
+    &:active {
+      color: rgb(0, 136, 0);
+    }
+  }
 
-.remove-mat-icon {
-  @include mat-icon-size(20px);
-  cursor: pointer;
-  color: rgb(145, 1, 1);
+  &-remove {
+    @include mat-icon-size(20px);
+    @include unselect();
+    cursor: pointer;
+    color: rgb(192, 3, 3);
+
+    &:hover {
+      color: rgb(117, 2, 2);
+    }
+
+    &:active {
+      color: rgb(192, 3, 3);
+    }
+  }
+
+  &-removeBtn {
+    cursor: pointer;
+    color: rgb(192, 3, 3);
+
+    &:hover {
+      color: rgb(117, 2, 2);
+    }
+
+    &:active {
+      color: rgb(192, 3, 3);
+    }
+    @include unselect();
+  }
 }

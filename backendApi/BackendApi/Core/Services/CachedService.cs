@@ -13,23 +13,18 @@ namespace BackendApi.Core.Services
     public class CachedService : ICachedService
     {
 
-        // private readonly IDatabase _db;
         
-        // private readonly IConnectionMultiplexer _redis;
         private readonly IDistributedCache _db;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public CachedService(
             IHttpContextAccessor httpContextAccessor,
-            // IConnectionMultiplexer redis
             IDistributedCache db 
             
             )
         {
             this._httpContextAccessor = httpContextAccessor;
-            // this._redis = redis;
             this._db = db;
-            // this._db = this._redis.GetDatabase();
         }
 
 

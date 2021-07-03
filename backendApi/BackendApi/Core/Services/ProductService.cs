@@ -91,15 +91,6 @@ namespace BackendApi.Core.Services
             return query;
         }
 
-        // private string GetCurrentLang()
-        // {
-        //     var currentLang = _httpContextAccessor.HttpContext.Request.Headers["Accept-Language"].FirstOrDefault();
-        //     if (string.IsNullOrEmpty(currentLang))
-        //     {
-        //         currentLang = "en-US";
-        //     }
-        //     return currentLang;
-        // }
 
         private async Task<List<ProductDto>> GetProductsDtoCachedAsync()
         {

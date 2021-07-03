@@ -42,21 +42,11 @@ namespace BackendApi.Core.Services
             decimal shippingPrice = 0m;
 
             if(basket.DeliveryMethodId.HasValue){
-                // var deliveryMethod = await _unitOfWork.Repository<DeliveryMethod>()
-                //             .GetByIdAsync((int)basket.DeliveryMethodId);
                 var deliveryMethod = await _storeRepo.GetByAsync<DeliveryMethod>(query => query.Where(q => q.Id == (int)basket.DeliveryMethodId)
                     
                      );
                 shippingPrice = deliveryMethod.Price;
             }
-
-            // foreach(var item in basket.BasketItems){
-            //     // var productItem = await _unitOfWork.Repository<Models.Entities.Product>().GetByIdAsync(item.Id);
-            //     var productItem = await _unitOfWork.EntityRepository<Models.Entities.Product>().GetByIdAsync(item.Id);
-            //     if(item.Price != productItem.Price){
-            //         item.Price = productItem.Price;
-            //     }
-            // }
 
             var service = new PaymentIntentService();
 
@@ -87,14 +77,12 @@ namespace BackendApi.Core.Services
 
         public async Task<Models.Entities.Order> UpdateOrderPaymentFailed(string paymentIntentId)
         {
-            // var spec = new OrderByPaymentIntentIdSpec(paymentIntentId);
             var order = await _storeRepo.GetByAsync<Models.Entities.Order>(q => {
                 return q.Where(o => o.PaymentIntentId == paymentIntentId);
             });
             if(order == null) return null;
 
             order.OrderStatus = OrderStatus.PaymentFailed;
-            // _unitOfWork.Repository<Models.Entities.Order>().Update(order);
 
             _storeRepo.Update(order);
             await _storeRepo.CompleteAsync();
@@ -103,8 +91,6 @@ namespace BackendApi.Core.Services
 
         public async Task<Models.Entities.Order> UpdateOrderPaymentSuccessed(string paymentIntentId)
         {
-            //  var spec = new OrderByPaymentIntentIdSpec(paymentIntentId);
-            // var order = await _unitOfWork.Repository<Models.Entities.Order>().GetEntityWithSpec(spec);
             var order = await _storeRepo.GetByAsync<Models.Entities.Order>(q => {
                 return q.Where(o => o.PaymentIntentId == paymentIntentId);
             });
