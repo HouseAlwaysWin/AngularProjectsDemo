@@ -32,7 +32,7 @@ const routes: Routes = [
     path: 'checkout',
     loadChildren: () => import('./checkout/checkout.module').then(m => m.CheckoutModule),
     canActivate: [AuthGuard],
-    canLoad: [CheckoutGuard]
+    // canLoad: [CheckoutGuard]
   },
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];

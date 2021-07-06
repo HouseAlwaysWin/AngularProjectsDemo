@@ -1,25 +1,10 @@
-<div fxLayout="column">
-
-  <div></div>
-  <div fxLayout.gt-sm="row"
-       fxLayout="column"
-       fxLayoutAlign="space-between"
-       class="addressTitle">
-    <h4>{{ 'CheckoutAddress.ShippingAddress' | translate}}</h4>
-    <!-- <button mat-stroked-button
-      (click)="setUserAddress()"
-      color="primary">
-      {{ 'Checkout.SetAddress' | translate}}
-    </button> -->
-  </div>
+<div class="address">
 
   <form [formGroup]="checkoutForm"
-        fxLayout="column">
-    <div fxLayout.gt-sm="row"
-         fxLayout="column"
-         formGroupName="addressForm">
-      <mat-form-field class="addressField"
-                      fxFlex="50">
+        class="address-form">
+    <div formGroupName="addressForm"
+         class="address-form-field">
+      <mat-form-field class="address-field">
         <input matInput
                type="text"
                formControlName="firstName"
@@ -30,7 +15,7 @@
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field fxFlex="50">
+      <mat-form-field class="address-field">
         <input matInput
                type="text"
                formControlName="lastName"
@@ -42,11 +27,9 @@
       </mat-form-field>
     </div>
 
-    <div fxLayout.gt-sm="row"
-         fxLayout="column"
-         formGroupName="addressForm">
-      <mat-form-field class="addressField"
-                      fxFlex="50">
+    <div formGroupName="addressForm"
+         class="address-form-field">
+      <mat-form-field class="address-field">
         <input matInput
                type="text"
                formControlName="street"
@@ -57,7 +40,7 @@
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field fxFlex="50">
+      <mat-form-field class="address-field">
         <input matInput
                type="text"
                formControlName="city"
@@ -69,11 +52,9 @@
       </mat-form-field>
     </div>
 
-    <div fxLayout.gt-sm="row"
-         fxLayout="column"
-         formGroupName="addressForm">
-      <mat-form-field class="addressField"
-                      fxFlex="50">
+    <div formGroupName="addressForm"
+         class="address-form-field">
+      <mat-form-field class="address-field">
         <input matInput
                type="text"
                formControlName="state"
@@ -84,7 +65,7 @@
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field fxFlex="50">
+      <mat-form-field class="address-field">
         <input matInput
                type="text"
                formControlName="zipCode"
@@ -99,8 +80,7 @@
   </form>
 
 
-  <div fxLayout="row"
-       fxLayoutAlign="space-between center">
+  <div class="address-action">
     <button mat-raised-button
             routerLink="/basket">{{ 'Checkout.Previous' | translate}}</button>
     <button mat-raised-button
@@ -109,14 +89,5 @@
             [disabled]="addressForm.invalid">{{ 'Checkout.Next' | translate }}</button>
   </div>
 
-  <!-- <div fxLayout="row"
-    fxLayoutAlign="space-between center">
-    <button mat-raised-button
-      routerLink="/basket"
-      color="warn">&larr;</button>
-    <button mat-raised-button
-      cdkStepperNext
-      [disabled]="addressForm.invalid"
-      color="warn">&rarr;</button>
-  </div> -->
+
 </div>

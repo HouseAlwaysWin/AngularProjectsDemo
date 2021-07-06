@@ -1,15 +1,60 @@
-.detail-table {
-  width: 100%;
+@import "../../../styles.scss";
+
+.detail {
+  min-height: 70rem;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+
+  &-content {
+    display: flex;
+    align-items: start;
+    flex-flow: column;
+    height: 100%;
+
+    @media only screen and (max-width: $bp-medium) {
+      width: 60rem;
+    }
+
+    @media only screen and (max-width: $bp-small) {
+      width: 50rem;
+      overflow-x: scroll;
+    }
+
+    @media only screen and (max-width: $bp-smallest) {
+      width: 20rem;
+      overflow-x: scroll;
+    }
+  }
+
+  &-table {
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0);
+  }
+
+  &-img {
+    margin-top: 0.5rem;
+    height: 100px;
+    width: 100px;
+    object-fit: cover;
+  }
+
+  &-return {
+    margin-top: 1em;
+    text-align: center;
+  }
+}
+
+.mat-cell {
+  padding-left: 2rem;
+  white-space: nowrap;
+}
+
+.mat-header-cell {
+  padding: 2rem;
+  white-space: nowrap;
+}
+
+.mat-table {
   background-color: rgba(255, 255, 255, 0);
-}
-
-.detail-img {
-  height: 200px;
-  width: 200px;
-  object-fit: cover;
-}
-
-.detail-return {
-  margin-top: 1em;
-  text-align: center;
 }

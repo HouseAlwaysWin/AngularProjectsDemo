@@ -57,3 +57,10 @@
     text-shadow: 2px 2px rgba(110, 110, 110, 0.2);
   }
 }
+
+app-baske-total-summary {
+  width: 50rem;
+  @media only screen and (max-width: $bp-smallest) {
+    width: 100%;
+  }
+}

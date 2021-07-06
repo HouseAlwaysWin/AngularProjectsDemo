@@ -10,12 +10,6 @@ a:active {
   color: lightgray;
 }
 
-.navigation-items {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-
 mat-toolbar {
   position: fixed;
   top: 0;
@@ -30,4 +24,41 @@ mat-toolbar {
 .login-mat-icon {
   @include mat-icon-size(30px);
   padding-bottom: 5px;
+}
+
+.nav {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+
+  &-top {
+    display: flex;
+    flex-flow: row;
+
+    @include respond(small) {
+      display: none;
+    }
+  }
+
+  &-items {
+    display: flex;
+    flex-flow: row nowrap;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  &-toggle-btn {
+    display: none;
+
+    @include respond(small) {
+      display: inline-block;
+    }
+  }
+
+  &-title {
+    @include respond(small) {
+      display: none;
+    }
+  }
 }

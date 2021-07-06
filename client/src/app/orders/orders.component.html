@@ -1,7 +1,7 @@
 <div class="order">
-  <div *ngIf="orderList.length>0;else noOrder">
+  <div *ngIf="orderList.length>0;else noOrder"
+       class="order-table">
     <table mat-table
-           class="orderTable"
            [dataSource]="pageItems">
 
       <!--- Note that these columns can be defined in any order.

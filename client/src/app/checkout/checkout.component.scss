@@ -1,7 +1,37 @@
-// .checkout {
-//   margin-top: 5em;
-// }
+@import "../../styles.scss";
 
-mat-vertical-stepper {
-  background-color: rgba(255, 255, 255, 0);
+::ng-deep mat-vertical-stepper {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.checkout {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: flex-start;
+  flex-flow: row wrap;
+  min-height: 80rem;
+  mat-vertical-stepper {
+    background-color: rgba(0, 0, 0, 0);
+    width: 50rem;
+  }
+  @include respond(smallest) {
+    mat-vertical-stepper {
+      width: 27rem;
+    }
+    flex-direction: column;
+  }
+
+  &-step {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &-summary {
+    width: 50rem;
+    @include respond(smallest) {
+      width: 27rem;
+    }
+  }
 }

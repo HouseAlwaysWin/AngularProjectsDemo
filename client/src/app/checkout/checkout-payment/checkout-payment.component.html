@@ -1,7 +1,9 @@
-<div [class.hide]="isLoading">
+<div [class.hide]="isLoading"
+     class="payment">
   <div [formGroup]="checkoutForm"
-       class="paymentForm">
-    <div formGroupName="paymentForm">
+       class="payment-form">
+    <div formGroupName="paymentForm"
+         class="payment-form-field">
       <input placeholder="Name"
              class="card-input"
              formControlName="nameOnCard" />
@@ -18,18 +20,18 @@
         {{ cardErrors }}
       </mat-error>
     </ng-container>
+  </div>
+
+  <div class="payment-action">
+
+    <button mat-raised-button
+            matStepperPrevious>{{ 'Checkout.Previous' | translate}}</button>
     <button mat-raised-button
             class="payment-submit"
             [disabled]="checkoutForm.get('paymentForm').invalid || !cardNumberValid || !cardExpiryValid || !cardCvcValid || isLoading"
             (click)="submitOrder()"
             color="primary">{{ 'Checkout.Submit' | translate}}</button>
-  </div>
 
-
-  <div fxLayout="row"
-       fxLayoutAlign="space-between center">
-    <button mat-raised-button
-            matStepperPrevious>{{ 'Checkout.Previous' | translate}}</button>
   </div>
 </div>
 

@@ -71,6 +71,8 @@ export class ShopEffects {
   autocomplete = createEffect(() => this.action$.pipe(
     ofType(ShopActions.AutoComplete),
     switchMap(action => {
+      console.log('autocomplete effect');
+      console.log(action);
       return this.shopService.getAutocomplete(action).pipe(
         map(res => ShopActions.GetAutocompleteSuccess({
           searchOptions: res.data

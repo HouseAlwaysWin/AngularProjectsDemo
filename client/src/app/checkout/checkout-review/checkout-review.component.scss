@@ -1,0 +1,25 @@
+@import "../../../styles.scss";
+
+.review {
+  &-action {
+    margin-top: 1rem;
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    @include respond(small) {
+      width: 30rem;
+      flex-flow: column wrap;
+      .mat-raised-button {
+        width: 20rem;
+        margin-bottom: 1rem;
+      }
+    }
+    @include respond(smallest) {
+      flex-flow: column wrap;
+      .mat-raised-button {
+        width: 20rem;
+        margin-bottom: 1rem;
+      }
+    }
+  }
+}

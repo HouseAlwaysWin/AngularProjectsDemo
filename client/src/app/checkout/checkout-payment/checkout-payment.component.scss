@@ -1,20 +1,68 @@
+@import "../../../styles.scss";
+
+.payment {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+
+  &-form {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    @include respond(small) {
+      justify-content: flex-start;
+    }
+    padding: 1em;
+    text-align: center;
+
+    &-field {
+      display: flex;
+      flex-flow: column wrap;
+    }
+  }
+
+  &-action {
+    margin-top: 1rem;
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+
+    @include respond(small) {
+      width: 30rem;
+      flex-flow: column wrap;
+      .mat-raised-button {
+        width: 20rem;
+        margin-bottom: 1rem;
+      }
+    }
+
+    @include respond(smallest) {
+      flex-flow: column wrap;
+      .mat-raised-button {
+        width: 20rem;
+        margin-bottom: 1rem;
+      }
+    }
+  }
+}
+
 .card-input {
   background: transparent;
   border: none;
   border-bottom: solid 1px #ccc;
   padding: 20px 2px 5px;
   transition: padding 0.4s;
-  width: 100%;
+  width: 40rem;
   outline: none;
-}
-
-.paymentForm {
-  padding: 1em;
-  text-align: center;
-}
-
-.payment-submit {
-  margin-top: 1em;
+  @include respond(medium) {
+    width: 50rem;
+  }
+  @include respond(small) {
+    width: 30rem;
+  }
+  @include respond(smallest) {
+    width: 20rem;
+  }
 }
 
 .hide {

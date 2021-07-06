@@ -4,38 +4,39 @@
   &::-webkit-scrollbar {
     height: 1rem;
     background-color: rgba($color-grey-light, 0.5);
+    border: none;
+    border-radius: 1rem;
+    outline: none;
   }
   &::-webkit-scrollbar-track {
     width: 10px;
-    box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.3);
+    outline: none;
   }
   &::-webkit-scrollbar-thumb {
     background-color: $color-primary;
     border-radius: 1rem;
     outline: none;
   }
-
-  @media only screen and(max-width:$bp-medium) {
-    display: inline-block;
-    max-width: 60rem;
-    overflow-x: scroll;
+  ::-webkit-scrollbar-track-piece {
+    background-color: red;
   }
 
-  @media only screen and(max-width:$bp-small) {
+  @include respond(small) {
     display: inline-block;
     max-width: 40rem;
     overflow-x: scroll;
   }
 
-  @media only screen and(max-width:$bp-smallest) {
+  @include respond(smallest) {
     display: inline-block;
-    max-width: 30rem;
+    max-width: 20rem;
     overflow-x: scroll;
   }
 }
 
 .mat-cell {
   padding-left: 2rem;
+  white-space: nowrap;
 }
 
 .mat-header-cell {
@@ -66,6 +67,11 @@
   &-row {
     overflow-x: scroll;
     // padding: 10px;
+  }
+
+  &-quantity-action {
+    display: flex;
+    flex-flow: row;
   }
 }
 
@@ -141,5 +147,44 @@
       color: rgb(192, 3, 3);
     }
     @include unselect();
+  }
+}
+
+mat-paginator {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  @include respond(medium) {
+    flex-flow: row nowrap;
+    justify-content: center;
+  }
+  @include respond(medium) {
+    flex-flow: column nowrap;
+    align-items: center;
+  }
+}
+
+::ng-deep .mat-paginator .mat-paginator-container {
+  @include respond(medium) {
+    flex-flow: row nowrap;
+    justify-content: start;
+  }
+  @include respond(smallest) {
+    flex-flow: column nowrap;
+    align-items: start;
+  }
+}
+
+::ng-deep .mat-paginator .mat-paginator-page-size,
+::ng-deep .mat-paginator .mat-paginator-range-actions {
+  @include respond(medium) {
+    flex-flow: row nowrap;
+    justify-content: start;
+  }
+}
+
+::ng-deep .mat-paginator .mat-paginator-range-label {
+  @include respond(smallest) {
+    margin: 0;
   }
 }

@@ -1,20 +1,16 @@
-<div [formGroup]="checkoutForm">
-  <div>
-
-  </div>
+<div [formGroup]="checkoutForm"
+     class="delivery">
 
   <div formGroupName="deliveryForm"
-    fxLayout="column"
-    fxLayoutAlign="center center">
+       class="delivery-form">
     <p class="delivery-method-title">{{ 'Checkout.DeliverymethodTitle' | translate}}</p>
     <mat-radio-group formControlName="deliveryMethodId"
-      class="delivery-radio-group"
-      fxLayout="column"
-      [(ngModel)]="selectDeliveryMethods">
+                     class="delivery-radio-group"
+                     [(ngModel)]="selectDeliveryMethods">
       <mat-radio-button *ngFor="let item of deliveryMethods;let i =index"
-        class="delivery-radio-select"
-        (change)="setShippingPrice($event.value)"
-        [value]="item">
+                        class="delivery-radio-select"
+                        (change)="setShippingPrice($event.value)"
+                        [value]="item">
         <strong>{{ item.shortName }}</strong> - {{ item.price | currency }}
         <div>
           {{ item.description }}
@@ -25,21 +21,10 @@
 
 </div>
 
-<div class="btn-step-area"
-  fxLayout="row"
-  fxLayoutAlign="space-between center">
+<div class="delivery-action">
   <button mat-raised-button
-    matStepperPrevious>{{ 'Checkout.Previous' | translate}}</button>
+          matStepperPrevious>{{ 'Checkout.Previous' | translate}}</button>
   <button mat-raised-button
-    color="primary"
-    matStepperNext>{{ 'Checkout.Next' | translate }}</button>
+          color="primary"
+          matStepperNext>{{ 'Checkout.Next' | translate }}</button>
 </div>
-<!-- <div fxLayout="row"
-  fxLayoutAlign="space-between center">
-  <button mat-raised-button
-    cdkStepperPrevious
-    color="warn">&larr;</button>
-  <button mat-raised-button
-    cdkStepperNext
-    color="warn">&rarr;</button>
-</div> -->

@@ -1,13 +1,53 @@
+@import "../../../styles.scss";
+
 .btn-step-area {
   margin-top: 1em;
 }
 
-.delivery-radio-select {
-  margin: 0.5em;
-}
+.delivery {
+  &-form {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    @include respond(small) {
+      align-items: flex-start;
+    }
+  }
 
-.delivery-method-title {
-  margin-top: 20px;
-  font-weight: bold;
-  font-size: 20px;
+  &-radio-group {
+    display: flex;
+    flex-flow: column nowrap;
+  }
+
+  &-radio-select {
+    margin: 0.5em;
+  }
+
+  &-method-title {
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 20px;
+  }
+
+  &-action {
+    margin-top: 1rem;
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    @include respond(small) {
+      width: 30rem;
+      flex-flow: column wrap;
+      .mat-raised-button {
+        width: 20rem;
+        margin-bottom: 1rem;
+      }
+    }
+    @include respond(smallest) {
+      flex-flow: column wrap;
+      .mat-raised-button {
+        width: 20rem;
+        margin-bottom: 1rem;
+      }
+    }
+  }
 }

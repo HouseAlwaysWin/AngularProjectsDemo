@@ -1,7 +1,58 @@
-.addressField {
-  margin-right: 1em;
-}
+@import "../../../styles.scss";
 
-.addressTitle {
-  margin-top: 1em;
+.address {
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  width: 40rem;
+
+  &-field {
+    margin-right: 1em;
+    flex: 1;
+  }
+
+  &-form {
+    display: flex;
+    flex-flow: column;
+
+    &-field {
+      display: flex;
+      flex-flow: row wrap;
+
+      @include respond(medium) {
+        flex-flow: column wrap;
+      }
+      @include respond(small) {
+        width: 30rem;
+        flex-flow: column wrap;
+      }
+      @include respond(smallest) {
+        flex-flow: column wrap;
+        width: 20rem;
+      }
+    }
+  }
+
+  &-action {
+    margin-top: 1rem;
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    @include respond(small) {
+      width: 30rem;
+      flex-flow: column wrap;
+      .mat-raised-button {
+        width: 20rem;
+        margin-bottom: 1rem;
+      }
+    }
+
+    @include respond(smallest) {
+      flex-flow: column wrap;
+      .mat-raised-button {
+        width: 20rem;
+        margin-bottom: 1rem;
+      }
+    }
+  }
 }

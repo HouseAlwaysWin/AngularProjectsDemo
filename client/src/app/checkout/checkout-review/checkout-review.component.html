@@ -1,12 +1,12 @@
-<div *ngIf="!isLoading">
+<div *ngIf="!isLoading"
+     class="review">
   <app-basket-summary [hiddenRemove]="true"
                       [showQuantityAdj]="false"
                       (remove)="removeBasketItem($event)"></app-basket-summary>
 
 
 
-  <div fxLayout="row"
-       fxLayoutAlign="space-between center">
+  <div class="review-action">
     <button mat-raised-button
             matStepperPrevious>{{ 'Checkout.Previous' | translate}}</button>
     <button mat-raised-button
@@ -21,16 +21,3 @@
                         color="accent"
                         diameter="120"></mat-progress-spinner>
 </div>
-
-
-
-<!-- <div fxLayout="row"
-  fxLayoutAlign="space-between center">
-
-  <button mat-raised-button
-    cdkStepperPrevious
-    color="warn">&larr;</button>
-  <button mat-raised-button
-    (click)="createPaymentIntent()"
-    color="warn">&rarr;</button>
-</div> -->

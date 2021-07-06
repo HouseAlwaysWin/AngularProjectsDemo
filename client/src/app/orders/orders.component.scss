@@ -1,10 +1,67 @@
-.orderTable {
-  width: 100%;
-  background-color: rgba(255, 255, 255, 0);
+@import "../../styles.scss";
+
+.mat-cell {
+  padding-left: 2rem;
+  white-space: nowrap;
 }
 
-.order-paging {
+.mat-header-cell {
+  padding: 2rem;
+  white-space: nowrap;
+}
+
+.mat-table {
   background-color: rgba(255, 255, 255, 0);
+  min-height: 70rem;
+  width: 70rem;
+}
+
+.order {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+
+  // @media only screen and (max-width: $bp-large) {
+  //   width: 60rem;
+  //   overflow-x: scroll;
+  // }
+
+  // @media only screen and (max-width: $bp-medium) {
+  //   width: 40rem;
+  // }
+
+  // @media only screen and (max-width: $bp-smallest) {
+  //   width: 27rem;
+  // }
+
+  &-table {
+    background-color: rgba(255, 255, 255, 0);
+    @media only screen and (max-width: $bp-medium-large) {
+      width: 60rem;
+      overflow-x: scroll;
+    }
+
+    @media only screen and (max-width: $bp-medium) {
+      width: 50rem;
+      overflow-x: scroll;
+    }
+
+    @media only screen and (max-width: $bp-smallest) {
+      display: inline;
+      width: 20rem;
+      overflow-x: scroll;
+    }
+  }
+
+  &-paging {
+    background-color: rgba(255, 255, 255, 0);
+  }
+}
+
+mat-paginator {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
 }
 
 .no-order {
