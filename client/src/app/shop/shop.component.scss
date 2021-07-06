@@ -1,4 +1,4 @@
-@import "../../styles/main.scss";
+@import "../../styles.scss";
 
 .shop {
   display: flex;
@@ -16,13 +16,16 @@
   }
 
   @include respond(smallest) {
-    width: 22rem;
+    width: 35rem;
   }
 
   &-nav {
     display: flex;
     flex-direction: column;
-    flex: 1;
+    width: 30%;
+    @include respond(medium) {
+      width: 100%;
+    }
 
     &-all-btn {
       width: 100%;
@@ -36,13 +39,7 @@
     }
 
     &-root {
-      -webkit-touch-callout: none; /* iOS Safari */
-      -webkit-user-select: none; /* Safari */
-      -khtml-user-select: none; /* Konqueror HTML */
-      -moz-user-select: none; /* Old versions of Firefox */
-      -ms-user-select: none; /* Internet Explorer/Edge */
-      user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome, Edge, Opera and Firefox */
+      @include unselect();
 
       &-node {
         display: flex;
@@ -126,8 +123,14 @@
   &-products {
     display: flex;
     flex-direction: column;
-    flex: 3.8;
+    flex-flow: column wrap;
+    align-items: flex-start;
     min-height: 70rem;
+    // width: 100%;
+
+    @include respond(smallest) {
+      align-items: center;
+    }
 
     &-list {
       display: flex;
@@ -150,6 +153,20 @@
       flex-direction: row;
       justify-content: flex-start;
       margin-left: 2rem;
+      width: 100%;
+
+      @include respond(medium) {
+        width: 50rem;
+      }
+
+      @include respond(small) {
+        width: 40rem;
+      }
+
+      @include respond(smallest) {
+        width: 30rem;
+      }
+
       & mat-form-field,
       form,
       input {
@@ -165,6 +182,12 @@
       & mat-paginator {
         background-color: rgba($color-white, 0);
       }
+    }
+
+    &-loading {
+      width: 50rem;
+      display: flex;
+      justify-content: center;
     }
   }
 }

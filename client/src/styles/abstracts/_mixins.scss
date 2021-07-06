@@ -54,6 +54,12 @@
     }
   }
 
+  @if $breakpoint == medium-large {
+    @media only screen and (max-width: $screen-medium-large) {
+      @content;
+    }
+  }
+
   @if $breakpoint == large {
     @media only screen and (max-width: $screen-large) {
       @content;

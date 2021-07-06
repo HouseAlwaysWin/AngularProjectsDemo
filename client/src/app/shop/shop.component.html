@@ -106,8 +106,9 @@
       </form>
     </div>
 
-    <div>
-      <div *ngIf="!isLoading">
+    <div class="shop-products">
+      <div *ngIf="!isLoading"
+           class="shop-products-list">
         <div *ngIf="productTotalcount;else productEmpty">
           <div class="shop-products-paging">
             <!-- <mat-paginator [length]="(products$ |async)?.totalCount" -->
@@ -143,13 +144,14 @@
           </div>
         </ng-template>
       </div>
+      <div *ngIf="false"
+           class="shop-products-loading">
+        <mat-progress-spinner mode="indeterminate"
+                              color="accent"
+                              diameter="120"></mat-progress-spinner>
+      </div>
     </div>
   </div>
 
 
-</div>
-<div *ngIf="isLoading">
-  <mat-progress-spinner mode="indeterminate"
-                        color="accent"
-                        diameter="120"></mat-progress-spinner>
 </div>
