@@ -81,6 +81,7 @@ namespace BackendApi.Controllers
             return BaseApiOk();
         }
 
+        [HttpPost("add-products")]
         public async Task<ActionResult> AddProducts(List<Product> products){
             await _productService.AddProductsAsync(products);
             return BaseApiOk();

@@ -5,6 +5,28 @@
   line-height: $size;
 }
 
+@mixin common-scroll() {
+  &::-webkit-scrollbar {
+    height: 1rem;
+    background-color: rgba($color-grey-light, 0.5);
+    border: none;
+    border-radius: 1rem;
+    outline: none;
+  }
+  &::-webkit-scrollbar-track {
+    width: 10px;
+    outline: none;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: $color-primary;
+    border-radius: 1rem;
+    outline: none;
+  }
+  ::-webkit-scrollbar-track-piece {
+    background-color: red;
+  }
+}
+
 @mixin unselect() {
   -moz-user-select: none;
   -khtml-user-select: none;

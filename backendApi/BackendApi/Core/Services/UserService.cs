@@ -110,7 +110,8 @@ namespace BackendApi.Core.Services
             var notifications = await _userRepo.GetAllPagedAsync<Notification>(pageIndex,pageSize,
                 query => query.Where(u => u.AppUserId == userId)
                                .Include(u => u.RequestUser)
-                               .ThenInclude(u=> u.Photos));
+                               .ThenInclude(u=> u.Photos)
+                               .OrderBy(u => u.Id));
             
             var notificationsDto = _mapper.Map<PagedList<Notification>,PagedList<NotificationDto>>(notifications);
 

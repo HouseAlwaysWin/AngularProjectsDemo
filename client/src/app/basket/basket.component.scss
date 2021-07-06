@@ -60,7 +60,7 @@
 
 app-baske-total-summary {
   width: 50rem;
-  @media only screen and (max-width: $bp-smallest) {
+  @include respond(smallest) {
     width: 100%;
   }
 }

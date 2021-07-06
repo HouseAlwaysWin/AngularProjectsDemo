@@ -21,32 +21,19 @@
   justify-content: center;
   width: 100%;
 
-  // @media only screen and (max-width: $bp-large) {
-  //   width: 60rem;
-  //   overflow-x: scroll;
-  // }
-
-  // @media only screen and (max-width: $bp-medium) {
-  //   width: 40rem;
-  // }
-
-  // @media only screen and (max-width: $bp-smallest) {
-  //   width: 27rem;
-  // }
-
   &-table {
     background-color: rgba(255, 255, 255, 0);
-    @media only screen and (max-width: $bp-medium-large) {
+
+    @include common-scroll();
+    @include respond(large) {
       width: 60rem;
       overflow-x: scroll;
     }
-
-    @media only screen and (max-width: $bp-medium) {
+    @include respond(medium) {
       width: 50rem;
       overflow-x: scroll;
     }
-
-    @media only screen and (max-width: $bp-smallest) {
+    @include respond(smallest) {
       display: inline;
       width: 20rem;
       overflow-x: scroll;

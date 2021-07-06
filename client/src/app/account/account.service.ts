@@ -62,6 +62,7 @@ export class AccountService {
   }
 
   login(loginData: ILoginForm) {
+    console.log(loginData);
     return this.http.post(this.baseUrl + 'account/login', loginData).pipe(
       map((res: IApiResponse<IUser>) => {
         if (res.isSuccessed) {

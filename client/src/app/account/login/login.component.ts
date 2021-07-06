@@ -84,11 +84,6 @@ export class LoginComponent implements OnInit, OnDestroy {
       }, error => {
         var message = error.error.message ? error.error.message : this.translate.instant('AccountForm.LoginFailed');
         this.error = message;
-        // this.dialog.open(DialogMessage, {
-        //   data: {
-        //     message: message
-        //   }
-        // });
       });
 
   }

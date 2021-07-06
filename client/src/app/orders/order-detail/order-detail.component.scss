@@ -8,20 +8,20 @@
 
   &-content {
     display: flex;
-    align-items: start;
+    align-items: flex-start;
     flex-flow: column;
     height: 100%;
-
-    @media only screen and (max-width: $bp-medium) {
+    @include common-scroll();
+    @include respond(medium) {
       width: 60rem;
     }
 
-    @media only screen and (max-width: $bp-small) {
+    @include respond(small) {
       width: 50rem;
       overflow-x: scroll;
     }
 
-    @media only screen and (max-width: $bp-smallest) {
+    @include respond(smallest) {
       width: 20rem;
       overflow-x: scroll;
     }
