@@ -16,7 +16,7 @@
     box-shadow: 0 0 15px rgba($color-black, 0.2);
   }
 
-  &_side {
+  &-side {
     height: 30rem;
     transition: all 0.3s ease-in;
     position: absolute;
@@ -29,24 +29,24 @@
     overflow: hidden;
     box-shadow: 0 1.5rem 4rem rgba($color-black, 0.15);
 
-    &_front {
+    &-front {
       background-color: $color-white;
-      &_rotate {
+      &-rotate {
         transform: rotateY(-180deg);
       }
     }
 
-    &_back {
+    &-back {
       background-image: linear-gradient(to left bottom, $color-grey-light, $color-grey-dark);
       transform: rotateY(180deg);
-      &_rotate {
+      &-rotate {
         background-image: linear-gradient(to left bottom, $color-grey-light, $color-grey-dark);
         transform: rotateY(0);
       }
     }
   }
 
-  &_picture {
+  &-picture {
     overflow: hidden;
     background-color: $color-black;
 
@@ -68,7 +68,7 @@
     }
   }
 
-  &_heading {
+  &-heading {
     position: absolute;
     font-size: 2rem;
     font-weight: 400;
@@ -82,7 +82,7 @@
     background-image: linear-gradient(to right bottom, rgba($color-primary-light, 0.8), rgba($color-primary-dark, 0.8));
   }
 
-  &_details {
+  &-details {
     overflow: hidden;
     ul {
       margin: 0 auto;
@@ -100,8 +100,8 @@
     }
   }
 
-  &_price {
-    font-size: 3rem;
+  &-description {
+    font-size: 2rem;
     text-decoration: none;
     color: $color-white;
     text-align: center;
@@ -111,20 +111,16 @@
     transform: translate(-50%, -50%);
     transition: all 0.3s;
     cursor: pointer;
+    width: 100%;
+    word-wrap: break-word;
 
     &:hover {
-      font-size: 4rem;
-      &::after {
-        font-size: 5rem;
-        color: red;
-        transform: scaleX(1.4) scaleY(1.6);
-        opacity: 0;
-      }
+      font-size: 3rem;
     }
   }
 
   .btn,
-  .btn_white {
+  .btn-white {
     position: absolute;
     top: 80%;
     left: 50%;

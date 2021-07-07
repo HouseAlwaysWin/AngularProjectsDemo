@@ -23,7 +23,7 @@
     }
   }
 
-  &_primary {
+  &-primary {
     background-color: $color-primary;
     color: $color-white;
 
@@ -32,7 +32,7 @@
     }
   }
 
-  &_white {
+  &-white {
     background-color: $color-white;
     color: $color-black;
 

@@ -6,7 +6,7 @@
   justify-content: center;
   align-items: center;
 
-  @media only screen and(max-width:$bp-small) {
+  @include respond($bp-small) {
     flex-flow: column wrap;
   }
 }

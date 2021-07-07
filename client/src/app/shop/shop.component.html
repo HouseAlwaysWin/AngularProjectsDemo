@@ -106,51 +106,50 @@
       </form>
     </div>
 
-    <div class="shop-products">
-      <div *ngIf="!isLoading"
-           class="shop-products-list">
-        <div *ngIf="productTotalcount;else productEmpty">
-          <div class="shop-products-paging">
-            <!-- <mat-paginator [length]="(products$ |async)?.totalCount" -->
-            <mat-paginator [length]="productTotalcount"
-                           (page)="setPage($event)"
-                           [pageSize]="shopParams.pageSize"
-                           [pageIndex]="shopParams.pageIndex"
-                           [pageSizeOptions]="[5,10,25,100]"
-                           [showFirstLastButtons]="true">
-            </mat-paginator>
-          </div>
-          <div [@fadeInGrowList]
-               class="shop-products-list">
-            <app-product-item [product]="product"
-                              *ngFor="let product of products"></app-product-item>
-
-          </div>
-          <div class="shop-products-paging">
-            <mat-paginator [length]="productTotalcount"
-                           (page)="setPage($event)"
-                           [pageSize]="shopParams.pageSize"
-                           [pageIndex]="shopParams.pageIndex"
-                           [pageSizeOptions]="[5,10,25,100]"
-                           [showFirstLastButtons]="true">
-            </mat-paginator>
-          </div>
+    <div class="shop-products"
+         *ngIf="!isLoading">
+      <div *ngIf="productTotalcount;else productEmpty">
+        <div class="shop-products-paging">
+          <!-- <mat-paginator [length]="(products$ |async)?.totalCount" -->
+          <mat-paginator [length]="productTotalcount"
+                         (page)="setPage($event)"
+                         [pageSize]="shopParams.pageSize"
+                         [pageIndex]="shopParams.pageIndex"
+                         [pageSizeOptions]="[5,10,25,100]"
+                         [showFirstLastButtons]="true">
+          </mat-paginator>
         </div>
-        <ng-template #productEmpty>
-          <div class="product-notfound">
-            <h2>
-              {{ 'Shop.NoProductsFound' | translate}}
-            </h2>
-          </div>
-        </ng-template>
+        <div [@fadeInGrowList]
+             class="shop-products-list">
+          <app-product-item [product]="product"
+                            *ngFor="let product of products"></app-product-item>
+
+        </div>
+        <div class="shop-products-paging">
+          <mat-paginator [length]="productTotalcount"
+                         (page)="setPage($event)"
+                         [pageSize]="shopParams.pageSize"
+                         [pageIndex]="shopParams.pageIndex"
+                         [pageSizeOptions]="[5,10,25,100]"
+                         [showFirstLastButtons]="true">
+          </mat-paginator>
+        </div>
       </div>
-      <div *ngIf="false"
-           class="shop-products-loading">
-        <mat-progress-spinner mode="indeterminate"
-                              color="accent"
-                              diameter="120"></mat-progress-spinner>
-      </div>
+      <ng-template #productEmpty>
+        <div class="product-notfound">
+          <h2>
+            {{ 'Shop.NoProductsFound' | translate}}
+          </h2>
+        </div>
+      </ng-template>
     </div>
+    <div *ngIf="isLoading"
+         class="shop-products-loading">
+      <mat-progress-spinner mode="indeterminate"
+                            color="accent"
+                            diameter="120"></mat-progress-spinner>
+    </div>
+
   </div>
 
 

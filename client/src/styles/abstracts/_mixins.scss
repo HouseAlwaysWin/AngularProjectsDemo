@@ -71,4 +71,16 @@
       @content;
     }
   }
+
+  @if $breakpoint == x-large {
+    @media only screen and (max-width: $screen-xx-large) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == xx-large {
+    @media only screen and (max-width: $screen-x-large) {
+      @content;
+    }
+  }
 }
