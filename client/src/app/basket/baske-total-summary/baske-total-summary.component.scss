@@ -40,6 +40,14 @@
   }
 }
 
-.btn-process {
-  text-align: center;
+.btn {
+  &-process {
+    text-align: center;
+  }
+
+  &-checkout {
+    &:hover {
+      background-color: rgb(39, 39, 153);
+    }
+  }
 }

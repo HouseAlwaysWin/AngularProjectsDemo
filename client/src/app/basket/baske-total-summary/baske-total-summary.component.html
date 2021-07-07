@@ -4,7 +4,7 @@
   </div>
   <div class="order-summary-list">
     <p class="order-summary-hint"
-      *ngIf="showHint">
+       *ngIf="showHint">
       {{ 'BasketTotal.Hint' | translate }}
     </p>
 
@@ -24,10 +24,11 @@
     </div>
   </div>
   <div class="btn-process"
-    *ngIf="showProcessBtn">
+       *ngIf="showProcessBtn">
     <button mat-raised-button
-      routerLink="/checkout"
-      color="primary">
+            class="btn-checkout"
+            routerLink="/checkout"
+            color="primary">
       {{ 'BasketTotal.ProcessCheckout' | translate }}
     </button>
   </div>

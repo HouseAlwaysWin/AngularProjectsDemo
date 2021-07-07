@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { Injector, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MaterialModule } from '../material/material.module';
@@ -10,7 +10,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DialogMessage } from './components/dialog-message/dialog-message.component';
 import { TrucateTextPipe } from './pipes/trucate-text.pipe';
 import { FadeInOutDirective } from './directives/fadeInOut/fade-in-out.directive';
-
 
 
 @NgModule({
@@ -38,4 +37,5 @@ import { FadeInOutDirective } from './directives/fadeInOut/fade-in-out.directive
     FadeInOutDirective,
   ]
 })
-export class SharedModule { }
+export class SharedModule {
+}

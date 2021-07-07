@@ -61,3 +61,11 @@ mat-paginator {
   text-align: center;
   min-height: 80rem;
 }
+
+.btn {
+  &-detail {
+    &:hover {
+      background-color: rgb(39, 39, 153);
+    }
+  }
+}

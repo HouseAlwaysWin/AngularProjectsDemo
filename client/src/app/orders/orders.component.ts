@@ -68,5 +68,6 @@ export class OrdersComponent implements OnInit, OnDestroy {
     this.router.navigate([`/orders/${item.id}`]);
   }
 
+
 }
 

@@ -82,10 +82,12 @@
 
   <div class="address-action">
     <button mat-raised-button
+            class="prev"
             routerLink="/basket">{{ 'Checkout.Previous' | translate}}</button>
     <button mat-raised-button
             color="primary"
             matStepperNext
+            class="next"
             [disabled]="addressForm.invalid">{{ 'Checkout.Next' | translate }}</button>
   </div>
 

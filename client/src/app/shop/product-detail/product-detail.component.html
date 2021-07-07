@@ -58,20 +58,20 @@
     <div class="product-select-btns">
       <button mat-raised-button
               (click)="addItemToBasket()"
-              class="btnAction"
+              class="btn-action btn-add-cart"
               color="warn">
         {{ 'ProductDetail.AddToCart' | translate}}
       </button>
 
       <button mat-raised-button
               routerLink="/basket"
-              class="btnAction"
+              class="btn-action btn-go-basket"
               color="primary">
         {{ 'ProductDetail.GoToBasket' | translate }}
       </button>
 
       <button mat-raised-button
-              class="btnAction"
+              class="btn-action btn-return"
               routerLink="/shop">
         {{ 'ProductDetail.ReturnShop' | translate }}
       </button>

@@ -42,6 +42,12 @@
   &-return {
     margin-top: 1em;
     text-align: center;
+
+    &-btn {
+      &:hover {
+        background-color: rgb(117, 2, 2);
+      }
+    }
   }
 }
 

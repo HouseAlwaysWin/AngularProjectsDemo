@@ -72,3 +72,15 @@
 .show {
   display: block;
 }
+
+.prev {
+  &:hover {
+    color: white;
+    background-color: rgb(173, 166, 166);
+  }
+}
+.next {
+  &:hover {
+    background-color: rgb(39, 39, 153);
+  }
+}
