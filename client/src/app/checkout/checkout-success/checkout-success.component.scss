@@ -1,4 +1,9 @@
 .checkout-success {
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: flex-start;
+  align-items: center;
+  min-height: 70rem;
   margin-top: 5em;
 }
 
